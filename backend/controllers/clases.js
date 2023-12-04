@@ -19,6 +19,57 @@ const getClases = (req, res) => {
     });
 }
 
+const getClasesPorCriterio = (req, res) => {
+    return new Promise(function(resolve, reject) {
+        let query = 'SELECT * FROM clase';
+        let conditions = [];
+        let values = [];
+        let validParams = ['ID_Clase', 'Nombre', 'NumAlumnos', 'ID_Centro'];
+
+        let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
+
+        if (!isValidQuery) {
+            return reject({ statusCode: 400, message: "Parámetros de búsqueda no válidos en Clases" });
+        }
+
+        if(req.query.ID_Clase){
+            conditions.push("ID_Clase = ?");
+            values.push(req.query.ID_Clase);
+        }
+        if(req.query.Nombre){
+            conditions.push("Nombre = ?");
+            values.push(req.query.Nombre);
+        }
+        if(req.query.NumAlumnos){
+            conditions.push("NumAlumnos = ?");
+            values.push(req.query.NumAlumnos);
+        }
+        if(req.query.ID_Centro){
+            conditions.push("ID_Centro = ?");
+            values.push(req.query.ID_Centro);
+        }
+
+        if(conditions.length > 0){
+            query += ' WHERE ' + conditions.join(' AND ');
+        }
+
+        connection.query(query, values, (error, results) => {
+            if (error) {
+                reject({ statusCode: 500, message: "Error al obtener la clase"});
+            } else {
+                resolve(
+                    res.json({
+                        ok: true,
+                        msg: 'getClaseByCriteria',
+                        results
+                    })
+                );
+            }
+        });
+    });
+}
+
+
 const createClase = (req, res) => {
     return new Promise(function(resolve, reject) {
         connection.query('INSERT INTO clase SET ?', [req.body], (error, results) => {
@@ -94,4 +145,4 @@ const deleteClase = (req, res) => {
     });
 }
 
-module.exports = { getClases, createClase, updateClase, deleteClase };
+module.exports = { getClases, createClase, updateClase, deleteClase, getClasesPorCriterio };

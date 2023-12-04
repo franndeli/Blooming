@@ -1,5 +1,6 @@
 const { dbConnection } = require('../database/configdb');
 const connection = dbConnection();
+const bcrypt = require('bcryptjs');
 
 const Profesor = require('../models/profesor');
 
@@ -91,20 +92,35 @@ const getProfesoresPorCriterio = (req, res) => {
 
 const createProfesor = (req, res) => {
     return new Promise(function(resolve, reject) {
-        connection.query('INSERT INTO profesor SET ?', [req.body], (error, results) => {
+        const email = req.body.Email;
+
+        // Comprobación de si existe ya el email
+        connection.query('SELECT * FROM profesor WHERE Email = ?', [email], (error, results) => {
             if (error) {
-                reject({ statusCode: 500, message: "Error al crear el profesor"});
-            }else{
-                resolve(
-                    res.json({
-                        ok: true,
-                        msg: 'createProfesor'
-                    })
-                );
+                reject({ statusCode: 500, message: "Error al verificar el email"});
+            } else if (results.length > 0) {
+                reject({ statusCode: 400, message: "El email de este profesor ya existe"});
+            } else {
+                // Cifrar la contraseña antes de insertar
+                const salt = bcrypt.genSaltSync();
+                const hashedPassword = bcrypt.hashSync(req.body.Contraseña, salt);
+
+                // Crear un nuevo objeto con la contraseña cifrada
+                const newProfesor = { ...req.body, Contraseña: hashedPassword };
+
+                // Insertar en la base de datos
+                connection.query('INSERT INTO profesor SET ?', [newProfesor], (insertError, insertResults) => {
+                    if (insertError) {
+                        reject({ statusCode: 500, message: "Error al crear el profesor"});
+                    } else {
+                        resolve(res.json({ ok: true, msg: 'createProfesor' }));
+                    }
+                });
             }
         });
     });
-}
+};
+
 
 const updateProfesor = (req, res) => {
     return new Promise(function(resolve, reject) {

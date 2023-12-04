@@ -2,7 +2,7 @@ class Profesor {
     ID_Profesor;
     Nombre;
     Apellidos;
-    Correo;
+    Email;
     Contraseña;
     ID_Clase;
     ID_Centro;

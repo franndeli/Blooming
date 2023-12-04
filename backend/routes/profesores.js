@@ -11,14 +11,17 @@ router.get('/', getProfesores );
 
 router.post('/', [
         check('Nombre', 'El argumento "Nombre" es obligatorio').not().isEmpty(),
+        check('Apellido', 'El argumento "Nombre" es obligatorio').not().isEmpty(),
         check('Especialidad', 'El argumento "Especialidad" es obligatorio').not().isEmpty(),
         check('ID_Centro', 'El argumento "ID_Centro" es obligatorio').not().isEmpty(),
         validarCampos
     ], createProfesor);
 
 router.put('/:ID_Profesor', [
-        check('Nombre', 'El argumento "Nombre" es obligatorio').not().isEmpty(),
-        check('Especialidad', 'El argumento "Especialidad" es obligatorio').not().isEmpty(),
+    //Campos opcionales, no es necesario ponerlos todos para hacer una llamada PUT
+        check('Nombre').optional().not().isEmpty().withMessage('El argumento "Nombre" no debe estar vacío'),
+        check('Apellido').optional().not().isEmpty().withMessage('El argumento "Apellido" no debe estar vacío'),
+        check('Especialidad').optional().not().isEmpty().withMessage('El argumento "Especialidad" no debe estar vacío'),
         check('ID_Centro', 'El argumento "ID_Centro" es obligatorio').not().isEmpty(),
         check('ID_Profesor').isInt().withMessage('El campo "ID_Profesor" debe ser un número entero'),
         validarCampos

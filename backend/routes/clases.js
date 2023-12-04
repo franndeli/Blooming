@@ -16,7 +16,8 @@ router.post('/', [
     ], createClase);
 
 router.put('/:ID_Clase', [
-        check('Nombre', 'El argumento "Nombre" es obligatorio').not().isEmpty(),
+    //Campos opcionales, no es necesario ponerlos todos para hacer una llamada PUT
+        check('Nombre').optional().not().isEmpty().withMessage('El argumento "Nombre" es obligatorio'),
         check('ID_Centro', 'El argumento "ID_Centro" es obligatorio').not().isEmpty(),
         check('ID_Clase').isInt().withMessage('El campo "ID_Clase" debe ser un número entero'),
         validarCampos

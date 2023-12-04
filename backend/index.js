@@ -10,11 +10,18 @@ const app = express();
 
 dbConnection();
 
-app.use(cors());  
+app.use(cors());
+app.use(express.json());
 
 app.use('/api/alumnos', require('./routes/alumnos'));
+app.use('/api/centros', require('./routes/centros'));
+app.use('/api/clases', require('./routes/clases'));
+app.use('/api/profesores', require('./routes/profesores'));
 
 app.listen(process.env.PORT, () => {
     console.log('Prueba de conexión corriendo en http://localhost:' + process.env.PORT + '/api/alumnos ');
+    console.log('Prueba de conexión corriendo en http://localhost:' + process.env.PORT + '/api/centros ');
+    console.log('Prueba de conexión corriendo en http://localhost:' + process.env.PORT + '/api/clases ');
+    console.log('Prueba de conexión corriendo en http://localhost:' + process.env.PORT + '/api/profesores ');
 });
 

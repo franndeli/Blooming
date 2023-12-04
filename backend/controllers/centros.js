@@ -1,16 +1,16 @@
 const { dbConnection } = require('../database/configdb');
 const connection = dbConnection();
 
-const getAlumnos = (req, res) => {
+const getCentros = (req, res) => {
     return new Promise(function(resolve, reject) {
-        connection.query('SELECT * FROM alumno', (error, results) => {
+        connection.query('SELECT * FROM centro_escolar', (error, results) => {
             if (error) {
-                reject({ statusCode: 500, message: "Error al obtener los alumnos"});
+                reject({ statusCode: 500, message: "Error al obtener los centros"});
             }else{
                 resolve(
                     res.json({
                         ok: true,
-                        msg: 'getAlumnos',
+                        msg: 'getCentros',
                         results
                     })
                 );
@@ -19,16 +19,16 @@ const getAlumnos = (req, res) => {
     });
 }
 
-const createAlumno = (req, res) => {
+const createCentro = (req, res) => {
     return new Promise(function(resolve, reject) {
-        connection.query('INSERT INTO alumno SET ?', [req.body], (error, results) => {
+        connection.query('INSERT INTO centro_escolar SET ?', [req.body], (error, results) => {
             if (error) {
-                reject({ statusCode: 500, message: "Error al crear el alumno"});
+                reject({ statusCode: 500, message: "Error al crear el centro"});
             }else{
                 resolve(
                     res.json({
                         ok: true,
-                        msg: 'createAlumno'
+                        msg: 'createCentro'
                     })
                 );
             }
@@ -36,17 +36,17 @@ const createAlumno = (req, res) => {
     });
 }
 
-const updateAlumno = (req, res) => {
+const updateCentro = (req, res) => {
     return new Promise(function(resolve, reject) {
-        const id = req.params.ID_Alumno;
-        connection.query('SELECT * FROM alumno WHERE ID_Alumno = ?', [id], (error, rows) => {
+        const id = req.params.ID_Centro;
+        connection.query('SELECT * FROM centro_escolar WHERE ID_Centro = ?', [id], (error, rows) => {
             if(error){
-                reject({ statusCode: 500, message: "Error al actualizar el alumno"});
+                reject({ statusCode: 500, message: "Error al actualizar el centro"});
             }else{
                 if(rows.length === 0){
-                    reject({ statusCode: 404, message: "Alumno no encontrado" });
+                    reject({ statusCode: 404, message: "Centro no encontrado" });
                 }else{
-                    connection.query('UPDATE alumno SET ? WHERE ID_Alumno = ?', [req.body, id], (error, results) => {
+                    connection.query('UPDATE centro_escolar SET ? WHERE ID_Centro = ?', [req.body, id], (error, results) => {
                         if (error) {
                             console.log(error);
                             return;
@@ -54,7 +54,7 @@ const updateAlumno = (req, res) => {
                             resolve(
                                 res.json({
                                     ok: true,
-                                    msg: 'updateAlumno'
+                                    msg: 'updateCentro'
                                 })
                             );
                         }
@@ -65,17 +65,17 @@ const updateAlumno = (req, res) => {
     });
 }
 
-const deleteAlumno = (req, res) => {
+const deleteCentro = (req, res) => {
     return new Promise(function(resolve, reject) {
-        const id = req.params.ID_Alumno;
-        connection.query('SELECT * FROM alumno WHERE ID_Alumno = ?', [id], (error, rows) => {
+        const id = req.params.ID_Centro;
+        connection.query('SELECT * FROM centro_escolar WHERE ID_Centro = ?', [id], (error, rows) => {
             if(error){
-                reject({ statusCode: 500, message: "Error al eliminar el alumno"});
+                reject({ statusCode: 500, message: "Error al eliminar el centro"});
             }else{
                 if(rows.length === 0){
-                    reject({ statusCode: 404, message: "Alumno no encontrado" });
+                    reject({ statusCode: 404, message: "Centro no encontrado" });
                 }else{
-                    connection.query('DELETE FROM alumno WHERE ID_Alumno = ?', [id], (error, results) => {
+                    connection.query('DELETE FROM centro_escolar WHERE ID_Centro = ?', [id], (error, results) => {
                         if (error) {
                             console.log(error);
                             return;
@@ -83,7 +83,7 @@ const deleteAlumno = (req, res) => {
                             resolve(
                                 res.json({
                                     ok: true,
-                                    msg: 'deleteAlumno'
+                                    msg: 'deleteCentro'
                                 })
                             );
                         }
@@ -94,4 +94,4 @@ const deleteAlumno = (req, res) => {
     });
 }
 
-module.exports = { getAlumnos, createAlumno, updateAlumno, deleteAlumno };
+module.exports = { getCentros, createCentro, updateCentro, deleteCentro };

@@ -1,16 +1,16 @@
 const { dbConnection } = require('../database/configdb');
 const connection = dbConnection();
 
-const getAlumnos = (req, res) => {
+const getProfesores = (req, res) => {
     return new Promise(function(resolve, reject) {
-        connection.query('SELECT * FROM alumno', (error, results) => {
+        connection.query('SELECT * FROM profesor', (error, results) => {
             if (error) {
-                reject({ statusCode: 500, message: "Error al obtener los alumnos"});
+                reject({ statusCode: 500, message: "Error al obtener los profesores"});
             }else{
                 resolve(
                     res.json({
                         ok: true,
-                        msg: 'getAlumnos',
+                        msg: 'getProfesores',
                         results
                     })
                 );
@@ -19,16 +19,16 @@ const getAlumnos = (req, res) => {
     });
 }
 
-const createAlumno = (req, res) => {
+const createProfesor = (req, res) => {
     return new Promise(function(resolve, reject) {
-        connection.query('INSERT INTO alumno SET ?', [req.body], (error, results) => {
+        connection.query('INSERT INTO profesor SET ?', [req.body], (error, results) => {
             if (error) {
-                reject({ statusCode: 500, message: "Error al crear el alumno"});
+                reject({ statusCode: 500, message: "Error al crear el profesor"});
             }else{
                 resolve(
                     res.json({
                         ok: true,
-                        msg: 'createAlumno'
+                        msg: 'createProfesor'
                     })
                 );
             }
@@ -36,17 +36,17 @@ const createAlumno = (req, res) => {
     });
 }
 
-const updateAlumno = (req, res) => {
+const updateProfesor = (req, res) => {
     return new Promise(function(resolve, reject) {
-        const id = req.params.ID_Alumno;
-        connection.query('SELECT * FROM alumno WHERE ID_Alumno = ?', [id], (error, rows) => {
+        const id = req.params.ID_Profesor;
+        connection.query('SELECT * FROM profesor WHERE ID_Profesor = ?', [id], (error, rows) => {
             if(error){
-                reject({ statusCode: 500, message: "Error al actualizar el alumno"});
+                reject({ statusCode: 500, message: "Error al actualizar el profesor"});
             }else{
                 if(rows.length === 0){
-                    reject({ statusCode: 404, message: "Alumno no encontrado" });
+                    reject({ statusCode: 404, message: "Profesor no encontrado" });
                 }else{
-                    connection.query('UPDATE alumno SET ? WHERE ID_Alumno = ?', [req.body, id], (error, results) => {
+                    connection.query('UPDATE profesor SET ? WHERE ID_Profesor = ?', [req.body, id], (error, results) => {
                         if (error) {
                             console.log(error);
                             return;
@@ -54,7 +54,7 @@ const updateAlumno = (req, res) => {
                             resolve(
                                 res.json({
                                     ok: true,
-                                    msg: 'updateAlumno'
+                                    msg: 'updateProfesor'
                                 })
                             );
                         }
@@ -65,17 +65,17 @@ const updateAlumno = (req, res) => {
     });
 }
 
-const deleteAlumno = (req, res) => {
+const deleteProfesor = (req, res) => {
     return new Promise(function(resolve, reject) {
-        const id = req.params.ID_Alumno;
-        connection.query('SELECT * FROM alumno WHERE ID_Alumno = ?', [id], (error, rows) => {
+        const id = req.params.ID_Profesor;
+        connection.query('SELECT * FROM profesor WHERE ID_Profesor = ?', [id], (error, rows) => {
             if(error){
-                reject({ statusCode: 500, message: "Error al eliminar el alumno"});
+                reject({ statusCode: 500, message: "Error al actualizar el profesor"});
             }else{
                 if(rows.length === 0){
-                    reject({ statusCode: 404, message: "Alumno no encontrado" });
+                    reject({ statusCode: 404, message: "Profesor no encontrado" });
                 }else{
-                    connection.query('DELETE FROM alumno WHERE ID_Alumno = ?', [id], (error, results) => {
+                    connection.query('DELETE FROM profesor WHERE ID_Profesor = ?', [id], (error, results) => {
                         if (error) {
                             console.log(error);
                             return;
@@ -83,7 +83,7 @@ const deleteAlumno = (req, res) => {
                             resolve(
                                 res.json({
                                     ok: true,
-                                    msg: 'deleteAlumno'
+                                    msg: 'deleteProfesor'
                                 })
                             );
                         }
@@ -94,4 +94,4 @@ const deleteAlumno = (req, res) => {
     });
 }
 
-module.exports = { getAlumnos, createAlumno, updateAlumno, deleteAlumno };
+module.exports = { getProfesores, createProfesor, updateProfesor, deleteProfesor };

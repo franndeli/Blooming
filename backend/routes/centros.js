@@ -24,7 +24,11 @@ router.post('/', [
         check('Calle', 'El argumento "Calle" es obligatorio').not().isEmpty(),
         check('CP', 'El argumento "CP" es obligatorio').not().isEmpty(),
         validarCampos
-    ], createCentro);
+    ], (req, res, next) => {
+        createCentro(req, res).catch(error => {
+            res.status(error.statusCode || 500).json({ message: error.message });
+        });
+    });
 
 router.put('/:ID_Centro', [
     //Campos opcionales, no es necesario ponerlos todos para hacer una llamada PUT

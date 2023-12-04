@@ -97,20 +97,33 @@ const getAlumnosPorCriterio = (req, res) => {
 
 const createAlumno = (req, res) => {
     return new Promise(function(resolve, reject) {
-        connection.query('INSERT INTO alumno SET ?', [req.body], (error, results) => {
+        //Comprobamos si existe el email
+        const usuario = req.body.Usuario;
+        
+        connection.query('SELECT * FROM alumno WHERE Usuario = ?', [usuario], (error, results) => {
             if (error) {
-                reject({ statusCode: 500, message: "Error al crear el alumno"});
-            }else{
-                resolve(
-                    res.json({
-                        ok: true,
-                        msg: 'createAlumno'
-                    })
-                );
+                reject({ statusCode: 500, message: "Error al verificar el usuario"});
+            } else if (results.length > 0) {
+                // Si se encuentra un alumno con el mismo email, rechaza la petición
+                reject({ statusCode: 400, message: "El usuario del alumno ya existe"});
+            } else {
+                // Si no existe, procede con la inserción
+                connection.query('INSERT INTO alumno SET ?', [req.body], (insertError, insertResults) => {
+                    if (insertError) {
+                        reject({ statusCode: 500, message: "Error al crear el alumno"});
+                    } else {
+                        resolve(
+                            res.json({
+                                ok: true,
+                                msg: 'createAlumno'
+                            })
+                        );
+                    }
+                });
             }
         });
     });
-}
+};
 
 const updateAlumno = (req, res) => {
     return new Promise(function(resolve, reject) {

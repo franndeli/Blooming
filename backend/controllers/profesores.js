@@ -1,17 +1,24 @@
 const { dbConnection } = require('../database/configdb');
 const connection = dbConnection();
 
+const Profesor = require('../models/profesor');
+
 const getProfesores = (req, res) => {
     return new Promise(function(resolve, reject) {
         connection.query('SELECT * FROM profesor', (error, results) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al obtener los profesores"});
             }else{
+                const profesores = results.map(row => {
+                    const profesor = new Profesor();
+                    Object.assign(profesor, row);
+                    return profesor.toJSON();
+                });
                 resolve(
                     res.json({
                         ok: true,
                         msg: 'getProfesores',
-                        results
+                        profesores
                     })
                 );
             }

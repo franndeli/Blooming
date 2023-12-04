@@ -84,20 +84,33 @@ const getCentrosPorCriterio = (req, res) => {
 
 const createCentro = (req, res) => {
     return new Promise(function(resolve, reject) {
-        connection.query('INSERT INTO centro_escolar SET ?', [req.body], (error, results) => {
+        //Comprueba si el email ya existe
+        const email = req.body.Email;
+        connection.query('SELECT * FROM centro_escolar WHERE Email = ?', [email], (error, results) => {
             if (error) {
-                reject({ statusCode: 500, message: "Error al crear el centro"});
-            }else{
-                resolve(
-                    res.json({
-                        ok: true,
-                        msg: 'createCentro'
-                    })
-                );
+                reject({ statusCode: 500, message: "Error al verificar el email"});
+            } else if (results.length > 0) {
+                // Si se encuentra un centro con el mismo email, rechaza la petición
+                reject({ statusCode: 400, message: "El email ya existe en otro centro"});
+            } else {
+                // Si no existe, procede con la inserción
+                connection.query('INSERT INTO centro_escolar SET ?', [req.body], (insertError, insertResults) => {
+                    if (insertError) {
+                        reject({ statusCode: 500, message: "Error al crear el centro"});
+                    } else {
+                        resolve(
+                            res.json({
+                                ok: true,
+                                msg: 'createCentro'
+                            })
+                        );
+                    }
+                });
             }
         });
     });
-}
+};
+
 
 const updateCentro = (req, res) => {
     return new Promise(function(resolve, reject) {

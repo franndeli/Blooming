@@ -1,13 +1,18 @@
 /* RUTA BASE '/api/clases' */
 
 const { Router } = require('express');
-const { getClases, createClase, updateClase, deleteClase } = require('../controllers/clases');
+const { getClases, createClase, updateClase, deleteClase, getClasesPorCriterio } = require('../controllers/clases');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middleware/validaciones');
 
 const router = Router();
 
 router.get('/', getClases );
+router.get('/buscar', (req, res) => {
+    getClasesPorCriterio(req, res).catch(error => {
+        res.status(error.statusCode || 500).json({ error: error.message });
+    });
+});
 
 router.post('/', [
         check('Nombre', 'El argumento "Nombre" es obligatorio').not().isEmpty(),

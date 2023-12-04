@@ -19,6 +19,69 @@ const getCentros = (req, res) => {
     });
 }
 
+const getCentrosPorCriterio = (req, res) => {
+    return new Promise(function(resolve, reject) {
+        let query = 'SELECT * FROM centro_escolar';
+        let conditions = [];
+        let values = [];
+        let validParams = ['ID_Centro', 'Nombre', 'Email', 'Localidad', 'Provincia', 'Calle', 'CP'];
+
+        let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
+
+        if (!isValidQuery) {
+            return reject({ statusCode: 400, message: "Parámetros de búsqueda no válidos en Centros" });
+        }
+
+        if(req.query.ID_Centro){
+            conditions.push("ID_Centro = ?");
+            values.push(req.query.ID_Centro);
+        }
+        if(req.query.Nombre){
+            conditions.push("Nombre = ?");
+            values.push(req.query.Nombre);
+        }
+        if(req.query.Email){
+            conditions.push("Email = ?");
+            values.push(req.query.Email);
+        }
+        if(req.query.Localidad){
+            conditions.push("Localidad = ?");
+            values.push(req.query.Localidad);
+        }
+        if(req.query.Provincia){
+            conditions.push("Provincia = ?");
+            values.push(req.query.Provincia);
+        }
+        if(req.query.Calle){
+            conditions.push("Calle = ?");
+            values.push(req.query.Calle);
+        }
+        if(req.query.CP){
+            conditions.push("CP = ?");
+            values.push(req.query.CP);
+        }
+
+        if(conditions.length > 0){
+            query += ' WHERE ' + conditions.join(' AND ');
+        }
+
+        connection.query(query, values, (error, results) => {
+            if (error) {
+                reject({ statusCode: 500, message: "Error al obtener el centro"});
+            } else {
+                resolve(
+                    res.json({
+                        ok: true,
+                        msg: 'getCentroByCriteria',
+                        results
+                    })
+                );
+            }
+        });
+    });
+}
+
+
 const createCentro = (req, res) => {
     return new Promise(function(resolve, reject) {
         connection.query('INSERT INTO centro_escolar SET ?', [req.body], (error, results) => {
@@ -94,4 +157,4 @@ const deleteCentro = (req, res) => {
     });
 }
 
-module.exports = { getCentros, createCentro, updateCentro, deleteCentro };
+module.exports = { getCentros, createCentro, updateCentro, deleteCentro, getCentrosPorCriterio };

@@ -1,13 +1,19 @@
-/* RUTA BASE '/api/usuarios' */
+/* RUTA BASE '/api/alumnos' */
 
 const { Router } = require('express');
-const { getAlumnos, createAlumno, updateAlumno, deleteAlumno } = require('../controllers/alumnos');
-const { check } = require('express-validator');
+const { getAlumnos, createAlumno, updateAlumno, deleteAlumno, getAlumnosPorCriterio } = require('../controllers/alumnos');
+const { check, Result } = require('express-validator');
 const { validarCampos } = require('../middleware/validaciones');
 
 const router = Router();
 
 router.get('/', getAlumnos );
+
+router.get('/buscar', (req, res) => {
+    getAlumnosPorCriterio(req, res).catch(error => {
+        res.status(error.statusCode || 500).json({ error: error.message });
+    });
+});
 
 router.post('/', [
         check('Nombre', 'El argumento "Nombre" es obligatorio').not().isEmpty(),

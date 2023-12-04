@@ -1,8 +1,10 @@
 class Profesor {
     ID_Profesor;
     Nombre;
-    Apellido;
-    Especialidad;
+    Apellidos;
+    Correo;
+    Contraseña;
+    ID_Clase;
     ID_Centro;
 }
 

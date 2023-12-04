@@ -24,7 +24,7 @@ const getClasesPorCriterio = (req, res) => {
         let query = 'SELECT * FROM clase';
         let conditions = [];
         let values = [];
-        let validParams = ['ID_Clase', 'Nombre', 'ID_Centro'];
+        let validParams = ['ID_Clase', 'Nombre', 'NumAlumnos', 'ID_Centro'];
 
         let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
 
@@ -39,6 +39,10 @@ const getClasesPorCriterio = (req, res) => {
         if(req.query.Nombre){
             conditions.push("Nombre = ?");
             values.push(req.query.Nombre);
+        }
+        if(req.query.NumAlumnos){
+            conditions.push("NumAlumnos = ?");
+            values.push(req.query.NumAlumnos);
         }
         if(req.query.ID_Centro){
             conditions.push("ID_Centro = ?");

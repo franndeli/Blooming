@@ -1,7 +1,9 @@
 class Alumno {
     ID_Alumno;
     Nombre;
-    Apellido;
+    Apellidos;
+    Usuario;
+    Contraseña;
     FechaNacimiento;
     ID_Clase;
 }

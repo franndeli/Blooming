@@ -32,7 +32,7 @@ const getAlumnosPorCriterio = (req, res) => {
         let conditions = [];
         let values = [];
 
-        let validParams = ['ID_Alumno', 'Nombre', 'Apellido', 'FechaNacimiento', 'ID_Clase'];
+        let validParams = ['ID_Alumno', 'Nombre', 'Apellidos', 'Usuario', 'Contraseña', 'FechaNacimiento', 'ID_Clase'];
 
         let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
 
@@ -51,6 +51,14 @@ const getAlumnosPorCriterio = (req, res) => {
         if(req.query.Apellido){
             conditions.push("Apellido = ?");
             values.push(req.query.Apellido);
+        }
+        if(req.query.Usuario){
+            conditions.push("Usuario = ?");
+            values.push(req.query.Usuario);
+        }
+        if(req.query.Contraseña){
+            conditions.push("Contraseña = ?");
+            values.push(req.query.Contraseña);
         }
         if(req.query.FechaNacimiento){
             conditions.push("FechaNacimiento = ?");

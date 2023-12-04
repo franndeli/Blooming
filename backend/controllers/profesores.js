@@ -24,7 +24,7 @@ const getProfesoresPorCriterio = (req, res) => {
         let query = 'SELECT * FROM profesor';
         let conditions = [];
         let values = [];
-        let validParams = ['ID_Profesor', 'Nombre', 'Apellido', 'Especialidad', 'ID_Centro'];
+        let validParams = ['ID_Profesor', 'Nombre', 'Apellidos', 'Correo', 'Contraseña', 'ID_Centro'];
 
         let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
 
@@ -41,12 +41,20 @@ const getProfesoresPorCriterio = (req, res) => {
             values.push(req.query.Nombre);
         }
         if(req.query.Apellido){
-            conditions.push("Apellido = ?");
+            conditions.push("Apellidos = ?");
             values.push(req.query.Apellido);
         }
-        if(req.query.Especialidad){
-            conditions.push("Especialidad = ?");
-            values.push(req.query.Especialidad);
+        if(req.query.Correo){
+            conditions.push("Correo = ?");
+            values.push(req.query.Correo);
+        }
+        if(req.query.Contraseña){
+            conditions.push("Contraseña = ?");
+            values.push(req.query.Contraseña);
+        }
+        if(req.query.ID_Clase){
+            conditions.push("ID_Clase = ?");
+            values.push(req.query.ID_Clase);
         }
         if(req.query.ID_Centro){
             conditions.push("ID_Centro = ?");

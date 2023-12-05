@@ -1,5 +1,6 @@
 const { dbConnection } = require('../database/configdb');
 const connection = dbConnection();
+const hashPassword = require('../middleware/hashHelper');
 
 const getCentros = (req, res) => {
     return new Promise(function(resolve, reject) {
@@ -84,8 +85,9 @@ const getCentrosPorCriterio = (req, res) => {
 
 const createCentro = (req, res) => {
     return new Promise(function(resolve, reject) {
-        //Comprueba si el email ya existe
         const email = req.body.Email;
+
+        //Comprueba si el email ya existe
         connection.query('SELECT * FROM centro_escolar WHERE Email = ?', [email], (error, results) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al verificar el email"});
@@ -93,8 +95,11 @@ const createCentro = (req, res) => {
                 // Si se encuentra un centro con el mismo email, rechaza la petición
                 reject({ statusCode: 400, message: "El email ya existe en otro centro"});
             } else {
-                // Si no existe, procede con la inserción
-                connection.query('INSERT INTO centro_escolar SET ?', [req.body], (insertError, insertResults) => {
+                //Ciframos la contraseña antes de insertar
+                const hashedPassword = hashPassword(req.body.Contraseña);
+                const newCentro = { ...req.body, Contraseña: hashedPassword };
+
+                connection.query('INSERT INTO centro_escolar SET ?', [newCentro], (insertError, insertResults) => {
                     if (insertError) {
                         reject({ statusCode: 500, message: "Error al crear el centro"});
                     } else {
@@ -115,29 +120,33 @@ const createCentro = (req, res) => {
 const updateCentro = (req, res) => {
     return new Promise(function(resolve, reject) {
         const id = req.params.ID_Centro;
-        connection.query('SELECT * FROM centro_escolar WHERE ID_Centro = ?', [id], (error, rows) => {
-            if(error){
-                reject({ statusCode: 500, message: "Error al actualizar el centro"});
-            }else{
-                if(rows.length === 0){
-                    reject({ statusCode: 404, message: "Centro no encontrado" });
-                }else{
-                    connection.query('UPDATE centro_escolar SET ? WHERE ID_Centro = ?', [req.body, id], (error, results) => {
-                        if (error) {
-                            console.log(error);
-                            return;
-                        }else{
-                            resolve(
-                                res.json({
-                                    ok: true,
-                                    msg: 'updateCentro'
-                                })
-                            );
-                        }
-                    });
+
+        if(req.body.Contraseña){
+            const hashedPassword = hashPassword(req.body.Contraseña);
+            
+            req.body.Contraseña = hashedPassword;
+
+            actualizarCentro();
+        } else{
+
+            actualizarCentro();
+        }
+
+        //Hacemos el update
+        function actualizarCentro() {
+            connection.query('UPDATE centro_escolar SET ? WHERE ID_Centro = ?', [req.body, id], (error, results) => {
+                if (error) {
+                    reject({ statusCode: 500, message: "Error al actualizar el centro"});
+                } else {
+                    resolve(
+                        res.json({
+                            ok: true,
+                            msg: 'updateCentro'
+                        })
+                    );
                 }
-            }
-        });
+            });
+        }
     });
 }
 

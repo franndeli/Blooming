@@ -35,8 +35,8 @@ router.put('/:ID_Profesor', [
         check('Apellidos').optional().not().isEmpty().withMessage('El argumento "Apellidos" no debe estar vacío'),
         check('Email').optional().not().isEmpty().withMessage('El argumento "Email" no debe estar vacío'),
         check('Contraseña').optional().not().isEmpty().withMessage('El argumento "Contraseña" no debe estar vacío'),
-        check('ID_Clase', 'El argumento "ID_Centro" es obligatorio').not().isEmpty(),
-        check('ID_Centro', 'El argumento "ID_Centro" es obligatorio').not().isEmpty(),
+        check('ID_Clase').optional().not().isEmpty().withMessage('El argumento "ID_Clase" es obligatorio'),
+        check('ID_Centro').optional().not().isEmpty().withMessage('El argumento "ID_Centro" es obligatorio'),
         check('ID_Profesor').isInt().withMessage('El campo "ID_Profesor" debe ser un número entero'),
         validarCampos
     ], updateProfesor);

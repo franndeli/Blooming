@@ -1,6 +1,6 @@
 const { dbConnection } = require('../database/configdb');
 const connection = dbConnection();
-const bcrypt = require('bcryptjs');
+const hashPassword = require('../middleware/hashHelper');
 
 const Profesor = require('../models/profesor');
 
@@ -99,13 +99,11 @@ const createProfesor = (req, res) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al verificar el email"});
             } else if (results.length > 0) {
+                //Si se encuentra profesor con el mismo email, rechaza la petición
                 reject({ statusCode: 400, message: "El email de este profesor ya existe"});
             } else {
                 // Cifrar la contraseña antes de insertar
-                const salt = bcrypt.genSaltSync();
-                const hashedPassword = bcrypt.hashSync(req.body.Contraseña, salt);
-
-                // Crear un nuevo objeto con la contraseña cifrada
+                const hashedPassword = hashPassword(req.body.Contraseña);
                 const newProfesor = { ...req.body, Contraseña: hashedPassword };
 
                 // Insertar en la base de datos
@@ -125,29 +123,34 @@ const createProfesor = (req, res) => {
 const updateProfesor = (req, res) => {
     return new Promise(function(resolve, reject) {
         const id = req.params.ID_Profesor;
-        connection.query('SELECT * FROM profesor WHERE ID_Profesor = ?', [id], (error, rows) => {
-            if(error){
-                reject({ statusCode: 500, message: "Error al actualizar el profesor"});
-            }else{
-                if(rows.length === 0){
-                    reject({ statusCode: 404, message: "Profesor no encontrado" });
-                }else{
-                    connection.query('UPDATE profesor SET ? WHERE ID_Profesor = ?', [req.body, id], (error, results) => {
-                        if (error) {
-                            console.log(error);
-                            return;
-                        }else{
-                            resolve(
-                                res.json({
-                                    ok: true,
-                                    msg: 'updateProfesor'
-                                })
-                            );
-                        }
-                    });
+
+        //Comprobamos si hay una contraseña en el update
+        if(req.body.Contraseña){
+            const hashedPassword = hashPassword(req.body.Contraseña);
+            
+            req.body.Contraseña = hashedPassword;
+
+            actualizarProfesor();
+        } else{
+
+            actualizarProfesor();
+        }
+
+        //Hacemos el update
+        function actualizarProfesor() {
+            connection.query('UPDATE profesor SET ? WHERE ID_Profesor = ?', [req.body, id], (error, results) => {
+                if (error) {
+                    reject({ statusCode: 500, message: "Error al actualizar el profesor"});
+                } else {
+                    resolve(
+                        res.json({
+                            ok: true,
+                            msg: 'updateProfesor'
+                        })
+                    );
                 }
-            }
-        });
+            });
+        }
     });
 }
 

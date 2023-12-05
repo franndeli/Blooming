@@ -1,17 +1,24 @@
 const { dbConnection } = require('../database/configdb');
 const connection = dbConnection();
 
+const Clase = require('../models/clase');
+
 const getClases = (req, res) => {
     return new Promise(function(resolve, reject) {
         connection.query('SELECT * FROM clase', (error, results) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al obtener las clases"});
             }else{
+                const clases = results.map(row => {
+                    const clase = new Clase();
+                    Object.assign(clase, row);
+                    return clase.toJSON();
+                });
                 resolve(
                     res.json({
                         ok: true,
                         msg: 'getClases',
-                        results
+                        clases
                     })
                 );
             }
@@ -56,12 +63,17 @@ const getClasesPorCriterio = (req, res) => {
         connection.query(query, values, (error, results) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al obtener la clase"});
-            } else {
+            } else{
+                const clases = results.map(row => {
+                    const clase = new Clase();
+                    Object.assign(clase, row);
+                    return clase.toJSON();
+                });
                 resolve(
                     res.json({
                         ok: true,
-                        msg: 'getClaseByCriteria',
-                        results
+                        msg: 'getClasesPorCriterio',
+                        clases
                     })
                 );
             }

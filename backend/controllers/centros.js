@@ -2,17 +2,24 @@ const { dbConnection } = require('../database/configdb');
 const connection = dbConnection();
 const hashPassword = require('../middleware/hashHelper');
 
+const Centro = require('../models/centro');
+
 const getCentros = (req, res) => {
     return new Promise(function(resolve, reject) {
         connection.query('SELECT * FROM centro_escolar', (error, results) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al obtener los centros"});
             }else{
+                const centros = results.map(row => {
+                    const centro = new Centro();
+                    Object.assign(centro, row);
+                    return centro.toJSON();
+                });
                 resolve(
                     res.json({
                         ok: true,
                         msg: 'getCentros',
-                        results
+                        centros
                     })
                 );
             }
@@ -69,12 +76,17 @@ const getCentrosPorCriterio = (req, res) => {
         connection.query(query, values, (error, results) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al obtener el centro"});
-            } else {
+            } else{
+                const centros = results.map(row => {
+                    const centro = new Centro();
+                    Object.assign(centro, row);
+                    return centro.toJSON();
+                });
                 resolve(
                     res.json({
                         ok: true,
-                        msg: 'getCentroByCriteria',
-                        results
+                        msg: 'getCentrosPorCriterios',
+                        centros
                     })
                 );
             }

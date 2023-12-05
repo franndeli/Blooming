@@ -3,23 +3,22 @@ const connection = dbConnection();
 const moment = require('moment');
 const hashPassword = require('../middleware/hashHelper');
 
-
 const getAlumnos = (req, res) => {
     return new Promise(function(resolve, reject) {
         connection.query('SELECT * FROM alumno', (error, results) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al obtener los alumnos"});
             } else {
-                // Aquí convertimos las fechas antes de resolver
-                const ajustarFechas = results.map(alumno => ({
-                    ...alumno,
-                    FechaNacimiento: moment(alumno.FechaNacimiento).format('DD-MM-YYYY')
-                }));
-
+                const alumnos = results.map(row => {
+                    const alumno = new Alumno();
+                    Object.assign(alumno, row);
+                    alumno.ajustarFechas();
+                    return alumno.toJSON();
+                });
                 resolve(res.json({
                     ok: true,
                     msg: 'getAlumnos',
-                    results: ajustarFechas
+                    results: alumnos
                 }));
             }
         });
@@ -78,18 +77,17 @@ const getAlumnosPorCriterio = (req, res) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al obtener el alumno"});
             } else {
-                //AJUSTAMOS LAS FECHAS
-                const ajustarFechas = results.map(alumno => ({
-                    ...alumno,
-                    FechaNacimiento: moment(alumno.FechaNacimiento).format('DD-MM-YYYY')
+                const alumnos = results.map(row => {
+                    const alumno = new Alumno();
+                    Object.assign(alumno, row);
+                    alumno.ajustarFechas();
+                    return alumno.toJSON();
+                });
+                resolve(res.json({
+                    ok: true,
+                    msg: 'getAlumnos',
+                    results: alumnos
                 }));
-                resolve(
-                    res.json({
-                        ok: true,
-                        msg: 'getAlumnoPorCriterio',
-                        results: ajustarFechas
-                    })
-                );
             }
         });
     });

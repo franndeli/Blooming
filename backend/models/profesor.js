@@ -13,6 +13,4 @@ class Profesor {
     }
 }
 
-
-
 module.exports = Profesor;

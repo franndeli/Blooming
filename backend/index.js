@@ -18,6 +18,9 @@ app.use('/api/centros', require('./routes/centros'));
 app.use('/api/clases', require('./routes/clases'));
 app.use('/api/profesores', require('./routes/profesores'));
 
+//Autenticación
+app.use('/api/login', require('./routes/auth'));
+
 app.listen(process.env.PORT, () => {
     console.log('Prueba de conexión corriendo en http://localhost:' + process.env.PORT + '/api/alumnos ');
     console.log('Prueba de conexión corriendo en http://localhost:' + process.env.PORT + '/api/centros ');

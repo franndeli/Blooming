@@ -4,19 +4,20 @@ import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RecoveryComponent } from './auth/recovery/recovery.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { UsuariosComponent } from './pages/usuarios/usuarios.component';
+import { AuthRoutingModule } from './auth/auth.routing';
+import { PagesRoutingModule } from './pages/pages.routing';
 const routes: Routes = [
-  { path: 'auth', component: AuthLayoutComponent, // /auth
-    children:[
-      {path: 'login', component:LoginComponent },// /auth/login
-      {path: 'recovery', component: RecoveryComponent } // /auth/recovery
-    ]
-
-  },
-  {path: 'admin', component: AdminLayoutComponent}// /admin
+  // login y recovery authroutingmodules
+  // dashboard pagesroutingmodules
+  { path: '**', redirectTo: 'login'}
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes),
+  AuthRoutingModule,
+  PagesRoutingModule],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

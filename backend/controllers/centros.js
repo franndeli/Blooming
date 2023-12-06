@@ -5,34 +5,14 @@ const hashPassword = require('../middleware/hashHelper');
 const Centro = require('../models/centro');
 
 const getCentros = (req, res) => {
-    return new Promise(function(resolve, reject) {
-        connection.query('SELECT * FROM centro_escolar', (error, results) => {
-            if (error) {
-                reject({ statusCode: 500, message: "Error al obtener los centros"});
-            }else{
-                const centros = results.map(row => {
-                    const centro = new Centro();
-                    Object.assign(centro, row);
-                    return centro.toJSON();
-                });
-                resolve(
-                    res.json({
-                        ok: true,
-                        msg: 'getCentros',
-                        centros
-                    })
-                );
-            }
-        });
-    });
-}
+    const tam = Number(process.env.TAMPORPAG);
+    const desde = Number(req.query.desde) || 0;
 
-const getCentrosPorCriterio = (req, res) => {
     return new Promise(function(resolve, reject) {
         let query = 'SELECT * FROM centro_escolar';
         let conditions = [];
         let values = [];
-        let validParams = ['ID_Centro', 'Nombre', 'Email', 'Localidad', 'Provincia', 'Calle', 'CP'];
+        let validParams = ['ID_Centro', 'Nombre', 'Email', 'Localidad', 'Provincia', 'Calle', 'CP', 'desde'];
 
         let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
 
@@ -45,33 +25,35 @@ const getCentrosPorCriterio = (req, res) => {
             values.push(req.query.ID_Centro);
         }
         if(req.query.Nombre){
-            conditions.push("Nombre = ?");
-            values.push(req.query.Nombre);
+            conditions.push("Nombre LIKE ?");
+            values.push(`${req.query.Nombre}%`);
         }
         if(req.query.Email){
-            conditions.push("Email = ?");
-            values.push(req.query.Email);
+            conditions.push("Email LIKE ?");
+            values.push(`${req.query.Email}%`);
         }
         if(req.query.Localidad){
-            conditions.push("Localidad = ?");
-            values.push(req.query.Localidad);
+            conditions.push("Localidad LIKE ?");
+            values.push(`${req.query.Localidad}%`);
         }
         if(req.query.Provincia){
-            conditions.push("Provincia = ?");
-            values.push(req.query.Provincia);
+            conditions.push("Provincia LIKE ?");
+            values.push(`${req.query.Provincia}%`);
         }
         if(req.query.Calle){
-            conditions.push("Calle = ?");
-            values.push(req.query.Calle);
+            conditions.push("Calle LIKE ?");
+            values.push(`%${req.query.Calle}%`);
         }
         if(req.query.CP){
-            conditions.push("CP = ?");
-            values.push(req.query.CP);
+            conditions.push("CP LIKE ?");
+            values.push(`%${req.query.CP}%`);
         }
 
         if(conditions.length > 0){
             query += ' WHERE ' + conditions.join(' AND ');
         }
+
+        query += ` LIMIT ${tam} OFFSET ${desde}`;
 
         connection.query(query, values, (error, results) => {
             if (error) {
@@ -85,7 +67,7 @@ const getCentrosPorCriterio = (req, res) => {
                 resolve(
                     res.json({
                         ok: true,
-                        msg: 'getCentrosPorCriterios',
+                        msg: 'getCentros',
                         centros
                     })
                 );
@@ -118,7 +100,8 @@ const createCentro = (req, res) => {
                         resolve(
                             res.json({
                                 ok: true,
-                                msg: 'createCentro'
+                                msg: 'createCentro',
+                                newCentro
                             })
                         );
                     }
@@ -191,4 +174,4 @@ const deleteCentro = (req, res) => {
     });
 }
 
-module.exports = { getCentros, createCentro, updateCentro, deleteCentro, getCentrosPorCriterio };
+module.exports = { getCentros, createCentro, updateCentro, deleteCentro };

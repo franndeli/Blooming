@@ -1,17 +1,15 @@
 /* RUTA BASE '/api/alumnos' */
 
 const { Router } = require('express');
-const { getAlumnos, createAlumno, updateAlumno, deleteAlumno, getAlumnosPorCriterio } = require('../controllers/alumnos');
+const { getAlumnos, createAlumno, updateAlumno, deleteAlumno } = require('../controllers/alumnos');
 const { check, Result } = require('express-validator');
 const { validarCampos } = require('../middleware/validaciones');
 const { validarJWT } = require('../middleware/validar-jwt');
 
 const router = Router();
 
-router.get('/', validarJWT, getAlumnos );
-
-router.get('/buscar', (req, res) => {
-    getAlumnosPorCriterio(req, res).catch(error => {
+router.get('/', (req, res) => {
+    getAlumnos(req, res).catch(error => {
         res.status(error.statusCode || 500).json({ error: error.message });
     });
 });

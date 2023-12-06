@@ -1,16 +1,14 @@
 /* RUTA BASE '/api/centros' */
 
 const { Router } = require('express');
-const { getCentros, createCentro, updateCentro, deleteCentro, getCentrosPorCriterio } = require('../controllers/centros');
+const { getCentros, createCentro, updateCentro, deleteCentro } = require('../controllers/centros');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middleware/validaciones');
 
 const router = Router();
 
-router.get('/', getCentros );
-
-router.get('/buscar', (req, res) => {
-    getCentrosPorCriterio(req, res).catch(error => {
+router.get('/', (req, res) => {
+    getCentros(req, res).catch(error => {
         res.status(error.statusCode || 500).json({ error: error.message });
     });
 });

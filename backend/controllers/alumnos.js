@@ -3,8 +3,6 @@ const connection = dbConnection();
 const hashPassword = require('../middleware/hashHelper');
 const Alumno = require('../models/alumno');
 
-const Alumno = require('../models/alumno');
-
 const getAlumnos = (req, res) => {
     const tam = Number(process.env.TAMPORPAG);
     const desde = Number(req.query.desde) || 0;

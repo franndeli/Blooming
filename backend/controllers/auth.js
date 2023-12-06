@@ -2,11 +2,13 @@ const { dbConnection } = require('../database/configdb');
 const connection = dbConnection();
 const bcrypt = require('bcryptjs');
 
+const { generarJWT } = require('../helpers/jwt');
+
 const login = async (req, res) => {
     const { Usuario, Contraseña } = req.body;
 
     try {
-        connection.query('SELECT * FROM alumno WHERE Usuario = ?', [Usuario], (error, results) => {
+        connection.query('SELECT * FROM alumno WHERE Usuario = ?', [Usuario], async (error, results) => {
             if (error) {
                 console.log(error);
                 return res.status(500).json({
@@ -32,13 +34,15 @@ const login = async (req, res) => {
                     msg: 'Usuario o contraseña incorrectos',
                     token: ''
                 });
-            }
+            } else {
+                const token = await generarJWT(alumnoBD.ID_Alumno);
 
-            res.json({
-                ok: true,
-                msg: 'login',
-                token: 'token' // Asegúrate de generar un token real aquí
-            });
+                res.json({
+                    ok: true,
+                    msg: 'login',
+                    token // Asegúrate de generar un token real aquí
+                });
+            }
         });
     } catch (error) {
         console.log(error);
@@ -49,4 +53,5 @@ const login = async (req, res) => {
         });
     }
 };
+
 module.exports = { login }

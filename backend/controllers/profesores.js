@@ -5,34 +5,14 @@ const hashPassword = require('../middleware/hashHelper');
 const Profesor = require('../models/profesor');
 
 const getProfesores = (req, res) => {
-    return new Promise(function(resolve, reject) {
-        connection.query('SELECT * FROM profesor', (error, results) => {
-            if (error) {
-                reject({ statusCode: 500, message: "Error al obtener los profesores"});
-            }else{
-                const profesores = results.map(row => {
-                    const profesor = new Profesor();
-                    Object.assign(profesor, row);
-                    return profesor.toJSON();
-                });
-                resolve(
-                    res.json({
-                        ok: true,
-                        msg: 'getProfesores',
-                        profesores
-                    })
-                );
-            }
-        });
-    });
-}
+    const tam = Number(process.env.TAMPORPAG);
+    const desde = Number(req.query.desde) || 0;
 
-const getProfesoresPorCriterio = (req, res) => {
     return new Promise(function(resolve, reject) {
         let query = 'SELECT * FROM profesor';
         let conditions = [];
         let values = [];
-        let validParams = ['ID_Profesor', 'Nombre', 'Apellidos', 'Correo', 'Contraseña', 'ID_Centro'];
+        let validParams = ['ID_Profesor', 'Nombre', 'Apellidos', 'Email', 'Contraseña', 'ID_Centro', 'desde'];
 
         let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
 
@@ -45,16 +25,16 @@ const getProfesoresPorCriterio = (req, res) => {
             values.push(req.query.ID_Profesor);
         }
         if(req.query.Nombre){
-            conditions.push("Nombre = ?");
-            values.push(req.query.Nombre);
+            conditions.push("Nombre LIKE ?");
+            values.push(`${req.query.Nombre}%`);
         }
         if(req.query.Apellido){
-            conditions.push("Apellidos = ?");
-            values.push(req.query.Apellido);
+            conditions.push("Apellidos LIKE ?");
+            values.push(`${req.query.Apellidos}%`);
         }
-        if(req.query.Correo){
-            conditions.push("Correo = ?");
-            values.push(req.query.Correo);
+        if(req.query.Email){
+            conditions.push("Email LIKE ?");
+            values.push(`${req.query.Email}%`);
         }
         if(req.query.Contraseña){
             conditions.push("Contraseña = ?");
@@ -73,15 +53,22 @@ const getProfesoresPorCriterio = (req, res) => {
             query += ' WHERE ' + conditions.join(' AND ');
         }
 
+        query += ` LIMIT ${tam} OFFSET ${desde}`;
+
         connection.query(query, values, (error, results) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al obtener el profesor"});
             } else {
+                const profesores = results.map(row => {
+                    const profesor = new Profesor();
+                    Object.assign(profesor, row);
+                    return profesor.toJSON();
+                });
                 resolve(
                     res.json({
                         ok: true,
-                        msg: 'getProfesorByCriteria',
-                        results
+                        msg: 'getProfesores',
+                        profesores
                     })
                 );
             }
@@ -183,4 +170,4 @@ const deleteProfesor = (req, res) => {
     });
 }
 
-module.exports = { getProfesores, createProfesor, updateProfesor, deleteProfesor, getProfesoresPorCriterio };
+module.exports = { getProfesores, createProfesor, updateProfesor, deleteProfesor };

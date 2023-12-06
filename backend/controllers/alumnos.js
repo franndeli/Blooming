@@ -1,39 +1,20 @@
 const { dbConnection } = require('../database/configdb');
 const connection = dbConnection();
 const hashPassword = require('../middleware/hashHelper');
+const Alumno = require('../models/alumno');
 
 const Alumno = require('../models/alumno');
 
 const getAlumnos = (req, res) => {
-    return new Promise(function(resolve, reject) {
-        connection.query('SELECT * FROM alumno', (error, results) => {
-            if (error) {
-                reject({ statusCode: 500, message: "Error al obtener los alumnos"});
-            } else {
-                const alumnos = results.map(row => {
-                    const alumno = new Alumno();
-                    Object.assign(alumno, row);
-                    alumno.ajustarFechas();
-                    return alumno.toJSON();
-                });
-                resolve(res.json({
-                    ok: true,
-                    msg: 'getAlumnos',
-                    results: alumnos
-                }));
-            }
-        });
-    });
-}
+    const tam = Number(process.env.TAMPORPAG);
+    const desde = Number(req.query.desde) || 0;
 
-
-const getAlumnosPorCriterio = (req, res) => {
     return new Promise(function(resolve, reject) {
         let query = 'SELECT * FROM alumno';
         let conditions = [];
         let values = [];
 
-        let validParams = ['ID_Alumno', 'Nombre', 'Apellidos', 'Usuario', 'Contraseña', 'FechaNacimiento', 'ID_Clase'];
+        let validParams = ['ID_Alumno', 'Nombre', 'Apellidos', 'Usuario', 'Contraseña', 'FechaNacimiento', 'ID_Clase', 'desde'];
 
         let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
 
@@ -46,21 +27,18 @@ const getAlumnosPorCriterio = (req, res) => {
             values.push(req.query.ID_Alumno);
         }
         if(req.query.Nombre){
-            conditions.push("Nombre = ?");
-            values.push(req.query.Nombre);
+            conditions.push("Nombre LIKE ?");
+            values.push(`${req.query.Nombre}%`);
         }
-        if(req.query.Apellido){
-            conditions.push("Apellido = ?");
-            values.push(req.query.Apellido);
+        if(req.query.Apellidos){
+            conditions.push("Apellidos LIKE ?");
+            values.push(`${req.query.Apellidos}%`);
         }
         if(req.query.Usuario){
-            conditions.push("Usuario = ?");
-            values.push(req.query.Usuario);
+            conditions.push("Usuario LIKE ?");
+            values.push(`${req.query.Usuario}%`);
         }
-        if(req.query.Contraseña){
-            conditions.push("Contraseña = ?");
-            values.push(req.query.Contraseña);
-        }
+        // No se incluye Contraseña por motivos de seguridad
         if(req.query.FechaNacimiento){
             conditions.push("FechaNacimiento = ?");
             values.push(req.query.FechaNacimiento);
@@ -73,6 +51,8 @@ const getAlumnosPorCriterio = (req, res) => {
         if(conditions.length > 0){
             query += ' WHERE ' + conditions.join(' AND ');
         }
+
+        query += ` LIMIT ${tam} OFFSET ${desde}`;
 
         connection.query(query, values, (error, results) => {
             if (error) {
@@ -193,4 +173,4 @@ const deleteAlumno = (req, res) => {
     });
 }
 
-module.exports = { getAlumnos, createAlumno, updateAlumno, deleteAlumno, getAlumnosPorCriterio };
+module.exports = { getAlumnos, createAlumno, updateAlumno, deleteAlumno };

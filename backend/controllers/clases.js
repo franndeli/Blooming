@@ -4,34 +4,14 @@ const connection = dbConnection();
 const Clase = require('../models/clase');
 
 const getClases = (req, res) => {
-    return new Promise(function(resolve, reject) {
-        connection.query('SELECT * FROM clase', (error, results) => {
-            if (error) {
-                reject({ statusCode: 500, message: "Error al obtener las clases"});
-            }else{
-                const clases = results.map(row => {
-                    const clase = new Clase();
-                    Object.assign(clase, row);
-                    return clase.toJSON();
-                });
-                resolve(
-                    res.json({
-                        ok: true,
-                        msg: 'getClases',
-                        clases
-                    })
-                );
-            }
-        });
-    });
-}
+    const tam = Number(process.env.TAMPORPAG);
+    const desde = Number(req.query.desde) || 0;
 
-const getClasesPorCriterio = (req, res) => {
     return new Promise(function(resolve, reject) {
         let query = 'SELECT * FROM clase';
         let conditions = [];
         let values = [];
-        let validParams = ['ID_Clase', 'Nombre', 'NumAlumnos', 'ID_Centro'];
+        let validParams = ['ID_Clase', 'Nombre', 'NumAlumnos', 'ID_Centro', 'desde'];
 
         let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
 
@@ -44,8 +24,8 @@ const getClasesPorCriterio = (req, res) => {
             values.push(req.query.ID_Clase);
         }
         if(req.query.Nombre){
-            conditions.push("Nombre = ?");
-            values.push(req.query.Nombre);
+            conditions.push("Nombre LIKE ?");
+            values.push(`%${req.query.Nombre}%`);
         }
         if(req.query.NumAlumnos){
             conditions.push("NumAlumnos = ?");
@@ -60,6 +40,8 @@ const getClasesPorCriterio = (req, res) => {
             query += ' WHERE ' + conditions.join(' AND ');
         }
 
+        query += ` LIMIT ${tam} OFFSET ${desde}`;
+
         connection.query(query, values, (error, results) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al obtener la clase"});
@@ -72,7 +54,7 @@ const getClasesPorCriterio = (req, res) => {
                 resolve(
                     res.json({
                         ok: true,
-                        msg: 'getClasesPorCriterio',
+                        msg: 'getClases',
                         clases
                     })
                 );
@@ -157,4 +139,4 @@ const deleteClase = (req, res) => {
     });
 }
 
-module.exports = { getClases, createClase, updateClase, deleteClase, getClasesPorCriterio };
+module.exports = { getClases, createClase, updateClase, deleteClase };

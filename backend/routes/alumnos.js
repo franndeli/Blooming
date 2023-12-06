@@ -1,21 +1,21 @@
 /* RUTA BASE '/api/alumnos' */
 
 const { Router } = require('express');
-const { getAlumnos, createAlumno, updateAlumno, deleteAlumno, getAlumnosPorCriterio } = require('../controllers/alumnos');
+const { getAlumnos, createAlumno, updateAlumno, deleteAlumno } = require('../controllers/alumnos');
 const { check, Result } = require('express-validator');
 const { validarCampos } = require('../middleware/validaciones');
+const { validarJWT } = require('../middleware/validar-jwt');
 
 const router = Router();
 
-router.get('/', getAlumnos );
-
-router.get('/buscar', (req, res) => {
-    getAlumnosPorCriterio(req, res).catch(error => {
+router.get('/', (req, res) => {
+    getAlumnos(req, res).catch(error => {
         res.status(error.statusCode || 500).json({ error: error.message });
     });
 });
 
 router.post('/', [
+        validarJWT,
         check('Nombre', 'El argumento "Nombre" es obligatorio').not().isEmpty(),
         check('Apellidos', 'El argumento "Apellidos" es obligatorio').not().isEmpty(),
         check('Usuario', 'El argumento "Usuario" es obligatorio').not().isEmpty(),
@@ -30,6 +30,7 @@ router.post('/', [
     });
 
 router.put('/:ID_Alumno', [
+        validarJWT,
     //Campos opcionales, no es necesario ponerlos todos para hacer una llamada PUT
         check('Nombre').optional().not().isEmpty().withMessage('El argumento "Nombre" no debe estar vacío'),
         check('Apellidos').optional().not().isEmpty().withMessage('El argumento "Apellidos" no debe estar vacío'),
@@ -42,6 +43,7 @@ router.put('/:ID_Alumno', [
     ], updateAlumno);
 
 router.delete('/:ID_Alumno', [
+        validarJWT, 
         check('ID_Alumno').isInt().withMessage('El campo "ID_Alumno" debe ser un número entero'),
         validarCampos
     ], deleteAlumno);

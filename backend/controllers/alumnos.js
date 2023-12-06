@@ -1,7 +1,8 @@
 const { dbConnection } = require('../database/configdb');
 const connection = dbConnection();
-const moment = require('moment');
 const hashPassword = require('../middleware/hashHelper');
+
+const Alumno = require('../models/alumno');
 
 const getAlumnos = (req, res) => {
     return new Promise(function(resolve, reject) {

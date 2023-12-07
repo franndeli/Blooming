@@ -8,6 +8,7 @@ class Alumno {
     Contraseña;
     FechaNacimiento;
     ID_Clase;
+    Rol;
 
     toJSON() {
         const { Contraseña, ...alumnoData } = this;

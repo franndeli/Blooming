@@ -4,18 +4,19 @@ const { Router } = require('express');
 const { getAlumnos, createAlumno, updateAlumno, deleteAlumno } = require('../controllers/alumnos');
 const { check, Result } = require('express-validator');
 const { validarCampos } = require('../middleware/validaciones');
+const { validarRol } = require('../middleware/validar-rol');
 const { validarJWT } = require('../middleware/validar-jwt');
 
 const router = Router();
 
-router.get('/', (req, res) => {
+router.get('/', validarJWT, validarRol(['Profesor', 'Centro']), (req, res) => {
     getAlumnos(req, res).catch(error => {
         res.status(error.statusCode || 500).json({ error: error.message });
     });
 });
 
 router.post('/', [
-        validarJWT,
+        validarJWT, validarRol(['Centro']),
         check('Nombre', 'El argumento "Nombre" es obligatorio').not().isEmpty(),
         check('Apellidos', 'El argumento "Apellidos" es obligatorio').not().isEmpty(),
         check('Usuario', 'El argumento "Usuario" es obligatorio').not().isEmpty(),
@@ -30,7 +31,7 @@ router.post('/', [
     });
 
 router.put('/:ID_Alumno', [
-        validarJWT,
+        validarJWT, validarRol(['Centro']),
     //Campos opcionales, no es necesario ponerlos todos para hacer una llamada PUT
         check('Nombre').optional().not().isEmpty().withMessage('El argumento "Nombre" no debe estar vacío'),
         check('Apellidos').optional().not().isEmpty().withMessage('El argumento "Apellidos" no debe estar vacío'),
@@ -40,12 +41,20 @@ router.put('/:ID_Alumno', [
         check('ID_Clase').optional().isInt().withMessage('El argumento "ID_Clase" debe ser un número entero'),
         check('ID_Alumno').isInt().withMessage('El campo "ID_Alumno" debe ser un número entero'),
         validarCampos
-    ], updateAlumno);
+    ], (req, res) => {
+        updateAlumno(req, res).catch(error => {
+            res.status(error.statusCode || 500).json({ error: error.message });
+        });
+    });
 
 router.delete('/:ID_Alumno', [
-        validarJWT, 
+        validarJWT, validarRol(['Centro']),
         check('ID_Alumno').isInt().withMessage('El campo "ID_Alumno" debe ser un número entero'),
         validarCampos
-    ], deleteAlumno);
+    ], (req, res) => {
+        deleteAlumno(req, res).catch(error => {
+            res.status(error.statusCode || 500).json({ error: error.message });
+        });
+    });
 
 module.exports = router;

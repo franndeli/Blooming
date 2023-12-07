@@ -10,8 +10,9 @@ const validarJWT = (req, res, next) => {
         });
     }
     try {
-        const { ID, ...object } = jwt.verify(token, process.env.JWTSECRET);
+        const { ID, Rol, ...object } = jwt.verify(token, process.env.JWTSECRET);
         req.ID = ID;
+        req.Rol = Rol;
         next();
     } catch (err) {
         return res.status(400).json({
@@ -20,4 +21,5 @@ const validarJWT = (req, res, next) => {
         })
     }
 }
+
 module.exports = { validarJWT }

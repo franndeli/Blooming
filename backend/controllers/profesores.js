@@ -79,15 +79,15 @@ const getProfesores = (req, res) => {
 
 const createProfesor = (req, res) => {
     return new Promise(function(resolve, reject) {
-        const email = req.body.Email;
+        const { Email, ID_Centro } = req.body;
 
         // Comprobación de si existe ya el email
-        connection.query('SELECT * FROM profesor WHERE Email = ?', [email], (error, results) => {
+        connection.query('SELECT * FROM profesor WHERE Email = ? AND ID_Centro = ?', [Email, ID_Centro], (error, results) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al verificar el email"});
             } else if (results.length > 0) {
                 //Si se encuentra profesor con el mismo email, rechaza la petición
-                reject({ statusCode: 400, message: "El email de este profesor ya existe"});
+                reject({ statusCode: 400, message: "El email de este profesor ya existe en el centro especificado"});
             } else {
                 // Cifrar la contraseña antes de insertar
                 const hashedPassword = hashPassword(req.body.Contraseña);

@@ -66,20 +66,36 @@ const getClases = (req, res) => {
 
 const createClase = (req, res) => {
     return new Promise(function(resolve, reject) {
-        connection.query('INSERT INTO clase SET ?', [req.body], (error, results) => {
+        const { Nombre, ID_Centro } = req.body;
+
+        // Primero verificar si ya existe una clase con el mismo nombre y ID_Centro
+        connection.query('SELECT * FROM clase WHERE Nombre = ? AND ID_Centro = ?', [Nombre, ID_Centro], (error, results) => {
             if (error) {
-                reject({ statusCode: 500, message: "Error al crear la clase"});
-            }else{
-                resolve(
-                    res.json({
+                console.log(error);
+                return reject({ statusCode: 500, message: "Error al verificar la clase"});
+            }
+
+            if (results.length > 0) {
+                // Si ya existe una clase con el mismo nombre y ID_Centro, rechazar la creación
+                return reject({ statusCode: 400, message: "Ya existe una clase con este nombre en el centro especificado"});
+            }
+
+            // Si no existe, proceder con la creación de la nueva clase
+            connection.query('INSERT INTO clase SET ?', [req.body], (error, results) => {
+                if (error) {
+                    console.log(error);
+                    reject({ statusCode: 500, message: "Error al crear la clase"});
+                } else {
+                    resolve(res.json({
                         ok: true,
                         msg: 'createClase'
-                    })
-                );
-            }
+                    }));
+                }
+            });
         });
     });
-}
+};
+
 
 const updateClase = (req, res) => {
     return new Promise(function(resolve, reject) {
@@ -115,28 +131,43 @@ const deleteClase = (req, res) => {
         const id = req.params.ID_Clase;
         connection.query('SELECT * FROM clase WHERE ID_Clase = ?', [id], (error, rows) => {
             if(error){
-                reject({ statusCode: 500, message: "Error al eliminar la clase"});
-            }else{
-                if(rows.length === 0){
-                    reject({ statusCode: 404, message: "Clase no encontrada" });
-                }else{
-                    connection.query('DELETE FROM clase WHERE ID_Clase = ?', [id], (error, results) => {
+                reject({ statusCode: 500, message: "Error al buscar la clase"});
+            } else if(rows.length === 0){
+                reject({ statusCode: 404, message: "Clase no encontrada" });
+            } else {
+                // Primero, actualizar ID_Clase de los profesores a null
+                connection.query('UPDATE profesor SET ID_Clase = NULL WHERE ID_Clase = ?', [id], (error) => {
+                    if (error) {
+                        console.log(error);
+                        return reject({ statusCode: 500, message: "Error al actualizar los profesores de la clase"});
+                    }
+
+                    // Eliminar todos los alumnos que pertenecen a esta clase
+                    connection.query('DELETE FROM alumno WHERE ID_Clase = ?', [id], (error) => {
                         if (error) {
                             console.log(error);
-                            return;
-                        }else{
-                            resolve(
-                                res.json({
-                                    ok: true,
-                                    msg: 'deleteClase'
-                                })
-                            );
+                            reject({ statusCode: 500, message: "Error al eliminar los alumnos de la clase"});
+                        } else {
+                            // Luego, eliminar la clase
+                            connection.query('DELETE FROM clase WHERE ID_Clase = ?', [id], (error) => {
+                                if (error) {
+                                    console.log(error);
+                                    reject({ statusCode: 500, message: "Error al eliminar la clase"});
+                                } else {
+                                    resolve(res.json({
+                                        ok: true,
+                                        msg: 'Profesores actualizados y alumnos y clase eliminados correctamente'
+                                    }));
+                                }
+                            });
                         }
                     });
-                }
+                });
             }
         });
     });
-}
+};
+
+
 
 module.exports = { getClases, createClase, updateClase, deleteClase };

@@ -6,6 +6,7 @@ class Profesor {
     Contraseña;
     ID_Clase;
     ID_Centro;
+    Rol;
     
     toJSON() {
         const { Contraseña, ...profesorData } = this;

@@ -7,6 +7,7 @@ class Centro {
     Provincia;
     Calle;
     CP;
+    Rol;
 
     toJSON() {
         const { Contraseña, ...centroData } = this;

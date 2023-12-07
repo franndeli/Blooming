@@ -4,16 +4,19 @@ const { Router } = require('express');
 const { getCentros, createCentro, updateCentro, deleteCentro } = require('../controllers/centros');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middleware/validaciones');
+const { validarRol } = require('../middleware/validar-rol');
+const { validarJWT } = require('../middleware/validar-jwt');
 
 const router = Router();
 
-router.get('/', (req, res) => {
+router.get('/', validarJWT, validarRol(['Admin']), (req, res) => {
     getCentros(req, res).catch(error => {
         res.status(error.statusCode || 500).json({ error: error.message });
     });
 });
 
 router.post('/', [
+        validarJWT,validarRol(['Admin']),
         check('Nombre', 'El argumento "Nombre" es obligatorio').not().isEmpty(),
         check('Email', 'El argumento "Email" es obligatorio').not().isEmpty(),
         check('Contraseña', 'El argumento "Contraseña" es obligatorio').not().isEmpty(),
@@ -29,6 +32,7 @@ router.post('/', [
     });
 
 router.put('/:ID_Centro', [
+        validarJWT, validarRol(['Admin']),
     //Campos opcionales, no es necesario ponerlos todos para hacer una llamada PUT
         check('Nombre').optional().not().isEmpty().withMessage('El argumento "Nombre" no debe estar vacío'),
         check('Email').optional().not().isEmpty().withMessage('El argumento "Email" no debe estar vacío'),
@@ -39,12 +43,21 @@ router.put('/:ID_Centro', [
         check('CP').optional().not().isEmpty().withMessage('El argumento "CP" no debe estar vacío'),
         check('ID_Centro').isInt().withMessage('El campo "ID_Centro" debe ser un número entero'),
         validarCampos
-    ], updateCentro);
+    ], (req, res) => {
+        updateCentro(req, res).catch(error => {
+            res.status(error.statusCode || 500).json({ error: error.message });
+        });
+    });
 
 router.delete('/:ID_Centro', [
+        validarJWT, validarRol(['Admin']),
         check('ID_Centro').isInt().withMessage('El campo "ID_Centro" debe ser un número entero'),
         validarCampos
-    ], deleteCentro);
+    ], (req, res) => {
+        deleteCentro(req, res).catch(error => {
+            res.status(error.statusCode || 500).json({ error: error.message });
+        });
+    });
 
 
 module.exports = router;

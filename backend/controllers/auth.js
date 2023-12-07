@@ -64,9 +64,6 @@ const procesarLogin = async (usuario, contraseña, res) => {
             ok: false,
             msg: 'Usuario o contraseña incorrectos una vez validado',
             token: '',
-            contraseña,
-            validPassword
-        
         });
     } else {
         const token = await generarJWT(usuario.ID_Alumno || usuario.ID_Profesor || usuario.ID_Centro, usuario.Rol);

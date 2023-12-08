@@ -111,35 +111,27 @@ const updateProfesor = (req, res) => {
     return new Promise(function(resolve, reject) {
         const id = req.params.ID_Profesor;
 
-        //Comprobamos si hay una contraseña en el update
-        if(req.body.Contraseña){
+        if (req.body.Contraseña) {
             const hashedPassword = hashPassword(req.body.Contraseña);
-            
             req.body.Contraseña = hashedPassword;
-
-            actualizarProfesor();
-        } else{
-
-            actualizarProfesor();
         }
 
-        //Hacemos el update
-        function actualizarProfesor() {
-            connection.query('UPDATE profesor SET ? WHERE ID_Profesor = ?', [req.body, id], (error, results) => {
-                if (error) {
-                    reject({ statusCode: 500, message: "Error al actualizar el profesor"});
-                } else {
-                    resolve(
-                        res.json({
-                            ok: true,
-                            msg: 'updateProfesor'
-                        })
-                    );
-                }
-            });
-        }
+        connection.query('UPDATE profesor SET ? WHERE ID_Profesor = ?', [req.body, id], (error, results) => {
+            if (error) {
+                reject({ statusCode: 500, message: "Error al actualizar el Profesor"});
+            } else if (results.affectedRows === 0) {
+                // Ninguna fila fue afectada, es decir, no se encontró el Profesor
+                reject({ statusCode: 404, message: "Profesor no encontrado"});
+            } else {
+                resolve(res.json({
+                    ok: true,
+                    msg: 'updateProfesor',
+                    id
+                }));
+            }
+        });
     });
-}
+};
 
 const deleteProfesor = (req, res) => {
     return new Promise(function(resolve, reject) {

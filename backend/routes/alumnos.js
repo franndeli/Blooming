@@ -23,9 +23,9 @@ router.post('/', [
         check('FechaNacimiento', 'El argumento "FechaNacimiento" es obligatorio').not().isEmpty(),
         check('ID_Clase', 'El argumento "ID_Clase" es obligatorio').not().isEmpty(),
         validarCampos
-    ], (req, res, next) => {
+    ], (req, res) => {
         createAlumno(req, res).catch(error => {
-            res.status(error.statusCode || 500);
+            res.status(error.statusCode || 500).json({ message: error.message });
         });
     });
 

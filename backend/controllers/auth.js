@@ -35,11 +35,19 @@ const login = async (req, res) => {
                                 // Usuario encontrado en la tabla de centros escolares
                                 return procesarLogin(results[0], Contraseña, res);
                             } else {
-                                // Usuario no encontrado
-                                return res.status(400).json({
-                                    ok: false,
-                                    msg: 'No existe en ninguna tabla',
-                                    token: ''
+                                connection.query('SELECT *, "Admin" as Rol FROM admin WHERE Email = ? OR Nombre = ?', [Usuario, Usuario], async (error, results) => {
+                                    if (results.length > 0) {
+                                        // Usuario encontrado en la tabla de centros escolares
+                                        return procesarLogin(results[0], Contraseña, res);
+                                    } else {
+                                        
+                                        // Usuario no encontrado
+                                        return res.status(400).json({
+                                            ok: false,
+                                            msg: 'No existe en ninguna tabla',
+                                            token: ''
+                                        });
+                                    }
                                 });
                             }
                         });

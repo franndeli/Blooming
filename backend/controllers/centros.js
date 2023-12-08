@@ -116,34 +116,27 @@ const updateCentro = (req, res) => {
     return new Promise(function(resolve, reject) {
         const id = req.params.ID_Centro;
 
-        if(req.body.Contraseña){
+        if (req.body.Contraseña) {
             const hashedPassword = hashPassword(req.body.Contraseña);
-            
             req.body.Contraseña = hashedPassword;
-
-            actualizarCentro();
-        } else{
-
-            actualizarCentro();
         }
 
-        //Hacemos el update
-        function actualizarCentro() {
-            connection.query('UPDATE centro_escolar SET ? WHERE ID_Centro = ?', [req.body, id], (error, results) => {
-                if (error) {
-                    reject({ statusCode: 500, message: "Error al actualizar el centro"});
-                } else {
-                    resolve(
-                        res.json({
-                            ok: true,
-                            msg: 'updateCentro'
-                        })
-                    );
-                }
-            });
-        }
+        connection.query('UPDATE centro_escolar SET ? WHERE ID_Centro = ?', [req.body, id], (error, results) => {
+            if (error) {
+                reject({ statusCode: 500, message: "Error al actualizar el Centro"});
+            } else if (results.affectedRows === 0) {
+                // Ninguna fila fue afectada, es decir, no se encontró el Centro
+                reject({ statusCode: 404, message: "Centro no encontrado"});
+            } else {
+                resolve(res.json({
+                    ok: true,
+                    msg: 'updateCentro',
+                    id
+                }));
+            }
+        });
     });
-}
+};
 
 const deleteCentro = (req, res) => {
     return new Promise(function(resolve, reject) {

@@ -16,6 +16,7 @@ app.use(express.json());
 app.use('/api/alumnos', require('./routes/alumnos'));
 app.use('/api/centros', require('./routes/centros'));
 app.use('/api/clases', require('./routes/clases'));
+app.use('/api/admins', require('./routes/admins'));
 app.use('/api/profesores', require('./routes/profesores'));
 
 //Autenticación

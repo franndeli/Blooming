@@ -9,14 +9,14 @@ const { validarJWT } = require('../middleware/validar-jwt');
 
 const router = Router();
 
-router.get('/', validarJWT, validarRol(['Centro']), (req, res) => {
+router.get('/', validarJWT, validarRol(['Centro', 'Admin']), (req, res) => {
     getProfesores(req, res).catch(error => {
         res.status(error.statusCode || 500).json({ error: error.message });
     });
 });
 
 router.post('/', [
-        validarJWT, validarRol(['Centro']),
+        validarJWT, validarRol(['Centro', 'Admin']),
         check('Nombre', 'El argumento "Nombre" es obligatorio').not().isEmpty(),
         check('Apellidos', 'El argumento "Apellidos" es obligatorio').not().isEmpty(),
         check('Email', 'El argumento "Email" es obligatorio').not().isEmpty(),
@@ -31,7 +31,7 @@ router.post('/', [
     });
 
 router.put('/:ID_Profesor', [
-        validarJWT, validarRol(['Centro']),
+        validarJWT, validarRol(['Centro', 'Admin']),
     //Campos opcionales, no es necesario ponerlos todos para hacer una llamada PUT
         check('Nombre').optional().not().isEmpty().withMessage('El argumento "Nombre" no debe estar vacío'),
         check('Apellidos').optional().not().isEmpty().withMessage('El argumento "Apellidos" no debe estar vacío'),
@@ -48,7 +48,7 @@ router.put('/:ID_Profesor', [
     });
 
 router.delete('/:ID_Profesor', [
-        validarJWT, validarRol(['Centro']),
+        validarJWT, validarRol(['Centro', 'Admin']),
         check('ID_Profesor').isInt().withMessage('El campo "ID_Profesor" debe ser un número entero'),
         validarCampos
     ], (req, res) => {

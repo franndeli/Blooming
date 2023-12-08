@@ -9,7 +9,7 @@ const getAlumnos = (req, res) => {
     const desde = Number(req.query.desde) || 0;
 
     return new Promise(function(resolve, reject) {
-        let query = 'SELECT * FROM alumno';
+        let query = 'SELECT alumno.*, clase.Nombre AS NomClase FROM alumno LEFT JOIN clase ON alumno.ID_Clase = clase.ID_Clase';
         let conditions = [];
         let values = [];
 

@@ -35,7 +35,7 @@ const login = async (req, res) => {
                                 // Usuario encontrado en la tabla de centros escolares
                                 return procesarLogin(results[0], Contraseña, res);
                             } else {
-                                connection.query('SELECT *, "Admin" as Rol FROM admin WHERE Email = ? OR Nombre = ?', [Usuario, Usuario], async (error, results) => {
+                                connection.query('SELECT *, "Admin" as Rol FROM admin WHERE Email = ?', [Usuario], async (error, results) => {
                                     if (results.length > 0) {
                                         // Usuario encontrado en la tabla de centros escolares
                                         return procesarLogin(results[0], Contraseña, res);

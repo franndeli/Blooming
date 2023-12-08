@@ -31,11 +31,11 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              "src/favicon.ico",
+              "src/favicon.png",
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/assets/css/styles.css"
             ],
             "scripts": [],
             "server": "src/main.server.ts",

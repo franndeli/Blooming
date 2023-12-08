@@ -3,7 +3,14 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { FullComponent } from './layouts/full/full.component';
 
+import { ReactiveFormsModule } from '@angular/forms';
+import { LoginComponent } from './auth/login/login.component';
+
 export const Approutes: Routes = [
+  {
+    path: 'login',
+    loadChildren: () => import('./auth/login/login.module').then(m => m.LoginModule)
+  },
   {
     path: '',
     component: FullComponent,
@@ -36,3 +43,9 @@ export const Approutes: Routes = [
     redirectTo: '/starter'
   }
 ];
+
+@NgModule({
+  imports: [ReactiveFormsModule, RouterModule.forRoot(Approutes)],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}

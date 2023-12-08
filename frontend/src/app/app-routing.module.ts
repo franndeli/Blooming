@@ -8,16 +8,32 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { AuthRoutingModule } from './auth/auth.routing';
 import { PagesRoutingModule } from './pages/pages.routing';
+
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { CentrosComponent } from './layouts/admin-layout/centros/centros.component';
+
 const routes: Routes = [
   // login y recovery authroutingmodules
   // dashboard pagesroutingmodules
-  { path: '**', redirectTo: 'login'}
+  //{ path: '**', redirectTo: 'login'},
+  { path: 'admin', component: AdminLayoutComponent,
+  children: [
+    { path: '', component: AdminLayoutComponent},
+    { path: '**', redirectTo: ''}                  
+  ]},
+  { path: 'centros', component: CentrosComponent,
+  children: [
+    { path: '', component: CentrosComponent},
+    { path: '**', redirectTo: ''}                  
+  ]}
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes),
+  imports: 
+  [RouterModule.forRoot(routes),
   AuthRoutingModule,
-  PagesRoutingModule],
+  PagesRoutingModule,
+  MatSidenavModule],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

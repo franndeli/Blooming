@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { RecoveryComponent } from './recovery/recovery.component';
 import { AuthLayoutComponent } from '../layouts/auth-layout/auth-layout.component';
+import { RegistroComponent } from './registro/registro.component';
 
 
 @NgModule({
@@ -11,15 +12,17 @@ import { AuthLayoutComponent } from '../layouts/auth-layout/auth-layout.componen
       LoginComponent,
       RecoveryComponent,
       AuthLayoutComponent,
+      RegistroComponent
     ],
     exports: [
         AuthLayoutComponent,
         LoginComponent,
-        RecoveryComponent
+        RecoveryComponent,
+        RegistroComponent
     ],
     imports: [
       CommonModule,
-      RouterModule
+      RouterModule, 
     ]
   })
   export class AuthModule { }

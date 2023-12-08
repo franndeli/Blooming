@@ -16,17 +16,16 @@ router.get('/', validarJWT, validarRol(['Profesor', 'Centro']), (req, res) => {
 });
 
 router.post('/', [
-        validarJWT, validarRol(['Centro']),
+        validarJWT,
         check('Nombre', 'El argumento "Nombre" es obligatorio').not().isEmpty(),
         check('Apellidos', 'El argumento "Apellidos" es obligatorio').not().isEmpty(),
-        check('Usuario', 'El argumento "Usuario" es obligatorio').not().isEmpty(),
         check('Contraseña', 'El argumento "Contraseña" es obligatorio').not().isEmpty(),
         check('FechaNacimiento', 'El argumento "FechaNacimiento" es obligatorio').not().isEmpty(),
         check('ID_Clase', 'El argumento "ID_Clase" es obligatorio').not().isEmpty(),
         validarCampos
     ], (req, res, next) => {
         createAlumno(req, res).catch(error => {
-            res.status(error.statusCode || 500).json({ message: error.message });
+            res.status(error.statusCode || 500);
         });
     });
 

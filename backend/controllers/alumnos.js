@@ -1,6 +1,7 @@
 const { dbConnection } = require('../database/configdb');
 const connection = dbConnection();
 const hashPassword = require('../middleware/hashHelper');
+
 const Alumno = require('../models/alumno');
 
 const getAlumnos = (req, res) => {
@@ -72,12 +73,38 @@ const getAlumnos = (req, res) => {
     });
 }
 
+function obtenerApellidos(apellidos) {
+    const partes = apellidos.split(' ');
+
+    // Obtener las partes individuales de los apellidos
+    const apellido1 = partes[0] || '';
+    const apellido2 = partes.length > 1 ? partes[1] : '';
+
+    return { apellido1, apellido2 };
+}
+
+function generarUsuario(nombre, apellidos, id) {
+    // Separar los apellidos
+    const { apellido1, apellido2 } = obtenerApellidos(apellidos);
+
+    // Obtener las iniciales del primer y segundo apellido
+    const inicialApellido1 = apellido1.charAt(0).toLowerCase();
+    const inicialApellido2 = apellido2.charAt(0).toLowerCase();
+
+    //const numero = Math.floor(Math.random() * (50 - 1 + 1)) + 1;
+
+    // Crear el nombre de usuario concatenando los elementos
+    const username = `${nombre.toLowerCase()}${inicialApellido1}${inicialApellido2}${id}`;
+
+    return username;
+}
 
 const createAlumno = (req, res) => {
     return new Promise(function(resolve, reject) {
-        //Comprobamos si existe el email
-        const usuario = req.body.Usuario;
-        
+        //Establecemos el usuario a vacio para la comprobación
+        const usuario = "";
+
+        //Comprobamos si existe el usuario
         connection.query('SELECT * FROM alumno WHERE Usuario = ?', [usuario], (error, results) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al verificar el usuario"});
@@ -89,18 +116,30 @@ const createAlumno = (req, res) => {
                 
                 //Hasheamos la contraseña para guardarla
                 const hashedPassword = hashPassword(req.body.Contraseña);
-                const newAlumno = { ...req.body, Contraseña: hashedPassword };
+                const newAlumno = { ...req.body, Contraseña: hashedPassword, Usuario: usuario };
 
                 connection.query('INSERT INTO alumno SET ?', [newAlumno], (insertError, insertResults) => {
                     if (insertError) {
                         reject({ statusCode: 500, message: "Error al crear el alumno"});
                     } else {
-                        resolve(
-                            res.json({
-                                ok: true,
-                                msg: 'createAlumno'
-                            })
-                        );
+                        const idAlumno = insertResults.insertId;
+
+                        // Generamos el nombre de usuario utilizando el ID generado en la BD, el nombre y la inicial de los 2 apellidos
+                        const nomUsuario = generarUsuario(req.body.Nombre, req.body.Apellidos, idAlumno);
+                        
+                        //Actualizamos el usuario por el que acabamos de generar
+                        connection.query('UPDATE alumno SET Usuario = ? WHERE ID_Alumno = ?', [nomUsuario, idAlumno], (setError, setResults) => {
+                            if (setError) {
+                                reject({ statusCode: 500, message: "Error al establecer el nombre de usuario del alumno"});
+                            } else {
+                                resolve(
+                                    res.json({
+                                        ok: true,
+                                        msg: 'createAlumno'
+                                    })
+                                );
+                            }
+                        });
                     }
                 });
             }
@@ -112,28 +151,35 @@ const updateAlumno = (req, res) => {
     return new Promise(function(resolve, reject) {
         const id = req.params.ID_Alumno;
 
-        if (req.body.Contraseña) {
+        //Comprobamos si hay una contraseña en el update
+        if(req.body.Contraseña){
             const hashedPassword = hashPassword(req.body.Contraseña);
+            
             req.body.Contraseña = hashedPassword;
+
+            actualizarAlumno();
+        } else{
+
+            actualizarAlumno();
         }
 
-        connection.query('UPDATE alumno SET ? WHERE ID_Alumno = ?', [req.body, id], (error, results) => {
-            if (error) {
-                reject({ statusCode: 500, message: "Error al actualizar el alumno"});
-            } else if (results.affectedRows === 0) {
-                // Ninguna fila fue afectada, es decir, no se encontró el alumno
-                reject({ statusCode: 404, message: "Alumno no encontrado"});
-            } else {
-                resolve(res.json({
-                    ok: true,
-                    msg: 'updateAlumno',
-                    id
-                }));
-            }
-        });
+        //Hacemos el update
+        function actualizarAlumno() {
+            connection.query('UPDATE alumno SET ? WHERE ID_Alumno = ?', [req.body, id], (error, results) => {
+                if (error) {
+                    reject({ statusCode: 500, message: "Error al actualizar el alumno"});
+                } else {
+                    resolve(
+                        res.json({
+                            ok: true,
+                            msg: 'updateAlumno'
+                        })
+                    );
+                }
+            });
+        }
     });
-};
-
+}
 
 const deleteAlumno = (req, res) => {
     return new Promise(function(resolve, reject) {

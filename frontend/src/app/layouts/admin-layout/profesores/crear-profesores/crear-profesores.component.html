@@ -113,31 +113,45 @@ data-sidebar-position="fixed" data-header-position="fixed">
   <!--  Header End -->
   <div class="container-fluid">
     <!--  Row 1 -->
+    
     <div class="container-fluid">
-      <div class="container-fluid">
-        <div class="card">
-          <div class="card-body text-center">
-            <h5 class="card-title fw-semibold mb-4">Bienvenido de nuevo</h5>
-            <div class="card">
-                <div class="card-body d-flex flex-column justify-content-center">
-                  <a href="/centros" class="btn btn-outline-danger btn-custom custom1">Ver Centros</a>
-                  <a href="/crear-centros" class="btn btn-outline-danger btn-custom">Crear Centro</a>
-                  <a href="/profesores" class="btn btn-outline-danger btn-custom">Ver Profesores</a>
-                  <a href="/crear-profesores" class="btn btn-outline-danger btn-custom">Crear Profesor</a>
-                  <a href="/alumnos" class="btn btn-outline-danger btn-custom">Ver Alumnos</a>
-                  <a href="/crear-alumnos" class="btn btn-outline-danger btn-custom">Crear Alumno</a>
-                  <a href="/clases" class="btn btn-outline-danger btn-custom">Ver Clases</a>
-                  <a href="/crear-clases" class="btn btn-outline-danger btn-custom">Crear Clase</a>
+        <div class="container-fluid">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title fw-semibold mb-4">Crear Profesor</h5>
+              <div class="card">
+                <div class="card-body">
+                  <form>
+                    <div class="mb-3">
+                      <label for="exampleInputEmail1" class="form-label">Nombre</label>
+                      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                      </div>
+                    <div class="mb-3">
+                      <label for="exampleInputPassword1" class="form-label">Centro</label>
+                      <input type="password" class="form-control" id="exampleInputPassword1">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Clase</label>
+                        <input type="password" class="form-control" id="exampleInputPassword1">
+                      </div>
+                    <button type="submit" class="btn btn-danger">Aceptar</button>
+                    <a href="./profesores" class="btn btn-danger">Volver</a>
+                  </form>
                 </div>
+              </div>
+              
             </div>
           </div>
         </div>
-      </div>
     </div>
-  
+      
     <div class="py-6 px-6 text-center">
-      <p class="copyright">&copy; 2023 Blooming. Proyecto académico de la Universidad de Alicante .</p>
-    </div>
+        <p class="copyright">&copy; 2023 Blooming. Proyecto académico de la Universidad de Alicante .</p>
+      </div>
   </div>
 </div>
 </div>

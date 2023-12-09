@@ -5,6 +5,7 @@ import { LoginComponent } from './login/login.component';
 import { RecoveryComponent } from './recovery/recovery.component';
 import { AuthLayoutComponent } from '../layouts/auth-layout/auth-layout.component';
 import { RegistroComponent } from './registro/registro.component';
+import { InicioComponent } from './inicio/inicio.component';
 
 
 @NgModule({
@@ -12,7 +13,8 @@ import { RegistroComponent } from './registro/registro.component';
       LoginComponent,
       RecoveryComponent,
       AuthLayoutComponent,
-      RegistroComponent
+      RegistroComponent,
+      InicioComponent
     ],
     exports: [
         AuthLayoutComponent,

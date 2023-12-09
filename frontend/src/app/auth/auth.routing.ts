@@ -5,6 +5,7 @@ import { AuthLayoutComponent } from '../layouts/auth-layout/auth-layout.componen
 import { LoginComponent } from '../auth/login/login.component';
 import { RecoveryComponent } from '../auth/recovery/recovery.component';
 import { RegistroComponent } from './registro/registro.component';
+import { InicioComponent } from './inicio/inicio.component';
 
 const routes: Routes = [
   { path: 'login', component: AuthLayoutComponent,
@@ -22,6 +23,12 @@ const routes: Routes = [
   { path: 'registro', component: AuthLayoutComponent,
     children: [
       { path: '', component: RegistroComponent},
+      { path: '**', redirectTo: ''}                  
+    ]
+  },
+  { path: 'inicio', component: AuthLayoutComponent,
+    children: [
+      { path: '', component: InicioComponent},
       { path: '**', redirectTo: ''}                  
     ]
   }

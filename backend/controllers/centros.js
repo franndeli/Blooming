@@ -143,28 +143,47 @@ const deleteCentro = (req, res) => {
         const id = req.params.ID_Centro;
         connection.query('SELECT * FROM centro_escolar WHERE ID_Centro = ?', [id], (error, rows) => {
             if(error){
-                reject({ statusCode: 500, message: "Error al eliminar el centro"});
+                reject({ statusCode: 500, message: "Error al buscar el centro"});
+            }else if(rows.length === 0){
+                reject({ statusCode: 404, message: "Centro no encontrado" });
             }else{
-                if(rows.length === 0){
-                    reject({ statusCode: 404, message: "Centro no encontrado" });
-                }else{
-                    connection.query('DELETE FROM centro_escolar WHERE ID_Centro = ?', [id], (error, results) => {
+                // Eliminar alumnos de clases pertenecientes a este centro
+                connection.query('DELETE alumno FROM alumno INNER JOIN clase ON alumno.ID_Clase = clase.ID_Clase WHERE clase.ID_Centro = ?', [id], (error) => {
+                    if (error) {
+                        console.log(error);
+                        return reject({ statusCode: 500, message: "Error al eliminar alumnos del centro" });
+                    }
+                    // Eliminar profesores del centro
+                    connection.query('DELETE FROM profesor WHERE ID_Centro = ?', [id], (error) => {
                         if (error) {
                             console.log(error);
-                            return;
-                        }else{
-                            resolve(
-                                res.json({
-                                    ok: true,
-                                    msg: 'deleteCentro'
-                                })
-                            );
+                            return reject({ statusCode: 500, message: "Error al eliminar profesores del centro" });
                         }
+                        // Eliminar clases del centro
+                        connection.query('DELETE FROM clase WHERE ID_Centro = ?', [id], (error) => {
+                            if (error) {
+                                console.log(error);
+                                return reject({ statusCode: 500, message: "Error al eliminar clases del centro" });
+                            }
+                            // Finalmente, eliminar el centro
+                            connection.query('DELETE FROM centro_escolar WHERE ID_Centro = ?', [id], (error) => {
+                                if (error) {
+                                    console.log(error);
+                                    return reject({ statusCode: 500, message: "Error al eliminar el centro" });
+                                } else {
+                                    resolve(res.json({
+                                        ok: true,
+                                        msg: 'Centro, clases, profesores y alumnos eliminados correctamente'
+                                    }));
+                                }
+                            });
+                        });
                     });
-                }
+                });
             }
         });
     });
-}
+};
+
 
 module.exports = { getCentros, createCentro, updateCentro, deleteCentro };

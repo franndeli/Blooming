@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        h2 {
+            color: #333; /* Color del texto */
+            font-family: 'Arial', sans-serif; /* Familia de fuentes */
+            text-align: left; /* Alineación del texto */
+            margin-top: 20px; /* Margen superior */
+            margin-left: 20px; /* Margen superior */
+        }
+        /* Estilo para la tabla */
+        table {
+            border-collapse: collapse;
+            width: 50%;
+            margin: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Estilo para la media emocional */
+        .emotional-average {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>{{ claseTitle }}</h2>
+    <!-- Tabla de Alumnos -->
+    <table>
+        <tr>
+            <th>Nombre</th>
+            <th>Emoción 1</th>
+            <th>Emoción 2</th>
+            <th>Emoción 3</th>
+            <th>Media Emocional</th>
+        </tr>
+        <tr>
+            <td>Alumno 1</td>
+            <td>90</td>
+            <td>85</td>
+            <td>92</td>
+            <td class="emotional-average">89</td>
+        </tr>
+        <tr>
+            <td>Alumno 2</td>
+            <td>78</td>
+            <td>80</td>
+            <td>85</td>
+            <td class="emotional-average">81</td>
+        </tr>
+        <!-- Agrega más filas según sea necesario -->
+    </table>
+
+</body>
+</html>

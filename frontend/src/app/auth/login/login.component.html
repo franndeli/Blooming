@@ -12,14 +12,14 @@ data-sidebar-position="fixed" data-header-position="fixed">
               <img src="../assets/images/logos/logo.png" width="180" alt="">
             </a>
             <p class="text-center">Bienvenido de nuevo</p>
-            <form>
+            <form [formGroup]="form">
               <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Usuario / Email</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                <label for="Usuario" class="form-label">Usuario / Email</label>
+                <input class="form-control" formControlName="Usuario" aria-describedby="emailHelp">
               </div>
               <div class="mb-4">
-                <label for="exampleInputPassword1" class="form-label">Constraseña</label>
-                <input type="password" class="form-control" id="exampleInputPassword1">
+                <label for="Contraseña" class="form-label">Constraseña</label>
+                <input type="password" class="form-control" formControlName="Contraseña">
               </div>
               <div class="d-flex align-items-center justify-content-between mb-4">
                 <div class="form-check">
@@ -30,7 +30,11 @@ data-sidebar-position="fixed" data-header-position="fixed">
                 </div>
                 <a class="text-primary fw-bold" [routerLink]="['/recovery']">¿Has olvidado tu contraseña?</a>
               </div>
-              <a href="./index.html" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Aceptar</a>
+                <div class="row">
+                  <p class="text-danger" *ngIf="!validarLogin('Usuario')">El usuario es obligatorio</p>
+                  <p class="text-danger" *ngIf="!validarLogin('Contraseña')">La contraseña es obligatoria</p>
+                </div>
+              <button class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2" (click)="login()">Entrar</button>
               <div class="d-flex align-items-center justify-content-center">
                 <p class="fs-4 mb-0 fw-bold">¿Eres un Centro?</p>
                 <a class="text-primary fw-bold ms-2" [routerLink]="['/registro']">Regístrate</a>

@@ -9,8 +9,11 @@ const validarJWT = (req, res, next) => {
             msg: 'Falta token de autorización'
         });
     }
+
     try {
-        const { ID, Rol, ...object } = jwt.verify(token, process.env.JWTSECRET);
+        const { ID, Rol } = jwt.verify(token, process.env.JWTSECRET);
+        console.log(ID);
+        console.log(jwt.verify(token, process.env.JWTSECRET));
         req.ID = ID;
         req.Rol = Rol;
         next();
@@ -18,8 +21,9 @@ const validarJWT = (req, res, next) => {
         return res.status(400).json({
             ok: false,
             msg: 'Token no válido'
-        })
+        });
     }
-}
+};
+
 
 module.exports = { validarJWT }

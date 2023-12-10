@@ -2,6 +2,47 @@ const { dbConnection } = require('../database/configdb');
 const connection = dbConnection();
 const bcrypt = require('bcryptjs');
 const { generarJWT } = require('../helpers/jwt');
+const jwt = require('jsonwebtoken');
+
+const token = async(req, res) => {
+    const token = req.headers['x-token'];
+
+    if (!token) {
+        return res.status(401).json({
+            ok: false,
+            msg: 'No hay token en la petición'
+        });
+    }
+
+    try {
+        const { ID, Rol } = jwt.verify(token, process.env.JWTSECRET);
+
+        const usuario = await buscarUsuarioPorIDyRol(ID, Rol);
+
+        if (!usuario) {
+            return res.status(401).json({
+                ok: false,
+                msg: 'Token no válido - usuario no encontrado o rol cambiado'
+            });
+        }
+
+        // Aquí utilizamos ID y Rol directamente
+        const nuevotoken = await generarJWT(usuario);
+
+        return res.json({
+            ok: true,
+            msg: 'Token válido',
+            token: nuevotoken
+        });
+
+    } catch (err) {
+        return res.status(401).json({
+            ok: false,
+            msg: 'Token no válido',
+            error: err.message
+        });
+    }
+}
 
 const login = async (req, res) => {
     const { Usuario, Contraseña } = req.body;
@@ -34,7 +75,7 @@ const login = async (req, res) => {
             });
         }
 
-        const token = await generarJWT(usuario.ID_Alumno || usuario.ID_Profesor || usuario.ID_Centro, usuario.Rol);
+        const token = await generarJWT(usuario);
         res.json({
             ok: true,
             msg: `login ${usuario.Rol}`,
@@ -85,5 +126,32 @@ function consultaAsync(query, params) {
     });
 }
 
+async function buscarUsuarioPorIDyRol(id, rolEsperado) {
+    const tablaInfo = obtenerTablaPorRol(rolEsperado);
+    if (!tablaInfo) return null;
 
-module.exports = { login };
+    const query = `SELECT * FROM ${tablaInfo.nombre} WHERE ${tablaInfo.campoID} = ? AND Rol = ?`;
+    try {
+        const results = await consultaAsync(query, [id, rolEsperado]);
+        if (results && results.length > 0) {
+            return results[0];
+        }
+    } catch (error) {
+        console.error(`Error en la consulta a la tabla ${tablaInfo.nombre}:`, error);
+    }
+    return null;
+}
+
+function obtenerTablaPorRol(rol) {
+    switch (rol) {
+        case 'Alumno': return { nombre: 'alumno', campoID: 'ID_Alumno' };
+        case 'Profesor': return { nombre: 'profesor', campoID: 'ID_Profesor' };
+        case 'Centro': return { nombre: 'centro_escolar', campoID: 'ID_Centro' };
+        case 'Admin': return { nombre: 'admin', campoID: 'ID_Admin' };
+        default: return null;
+    }
+}
+
+
+
+module.exports = { login, token };

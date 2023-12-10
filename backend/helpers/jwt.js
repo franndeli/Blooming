@@ -1,8 +1,12 @@
 const jwt = require('jsonwebtoken');
 
-const generarJWT = (ID, Rol) => {
+const generarJWT = (usuario) => {
     return new Promise((resolve, reject) => {
-        const payload = { ID, Rol }
+        // Seleccionar el ID adecuado según el tipo de usuario
+        const ID = usuario.ID_Admin || usuario.ID_Profesor || usuario.ID_Centro || usuario.ID_Alumno;
+        const Rol = usuario.Rol;
+
+        const payload = { ID, Rol };
 
         jwt.sign(payload, process.env.JWTSECRET, {
             expiresIn: '1y'
@@ -15,6 +19,7 @@ const generarJWT = (ID, Rol) => {
             }
         });
     });
-}
+};
+
 
 module.exports = { generarJWT }

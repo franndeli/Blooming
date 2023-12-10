@@ -16,7 +16,6 @@ router.get('/', validarJWT, validarRol(['Admin']), (req, res) => {
 });
 
 router.post('/', [
-        validarJWT, validarRol(['Admin']),
         check('Nombre', 'El argumento "Nombre" es obligatorio').not().isEmpty(),
         check('Email', 'El argumento "Email" es obligatorio').not().isEmpty(),
         check('Contraseña', 'El argumento "Contraseña" es obligatorio').not().isEmpty(),

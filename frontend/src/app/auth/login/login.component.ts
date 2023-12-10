@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
   login(){
     this.sendForm=true
     if(!this.form.valid){
-      console.log('errores en el formulario');
+      console.log('Errores en el formulario');
     }else{
       console.log('login');
       this.authService.login(this.form.value).subscribe(

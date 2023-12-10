@@ -31,6 +31,7 @@ export class AuthService {
   }
 
   login(formData: any){
-  return this.http.post(this.basePath+'login', formData).pipe(retry(2),catchError(this.handleError));
+    console.log(formData);
+    return this.http.post(this.basePath+'login', formData).pipe(retry(2),catchError(this.handleError));
   }
 }

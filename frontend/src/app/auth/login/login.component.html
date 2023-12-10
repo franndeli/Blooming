@@ -25,7 +25,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
               <p class="text-danger" *ngIf="!validarLogin('Contraseña')">La contraseña es obligatoria</p>
               <div class="d-flex align-items-center justify-content-between mb-4">
                 <div class="form-check">
-                  <input class="form-check-input primary" type="checkbox" value="" id="flexCheckChecked" checked>
+                  <input class="form-check-input primary" type="checkbox" value="" id="flexCheckChecked" formControlName="Remember">
                   <label class="form-check-label text-dark" for="flexCheckChecked">
                     Recuérdame
                   </label>

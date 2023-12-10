@@ -16,12 +16,14 @@ export class LoginComponent implements OnInit {
   ngOnInit() {}
 
   public form = this.fb.group({
-    Usuario: ['', [Validators.required]],
-    Contraseña: ['', [Validators.required]]
+    Usuario: [localStorage.getItem('usuario') || '', [Validators.required]],
+    Contraseña: ['', [Validators.required]],
+    Remember: [ false || localStorage.getItem('usuario') ]
   });
 
   login(){
     this.sendForm=true
+    console.log(this.sendForm);
     if(!this.form.valid){
       console.log('Errores en el formulario');
     }else{
@@ -29,6 +31,11 @@ export class LoginComponent implements OnInit {
       this.authService.login(this.form.value).subscribe(
         (response:any) => {
           localStorage.setItem('token', response.token);
+          if (this.form.get('Remember')?.value ?? ''){
+            localStorage.setItem('usuario', this.form.get('Usuario')?.value ?? '');
+          } else {
+            localStorage.removeItem('usuario');
+          }
           console.log('Respuesta del servidor:', response);
           //Aquí habría que comprobar el rol que es para que te lleve a x pagina
           //Está puesto que te lleve a router porque la de inicio no se cual es e index no me deja :)

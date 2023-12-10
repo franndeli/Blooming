@@ -3634,6 +3634,7 @@ fieldset:disabled .btn {
   --bs-btn-disabled-color: #fff;
   --bs-btn-disabled-bg: #fa896b;
   --bs-btn-disabled-border-color: #fa896b;
+  margin-left: 10px; /*NUEVOOOOOOOOO*/
 }
 .btn-light {
   --bs-btn-color: #000;
@@ -16478,10 +16479,9 @@ fieldset:disabled .btn {
   position: absolute;
   -webkit-transition: 0.2s ease-in;
   transition: 0.2s ease-in;
-  height: 100vh;
+  height: 100%;
   z-index: 11;
   border-right: 1px solid rgb(229, 234, 239);
-  overflow-y: auto;
 }
 .left-sidebar-admin .scroll-sidebar {
   overflow-y: auto;

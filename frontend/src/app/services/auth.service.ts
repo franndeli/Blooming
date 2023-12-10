@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { retry, catchError } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -12,25 +10,12 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  httpOptions= {
-    headers: new HttpHeaders ({
-      'Content-Type': 'application/json'
-    })
-  }
-
-  // Manejador de errores API
-  handleError(error: HttpErrorResponse) {
-    if (error.error instanceof ErrorEvent) {
-      console.log("Ha ocurrido un error: ",error,error.message);
-    } else {
-      console.error(
-        `Codigo Error: '${error.status}' `+
-        `Body: '${error.error}'`);
-    } 
-    return throwError ('Ha sucedido un problema, reintentalo más tarde');
-  }
-
+  //LLAMADAS API  
   login(formData: any){
-  return this.http.post(this.basePath+'login', formData).pipe(retry(2),catchError(this.handleError));
+  return this.http.post(this.basePath+'login', formData);
+  }
+
+  registro(formData: any){
+    return this.http.post(this.basePath+'centros', formData);
   }
 }

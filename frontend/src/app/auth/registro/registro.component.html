@@ -12,20 +12,43 @@ data-sidebar-position="fixed" data-header-position="fixed">
               <img src="../assets/images/logos/logo.png" width="180" alt="">
             </a>
             <p class="text-center">Bienvenido a Blooming</p>
-            <form>
+            <form [formGroup]="form">
               <div class="mb-3">
-                <label for="exampleInputtext1" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="exampleInputtext1" aria-describedby="textHelp">
+                <label for="Nombre" class="form-label">Nombre</label>
+                <input class="form-control" formControlName="Nombre" id="Nombre" aria-describedby="textHelp">
               </div>
+              <p class="text-danger" *ngIf="!validarRegistro('Nombre')">El Nombre es obligatorio</p>
               <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Correo</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                <label for="Email" class="form-label">Email</label>
+                <input type="email" class="form-control" formControlName="Email" aria-describedby="emailHelp">
               </div>
+              <p class="text-danger" *ngIf="!validarRegistro('Email')">El Email es obligatorio</p>
               <div class="mb-4">
-                <label for="exampleInputPassword1" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="exampleInputPassword1">
+                <label for="Contraseña" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" formControlName="Contraseña" id="Contraseña">
               </div>
-              <a href="./index.html" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Aceptar</a>
+              <p class="text-danger" *ngIf="!validarRegistro('Contraseña')">La Contraseña es obligatoria</p>
+              <div class="mb-4">
+                <label for="Calle" class="form-label">Calle</label>
+                <input class="form-control" formControlName="Calle" id="Calle">
+              </div>
+              <p class="text-danger" *ngIf="!validarRegistro('Calle')">La Calle es obligatoria</p>
+              <div class="mb-4">
+                <label for="CP" class="form-label">Cóigo Postal</label>
+                <input class="form-control" formControlName="CP" id="CP">
+              </div>
+              <p class="text-danger" *ngIf="!validarRegistro('CP')">El Código Postal es obligatorio</p>
+              <div class="mb-4">
+                <label for="Localidad" class="form-label">Localidad</label>
+                <input class="form-control" formControlName="Localidad" id="Localidad">
+              </div>
+              <p class="text-danger" *ngIf="!validarRegistro('Localidad')">La Localidad es obligatoria</p>
+              <div class="mb-4">
+                <label for="Provincia" class="form-label">Provincia</label>
+                <input class="form-control d-inline-block" formControlName="Provincia" id="Provincia">
+              </div>
+              <p class="text-danger" *ngIf="!validarRegistro('Provincia')">La Provincia es obligatoria</p>
+              <button class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2" (click)="registro()">Entrar</button>
               <a href="./inicio" class="btn btn-secondary w-100 py-8 fs-4 mb-4 rounded-2">Volver</a>
               <div class="d-flex align-items-center justify-content-center">
                 <p class="fs-4 mb-0 fw-bold">¿Ya tienes una cuenta?</p>

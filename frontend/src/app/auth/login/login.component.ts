@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth.service'
+import { AuthService } from '../../services/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -30,13 +31,10 @@ export class LoginComponent implements OnInit {
         (response:any) => {
           localStorage.setItem('token', response.token);
           console.log('Respuesta del servidor:', response);
-          //Aquí habría que comprobar el rol que es para que te lleve a x pagina
-          //Está puesto que te lleve a router porque la de inicio no se cual es e index no me deja :)
+
           if(response.rol == 'Admin'){
             this.router.navigate(['admin']);
           }
-          //Ya lo he puesto jjjj esos los he comentado porque faltan esas páginas, so no hay donde redirigir
-          //Estoy motivadisimo no tengo sueño francis¡! un besazo¡
           /*
           if(response.rol == 'Centro'){
             this.router.navigate(['']);
@@ -51,9 +49,10 @@ export class LoginComponent implements OnInit {
         },
         (error) => {
           console.error('Error de autenticación:', error);
+          Swal.fire(error.error.msg);
         }
       );
-    }  
+    }
   }
 
   validarLogin(campo: string){

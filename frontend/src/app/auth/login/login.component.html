@@ -15,12 +15,12 @@ data-sidebar-position="fixed" data-header-position="fixed">
             <form [formGroup]="form">
               <div class="mb-3">
                 <label for="Usuario" class="form-label">Usuario / Email</label>
-                <input class="form-control" formControlName="Usuario" aria-describedby="emailHelp">
+                <input class="form-control" formControlName="Usuario" id="Usuario" aria-describedby="emailHelp">
               </div>
               <p class="text-danger" *ngIf="!validarLogin('Usuario')">El usuario es obligatorio</p>
               <div class="mb-4">
                 <label for="Contraseña" class="form-label">Constraseña</label>
-                <input type="password" class="form-control" formControlName="Contraseña">
+                <input type="password" class="form-control" formControlName="Contraseña" id="Constraseña">
               </div>
               <p class="text-danger" *ngIf="!validarLogin('Contraseña')">La contraseña es obligatoria</p>
               <div class="d-flex align-items-center justify-content-between mb-4">

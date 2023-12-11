@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AdminLayoutComponent } from './admin-layout.component';
+import { SidebarCentroComponent } from './sidebar-centro.component';
 
-describe('AdminLayoutComponent', () => {
-  let component: AdminLayoutComponent;
-  let fixture: ComponentFixture<AdminLayoutComponent>;
+describe('SidebarCentroComponent', () => {
+  let component: SidebarCentroComponent;
+  let fixture: ComponentFixture<SidebarCentroComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AdminLayoutComponent]
+      declarations: [SidebarCentroComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(AdminLayoutComponent);
+    fixture = TestBed.createComponent(SidebarCentroComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

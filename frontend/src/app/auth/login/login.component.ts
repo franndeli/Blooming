@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth.service'
+import { AuthService } from '../../services/auth.service';
+import { loginForm } from '../../interfaces/login-form.interface';
 
 @Component({
   selector: 'app-login',
@@ -27,8 +28,14 @@ export class LoginComponent implements OnInit {
     if(!this.form.valid){
       console.log('Errores en el formulario');
     }else{
+      const formData: loginForm = {
+        ...this.form.value,
+        Usuario: this.form.value.Usuario || '',
+        Contraseña: this.form.value.Contraseña || '',
+        Remember: !!this.form.value.Remember
+      };
       console.log('login');
-      this.authService.login(this.form.value).subscribe(
+      this.authService.login(formData).subscribe(
         (response:any) => {
           localStorage.setItem('token', response.token);
           if (this.form.get('Remember')?.value ?? ''){

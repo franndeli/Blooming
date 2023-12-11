@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
+import { loginForm } from '../interfaces/login-form.interface'
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,7 @@ export class AuthService {
     return throwError ('Ha sucedido un problema, reintentalo más tarde');
   }
 
-  login(formData: any){
+  login(formData: loginForm){
     console.log(formData);
     return this.http.post(this.basePath+'login', formData).pipe(retry(2),catchError(this.handleError));
   }

@@ -5,28 +5,31 @@ import { DashboardComponent } from '../pages/dashboard/dashboard.component';
 import { UsuariosComponent } from '../pages/usuarios/usuarios.component';
 import { CentrosVistaComponent } from './centros-vista/centros-vista.component';
 import { AdminComponent } from './admin/admin.component';
-import { AlumnosComponent } from './admin/alumnos/alumnos.component';
-import { CentrosComponent } from './admin/centros/centros.component';
-import { ClasesComponent } from './admin/clases/clases.component';
-import { ProfesoresComponent } from './admin/profesores/profesores.component';
+
 import { AdminLayoutComponent } from '../layouts/admin-layout/admin-layout.component';
-import { CrearAlumnosComponent } from './admin/alumnos/crear-alumnos/crear-alumnos.component';
-import { CrearCentrosComponent } from './admin/centros/crear-centros/crear-centros.component';
-import { CrearClasesComponent } from './admin/clases/crear-clases/crear-clases.component';
-import { CrearProfesoresComponent } from './admin/profesores/crear-profesores/crear-profesores.component';
+import { CrearAlumnosComponent } from './admin/ver-alumnos/crear-alumnos/crear-alumnos.component';
+import { CrearCentrosComponent } from './admin/ver-centros/crear-centros/crear-centros.component';
+import { CrearClasesComponent } from './admin/ver-clases/crear-clases/crear-clases.component';
+import { CrearProfesoresComponent } from './admin/ver-profesores/crear-profesores/crear-profesores.component';
+import { VerAlumnosComponent } from './admin/ver-alumnos/ver-alumnos.component';
+import { VerCentrosComponent } from './admin/ver-centros/ver-centros.component';
+import { VerClasesComponent } from './admin/ver-clases/ver-clases.component';
+import { VerProfesoresComponent } from './admin/ver-profesores/ver-profesores.component';
+import { AdmindashboardComponent } from './admin/admindashboard/admindashboard.component';
 
 const routes: Routes = [
-  { path: 'admindashboard', component: AdminLayoutComponent,
+  { path: 'admin', component: AdminLayoutComponent,
     children: [
-      { path: '**', redirectTo: 'admin'},
-      { path: 'alumnos', component: AlumnosComponent},
-      { path: 'centros', component: CentrosComponent},
-      { path: 'clases', component: ClasesComponent},
-      { path: 'profesores', component: ProfesoresComponent},
+      { path: 'admindashboard', component: AdmindashboardComponent},
+      { path: 'ver-alumnos', component: VerAlumnosComponent},
+      { path: 'ver-centros', component: VerCentrosComponent},
+      { path: 'ver-clases', component: VerClasesComponent},
+      { path: 'ver-profesores', component: VerProfesoresComponent},
       { path: 'crear-alumnos', component: CrearAlumnosComponent},
       { path: 'crear-centros', component: CrearCentrosComponent},
       { path: 'crear-clases', component: CrearClasesComponent},
       { path: 'crear-profesores', component: CrearProfesoresComponent},
+      { path: '**', redirectTo: 'admindashboard'},
   ]},
   /*{ 
     path: 'dashboard', component: DashboardComponent,

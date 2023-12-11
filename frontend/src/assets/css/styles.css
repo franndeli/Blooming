@@ -16990,7 +16990,8 @@ fieldset:disabled .btn {
 #main-wrapper[data-layout="vertical"][data-header-position="fixed"]
   .body-wrapper
   > .container-xxl {
-  padding-top: calc(70px + 15px);
+    padding-top: 100px; /* Ajusta según sea necesario */
+    padding-bottom: 15px;
 }
 @media (min-width: 1200px) {
   #main-wrapper[data-layout="vertical"][data-header-position="fixed"][data-sidebartype="mini-sidebar"]
@@ -17002,7 +17003,7 @@ fieldset:disabled .btn {
     width: calc(100% - 270px);
   }
   #main-wrapper[data-layout="vertical"][data-sidebartype="full"] .body-wrapper {
-    margin-left: 270px;
+    margin-left: 270px; /*AQUIIIIIIIIIIIII*/
   }
 }
 @media (max-width: 1199px) {

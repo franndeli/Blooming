@@ -17,6 +17,9 @@ import { CrearAlumnosComponent } from './layouts/admin-layout/alumnos/crear-alum
 import { CrearClasesComponent } from './layouts/admin-layout/clases/crear-clases/crear-clases.component';
 import { CrearProfesoresComponent } from './layouts/admin-layout/profesores/crear-profesores/crear-profesores.component';
 
+import { CommonModule } from '@angular/common';
+
+
 
 @NgModule({
   declarations: [
@@ -36,7 +39,8 @@ import { CrearProfesoresComponent } from './layouts/admin-layout/profesores/crea
     AppRoutingModule,
     PagesModule,
     AuthModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    CommonModule
   ],
   providers: [
     provideClientHydration()

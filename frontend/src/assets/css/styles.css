@@ -16473,6 +16473,9 @@ fieldset:disabled .btn {
   visibility: hidden !important;
 }
 /* PARA ADMIN*/
+.adminbar{
+  background-color: #FA896B;
+}
 .left-sidebar-admin {
   width: 270px;
   background-color: #c86e56;

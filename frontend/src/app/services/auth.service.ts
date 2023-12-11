@@ -3,13 +3,15 @@ import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
 import { loginForm } from '../interfaces/login-form.interface'
+import { environment } from '../../environments/environment';
+import { tap, map } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { TokenResponse } from '../interfaces/token-response';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
-  basePath='http://localhost:3000/api/';
 
   constructor(private http: HttpClient) { }
 
@@ -33,6 +35,31 @@ export class AuthService {
 
   login(formData: loginForm){
     console.log(formData);
-    return this.http.post(this.basePath+'login', formData).pipe(retry(2),catchError(this.handleError));
+    return this.http.post(`${environment.base_url}/login`, formData).pipe(retry(2),catchError(this.handleError));
+  }
+
+  validarToken() {
+    const token = localStorage.getItem('token') || '';
+    if (token === ''){
+      return of (false);
+    }
+
+    return this.http.get<TokenResponse>(`${environment.base_url}/login/token`, {
+      headers: {
+        'x-token': token
+      }
+    }).pipe(
+      tap( res => {
+        localStorage.setItem('token', res.token);
+      }),
+      map ( resp => {
+        return true;
+      }),
+      catchError ( err => {
+        console.warn(err);
+        return of(false);
+      })
+    )
+
   }
 }

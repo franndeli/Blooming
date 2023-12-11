@@ -26,12 +26,9 @@ export class LoginComponent implements OnInit {
     if(!this.form.valid){
       console.log('Errores en el formulario');
     }else{
-      console.log('login');
       this.authService.login(this.form.value).subscribe(
         (response:any) => {
           localStorage.setItem('token', response.token);
-          console.log('Respuesta del servidor:', response);
-
           if(response.rol == 'Admin'){
             this.router.navigate(['admin']);
           }

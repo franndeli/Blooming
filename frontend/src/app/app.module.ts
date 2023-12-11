@@ -17,6 +17,8 @@ import { CrearAlumnosComponent } from './layouts/admin-layout/alumnos/crear-alum
 import { CrearClasesComponent } from './layouts/admin-layout/clases/crear-clases/crear-clases.component';
 import { CrearProfesoresComponent } from './layouts/admin-layout/profesores/crear-profesores/crear-profesores.component';
 
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import { CrearProfesoresComponent } from './layouts/admin-layout/profesores/crea
     AppRoutingModule,
     PagesModule,
     AuthModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     provideClientHydration()

@@ -53,7 +53,10 @@ const getCentros = (req, res) => {
             query += ' WHERE ' + conditions.join(' AND ');
         }
 
-        query += ` LIMIT ${tam} OFFSET ${desde}`;
+        //quitar este if, solo para pruebas de get
+        if(req.query.desde){
+            query += ` LIMIT ${tam} OFFSET ${desde}`;
+        }
 
         connection.query(query, values, (error, results) => {
             if (error) {

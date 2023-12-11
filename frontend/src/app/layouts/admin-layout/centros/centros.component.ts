@@ -1,7 +1,6 @@
 import { Component, AfterViewInit  } from '@angular/core';
 import { CentroService } from '../../../services/centros.service';
 
-import { Centro } from '../../../interfaces/centros.interface'
 
 @Component({
   selector: 'app-centros',
@@ -26,8 +25,13 @@ export class CentrosComponent implements AfterViewInit  {
 
   getCentros(){
     this.centroService.getCentros().subscribe(res => {
-      console.log(res);
       this.centrosData = res;
+    })
+  }
+
+  eliminarCentro(id: number){
+    this.centroService.deleteCentro(id).subscribe(res => {
+      this.getCentros();
     })
   }
 }

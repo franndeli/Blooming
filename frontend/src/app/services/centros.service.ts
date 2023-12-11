@@ -40,4 +40,14 @@ export class CentroService {
     this.getHeader();
     return this.http.get<Centro>(this.basePath, this.httpOptions );
   }
+
+  deleteCentro(id:number){
+    this.getHeader();
+    return this.http.delete(this.basePath+id, this.httpOptions);
+  }
+
+  postCentro(formData: any){
+    return this.http.post(this.basePath, formData);
+  }
+
 }

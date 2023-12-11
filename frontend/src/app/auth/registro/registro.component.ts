@@ -27,8 +27,7 @@ export class RegistroComponent implements OnInit {
   });
 
   registro(){
-    this.sendForm=true
-
+    this.sendForm=true;
     if(!this.form.valid){
       console.log('Errores en el formulario');
     }else{

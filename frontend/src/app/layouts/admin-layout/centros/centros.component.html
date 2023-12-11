@@ -145,14 +145,14 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                     <td class="border-bottom-0">{{centro.CP}}</td>
                                     <td class="border-bottom-0">
                                       <a href="./login" class="btn btn-primary">M</a>
-                                      <a href="./login" class="btn btn-danger">E</a>
+                                      <button class="btn btn-danger" (click)="eliminarCentro(centro.ID_Centro)">E</button>
                                     </td>
                                 </tr>
                               </tbody>
                             </table>
                         </div>
                     </div>
-                    <a href="/crear-centros" class="btn btn-danger">Crear Centro</a>
+                    <button [routerLink]="['/crear-centros']" class="btn btn-danger">Crear Centro</button>
                 </div>
             </div>
         </div>

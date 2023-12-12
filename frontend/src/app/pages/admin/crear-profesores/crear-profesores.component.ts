@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ProfesorService } from '../../../../services/profesores.service';
+import { ProfesorService } from '../../../services/profesores.service';
 import Swal from 'sweetalert2'
 
 @Component({

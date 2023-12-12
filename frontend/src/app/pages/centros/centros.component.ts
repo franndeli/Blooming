@@ -1,5 +1,5 @@
 import { Component, AfterViewInit  } from '@angular/core';
-import { CentroService } from '../../../services/centros.service';
+import { CentroService } from '../../services/centros.service';
 import Swal from 'sweetalert2'
 
 

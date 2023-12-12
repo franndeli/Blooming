@@ -1,5 +1,5 @@
 import { Component, AfterViewInit } from '@angular/core';
-import { ProfesorService } from '../../../services/profesores.service';
+import { ProfesorService } from '../../services/profesores.service';
 import Swal from 'sweetalert2'
 
 @Component({

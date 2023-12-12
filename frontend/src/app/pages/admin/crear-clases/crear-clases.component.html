@@ -32,7 +32,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                   </div>
                   <p class="text-danger" *ngIf="!validarForm('NumAlumnos')">El Número de alumnos es obligatorio</p>
                   <button class="btn btn-danger" (click)="crearClase()">Aceptar</button>
-                  <button [routerLink]="['/clases']" class="btn btn-danger">Volver</button>
+                  <button href="/ver-clases" class="btn btn-danger">Volver</button>
                 </form>
               </div>
             </div>

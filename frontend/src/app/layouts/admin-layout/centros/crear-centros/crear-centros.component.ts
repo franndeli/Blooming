@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
 import { CentroService } from '../../../../services/centros.service';
@@ -13,8 +13,6 @@ export class CrearCentrosComponent {
   sendForm: boolean=false;
 
   constructor(private fb:FormBuilder, private centroService: CentroService, private router: Router){}
-
-  ngOnInit() {}
 
   public form = this.fb.group({
     Nombre: ['', [Validators.required]],

@@ -4,9 +4,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
-export class CentroService {
+export class ProfesorService {
 
-  private basePath='http://localhost:3000/api/centros/';
+  private basePath='http://localhost:3000/api/profesores/';
   private httpOptions: any;
   constructor(private http: HttpClient) { 
   }
@@ -35,18 +35,19 @@ export class CentroService {
     }
 
   //LLAMADAS API  
-  getCentros(){
+  getProfesores(){
     this.getHeader();
     return this.http.get(this.basePath, this.httpOptions );
   }
 
-  deleteCentro(id:number){
+  deleteProfesor(id:number){
     this.getHeader();
     return this.http.delete(this.basePath+id, this.httpOptions);
   }
 
-  postCentro(formData: any){
-    return this.http.post(this.basePath, formData);
+  postProfesor(formData: any){
+    this.getHeader();
+    return this.http.post(this.basePath, formData, this.httpOptions);
   }
 
 }

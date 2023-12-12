@@ -124,8 +124,8 @@ data-sidebar-position="fixed" data-header-position="fixed">
                             <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
                                 <thead class="text-dark fs-4">
                                     <tr>
-                                        <th class="border-bottom-0">ID</th>
                                         <th class="border-bottom-0">Nombre</th>
+                                        <th class="border-bottom-0">Apellidos</th>
                                         <th class="border-bottom-0">Usuario</th>
                                         <th class="border-bottom-0">Fecha de nacimiento</th>
                                         <th class="border-bottom-0">Clase</th>
@@ -133,53 +133,17 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                         <th class="border-bottom-0"></th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody *ngFor="let alumno of alumnosData.alumnos">
                                     <tr>
-                                        <td class="border-bottom-0">1</td>
-                                        <td class="border-bottom-0">Pepe</td>
-                                        <td class="border-bottom-0">Pepe1</td>
-                                        <td class="border-bottom-0">24/10/2015</td>
-                                        <td class="border-bottom-0">1ºA</td>
-                                        <td class="border-bottom-0">Cole1</td>
+                                        <td class="border-bottom-0">{{alumno.Nombre}}</td>
+                                        <td class="border-bottom-0">{{alumno.Apellidos}}</td>
+                                        <td class="border-bottom-0">{{alumno.Usuario}}</td>
+                                        <td class="border-bottom-0">{{alumno.FechaNacimiento}}</td>
+                                        <td class="border-bottom-0">{{alumno.NomClase}}</td>
+                                        <td class="border-bottom-0">{{alumno.NomCentro}}</td>
                                         <td class="border-bottom-0">
-                                          <a href="./" class="btn btn-primary">Modificar</a>
-                                          <a href="./" class="btn btn-danger">Eliminar</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border-bottom-0">1</td>
-                                        <td class="border-bottom-0">Pepe</td>
-                                        <td class="border-bottom-0">Pepe1</td>
-                                        <td class="border-bottom-0">24/10/2015</td>
-                                        <td class="border-bottom-0">1ºA</td>
-                                        <td class="border-bottom-0">Cole1</td>
-                                        <td class="border-bottom-0">
-                                          <a href="./" class="btn btn-primary">Modificar</a>
-                                          <a href="./" class="btn btn-danger">Eliminar</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border-bottom-0">1</td>
-                                        <td class="border-bottom-0">Pepe</td>
-                                        <td class="border-bottom-0">Pepe1</td>
-                                        <td class="border-bottom-0">24/10/2015</td>
-                                        <td class="border-bottom-0">1ºA</td>
-                                        <td class="border-bottom-0">Cole1</td>
-                                        <td class="border-bottom-0">
-                                          <a href="./" class="btn btn-primary">Modificar</a>
-                                          <a href="./" class="btn btn-danger">Eliminar</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="border-bottom-0">1</td>
-                                        <td class="border-bottom-0">Pepe</td>
-                                        <td class="border-bottom-0">Pepe1</td>
-                                        <td class="border-bottom-0">24/10/2015</td>
-                                        <td class="border-bottom-0">1ºA</td>
-                                        <td class="border-bottom-0">Cole1</td>
-                                        <td class="border-bottom-0">
-                                          <a href="./" class="btn btn-primary">Modificar</a>
-                                          <a href="./" class="btn btn-danger">Eliminar</a>
+                                          <a href="./" class="btn btn-primary">M</a>
+                                          <button class="btn btn-danger" (click)="eliminarAlumno(alumno.ID_Alumno)">E</button>
                                         </td>
                                     </tr>
                                 </tbody>

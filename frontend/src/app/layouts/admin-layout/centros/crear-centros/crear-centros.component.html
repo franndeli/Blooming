@@ -124,12 +124,12 @@ data-sidebar-position="fixed" data-header-position="fixed">
                   <form [formGroup]="form">
                     <div class="mb-3">
                       <label for="Nombre" class="form-label">Nombre</label>
-                      <input class="form-control" formControlName="Nombre" id="Nombre" aria-describedby="textHelp">
+                      <input class="form-control" formControlName="Nombre" id="Nombre">
                     </div>
                     <p class="text-danger" *ngIf="!validarForm('Nombre')">El Nombre es obligatorio</p>
                     <div class="mb-3">
                       <label for="Email" class="form-label">Email</label>
-                      <input type="email" class="form-control" formControlName="Email" aria-describedby="emailHelp">
+                      <input type="email" class="form-control" formControlName="Email">
                     </div>
                     <p class="text-danger" *ngIf="!validarForm('Email')">El Email es obligatorio</p>
                     <div class="mb-4">

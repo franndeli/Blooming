@@ -15,7 +15,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
             <form [formGroup]="form">
               <div class="mb-3">
                 <label for="Usuario" class="form-label">Usuario / Email</label>
-                <input class="form-control" formControlName="Usuario" id="Usuario" aria-describedby="emailHelp">
+                <input class="form-control" formControlName="Usuario" id="Usuario">
               </div>
               <p class="text-danger" *ngIf="!validarLogin('Usuario')">El usuario es obligatorio</p>
               <div class="mb-4">

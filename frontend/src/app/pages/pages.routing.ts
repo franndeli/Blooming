@@ -26,6 +26,11 @@ import { EditarAlumnosComponent } from './admin/editar-alumnos/editar-alumnos.co
 import { EditarCentrosComponent } from './admin/editar-centros/editar-centros.component';
 import { EditarClasesComponent } from './admin/editar-clases/editar-clases.component';
 import { EditarProfesoresComponent } from './admin/editar-profesores/editar-profesores.component';
+import { ProfesoresComponent } from './profesores/profesores.component';
+import { VerClasesPComponent } from './profesores/ver-clases-p/ver-clases-p.component';
+import { VerPerfilAlumnoComponent } from './profesores/ver-perfil-alumno/ver-perfil-alumno.component';
+import { ActividadRecienteComponent } from './profesores/actividad-reciente/actividad-reciente.component';
+import { VerAlumnosPComponent } from './profesores/ver-alumnos-p/ver-alumnos-p.component';
 
 const routes: Routes = [
   { path: 'admin', component: AdminLayoutComponent,
@@ -56,6 +61,16 @@ const routes: Routes = [
       { path: 'crear-profesores', component: CrearProfesoresCComponent},
       { path: 'crear-clases', component: CrearClasesCComponent},
   ]},
+  {
+    path: 'profesores', component: AdminLayoutComponent,
+    children: [
+      { path: 'dashboard', component: ProfesoresComponent},
+      { path: 'ver-clases', component: VerClasesPComponent},
+      { path: 'ver-perfil-alumno', component: VerPerfilAlumnoComponent},
+      { path: 'actividad-reciente', component: ActividadRecienteComponent},
+      { path: 'ver-alumnos', component: VerAlumnosPComponent},
+    ]
+  },
   /*{ 
     path: 'dashboard', component: DashboardComponent,
     children: [

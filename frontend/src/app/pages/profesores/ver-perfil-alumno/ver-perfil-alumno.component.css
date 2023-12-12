@@ -1,0 +1,12 @@
+
+.profile-container {
+    margin-top: 50px; /* Ajusta según sea necesario */
+  }
+
+  .profile-image {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 3px solid #fff; /* Ajusta el grosor y color del borde según sea necesario */
+  }
+

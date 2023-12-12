@@ -5,6 +5,8 @@ import { Component } from '@angular/core';
   templateUrl: './admin-layout.component.html',
   styleUrl: './admin-layout.component.css'
 })
+
+
 export class AdminLayoutComponent {
 
 }

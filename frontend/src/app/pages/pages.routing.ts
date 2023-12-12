@@ -52,7 +52,7 @@ const routes: Routes = [
       { path: '**', redirectTo: 'admindashboard'},
   ]},
   {
-    path: 'centros', component: AdminLayoutComponent,
+    path: 'centros', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
     children: [
       { path: 'dashboard', component: CentrosComponent},
       { path: 'ver-alumnos', component: VerAlumnosCComponent},
@@ -63,7 +63,7 @@ const routes: Routes = [
       { path: 'crear-clases', component: CrearClasesCComponent},
   ]},
   {
-    path: 'profesores', component: AdminLayoutComponent,
+    path: 'profesores', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
     children: [
       { path: 'dashboard', component: ProfesoresComponent},
       { path: 'ver-clases', component: VerClasesPComponent},

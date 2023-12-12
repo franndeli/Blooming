@@ -1,12 +1,116 @@
 <!--  Body Wrapper -->
 <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
 data-sidebar-position="fixed" data-header-position="fixed">
-
-
+<!-- Sidebar Start -->
+<aside class="left-sidebar-admin">
+  <!-- Sidebar scroll-->
+  <div>
+    <div class="brand-logo d-flex align-items-center justify-content-between">
+      <a href="./admin" class="text-nowrap logo-img">
+        <br>
+        <img src="../assets/images/logos/logo.png" width="180" alt="" />
+      </a>
+      <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+        <i class="ti ti-x fs-8"></i>
+      </div>
+    </div>
+    <!-- Sidebar navigation-->
+    <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+        <br>
+        <h3 style="color: white;">Admin</h3>
+      <ul id="sidebarnav">
+        <li class="nav-small-cap">
+          <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+          <span class="hide-menu">Home</span>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="./centros" aria-expanded="false">
+            <span>
+              <i class="ti ti-home"></i>
+            </span>
+            <span class="hide-menu">Centros</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="./profesores" aria-expanded="false">
+            <span>
+              <i class="ti ti-address-book"></i>
+            </span>
+            <span class="hide-menu">Profesores</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="./alumnos" aria-expanded="false">
+            <span>
+              <i class="ti ti-address-book"></i>
+            </span>
+            <span class="hide-menu">Alumnos</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="./clases" aria-expanded="false">
+            <span>
+              <i class="ti ti-address-book"></i>
+            </span>
+            <span class="hide-menu">Clases</span>
+          </a>
+      </li>
+      </ul>
+      
+    </nav>
+    <!-- End Sidebar navigation -->
+  </div>
+  <!-- End Sidebar scroll-->
+</aside>
 <!--  Sidebar End -->
 <!--  Main wrapper -->
-<div class="body-wrapper" style="margin-left: 0;">
- 
+<div class="body-wrapper">
+  <!--  Header Start -->
+  <header class="app-header">
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <ul class="navbar-nav">
+        <li class="nav-item d-block d-xl-none">
+          <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
+            <i class="ti ti-menu-2"></i>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link nav-icon-hover" href="javascript:void(0)">
+            <i class="ti ti-bell-ringing"></i>
+            <div class="notification bg-primary rounded-circle"></div>
+          </a>
+        </li>
+      </ul>
+      <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+        <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+          <li class="nav-item dropdown">
+            <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <img src="../assets/images/profile/user-1.jpg" alt="" width="35" height="35" class="rounded-circle">
+            </a>
+            <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
+              <div class="message-body">
+                <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                  <i class="ti ti-user fs-6"></i>
+                  <p class="mb-0 fs-3">My Profile</p>
+                </a>
+                <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                  <i class="ti ti-mail fs-6"></i>
+                  <p class="mb-0 fs-3">My Account</p>
+                </a>
+                <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
+                  <i class="ti ti-list-check fs-6"></i>
+                  <p class="mb-0 fs-3">My Task</p>
+                </a>
+                <a href="./authentication-login.html" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <!--  Header End -->
   <div class="container-fluid">
     <!--  Row 1 -->
     
@@ -17,33 +121,39 @@ data-sidebar-position="fixed" data-header-position="fixed">
               <h5 class="card-title fw-semibold mb-4">Crear Alumno</h5>
               <div class="card">
                 <div class="card-body">
-                  <form>
+                  <form [formGroup]="form">
                     <div class="mb-3">
-                      <label for="exampleInputEmail1" class="form-label">Nombre</label>
-                      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                      <label for="Nombre" class="form-label">Nombre</label>
+                      <input class="form-control" formControlName="Nombre" id="Nombre">
                     </div>
+                    <p class="text-danger" *ngIf="!validarForm('Nombre')">El Nombre es obligatorio</p>
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Apellidos</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                      </div>
-                    <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Usuario</label>
-                      <input type="password" class="form-control" id="exampleInputPassword1">
+                      <label for="Apellidos" class="form-label">Apellidos</label>
+                      <input class="form-control" formControlName="Apellidos" id="Apellidos">
                     </div>
+                    <p class="text-danger" *ngIf="!validarForm('Apellidos')">El Nombre es obligatorio</p>
                     <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Fecha de Nacimiento</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1">
+                      <label for="Contraseña" class="form-label">Contraseña</label>
+                      <input type="password" class="form-control" formControlName="Contraseña" id="Contraseña">
                     </div>
+                    <p class="text-danger" *ngIf="!validarForm('Contraseña')">El Nombre es obligatorio</p>
                     <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Clase</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1">
+                      <label for="FechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+                      <input class="form-control" formControlName="FechaNacimiento" id="FechaNacimiento">
                     </div>
+                    <p class="text-danger" *ngIf="!validarForm('FechaNacimiento')">El Nombre es obligatorio</p>
                     <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Centro</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1">
+                      <label for="ID_Clase" class="form-label">Clase</label>
+                      <input class="form-control" formControlName="ID_Clase" id="ID_Clase">
                     </div>
-                    <button type="submit" class="btn btn-danger">Aceptar</button>
-                    <a href="./alumnos" class="btn btn-danger">Volver</a>
+                    <p class="text-danger" *ngIf="!validarForm('ID_Clase')">El Nombre es obligatorio</p>
+                    <!-- <div class="mb-3">
+                      <label for="ID_Centro" class="form-label">Centro</label>
+                      <input class="form-control" formControlName="ID_Centro" id="ID_Centro">
+                    </div>
+                    <p class="text-danger" *ngIf="!validarForm('ID_Centro')">El Centro es obligatorio</p> -->
+                    <button class="btn btn-danger" (click)="crearAlumno()">Aceptar</button>
+                    <button [routerLink]="['/alumnos']" class="btn btn-danger">Volver</button>
                   </form>
                 </div>
               </div>

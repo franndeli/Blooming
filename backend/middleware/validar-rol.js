@@ -4,7 +4,7 @@ const validarRol = (rolesPermitidos) => {
         if (rolesPermitidos.includes(usuarioRol)) {
             next();
         } else {
-            return res.status(403).json({ msg: 'Acceso denegado: rol no autorizado para esta operación' });
+            return res.status(403).json({ message: 'Acceso denegado: rol no autorizado para esta operación' });
         }
     };
 };

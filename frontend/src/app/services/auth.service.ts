@@ -11,6 +11,7 @@ import { TokenResponse } from '../interfaces/token-response';
 @Injectable({
   providedIn: 'root'
 })
+
 export class AuthService {
 
   constructor(private http: HttpClient) { }
@@ -35,7 +36,11 @@ export class AuthService {
 
   login(formData: loginForm){
     console.log(formData);
-    return this.http.post(`${environment.base_url}/login`, formData).pipe(retry(2),catchError(this.handleError));
+    return this.http.post(`${environment.base_url}/login`, formData);
+  }
+
+  registro(formData: any){
+    return this.http.post(`${environment.base_url}/centros`, formData);
   }
 
   validarToken() {
@@ -60,6 +65,5 @@ export class AuthService {
         return of(false);
       })
     )
-
   }
 }

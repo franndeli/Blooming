@@ -52,7 +52,7 @@ const login = async (req, res) => {
         if (!usuario) {
             return res.status(400).json({
                 ok: false,
-                msg: 'Usuario o contraseña incorrectos',
+                message: 'Usuario o contraseña incorrectos',
                 token: ''
             });
         }
@@ -61,7 +61,7 @@ const login = async (req, res) => {
         if (usuario.Rol !== usuario.RolEsperado) {
             return res.status(400).json({
                 ok: false,
-                msg: `Rol no autorizado: se esperaba ${usuario.RolEsperado}`,
+                message: `Rol no autorizado: se esperaba ${usuario.RolEsperado}`,
                 token: ''
             });
         }
@@ -70,7 +70,7 @@ const login = async (req, res) => {
         if (!validPassword) {
             return res.status(400).json({
                 ok: false,
-                msg: 'Usuario o contraseña incorrectos',
+                message: 'Usuario o contraseña incorrectos',
                 token: ''
             });
         }
@@ -78,7 +78,7 @@ const login = async (req, res) => {
         const token = await generarJWT(usuario);
         res.json({
             ok: true,
-            msg: `login ${usuario.Rol}`,
+            message: `login ${usuario.Rol}`,
             rol: usuario.Rol,
             token
         });
@@ -86,7 +86,7 @@ const login = async (req, res) => {
         console.log(error);
         return res.status(500).json({
             ok: false,
-            msg: 'Error en login',
+            message: 'Error en login',
             token: ''
         });
     }

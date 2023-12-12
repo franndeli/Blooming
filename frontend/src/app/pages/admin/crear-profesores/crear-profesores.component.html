@@ -9,39 +9,53 @@ data-sidebar-position="fixed" data-header-position="fixed">
     <!--  Row 1 -->
     
     <div class="container-fluid">
-        <div class="container-fluid">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title fw-semibold mb-4">Crear Profesor</h5>
-              <div class="card">
-                <div class="card-body">
-                  <form>
-                    <div class="mb-3">
-                      <label for="exampleInputEmail1" class="form-label">Nombre</label>
-                      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                      </div>
-                    <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Centro</label>
-                      <input type="password" class="form-control" id="exampleInputPassword1">
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Clase</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1">
-                      </div>
-                    <button type="submit" class="btn btn-danger">Aceptar</button>
-                    <a href="./profesores" class="btn btn-danger">Volver</a>
-                  </form>
-                </div>
+      <div class="container-fluid">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title fw-semibold mb-4">Crear Profesor</h5>
+            <div class="card">
+              <div class="card-body">
+                <form [formGroup]="form">
+                  <div class="mb-3">
+                    <label for="Nombre" class="form-label">Nombre</label>
+                    <input class="form-control" formControlName="Nombre" id="Nombre">
+                  </div>
+                  <p class="text-danger" *ngIf="!validarForm('Nombre')">El Centro es obligatorio</p>
+                  <div class="mb-3">
+                    <label for="Apellidos" class="form-label">Apellidos</label>
+                    <input class="form-control" formControlName="Apellidos" id="Apellidos">
+                  </div>
+                  <p class="text-danger" *ngIf="!validarForm('Apellidos')">El Centro es obligatorio</p>
+                  <div class="mb-3">
+                    <label for="Email" class="form-label">Email</label>
+                    <input type="email" class="form-control" formControlName="Email" id="Email">
+                  </div>
+                  <p class="text-danger" *ngIf="!validarForm('Email')">El Centro es obligatorio</p>
+                  <div class="mb-3">
+                    <label for="Contraseña" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" formControlName="Contraseña" id="Contraseña">
+                  </div>
+                  <p class="text-danger" *ngIf="!validarForm('Contraseña')">El Centro es obligatorio</p>
+                  <div class="mb-3">
+                    <label for="ID_Centro" class="form-label">Centro</label>
+                    <input class="form-control" formControlName="ID_Centro" id="ID_Centro">
+                  </div>
+                  <p class="text-danger" *ngIf="!validarForm('ID_Centro')">El Centro es obligatorio</p>
+                  <div class="mb-3">
+                    <label for="ID_Clase" class="form-label">Clase</label>
+                    <input class="form-control" formControlName="ID_Clase" id="ID_Clase">
+                  </div>
+                  <p class="text-danger" *ngIf="!validarForm('ID_Clase')">El Centro es obligatorio</p>
+                  <button class="btn btn-danger" (click)="crearProfesor()">Aceptar</button>
+                  <button [routerLink]="['/profesores']" class="btn btn-danger">Volver</button>
+                </form>
               </div>
-              
             </div>
+            
           </div>
         </div>
-    </div>
+      </div>
+  </div>
       
     <div class="py-6 px-6 text-center">
         <p class="copyright">&copy; 2023 Blooming. Proyecto académico de la Universidad de Alicante .</p>

@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { DashboardComponent } from '../pages/dashboard/dashboard.component';
 import { UsuariosComponent } from '../pages/usuarios/usuarios.component';
-import { CentrosVistaComponent } from './centros-vista/centros-vista.component';
+import { CentrosComponent } from './centros/centros.component';
 import { AdminComponent } from './admin/admin.component';
 
 import { AdminLayoutComponent } from '../layouts/admin-layout/admin-layout.component';
@@ -16,6 +16,12 @@ import { VerCentrosComponent } from './admin/ver-centros/ver-centros.component';
 import { VerClasesComponent } from './admin/ver-clases/ver-clases.component';
 import { VerProfesoresComponent } from './admin/ver-profesores/ver-profesores.component';
 import { AdmindashboardComponent } from './admin/admindashboard/admindashboard.component';
+import { VerAlumnosCComponent } from './centros/ver-alumnos-c/ver-alumnos-c.component';
+import { VerProfesoresCComponent } from './centros/ver-profesores-c/ver-profesores-c.component';
+import { VerClasesCComponent } from './centros/ver-clases-c/ver-clases-c.component';
+import { CrearAlumnosCComponent } from './centros/crear-alumnos-c/crear-alumnos-c.component';
+import { CrearProfesoresCComponent } from './centros/crear-profesores-c/crear-profesores-c.component';
+import { CrearClasesCComponent } from './centros/crear-clases-c/crear-clases-c.component';
 
 const routes: Routes = [
   { path: 'admin', component: AdminLayoutComponent,
@@ -31,14 +37,24 @@ const routes: Routes = [
       { path: 'crear-profesores', component: CrearProfesoresComponent},
       { path: '**', redirectTo: 'admindashboard'},
   ]},
+  {
+    path: 'centros', component: AdminLayoutComponent,
+    children: [
+      { path: 'dashboard', component: CentrosComponent},
+      { path: 'ver-alumnos', component: VerAlumnosCComponent},
+      { path: 'ver-profesores', component: VerProfesoresCComponent},
+      { path: 'ver-clases', component: VerClasesCComponent},
+      { path: 'crear-alumnos', component: CrearAlumnosCComponent},
+      { path: 'crear-profesores', component: CrearProfesoresCComponent},
+      { path: 'crear-clases', component: CrearClasesCComponent},
+  ]},
   /*{ 
     path: 'dashboard', component: DashboardComponent,
     children: [
     { path: '', component: DashboardComponent},
     { path: '**', redirectTo: ''}
   ]},*/
-  { path: 'usuarios', component: UsuariosComponent},
-  { path: 'centrosvista', component: CentrosVistaComponent}
+  { path: 'usuarios', component: UsuariosComponent}
 ];
 
 @NgModule({

@@ -7,10 +7,10 @@ import { CentrosComponent } from './centros/centros.component';
 import { AdminComponent } from './admin/admin.component';
 
 import { AdminLayoutComponent } from '../layouts/admin-layout/admin-layout.component';
-import { CrearAlumnosComponent } from './admin/ver-alumnos/crear-alumnos/crear-alumnos.component';
-import { CrearCentrosComponent } from './admin/ver-centros/crear-centros/crear-centros.component';
-import { CrearClasesComponent } from './admin/ver-clases/crear-clases/crear-clases.component';
-import { CrearProfesoresComponent } from './admin/ver-profesores/crear-profesores/crear-profesores.component';
+import { CrearAlumnosComponent } from './admin/crear-alumnos/crear-alumnos.component';
+import { CrearCentrosComponent } from './admin/crear-centros/crear-centros.component';
+import { CrearClasesComponent } from './admin/crear-clases/crear-clases.component';
+import { CrearProfesoresComponent } from './admin/crear-profesores/crear-profesores.component';
 import { VerAlumnosComponent } from './admin/ver-alumnos/ver-alumnos.component';
 import { VerCentrosComponent } from './admin/ver-centros/ver-centros.component';
 import { VerClasesComponent } from './admin/ver-clases/ver-clases.component';
@@ -22,6 +22,10 @@ import { VerClasesCComponent } from './centros/ver-clases-c/ver-clases-c.compone
 import { CrearAlumnosCComponent } from './centros/crear-alumnos-c/crear-alumnos-c.component';
 import { CrearProfesoresCComponent } from './centros/crear-profesores-c/crear-profesores-c.component';
 import { CrearClasesCComponent } from './centros/crear-clases-c/crear-clases-c.component';
+import { EditarAlumnosComponent } from './admin/editar-alumnos/editar-alumnos.component';
+import { EditarCentrosComponent } from './admin/editar-centros/editar-centros.component';
+import { EditarClasesComponent } from './admin/editar-clases/editar-clases.component';
+import { EditarProfesoresComponent } from './admin/editar-profesores/editar-profesores.component';
 
 const routes: Routes = [
   { path: 'admin', component: AdminLayoutComponent,
@@ -35,6 +39,10 @@ const routes: Routes = [
       { path: 'crear-centros', component: CrearCentrosComponent},
       { path: 'crear-clases', component: CrearClasesComponent},
       { path: 'crear-profesores', component: CrearProfesoresComponent},
+      { path: 'editar-alumnos', component: EditarAlumnosComponent},
+      { path: 'editar-centros', component: EditarCentrosComponent},
+      { path: 'editar-clases', component: EditarClasesComponent},
+      { path: 'editar-profesores', component: EditarProfesoresComponent},
       { path: '**', redirectTo: 'admindashboard'},
   ]},
   {

@@ -18,6 +18,10 @@ import { VerAlumnosCComponent } from './centros/ver-alumnos-c/ver-alumnos-c.comp
 import { CrearAlumnosCComponent } from './centros/crear-alumnos-c/crear-alumnos-c.component';
 import { CrearClasesCComponent } from './centros/crear-clases-c/crear-clases-c.component';
 import { CrearProfesoresCComponent } from './centros/crear-profesores-c/crear-profesores-c.component';
+import { EditarAlumnosComponent } from './admin/editar-alumnos/editar-alumnos.component';
+import { EditarClasesComponent } from './admin/editar-clases/editar-clases.component';
+import { EditarProfesoresComponent } from './admin/editar-profesores/editar-profesores.component';
+import { EditarCentrosComponent } from './admin/editar-centros/editar-centros.component';
 
 
 @NgModule({
@@ -37,7 +41,11 @@ import { CrearProfesoresCComponent } from './centros/crear-profesores-c/crear-pr
       VerAlumnosCComponent,
       CrearAlumnosCComponent,
       CrearClasesCComponent,
-      CrearProfesoresCComponent
+      CrearProfesoresCComponent,
+      EditarAlumnosComponent,
+      EditarClasesComponent,
+      EditarProfesoresComponent,
+      EditarCentrosComponent
   ],
   exports: [
     AdminLayoutComponent,

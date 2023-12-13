@@ -11,22 +11,38 @@ import { AdminComponent } from './admin/admin.component';
 import { AdminLayoutComponent } from '../layouts/admin-layout/admin-layout.component';
 
 import { CommonsModule } from '../commons/commons.module';
-import { AdmindashboardComponent } from './admin/admindashboard/admindashboard.component';
+
+//CENTROS
 import { VerProfesoresCComponent } from './centros/ver-profesores-c/ver-profesores-c.component';
 import { VerClasesCComponent } from './centros/ver-clases-c/ver-clases-c.component';
 import { VerAlumnosCComponent } from './centros/ver-alumnos-c/ver-alumnos-c.component';
 import { CrearAlumnosCComponent } from './centros/crear-alumnos-c/crear-alumnos-c.component';
 import { CrearClasesCComponent } from './centros/crear-clases-c/crear-clases-c.component';
 import { CrearProfesoresCComponent } from './centros/crear-profesores-c/crear-profesores-c.component';
-import { EditarAlumnosComponent } from './admin/editar-alumnos/editar-alumnos.component';
-import { EditarClasesComponent } from './admin/editar-clases/editar-clases.component';
+
+//ADMIN
+import { AdmindashboardComponent } from './admin/admindashboard/admindashboard.component';
+import { VerProfesoresComponent } from './admin/ver-profesores/ver-profesores.component';
+import { CrearProfesoresComponent } from './admin/crear-profesores/crear-profesores.component';
 import { EditarProfesoresComponent } from './admin/editar-profesores/editar-profesores.component';
+import { VerAlumnosComponent } from './admin/ver-alumnos/ver-alumnos.component';
+import { CrearAlumnosComponent } from './admin/crear-alumnos/crear-alumnos.component';
+import { EditarAlumnosComponent } from './admin/editar-alumnos/editar-alumnos.component';
+import { VerClasesComponent } from './admin/ver-clases/ver-clases.component';
+import { CrearClasesComponent } from './admin/crear-clases/crear-clases.component';
+import { EditarClasesComponent } from './admin/editar-clases/editar-clases.component';
+import { VerCentrosComponent } from './admin/ver-centros/ver-centros.component';
+import { CrearCentrosComponent } from './admin/crear-centros/crear-centros.component';
 import { EditarCentrosComponent } from './admin/editar-centros/editar-centros.component';
+
+//PROFESORES
 import { ProfesoresComponent } from './profesores/profesores.component';
 import { VerClasesPComponent } from './profesores/ver-clases-p/ver-clases-p.component';
 import { VerAlumnosPComponent } from './profesores/ver-alumnos-p/ver-alumnos-p.component';
 import { VerPerfilAlumnoComponent } from './profesores/ver-perfil-alumno/ver-perfil-alumno.component';
 import { ActividadRecienteComponent } from './profesores/actividad-reciente/actividad-reciente.component';
+
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -55,7 +71,15 @@ import { ActividadRecienteComponent } from './profesores/actividad-reciente/acti
       VerClasesPComponent,
       VerAlumnosPComponent,
       VerPerfilAlumnoComponent,
-      ActividadRecienteComponent
+      ActividadRecienteComponent,
+      CrearProfesoresComponent,
+      CrearClasesComponent,
+      CrearAlumnosComponent,
+      CrearCentrosComponent,
+      VerProfesoresComponent,
+      VerAlumnosComponent,
+      VerClasesComponent,
+      VerCentrosComponent
   ],
   exports: [
     AdminLayoutComponent,
@@ -64,7 +88,9 @@ import { ActividadRecienteComponent } from './profesores/actividad-reciente/acti
   imports: [
     CommonModule,
     RouterModule,
-    CommonsModule
+    CommonsModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class PagesModule { }

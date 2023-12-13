@@ -35,7 +35,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                     <td class="border-bottom-0">{{profesor.NomCentro}}</td>
                                     <td class="border-bottom-0">{{profesor.NomClase}}</td>
                                     <td class="border-bottom-0">
-                                      <a href="./" class="btn btn-primary">M</a>
+                                      <a routerLink="/admin/editar-profesores" class="btn btn-primary">M</a>
                                       <button class="btn btn-danger" (click)="eliminarProfesor(profesor.ID_Profesor)">E</button>
                                     </td>
                                 </tr>
@@ -43,7 +43,8 @@ data-sidebar-position="fixed" data-header-position="fixed">
                           </table>
                         </div>
                     </div>
-                    <a href="/crear-profesores" class="btn btn-danger">Crear Profesor</a>
+                    <a href="/admin/crear-profesores" class="btn btn-danger">Crear Profesor</a>
+                    <a href="/admin/dashboard" class="btn btn-danger">Volver</a>
                 </div>
             </div>
         </div>

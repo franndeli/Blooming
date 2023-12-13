@@ -32,11 +32,14 @@ import { VerClasesPComponent } from './profesores/ver-clases-p/ver-clases-p.comp
 import { VerPerfilAlumnoComponent } from './profesores/ver-perfil-alumno/ver-perfil-alumno.component';
 import { ActividadRecienteComponent } from './profesores/actividad-reciente/actividad-reciente.component';
 import { VerAlumnosPComponent } from './profesores/ver-alumnos-p/ver-alumnos-p.component';
+import { EditarAlumnosCComponent } from './centros/editar-alumnos-c/editar-alumnos-c.component';
+import { EditarProfesoresCComponent } from './centros/editar-profesores-c/editar-profesores-c.component';
+import { EditarClasesCComponent } from './centros/editar-clases-c/editar-clases-c.component';
 
 const routes: Routes = [
   { path: 'admin', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
     children: [
-      { path: 'admindashboard', component: AdmindashboardComponent},
+      { path: 'dashboard', component: AdmindashboardComponent},
       { path: 'ver-alumnos', component: VerAlumnosComponent},
       { path: 'ver-centros', component: VerCentrosComponent},
       { path: 'ver-clases', component: VerClasesComponent},
@@ -49,7 +52,7 @@ const routes: Routes = [
       { path: 'editar-centros', component: EditarCentrosComponent},
       { path: 'editar-clases', component: EditarClasesComponent},
       { path: 'editar-profesores', component: EditarProfesoresComponent},
-      { path: '**', redirectTo: 'admindashboard'},
+      { path: '**', redirectTo: 'dashboard'},
   ]},
   {
     path: 'centros', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
@@ -61,6 +64,9 @@ const routes: Routes = [
       { path: 'crear-alumnos', component: CrearAlumnosCComponent},
       { path: 'crear-profesores', component: CrearProfesoresCComponent},
       { path: 'crear-clases', component: CrearClasesCComponent},
+      { path: 'editar-alumnos', component: EditarAlumnosCComponent},
+      { path: 'editar-profesores', component: EditarProfesoresCComponent},
+      { path: 'editar-clases', component: EditarClasesCComponent},
   ]},
   {
     path: 'profesores', component: AdminLayoutComponent, canActivate: [ AuthGuard ],

@@ -43,6 +43,9 @@ import { VerPerfilAlumnoComponent } from './profesores/ver-perfil-alumno/ver-per
 import { ActividadRecienteComponent } from './profesores/actividad-reciente/actividad-reciente.component';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { EditarAlumnosCComponent } from './centros/editar-alumnos-c/editar-alumnos-c.component';
+import { EditarProfesoresCComponent } from './centros/editar-profesores-c/editar-profesores-c.component';
+import { EditarClasesCComponent } from './centros/editar-clases-c/editar-clases-c.component';
 
 
 @NgModule({
@@ -79,7 +82,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
       VerProfesoresComponent,
       VerAlumnosComponent,
       VerClasesComponent,
-      VerCentrosComponent
+      VerCentrosComponent,
+      EditarAlumnosCComponent,
+      EditarProfesoresCComponent,
+      EditarClasesCComponent
   ],
   exports: [
     AdminLayoutComponent,

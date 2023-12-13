@@ -9,7 +9,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 const routes: Routes = [
   // login y recovery authroutingmodules
   // dashboard pagesroutingmodules
-  { path: '**', redirectTo: 'login'},
+  { path: '**', redirectTo: 'inicio'},
 ];
 
 @NgModule({

@@ -30,7 +30,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                         <td class="border-bottom-0">{{clase.NumAlumnos}}</td>
                                         <td class="border-bottom-0">{{clase.NomCentro}}</td>
                                         <td class="border-bottom-0">
-                                          <a href="./" class="btn btn-primary">M</a>
+                                          <a routerLink="/admin/editar-clases" class="btn btn-primary">M</a>
                                           <button class="btn btn-danger" (click)="eliminarClase(clase.ID_Centro)">E</button>
                                         </td>
                                     </tr>
@@ -38,7 +38,8 @@ data-sidebar-position="fixed" data-header-position="fixed">
                             </table>
                         </div>
                     </div>
-                    <a href="/crear-clases" class="btn btn-danger">Crear Clase</a>
+                    <a href="/admin/crear-clases" class="btn btn-danger">Crear Clase</a>
+                    <a href="/admin/dashboard" class="btn btn-danger">Volver</a>
                 </div>
             </div>
         </div>

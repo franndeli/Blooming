@@ -29,7 +29,7 @@
                                     <td class="border-bottom-0">{{centro.Calle}}</td>
                                     <td class="border-bottom-0">{{centro.CP}}</td>
                                     <td class="border-bottom-0">
-                                      <a href="./login" class="btn btn-primary">M</a>
+                                      <a routerLink="/admin/editar-centros" class="btn btn-primary">M</a>
                                       <button class="btn btn-danger" (click)="eliminarCentro(centro.ID_Centro)">E</button>
                                     </td>
                                 </tr>
@@ -37,7 +37,8 @@
                             </table>
                         </div>
                     </div>
-                    <button href='/admin/crear-centros' class="btn btn-danger">Crear Centro</button>
+                    <button  routerLink="/admin/crear-centros"class="btn btn-danger">Crear Centro</button>
+                    <a href="/admin/dashboard" class="btn btn-danger">Volver</a>
                 </div>
             </div>
         </div>

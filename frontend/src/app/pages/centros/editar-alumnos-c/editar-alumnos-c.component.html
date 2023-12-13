@@ -2,9 +2,11 @@
 <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
 data-sidebar-position="fixed" data-header-position="fixed">
 
+
+<!--  Sidebar End -->
 <!--  Main wrapper -->
 <div class="body-wrapper" style="margin-left: 0;">
-  
+ 
   <div class="container-fluid">
     <!--  Row 1 -->
     
@@ -12,7 +14,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
         <div class="container-fluid">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title fw-semibold mb-4">Editar Clase</h5>
+              <h5 class="card-title fw-semibold mb-4">Editar Alumno</h5>
               <div class="card">
                 <div class="card-body">
                   <form>
@@ -21,15 +23,27 @@ data-sidebar-position="fixed" data-header-position="fixed">
                       <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Centro</label>
+                        <label for="exampleInputEmail1" class="form-label">Apellidos</label>
                         <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
                       </div>
                     <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Nº Alumnos</label>
+                      <label for="exampleInputPassword1" class="form-label">Usuario</label>
                       <input type="password" class="form-control" id="exampleInputPassword1">
                     </div>
-                    <button type="submit" class="btn btn-danger">Aceptar</button>
-                    <a routerLink="/admin/ver-clases" class="btn btn-danger">Volver</a>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Fecha de Nacimiento</label>
+                        <input type="password" class="form-control" id="exampleInputPassword1">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Clase</label>
+                        <input type="password" class="form-control" id="exampleInputPassword1">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Centro</label>
+                        <input type="password" class="form-control" id="exampleInputPassword1">
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Aceptar</button>
+                    <a routerLink="/centros/ver-alumnos" class="btn btn-secondary">Volver</a>
                   </form>
                 </div>
               </div>

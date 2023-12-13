@@ -47,7 +47,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                   </div>
                   <p class="text-danger" *ngIf="!validarForm('ID_Clase')">El Centro es obligatorio</p>
                   <button class="btn btn-danger" (click)="crearProfesor()">Aceptar</button>
-                  <button href='/profesores' class="btn btn-danger">Volver</button>
+                  <button  routerLink="/admin/ver-profesores" class="btn btn-danger">Volver</button>
                 </form>
               </div>
             </div>

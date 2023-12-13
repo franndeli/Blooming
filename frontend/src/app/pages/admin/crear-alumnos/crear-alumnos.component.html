@@ -3,7 +3,7 @@
 data-sidebar-position="fixed" data-header-position="fixed">
 
 <!--  Main wrapper -->
-<div class="body-wrapper">
+<div class="body-wrapper" style="margin-left: 0;">
   
   <!--  Header End -->
   <div class="container-fluid">
@@ -48,11 +48,10 @@ data-sidebar-position="fixed" data-header-position="fixed">
                     </div>
                     <p class="text-danger" *ngIf="!validarForm('ID_Centro')">El Centro es obligatorio</p> -->
                     <button class="btn btn-danger" (click)="crearAlumno()">Aceptar</button>
-                    <button href='/admindashboard' class="btn btn-danger">Volver</button>
+                    <button routerLink="/admin/ver-alumnos" class="btn btn-danger">Volver</button>
                   </form>
                 </div>
               </div>
-              
             </div>
           </div>
         </div>

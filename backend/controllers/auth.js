@@ -25,13 +25,15 @@ const token = async(req, res) => {
                 msg: 'Token no válido - usuario no encontrado o rol cambiado'
             });
         }
-
-        // Aquí utilizamos ID y Rol directamente
+        const nrol = usuario.Rol;
+        // Aquí utilizamo  s ID y Rol directamente
         const nuevotoken = await generarJWT(usuario);
 
         return res.json({
             ok: true,
             msg: 'Token válido',
+            rol: nrol,
+            id: usuario.ID,
             token: nuevotoken
         });
 
@@ -80,6 +82,7 @@ const login = async (req, res) => {
             ok: true,
             message: `login ${usuario.Rol}`,
             rol: usuario.Rol,
+            id: usuario.ID,
             token
         });
     } catch (error) {

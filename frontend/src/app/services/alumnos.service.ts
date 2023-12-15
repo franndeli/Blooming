@@ -50,4 +50,9 @@ export class AlumnoService {
     return this.http.post(this.basePath, formData, this.httpOptions);
   }
 
+  putAlumno(formData: any){
+    this.getHeader();
+    return this.http.put(this.basePath+formData.ID_Alumno, formData, this.httpOptions);
+  }
+
 }

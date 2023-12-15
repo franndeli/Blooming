@@ -50,4 +50,9 @@ export class ProfesorService {
     return this.http.post(this.basePath, formData, this.httpOptions);
   }
 
+  putProfesor(formData: any){
+    this.getHeader();
+    return this.http.put(this.basePath+formData.ID_Profesor, formData, this.httpOptions);
+  }
+
 }

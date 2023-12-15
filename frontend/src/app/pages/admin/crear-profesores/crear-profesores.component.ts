@@ -31,7 +31,7 @@ export class CrearProfesoresComponent {
     }else{
       this.profesorService.postProfesor(this.form.value).subscribe(
         (response:any) => {
-          this.router.navigate(['profesores']);
+          this.router.navigate(['admin/ver-profesores']);
         },
         (error) => {
           console.error('Error de creación:', error);

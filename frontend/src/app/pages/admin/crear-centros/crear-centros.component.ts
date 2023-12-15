@@ -31,7 +31,7 @@ export class CrearCentrosComponent {
     }else{
       this.centroService.postCentro(this.form.value).subscribe(
         (response:any) => {
-          this.router.navigate(['centros']);
+          this.router.navigate(['admin/ver-centros']);
         },
         (error) => {
           console.error('Error de creación:', error);

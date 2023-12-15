@@ -1,6 +1,10 @@
 import { Component, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { ProfesorService } from '../../../services/profesores.service';
+
 import Swal from 'sweetalert2'
+
 
 @Component({
   selector: 'app-profesores',
@@ -11,7 +15,7 @@ export class VerProfesoresComponent {
 
   profesoresData: any;
 
-  constructor(private profesorService: ProfesorService){
+  constructor(private profesorService: ProfesorService, private router: Router){
     this.profesoresData = [];
   }
 
@@ -49,6 +53,10 @@ export class VerProfesoresComponent {
         });
       }
     });
+  }
+
+  editarProfesor(profesor: any){
+    this.router.navigate(['admin/editar-profesores'], {state: {profesor}});
   }
 
 }

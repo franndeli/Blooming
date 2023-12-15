@@ -27,7 +27,7 @@ export class CrearClasesComponent {
     }else{
       this.claseService.postClase(this.form.value).subscribe(
         (response:any) => {
-          this.router.navigate(['clases']);
+          this.router.navigate(['admin/ver-clases']);
         },
         (error) => {
           console.error('Error de creación:', error);

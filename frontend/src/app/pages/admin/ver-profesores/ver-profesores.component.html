@@ -35,7 +35,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                     <td class="border-bottom-0">{{profesor.NomCentro}}</td>
                                     <td class="border-bottom-0">{{profesor.NomClase}}</td>
                                     <td class="border-bottom-0">
-                                      <a routerLink="/admin/editar-profesores" class="btn btn-primary">M</a>
+                                      <button class="btn btn-primary" (click)="editarProfesor(profesor)">M</button>
                                       <button class="btn btn-danger" (click)="eliminarProfesor(profesor.ID_Profesor)">E</button>
                                     </td>
                                 </tr>

@@ -18,22 +18,20 @@ data-sidebar-position="fixed" data-header-position="fixed">
                             <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
                                 <thead class="text-dark fs-4">
                                     <tr>
-                                        <th class="border-bottom-0">ID</th>
                                         <th class="border-bottom-0">Nombre</th>
-                                        <th class="border-bottom-0">Centro</th>
                                         <th class="border-bottom-0">NºAlumnos</th>
+                                        <th class="border-bottom-0">Centro</th>
                                         <th class="border-bottom-0"></th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody *ngFor="let clase of clasesData.clases">
                                     <tr>
-                                        <td class="border-bottom-0">1</td>
-                                        <td class="border-bottom-0">1ºA</td>
-                                        <td class="border-bottom-0">Cole1</td>
-                                        <td class="border-bottom-0">15</td>
+                                        <td class="border-bottom-0">{{clase.Nombre}}</td>
+                                        <td class="border-bottom-0">{{clase.NumAlumnos}}</td>
+                                        <td class="border-bottom-0">{{clase.NomCentro}}</td>
                                         <td class="border-bottom-0">
-                                          <a href="./centros/editar-clases" class="btn btn-secondary">Modificar</a>
-                                          <a href="./" class="btn btn-danger">Eliminar</a>
+                                          <a href="./centros/editar-clases" class="btn btn-secondary">M</a>
+                                          <button class="btn btn-danger" (click)="eliminarClase(clase.ID_Clase)">E</button>
                                         </td>
                                     </tr>
                                 </tbody>

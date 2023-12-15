@@ -15,24 +15,28 @@ data-sidebar-position="fixed" data-header-position="fixed">
               <h5 class="card-title fw-semibold mb-4">Editar Profesor</h5>
               <div class="card">
                 <div class="card-body">
-                  <form>
+                  <form [formGroup]="form">
                     <div class="mb-3">
-                      <label for="exampleInputEmail1" class="form-label">Nombre</label>
-                      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                      <label for="Nombre" class="form-label">Nombre</label>
+                    <input class="form-control" formControlName="Nombre" id="Nombre">
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                      </div>
-                    <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Centro</label>
-                      <input type="password" class="form-control" id="exampleInputPassword1">
+                      <label for="Apellidos" class="form-label">Apellidos</label>
+                      <input class="form-control" formControlName="Apellidos" id="Apellidos">
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Clase</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1">
+                      <label for="Email" class="form-label">Email</label>
+                      <input type="email" class="form-control" formControlName="Email" id="Email">
                       </div>
-                    <button type="submit" class="btn btn-danger">Aceptar</button>
+                    <div class="mb-3">
+                      <label for="ID_Centro" class="form-label">Centro</label>
+                      <input class="form-control" formControlName="ID_Centro" id="ID_Centro">
+                    </div>
+                    <div class="mb-3">
+                      <label for="ID_Clase" class="form-label">Clase</label>
+                      <input class="form-control" formControlName="ID_Clase" id="ID_Clase">
+                      </div>
+                      <button class="btn btn-danger" (click)="actualizarProfesor()">Aceptar</button>
                     <a routerLink="/admin/ver-profesores"class="btn btn-danger">Volver</a>
                   </form>
                 </div>

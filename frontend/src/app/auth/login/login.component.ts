@@ -45,22 +45,19 @@ export class LoginComponent implements OnInit {
             localStorage.removeItem('usuario');
           }
           console.log('Respuesta del servidor:', response);
-          //Aquí habría que comprobar el rol que es para que te lleve a x pagina
-          //Está puesto que te lleve a router porque la de inicio no se cual es e index no me deja :)
           if(response.rol == 'Admin'){
-            this.router.navigate(['admin']);
+            this.router.navigate(['admin/dashboard']);
           }
-          /*
+          
           if(response.rol == 'Centro'){
-            this.router.navigate(['']);
+            this.router.navigate(['centros/dashboard']);
           }
           if(response.rol == 'Alumno'){
-            this.router.navigate(['']);
+            this.router.navigate(['usuarios/dashboard']);
           }
           if(response.rol == 'Profesor'){
-            this.router.navigate(['']);
+            this.router.navigate(['profesores/dashboard']);
           }
-          */
         },
         (error) => {
           console.error('Error de autenticación:', error);

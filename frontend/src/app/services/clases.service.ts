@@ -52,4 +52,9 @@ export class ClaseService {
       return this.http.post(this.basePath, formData, this.httpOptions);
     }
 
+    putClase(formData: any){
+      this.getHeader();
+      return this.http.put(this.basePath+formData.ID_Clase, formData, this.httpOptions);
+    }
+
 }

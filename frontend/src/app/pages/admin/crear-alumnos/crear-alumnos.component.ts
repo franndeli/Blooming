@@ -21,7 +21,6 @@ export class CrearAlumnosComponent {
     Contraseña: ['', [Validators.required]],
     FechaNacimiento: ['', [Validators.required]],
     ID_Clase: ['', [Validators.required]]
-    
   });
 
   crearAlumno(){
@@ -31,7 +30,7 @@ export class CrearAlumnosComponent {
     }else{
       this.alumnoService.postAlumno(this.form.value).subscribe(
         (response:any) => {
-          this.router.navigate(['alumnos']);
+          this.router.navigate(['admin/ver-alumnos']);
         },
         (error) => {
           console.error('Error de creación:', error);

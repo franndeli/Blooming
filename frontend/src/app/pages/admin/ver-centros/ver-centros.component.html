@@ -29,7 +29,7 @@
                                     <td class="border-bottom-0">{{centro.Calle}}</td>
                                     <td class="border-bottom-0">{{centro.CP}}</td>
                                     <td class="border-bottom-0">
-                                      <a routerLink="/admin/editar-centros" class="btn btn-primary">M</a>
+                                      <button class="btn btn-primary" (click)="editarCentro(centro)">M</button>
                                       <button class="btn btn-danger" (click)="eliminarCentro(centro.ID_Centro)">E</button>
                                     </td>
                                 </tr>

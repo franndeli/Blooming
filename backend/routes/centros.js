@@ -35,7 +35,7 @@ router.put('/:ID_Centro', [
     //Campos opcionales, no es necesario ponerlos todos para hacer una llamada PUT
         check('Nombre').optional().not().isEmpty().withMessage('El argumento "Nombre" no debe estar vacío'),
         check('Email').optional().not().isEmpty().withMessage('El argumento "Email" no debe estar vacío'),
-        check('Contraseña').optional().not().isEmpty().withMessage('El argumento "Contraseña" no debe estar vacío'),
+        //check('Contraseña').optional().not().isEmpty().withMessage('El argumento "Contraseña" no debe estar vacío'),
         check('Localidad').optional().not().isEmpty().withMessage('El argumento "Localidad" no debe estar vacío'),
         check('Provincia').optional().not().isEmpty().withMessage('El argumento "Provincia" no debe estar vacío'),
         check('Calle').optional().not().isEmpty().withMessage('El argumento "Calle" no debe estar vacío'),

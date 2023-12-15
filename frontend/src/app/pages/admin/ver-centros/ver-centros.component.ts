@@ -1,6 +1,9 @@
 import { Component, AfterViewInit  } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { CentroService } from '../../../services/centros.service';
-import Swal from 'sweetalert2'
+
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-centros',
@@ -11,7 +14,7 @@ export class VerCentrosComponent {
 
   centrosData: any;
 
-  constructor(private centroService: CentroService){
+  constructor(private centroService: CentroService, private router: Router){
     this.centrosData = [];
   }
 
@@ -49,6 +52,10 @@ export class VerCentrosComponent {
         });
       }
     });
+  }
+
+  editarCentro(centro: any){
+    this.router.navigate(['admin/editar-centros'], {state: {centro}});
   }
 
 }

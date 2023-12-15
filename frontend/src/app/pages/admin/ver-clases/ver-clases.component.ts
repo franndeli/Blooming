@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { ClaseService } from '../../../services/clases.service';
-import Swal from 'sweetalert2'
+
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-clases',
   templateUrl: './ver-clases.component.html',
@@ -10,7 +14,7 @@ export class VerClasesComponent {
   
   clasesData: any;
 
-  constructor(private claseService: ClaseService){
+  constructor(private claseService: ClaseService, private router: Router){
     this.clasesData = [];
   }
 
@@ -48,6 +52,10 @@ export class VerClasesComponent {
         });
       }
     });
+  }
+
+  editarClase(clase: any){
+    this.router.navigate(['admin/editar-clases'], {state: {clase}});
   }
 
 }

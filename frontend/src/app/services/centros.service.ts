@@ -49,4 +49,9 @@ export class CentroService {
     return this.http.post(this.basePath, formData);
   }
 
+  putCentro(formData: any){
+    this.getHeader();
+    return this.http.put(this.basePath+formData.ID_Centro, formData, this.httpOptions);
+  }
+
 }

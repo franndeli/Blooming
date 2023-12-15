@@ -15,20 +15,20 @@ data-sidebar-position="fixed" data-header-position="fixed">
               <h5 class="card-title fw-semibold mb-4">Editar Clase</h5>
               <div class="card">
                 <div class="card-body">
-                  <form>
+                  <form [formGroup]="form">
                     <div class="mb-3">
-                      <label for="exampleInputEmail1" class="form-label">Nombre</label>
-                      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                      <label for="Nombre" class="form-label">Nombre</label>
+                    <input class="form-control" formControlName="Nombre" id="Nombre">
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Centro</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                      <label for="ID_Centro" class="form-label">Centro</label>
+                      <input class="form-control" formControlName="ID_Centro" id="ID_Centro">
                       </div>
                     <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Nº Alumnos</label>
-                      <input type="password" class="form-control" id="exampleInputPassword1">
+                      <label for="NumAlumnos" class="form-label">Nº Alumnos</label>
+                      <input class="form-control" formControlName="NumAlumnos" id="NumAlumnos">
                     </div>
-                    <button type="submit" class="btn btn-danger">Aceptar</button>
+                    <button class="btn btn-danger" (click)="actualizarClase()">Aceptar</button>
                     <a routerLink="/admin/ver-clases" class="btn btn-danger">Volver</a>
                   </form>
                 </div>

@@ -1,6 +1,10 @@
 import { Component, AfterViewInit  } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { AlumnoService } from '../../../services/alumnos.service';
-import Swal from 'sweetalert2'
+
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-alumnos',
@@ -11,7 +15,7 @@ export class VerAlumnosComponent implements AfterViewInit{
   
   alumnosData: any;
 
-  constructor(private alumnoService: AlumnoService){
+  constructor(private alumnoService: AlumnoService, private router: Router){
     this.alumnosData = [];
   }
 
@@ -51,4 +55,9 @@ export class VerAlumnosComponent implements AfterViewInit{
       }
     });
   }
+
+  editarAlumno(alumno: any){
+    this.router.navigate(['admin/editar-alumnos'], {state: {alumno}});
+  }
+  
 }

@@ -14,13 +14,13 @@ export class SidebarService {
   ];
   menuAlumno: sidebarItem[] = [];
   menuProfesor: sidebarItem[] = [
-    { titulo: 'Alumnos', icono: 'ti ti-friends', url: 'profesores/ver-alumnos'},
-    { titulo: 'Clases', icono: 'ti ti-school', url: 'profesores/ver-clases'}
+    { titulo: 'Alumnos', icono: 'ti ti-friends', url: '/profesores/ver-alumnos'},
+    { titulo: 'Clases', icono: 'ti ti-school', url: '/profesores/ver-clases'}
   ];
   menuCentro: sidebarItem[] = [
-    { titulo: 'Profesores', icono: 'ti ti-users', url: 'centros/ver-porfesores'},
-    { titulo: 'Alumnos', icono: 'ti ti-friends', url: 'centros/ver-alumnos'},
-    { titulo: 'Clases', icono: 'ti ti-school', url: 'centros/ver-clases'}
+    { titulo: 'Profesores', icono: 'ti ti-users', url: '/centros/ver-profesores'},
+    { titulo: 'Alumnos', icono: 'ti ti-friends', url: '/centros/ver-alumnos'},
+    { titulo: 'Clases', icono: 'ti ti-school', url: '/centros/ver-clases'}
   ];
 
 

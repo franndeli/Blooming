@@ -35,6 +35,8 @@ import { VerAlumnosPComponent } from './profesores/ver-alumnos-p/ver-alumnos-p.c
 import { EditarAlumnosCComponent } from './centros/editar-alumnos-c/editar-alumnos-c.component';
 import { EditarProfesoresCComponent } from './centros/editar-profesores-c/editar-profesores-c.component';
 import { EditarClasesCComponent } from './centros/editar-clases-c/editar-clases-c.component';
+import { AlumnoLayoutComponent } from '../layouts/alumno-layout/alumno-layout.component';
+import { AlumnosComponent } from './alumnos/alumnos.component';
 
 const routes: Routes = [
   { path: 'admin', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
@@ -78,13 +80,18 @@ const routes: Routes = [
       { path: 'ver-alumnos', component: VerAlumnosPComponent},
     ]
   },
+  { 
+    path: 'alumnos', component: AlumnoLayoutComponent,
+    children: [
+      { path: 'dashboard', component: AlumnosComponent},
+  ]}
   /*{ 
     path: 'dashboard', component: DashboardComponent,
     children: [
     { path: '', component: DashboardComponent},
     { path: '**', redirectTo: ''}
   ]},*/
-  { path: 'usuarios', component: UsuariosComponent}
+  /*{ path: 'usuarios', component: UsuariosComponent}*/
 ];
 
 @NgModule({

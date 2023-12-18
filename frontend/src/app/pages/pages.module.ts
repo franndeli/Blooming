@@ -46,6 +46,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EditarAlumnosCComponent } from './centros/editar-alumnos-c/editar-alumnos-c.component';
 import { EditarProfesoresCComponent } from './centros/editar-profesores-c/editar-profesores-c.component';
 import { EditarClasesCComponent } from './centros/editar-clases-c/editar-clases-c.component';
+import { AlumnoLayoutComponent } from '../layouts/alumno-layout/alumno-layout.component';
+import { AlumnosComponent } from './alumnos/alumnos.component';
 
 
 @NgModule({
@@ -58,7 +60,7 @@ import { EditarClasesCComponent } from './centros/editar-clases-c/editar-clases-
     CentrosVistaComponent,
     AdminComponent*/
     AdminLayoutComponent,
-
+    AlumnoLayoutComponent,
     AdmindashboardComponent,
       VerProfesoresCComponent,
       VerClasesCComponent,
@@ -85,11 +87,12 @@ import { EditarClasesCComponent } from './centros/editar-clases-c/editar-clases-
       VerCentrosComponent,
       EditarAlumnosCComponent,
       EditarProfesoresCComponent,
-      EditarClasesCComponent
+      EditarClasesCComponent,
+      AlumnosComponent
   ],
   exports: [
     AdminLayoutComponent,
-
+    AlumnoLayoutComponent
   ],
   imports: [
     CommonModule,

@@ -36,7 +36,12 @@ export class AuthService {
 
   login(formData: loginForm){
     console.log(formData);
-    return this.http.post(`${environment.base_url}/login`, formData);
+    return this.http.post(`${environment.base_url}/login`, formData)
+      .pipe(
+        tap( (res:any) => {
+          localStorage.setItem('rol', res.rol);
+        })
+      );
   }
 
   registro(formData: any){
@@ -45,6 +50,7 @@ export class AuthService {
 
   validarToken() {
     const token = localStorage.getItem('token') || '';
+
     if (token === ''){
       return of (false);
     }

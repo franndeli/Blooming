@@ -13,8 +13,20 @@
       <!-- Sidebar navigation-->
       <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
           <br>
-          <h3 style="color: white;">Admin</h3>
         <ul id="sidebarnav">
+          <li class="nav-small-cap">
+            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+            <span class="hide-menu">Home</span>
+          </li>
+          <li class="sidebar-item" *ngFor="let item of menu">
+            <a class="sidebar-link" [routerLink]="item.url" aria-expanded="false">
+              <span>
+                <i class="{{item.icono}}"></i>
+              </span>
+              <span class="hide-menu">{{item.titulo}}</span>
+            </a>
+          </li>
+          <!--
           <li class="nav-small-cap">
             <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
             <span class="hide-menu">Home</span>
@@ -50,7 +62,7 @@
               </span>
               <span class="hide-menu">Clases</span>
             </a>
-        </li>
+        </li>-->
         </ul>
         
       </nav>

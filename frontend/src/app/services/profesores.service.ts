@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { env } from 'process';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfesorService {
 
-  private basePath='http://localhost:3000/api/profesores/';
+  private basePath=`${environment.base_url}/profesores/`;
   private httpOptions: any;
   constructor(private http: HttpClient) { 
   }

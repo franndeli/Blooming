@@ -32,7 +32,7 @@ const getClases = (req, res) => {
             values.push(req.query.NumAlumnos);
         }
         if(req.query.ID_Centro){
-            conditions.push("ID_Centro = ?");
+            conditions.push("clase.ID_Centro = ?");
             values.push(req.query.ID_Centro);
         }
 

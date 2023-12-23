@@ -1,6 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 export class ClaseService {
 
-    private basePath='http://localhost:3000/api/clases/';
+    private basePath=`${environment.base_url}/clases/`;
     private httpOptions: any;
     constructor(private http: HttpClient) { 
     }

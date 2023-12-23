@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit {
             this.router.navigate(['centros/dashboard']);
           }
           if(response.rol == 'Alumno'){
-            this.router.navigate(['usuarios/dashboard']);
+            this.router.navigate(['alumnos/dashboard']);
           }
           if(response.rol == 'Profesor'){
             this.router.navigate(['profesores/dashboard']);

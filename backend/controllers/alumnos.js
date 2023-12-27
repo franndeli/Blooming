@@ -9,11 +9,12 @@ const getAlumnos = (req, res) => {
     const desde = Number(req.query.desde) || 0;
 
     return new Promise(function(resolve, reject) {
-        let query = 'SELECT alumno.*, clase.Nombre AS NomClase, centro_escolar.Nombre AS NomCentro FROM alumno LEFT JOIN clase ON alumno.ID_Clase = clase.ID_Clase LEFT JOIN centro_escolar ON clase.ID_Centro = centro_escolar.ID_Centro';
+        let query = 'SELECT alumno.*, clase.Nombre AS NomClase, centro_escolar.Nombre AS NomCentro FROM alumno LEFT JOIN clase ON alumno.ID_Clase = clase.ID_Clase LEFT JOIN centro_escolar ON alumno.ID_Centro = centro_escolar.ID_Centro';
+
         let conditions = [];
         let values = [];
 
-        let validParams = ['ID_Alumno', 'Nombre', 'Apellidos', 'Usuario', 'Contraseña', 'FechaNacimiento', 'ID_Clase', 'desde'];
+        let validParams = ['ID_Alumno', 'Nombre', 'Apellidos', 'Usuario', 'Contraseña', 'FechaNacimiento', 'ID_Clase', 'ID_Centro', 'desde'];
 
         let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
 
@@ -22,29 +23,32 @@ const getAlumnos = (req, res) => {
         }
 
         if(req.query.ID_Alumno){
-            conditions.push("ID_Alumno = ?");
+            conditions.push("alumno.ID_Alumno = ?");
             values.push(req.query.ID_Alumno);
         }
         if(req.query.Nombre){
-            conditions.push("Nombre LIKE ?");
+            conditions.push("alumno.Nombre LIKE ?");
             values.push(`${req.query.Nombre}%`);
         }
         if(req.query.Apellidos){
-            conditions.push("Apellidos LIKE ?");
+            conditions.push("alumno.Apellidos LIKE ?");
             values.push(`${req.query.Apellidos}%`);
         }
         if(req.query.Usuario){
-            conditions.push("Usuario LIKE ?");
+            conditions.push("alumno.Usuario LIKE ?");
             values.push(`${req.query.Usuario}%`);
         }
-        // No se incluye Contraseña por motivos de seguridad
         if(req.query.FechaNacimiento){
-            conditions.push("FechaNacimiento = ?");
+            conditions.push("alumno.FechaNacimiento = ?");
             values.push(req.query.FechaNacimiento);
         }
         if(req.query.ID_Clase){
-            conditions.push("ID_Clase = ?");
+            conditions.push("alumno.ID_Clase = ?");
             values.push(req.query.ID_Clase);
+        }
+        if(req.query.ID_Centro){
+            conditions.push("alumno.ID_Centro = ?");
+            values.push(req.query.ID_Centro);
         }
 
         if(conditions.length > 0){
@@ -72,6 +76,7 @@ const getAlumnos = (req, res) => {
         });
     });
 }
+
 
 function obtenerApellidos(apellidos) {
     const partes = apellidos.split(' ');
@@ -101,45 +106,32 @@ function generarUsuario(nombre, apellidos, id) {
 
 const createAlumno = (req, res) => {
     return new Promise(function(resolve, reject) {
-        //Establecemos el usuario a vacio para la comprobación
-        const usuario = "";
+        const { Nombre, Apellidos, Contraseña, FechaNacimiento, ID_Clase } = req.body;
 
-        //Comprobamos si existe el usuario
-        connection.query('SELECT * FROM alumno WHERE Usuario = ?', [usuario], (error, results) => {
+        // Primero, obtenemos el ID_Centro de la clase
+        connection.query('SELECT ID_Centro FROM clase WHERE ID_Clase = ?', [ID_Clase], (error, claseResults) => {
             if (error) {
-                reject({ statusCode: 500, message: "Error al verificar el usuario"});
-            } else if (results.length > 0) {
-                // Si se encuentra un alumno con el mismo email, rechaza la petición
-                reject({ statusCode: 400, message: "El usuario del alumno ya existe"});
+                reject({ statusCode: 500, message: "Error al obtener el centro de la clase"});
+            } else if (claseResults.length === 0) {
+                reject({ statusCode: 404, message: "Clase no encontrada"});
             } else {
-                // Si no existe, procede con la inserción
-                
-                //Hasheamos la contraseña para guardarla
-                const hashedPassword = hashPassword(req.body.Contraseña);
-                const newAlumno = { ...req.body, Contraseña: hashedPassword, Usuario: usuario };
+                const ID_Centro = claseResults[0].ID_Centro;
+
+                // Hasheamos la contraseña para guardarla
+                const hashedPassword = hashPassword(Contraseña);
+                const newAlumno = { Nombre, Apellidos, Contraseña: hashedPassword, FechaNacimiento, ID_Clase, ID_Centro };
 
                 connection.query('INSERT INTO alumno SET ?', [newAlumno], (insertError, insertResults) => {
                     if (insertError) {
                         reject({ statusCode: 500, message: "Error al crear el alumno"});
                     } else {
-                        const idAlumno = insertResults.insertId;
-
-                        // Generamos el nombre de usuario utilizando el ID generado en la BD, el nombre y la inicial de los 2 apellidos
-                        const nomUsuario = generarUsuario(req.body.Nombre, req.body.Apellidos, idAlumno);
-                        
-                        //Actualizamos el usuario por el que acabamos de generar
-                        connection.query('UPDATE alumno SET Usuario = ? WHERE ID_Alumno = ?', [nomUsuario, idAlumno], (setError, setResults) => {
-                            if (setError) {
-                                reject({ statusCode: 500, message: "Error al establecer el nombre de usuario del alumno"});
-                            } else {
-                                resolve(
-                                    res.json({
-                                        ok: true,
-                                        msg: 'createAlumno'
-                                    })
-                                );
-                            }
-                        });
+                        resolve(
+                            res.json({
+                                ok: true,
+                                msg: 'createAlumno',
+                                id: insertResults.insertId
+                            })
+                        );
                     }
                 });
             }

@@ -21,31 +21,31 @@ const getCentros = (req, res) => {
         }
 
         if(req.query.ID_Centro){
-            conditions.push("ID_Centro = ?");
+            conditions.push("centro_escolar.ID_Centro = ?");
             values.push(req.query.ID_Centro);
         }
         if(req.query.Nombre){
-            conditions.push("Nombre LIKE ?");
+            conditions.push("centro_escolar.Nombre LIKE ?");
             values.push(`${req.query.Nombre}%`);
         }
         if(req.query.Email){
-            conditions.push("Email LIKE ?");
+            conditions.push("centro_escolar.Email LIKE ?");
             values.push(`${req.query.Email}%`);
         }
         if(req.query.Localidad){
-            conditions.push("Localidad LIKE ?");
+            conditions.push("centro_escolar.Localidad LIKE ?");
             values.push(`${req.query.Localidad}%`);
         }
         if(req.query.Provincia){
-            conditions.push("Provincia LIKE ?");
+            conditions.push("centro_escolar.Provincia LIKE ?");
             values.push(`${req.query.Provincia}%`);
         }
         if(req.query.Calle){
-            conditions.push("Calle LIKE ?");
+            conditions.push("centro_escolar.Calle LIKE ?");
             values.push(`%${req.query.Calle}%`);
         }
         if(req.query.CP){
-            conditions.push("CP LIKE ?");
+            conditions.push("centro_escolar.CP LIKE ?");
             values.push(`%${req.query.CP}%`);
         }
 

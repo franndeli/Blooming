@@ -20,15 +20,15 @@ const getClases = (req, res) => {
         }
 
         if(req.query.ID_Clase){
-            conditions.push("ID_Clase = ?");
+            conditions.push("clase.ID_Clase = ?");
             values.push(req.query.ID_Clase);
         }
         if(req.query.Nombre){
-            conditions.push("Nombre LIKE ?");
+            conditions.push("clase.Nombre LIKE ?");
             values.push(`%${req.query.Nombre}%`);
         }
         if(req.query.NumAlumnos){
-            conditions.push("NumAlumnos = ?");
+            conditions.push("clase.NumAlumnos = ?");
             values.push(req.query.NumAlumnos);
         }
         if(req.query.ID_Centro){

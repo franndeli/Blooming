@@ -21,15 +21,15 @@ const getAdmins = (req, res) => {
         }
 
         if(req.query.ID_Admin){
-            conditions.push("ID_Admin = ?");
+            conditions.push("admin.ID_Admin = ?");
             values.push(req.query.ID_Admin);
         }
         if(req.query.Nombre){
-            conditions.push("Nombre LIKE ?");
+            conditions.push("admin.Nombre LIKE ?");
             values.push(`${req.query.Nombre}%`);
         }
         if(req.query.Email){
-            conditions.push("Email LIKE ?");
+            conditions.push("admin.Email LIKE ?");
             values.push(`${req.query.Email}%`);
         }
 

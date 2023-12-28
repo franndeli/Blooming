@@ -92,6 +92,13 @@ function generarUsuario(nombre, apellidos, id) {
     // Separar los apellidos
     const { apellido1, apellido2 } = obtenerApellidos(apellidos);
 
+    //Obtener el primer nombre
+    const nombres = nombre.split(' ');
+    const nombre1 = nombres.length > 0 ? nombres[0] : '';
+
+    // Obtener la primera inicial del segundo nombre
+    const inicialN2 = nombres.length > 1 ? nombres[1].charAt(0).toLowerCase() : '';
+
     // Obtener las iniciales del primer y segundo apellido
     const inicialApellido1 = apellido1.charAt(0).toLowerCase();
     const inicialApellido2 = apellido2.charAt(0).toLowerCase();
@@ -99,39 +106,52 @@ function generarUsuario(nombre, apellidos, id) {
     //const numero = Math.floor(Math.random() * (50 - 1 + 1)) + 1;
 
     // Crear el nombre de usuario concatenando los elementos
-    const username = `${nombre.toLowerCase()}${inicialApellido1}${inicialApellido2}${id}`;
+    const username = `${nombre1.toLowerCase()}${inicialN2}${inicialApellido1}${inicialApellido2}${id}`;
 
     return username;
 }
 
 const createAlumno = (req, res) => {
     return new Promise(function(resolve, reject) {
-        const { Nombre, Apellidos, Contraseña, FechaNacimiento, ID_Clase } = req.body;
+        //Establecemos el usuario a vacio para la comprobación
+        const usuario = "";
 
-        // Primero, obtenemos el ID_Centro de la clase
-        connection.query('SELECT ID_Centro FROM clase WHERE ID_Clase = ?', [ID_Clase], (error, claseResults) => {
+        //Comprobamos si existe el usuario
+        connection.query('SELECT * FROM alumno WHERE Usuario = ?', [usuario], (error, results) => {
             if (error) {
-                reject({ statusCode: 500, message: "Error al obtener el centro de la clase"});
-            } else if (claseResults.length === 0) {
-                reject({ statusCode: 404, message: "Clase no encontrada"});
+                reject({ statusCode: 500, message: "Error al verificar el usuario"});
+            } else if (results.length > 0) {
+                // Si se encuentra un alumno con el mismo email, rechaza la petición
+                reject({ statusCode: 400, message: "El usuario del alumno ya existe"});
             } else {
-                const ID_Centro = claseResults[0].ID_Centro;
-
-                // Hasheamos la contraseña para guardarla
-                const hashedPassword = hashPassword(Contraseña);
-                const newAlumno = { Nombre, Apellidos, Contraseña: hashedPassword, FechaNacimiento, ID_Clase, ID_Centro };
+                // Si no existe, procede con la inserción
+                
+                //Hasheamos la contraseña para guardarla
+                const hashedPassword = hashPassword(req.body.Contraseña);
+                const newAlumno = { ...req.body, Contraseña: hashedPassword, Usuario: usuario };
 
                 connection.query('INSERT INTO alumno SET ?', [newAlumno], (insertError, insertResults) => {
                     if (insertError) {
                         reject({ statusCode: 500, message: "Error al crear el alumno"});
                     } else {
-                        resolve(
-                            res.json({
-                                ok: true,
-                                msg: 'createAlumno',
-                                id: insertResults.insertId
-                            })
-                        );
+                        const idAlumno = insertResults.insertId;
+
+                        // Generamos el nombre de usuario utilizando el ID generado en la BD, el nombre y la inicial de los 2 apellidos
+                        const nomUsuario = generarUsuario(req.body.Nombre, req.body.Apellidos, idAlumno);
+                        
+                        //Actualizamos el usuario por el que acabamos de generar
+                        connection.query('UPDATE alumno SET Usuario = ? WHERE ID_Alumno = ?', [nomUsuario, idAlumno], (setError, setResults) => {
+                            if (setError) {
+                                reject({ statusCode: 500, message: "Error al establecer el nombre de usuario del alumno"});
+                            } else {
+                                resolve(
+                                    res.json({
+                                        ok: true,
+                                        msg: 'createAlumno'
+                                    })
+                                );
+                            }
+                        });
                     }
                 });
             }

@@ -1,5 +1,7 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ProfesorService } from '../../services/profesores.service';
+import { ClaseService } from '../../services/clases.service';
 import Swal from 'sweetalert2'
 
 @Component({
@@ -7,29 +9,32 @@ import Swal from 'sweetalert2'
   templateUrl: './profesores.component.html',
   styleUrl: './profesores.component.css'
 })
-export class ProfesoresComponent implements AfterViewInit {
+export class ProfesoresComponent implements OnInit{
 
-  profesoresData: any;
+  clasesData: any;
+  private id: any;
+  private centroID: any;
 
-  constructor(private profesorService: ProfesorService){
-    this.profesoresData = [];
+  constructor(private claseService: ClaseService, private profesorService: ProfesorService, private router: Router){
+    this.clasesData = [];
   }
 
-  ngAfterViewInit() {
-    this.tryLocalStorage();
+  ngOnInit() {
+    this.getClases();
   }
 
-  tryLocalStorage(){
-    this.getProfesores();
-  }
+  getClases(){
+    this.id = localStorage.getItem('id');
+    this.profesorService.getProfesorID(this.id).subscribe((res: any) => {
+      this.centroID = res.profesores[0].ID_Centro;
 
-  getProfesores(){
-    this.profesorService.getProfesores().subscribe(res => {
-      this.profesoresData = res;
+      this.claseService.getClasesCentro(this.centroID).subscribe(res => {
+        this.clasesData = res;
+      })
     })
   }
 
-  eliminarProfesor(id: number){
+  eliminarClase(id: number){
     Swal.fire({
       title: "¿Estás seguro?",
       text: "Esta acción no se podrá deshacer",
@@ -40,15 +45,19 @@ export class ProfesoresComponent implements AfterViewInit {
       confirmButtonText: "Eliminar"
     }).then((result) => {
       if (result.isConfirmed) {
-        this.profesorService.deleteProfesor(id).subscribe(res => {
-          this.getProfesores();
+        this.claseService.deleteClase(id).subscribe(res => {
+          this.getClases();
         })
         Swal.fire({
-          title: "Profesor Eliminado",
+          title: "Clase Eliminada",
           icon: "success"
         });
       }
     });
+  }
+
+  verClase(clase: any){
+    this.router.navigate(['profesores/ver-alumnos'], {state: {clase}});
   }
   
 }

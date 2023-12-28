@@ -20,22 +20,22 @@ data-sidebar-position="fixed" data-header-position="fixed">
                     <label for="Nombre" class="form-label">Nombre</label>
                     <input class="form-control" formControlName="Nombre" id="Nombre">
                   </div>
-                  <p class="text-danger" *ngIf="!validarForm('Nombre')">El Centro es obligatorio</p>
+                  <p class="text-danger" *ngIf="!validarForm('Nombre')">El Nombre es obligatorio</p>
                   <div class="mb-3">
                     <label for="Apellidos" class="form-label">Apellidos</label>
                     <input class="form-control" formControlName="Apellidos" id="Apellidos">
                   </div>
-                  <p class="text-danger" *ngIf="!validarForm('Apellidos')">El Centro es obligatorio</p>
+                  <p class="text-danger" *ngIf="!validarForm('Apellidos')">Los Apeliidos son obligatorios</p>
                   <div class="mb-3">
                     <label for="Email" class="form-label">Email</label>
                     <input type="email" class="form-control" formControlName="Email" id="Email">
                   </div>
-                  <p class="text-danger" *ngIf="!validarForm('Email')">El Centro es obligatorio</p>
+                  <p class="text-danger" *ngIf="!validarForm('Email')">El Email es obligatorio</p>
                   <div class="mb-3">
                     <label for="Contraseña" class="form-label">Contraseña</label>
                     <input type="password" class="form-control" formControlName="Contraseña" id="Contraseña">
                   </div>
-                  <p class="text-danger" *ngIf="!validarForm('Contraseña')">El Centro es obligatorio</p>
+                  <p class="text-danger" *ngIf="!validarForm('Contraseña')">La Contraseña es obligatoria</p>
                   <div class="mb-3">
                     <label for="ID_Centro" class="form-label">Centro</label>
                     <input class="form-control" formControlName="ID_Centro" id="ID_Centro">
@@ -45,7 +45,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                     <label for="ID_Clase" class="form-label">Clase</label>
                     <input class="form-control" formControlName="ID_Clase" id="ID_Clase">
                   </div>
-                  <p class="text-danger" *ngIf="!validarForm('ID_Clase')">El Centro es obligatorio</p>
+                  <p class="text-danger" *ngIf="!validarForm('ID_Clase')">La Clase es obligatoria</p>
                   <button class="btn btn-danger" (click)="crearProfesor()">Aceptar</button>
                   <button  routerLink="/admin/ver-profesores" class="btn btn-danger">Volver</button>
                 </form>

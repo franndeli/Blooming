@@ -30,8 +30,8 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                         <td class="border-bottom-0">{{clase.NumAlumnos}}</td>
                                         <td class="border-bottom-0">{{clase.NomCentro}}</td>
                                         <td class="border-bottom-0">
-                                          <a href="./centros/editar-clases" class="btn btn-secondary">M</a>
-                                          <button class="btn btn-danger" (click)="eliminarClase(clase.ID_Clase)">E</button>
+                                            <button class="btn btn-primary" (click)="editarClase(clase)">M</button>
+                                            <button class="btn btn-danger" (click)="eliminarClase(clase.ID_Clase)">E</button>
                                         </td>
                                     </tr>
                                 </tbody>

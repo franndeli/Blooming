@@ -17,32 +17,37 @@ data-sidebar-position="fixed" data-header-position="fixed">
               <h5 class="card-title fw-semibold mb-4">Crear Alumno</h5>
               <div class="card">
                 <div class="card-body">
-                  <form>
+                  <form [formGroup]="form">
                     <div class="mb-3">
-                      <label for="exampleInputEmail1" class="form-label">Nombre</label>
-                      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                      <label for="Nombre" class="form-label">Nombre</label>
+                      <input class="form-control" formControlName="Nombre" id="Nombre">
                     </div>
+                    <p class="text-danger" *ngIf="!validarForm('Nombre')">El Nombre es obligatorio</p>
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Apellidos</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                      </div>
-                    <div class="mb-3">
-                      <label for="exampleInputPassword1" class="form-label">Usuario</label>
-                      <input type="password" class="form-control" id="exampleInputPassword1">
+                      <label for="Apellidos" class="form-label">Apellidos</label>
+                      <input class="form-control" formControlName="Apellidos" id="Apellidos">
                     </div>
+                    <p class="text-danger" *ngIf="!validarForm('Apellidos')">Los Apellidos son obligatorios</p>
                     <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Fecha de Nacimiento</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1">
+                      <label for="Contraseña" class="form-label">Contraseña</label>
+                      <input type="password" class="form-control" formControlName="Contraseña" id="Contraseña">
                     </div>
+                    <p class="text-danger" *ngIf="!validarForm('Contraseña')">La Contraseña es obligatoria</p>
                     <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Clase</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1">
+                      <label for="FechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+                      <input class="form-control" formControlName="FechaNacimiento" id="FechaNacimiento">
                     </div>
+                    <p class="text-danger" *ngIf="!validarForm('FechaNacimiento')">La Fecha de Nacimiento es obligatoria</p>
                     <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Centro</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1">
+                      <label for="ID_Clase" class="form-label">Clase</label>
+                      <select class="form-control" formControlName="ID_Clase" id="ID_Clase">
+                        <option *ngFor="let clase of clasesData.clases" [value]="clase.ID_Clase">
+                          {{clase.Nombre}}
+                        </option>
+                      </select>
                     </div>
-                    <button type="submit" class="btn btn-secondary">Aceptar</button>
+                    <p class="text-danger" *ngIf="!validarForm('ID_Clase')">La Clase es obligatoria</p>
+                    <button class="btn btn-danger" (click)="crearAlumno()">Aceptar</button>
                     <a href="/centros/ver-alumnos" class="btn btn-secondary">Volver</a>
                   </form>
                 </div>

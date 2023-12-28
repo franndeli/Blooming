@@ -21,6 +21,7 @@ export class EditarAlumnosComponent implements OnInit {
     Apellidos: [''],
     Usuario: [''],
     FechaNacimiento: [''],
+    ID_Centro: [''],
     ID_Clase: ['']
   });
 
@@ -33,6 +34,7 @@ export class EditarAlumnosComponent implements OnInit {
         Apellidos: this.alumnosData.Apellidos,
         Usuario: this.alumnosData.Usuario,
         FechaNacimiento: this.alumnosData.FechaNacimiento,
+        ID_Centro: this.alumnosData.ID_Centro,
         ID_Clase: this.alumnosData.ID_Clase
       });
     });

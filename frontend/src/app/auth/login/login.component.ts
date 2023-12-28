@@ -45,6 +45,7 @@ export class LoginComponent implements OnInit {
             localStorage.removeItem('usuario');
           }
           console.log('Respuesta del servidor:', response);
+          localStorage.setItem('id', response.id);
           if(response.rol == 'Admin'){
             this.router.navigate(['admin/dashboard']);
           }

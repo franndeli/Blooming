@@ -8,30 +8,30 @@ data-sidebar-position="fixed" data-header-position="fixed">
             <div class="container-fluid">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title fw-semibold mb-4">Clase 1ºA</h5>
+                        <h5 class="card-title fw-semibold mb-4">Clase {{claseData.Nombre}}</h5>
                         <div class="card">
                             <div class="card-body">
                                 <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
                                     <thead class="text-dark fs-4">
                                         <tr>
-                                           
                                             <th class="border-bottom-0">Nombre</th>
+                                            <th class="border-bottom-0">Apellidos</th>
                                             <th class="border-bottom-0">Usuario</th>
                                             <th class="border-bottom-0">Fecha de nacimiento</th>
                                             <th class="border-bottom-0">Clase</th>
                                             <th class="border-bottom-0">Centro</th>
-                                            <th class="border-bottom-0">Estado Emocional</th>
+                                            <th class="border-bottom-0">Estado</th>
                                             <th class="border-bottom-0"></th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody *ngFor="let alumno of alumnosData.alumnos">
                                         <tr>
-                                           
-                                            <td class="border-bottom-0">Pepe</td>
-                                            <td class="border-bottom-0">Pepe1</td>
-                                            <td class="border-bottom-0">24/10/2015</td>
-                                            <td class="border-bottom-0">1ºA</td>
-                                            <td class="border-bottom-0">Cole1</td>
+                                            <td class="border-bottom-0">{{alumno.Nombre}}</td>
+                                            <td class="border-bottom-0">{{alumno.Apellidos}}</td>
+                                            <td class="border-bottom-0">{{alumno.Usuario}}</td>
+                                            <td class="border-bottom-0">{{alumno.FechaNacimiento}}</td>
+                                            <td class="border-bottom-0">{{alumno.NomClase}}</td>
+                                            <td class="border-bottom-0">{{alumno.NomCentro}}</td>
                                             <td class="border-bottom-0">
                                                 <div class="d-flex align-items-center gap-2">
                                                   <span class="badge bg-success rounded-3 fw-semibold">Bueno</span>

@@ -16558,8 +16558,8 @@ fieldset:disabled .btn {
   font-size: 21px;
 }
 .sidebar-nav ul .sidebar-item .sidebar-link:hover {
-  background-color: rgba(93, 135, 255, 0.1);
-  color: #5d87ff;
+  background-color: #deedd7;
+  color: black;
 }
 .sidebar-nav ul .sidebar-item .sidebar-link:hover.has-arrow:after {
   border-color: #5d87ff;

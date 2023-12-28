@@ -37,6 +37,7 @@ import { EditarProfesoresCComponent } from './centros/editar-profesores-c/editar
 import { EditarClasesCComponent } from './centros/editar-clases-c/editar-clases-c.component';
 import { AlumnoLayoutComponent } from '../layouts/alumno-layout/alumno-layout.component';
 import { AlumnosComponent } from './alumnos/alumnos.component';
+import { SidebarComponent } from '../commons/sidebar/sidebar.component';
 
 const routes: Routes = [
   { path: 'admin', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
@@ -84,7 +85,8 @@ const routes: Routes = [
     path: 'alumnos', component: AlumnoLayoutComponent,
     children: [
       { path: 'dashboard', component: AlumnosComponent},
-  ]}
+  ]},
+  { path: 'sidebar', component: SidebarComponent },
   /*{ 
     path: 'dashboard', component: DashboardComponent,
     children: [

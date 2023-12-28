@@ -1,72 +1,36 @@
-<aside class="left-sidebar">
-    <!-- Sidebar scroll-->
-    <div>
-      <div class="brand-logo d-flex align-items-center justify-content-between">
-        <a href="./admin/admindashboard" class="text-nowrap logo-img">
-          <br>
-          <img src="../assets/images/logos/logo.png" width="180" alt="" />
-        </a>
-        <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
-          <i class="ti ti-x fs-8"></i>
+<div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+  <aside class="left-sidebar">
+      <!-- Sidebar scroll-->
+      <div>
+        <div class="brand-logo d-flex align-items-center justify-content-between">
+          <a href="./admin/admindashboard" class="text-nowrap logo-img">
+            <br>
+            <img src="../assets/images/logos/logo.png" width="180" alt="" />
+          </a>
+          <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+            <i class="ti ti-x fs-8"></i>
+          </div>
         </div>
+        <!-- Sidebar navigation-->
+        <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+            <br>
+          <ul id="sidebarnav">
+            <li class="nav-small-cap">
+              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+              <span class="hide-menu">Home</span>
+            </li>
+            <li class="sidebar-item" *ngFor="let item of menu">
+              <a class="sidebar-link" [routerLink]="item.url" aria-expanded="false">
+                <span>
+                  <i class="{{item.icono}}"></i>
+                </span>
+                <span class="hide-menu">{{item.titulo}}</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <!-- End Sidebar navigation -->
       </div>
-      <!-- Sidebar navigation-->
-      <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
-          <br>
-        <ul id="sidebarnav">
-          <li class="nav-small-cap">
-            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-            <span class="hide-menu">Home</span>
-          </li>
-          <li class="sidebar-item" *ngFor="let item of menu">
-            <a class="sidebar-link" [routerLink]="item.url" aria-expanded="false">
-              <span>
-                <i class="{{item.icono}}"></i>
-              </span>
-              <span class="hide-menu">{{item.titulo}}</span>
-            </a>
-          </li>
-          <!--
-          <li class="nav-small-cap">
-            <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-            <span class="hide-menu">Home</span>
-          </li>
-          <li class="sidebar-item">
-            <a class="sidebar-link" href="./admin/ver-centros" aria-expanded="false">
-              <span>
-                <i class="ti ti-home"></i>
-              </span>
-              <span class="hide-menu">Centros</span>
-            </a>
-          </li>
-          <li class="sidebar-item">
-            <a class="sidebar-link" href="./admin/ver-profesores" aria-expanded="false">
-              <span>
-                <i class="ti ti-address-book"></i>
-              </span>
-              <span class="hide-menu">Profesores</span>
-            </a>
-          </li>
-          <li class="sidebar-item">
-            <a class="sidebar-link" href="./admin/ver-alumnos" aria-expanded="false">
-              <span>
-                <i class="ti ti-address-book"></i>
-              </span>
-              <span class="hide-menu">Alumnos</span>
-            </a>
-          </li>
-          <li class="sidebar-item">
-            <a class="sidebar-link" href="./admin/ver-clases" aria-expanded="false">
-              <span>
-                <i class="ti ti-address-book"></i>
-              </span>
-              <span class="hide-menu">Clases</span>
-            </a>
-        </li>-->
-        </ul>
-        
-      </nav>
-      <!-- End Sidebar navigation -->
-    </div>
-    <!-- End Sidebar scroll-->
-</aside>
+      <!-- End Sidebar scroll-->
+  </aside>
+</div>

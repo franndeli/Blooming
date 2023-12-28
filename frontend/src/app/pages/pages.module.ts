@@ -48,6 +48,8 @@ import { EditarProfesoresCComponent } from './centros/editar-profesores-c/editar
 import { EditarClasesCComponent } from './centros/editar-clases-c/editar-clases-c.component';
 import { AlumnoLayoutComponent } from '../layouts/alumno-layout/alumno-layout.component';
 import { AlumnosComponent } from './alumnos/alumnos.component';
+import { ThreejsComponent } from './alumnos/threejs/threejs.component';
+import { PruebaComponent } from './alumnos/prueba/prueba.component';
 
 
 @NgModule({
@@ -88,7 +90,9 @@ import { AlumnosComponent } from './alumnos/alumnos.component';
       EditarAlumnosCComponent,
       EditarProfesoresCComponent,
       EditarClasesCComponent,
-      AlumnosComponent
+      AlumnosComponent,
+      ThreejsComponent,
+      PruebaComponent
   ],
   exports: [
     AdminLayoutComponent,

@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
         },
         (error) => {
           console.error('Error de autenticación:', error);
-          Swal.fire(error.error.msg);
+          Swal.fire(error.error.message);
         }
       );
     }

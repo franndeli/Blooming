@@ -81,7 +81,7 @@ const routes: Routes = [
     ]
   },
   { 
-    path: 'alumnos', component: AlumnoLayoutComponent,
+    path: 'alumnos', component: AlumnoLayoutComponent, canActivate: [ AuthGuard ],
     children: [
       { path: 'dashboard', component: AlumnosComponent},
   ]}

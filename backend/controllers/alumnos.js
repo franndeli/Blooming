@@ -108,6 +108,7 @@ function generarUsuario(nombre, apellidos, id) {
     // Crear el nombre de usuario concatenando los elementos
     const username = `${nombre1.toLowerCase()}${inicialN2}${inicialApellido1}${inicialApellido2}${id}`;
 
+    console.log(username);
     return username;
 }
 

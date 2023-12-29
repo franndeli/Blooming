@@ -3,7 +3,8 @@ const jwt = require('jsonwebtoken');
 const generarJWT = (usuario) => {
     return new Promise((resolve, reject) => {
         // Seleccionar el ID adecuado según el tipo de usuario
-        const ID = usuario.ID_Admin || usuario.ID_Profesor || usuario.ID_Centro || usuario.ID_Alumno;
+        console.log(usuario);
+        const ID = usuario.ID_Alumno || usuario.ID_Profesor || usuario.ID_Admin  || usuario.ID_Centro;
         const Rol = usuario.Rol;
 
         if (!ID) {

@@ -61,6 +61,7 @@ export class AuthService {
       }
     }).pipe(
       tap((res: any) => {
+        console.log('HOLAAAAAAAAAAAAAAAAAAA', res);
         localStorage.setItem('token', res.token.token);
         localStorage.setItem('rol', res.rol);
       }),

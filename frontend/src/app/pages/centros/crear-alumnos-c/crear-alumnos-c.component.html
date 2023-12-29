@@ -35,7 +35,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                     <p class="text-danger" *ngIf="!validarForm('Contraseña')">La Contraseña es obligatoria</p>
                     <div class="mb-3">
                       <label for="FechaNacimiento" class="form-label">Fecha de Nacimiento</label>
-                      <input class="form-control" formControlName="FechaNacimiento" id="FechaNacimiento">
+                      <input type="date" class="form-control" formControlName="FechaNacimiento" id="FechaNacimiento">
                     </div>
                     <p class="text-danger" *ngIf="!validarForm('FechaNacimiento')">La Fecha de Nacimiento es obligatoria</p>
                     <div class="mb-3">

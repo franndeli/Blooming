@@ -22,8 +22,12 @@ data-sidebar-position="fixed" data-header-position="fixed">
                     </div>
                     <div class="mb-3">
                       <label for="ID_Centro" class="form-label">Centro</label>
-                      <input class="form-control" formControlName="ID_Centro" id="ID_Centro">
-                      </div>
+                      <select class="form-control" formControlName="ID_Centro" id="ID_Centro">
+                        <option *ngFor="let centro of centrosData.centros" [value]="centro.ID_Centro">
+                          {{centro.Nombre}}
+                        </option>
+                      </select>
+                    </div>
                     <div class="mb-3">
                       <label for="NumAlumnos" class="form-label">Nº Alumnos</label>
                       <input class="form-control" formControlName="NumAlumnos" id="NumAlumnos">

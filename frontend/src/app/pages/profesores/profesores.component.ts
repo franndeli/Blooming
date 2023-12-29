@@ -56,8 +56,8 @@ export class ProfesoresComponent implements OnInit{
     });
   }
 
-  verClase(clase: any){
-    this.router.navigate(['profesores/ver-alumnos'], {state: {clase}});
+  verClase(claseID: any){
+    this.router.navigate(['profesores/ver-alumnos'], {state: {claseID}});
   }
   
 }

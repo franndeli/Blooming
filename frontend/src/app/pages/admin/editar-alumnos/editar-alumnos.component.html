@@ -32,15 +32,23 @@ data-sidebar-position="fixed" data-header-position="fixed">
                     </div>
                     <div class="mb-3">
                       <label for="FechaNacimiento" class="form-label">Fecha de Nacimiento</label>
-                      <input class="form-control" formControlName="FechaNacimiento" id="FechaNacimiento">
-                    </div>
-                    <div class="mb-3">
-                      <label for="ID_Clase" class="form-label">Clase</label>
-                      <input class="form-control" formControlName="ID_Clase" id="ID_Clase">
+                      <input type="date" class="form-control" formControlName="FechaNacimiento" id="FechaNacimiento">
                     </div>
                     <div class="mb-3">
                       <label for="ID_Centro" class="form-label">Centro</label>
-                      <input class="form-control" formControlName="ID_Centro" id="ID_Centro">
+                      <select class="form-control" formControlName="ID_Centro" id="ID_Centro" (change)="ngOnChanges($event)">
+                        <option *ngFor="let centro of centrosData.centros" [value]="centro.ID_Centro">
+                          {{centro.Nombre}}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label for="ID_Clase" class="form-label">Clase</label>
+                      <select class="form-control" formControlName="ID_Clase" id="ID_Clase">
+                        <option *ngFor="let clase of clasesData.clases" [value]="clase.ID_Clase">
+                          {{clase.Nombre}}
+                        </option>
+                      </select>
                     </div>
                     <button class="btn btn-danger" (click)="actualizarAlumno()">Aceptar</button>
                     <a routerLink="/admin/ver-alumnos" class="btn btn-danger">Volver</a>

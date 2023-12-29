@@ -20,10 +20,6 @@ export class CrearProfesoresCComponent implements OnInit {
     this.clasesData = [];
   }
 
-  ngOnInit() {
-    this.cargarClases();
-  }
-
   public form = this.fb.group({
     Nombre: ['', [Validators.required]],
     Apellidos: ['', [Validators.required]],
@@ -32,6 +28,10 @@ export class CrearProfesoresCComponent implements OnInit {
     ID_Centro: [localStorage.getItem('id'), [Validators.required]],
     ID_Clase: ['', [Validators.required]]
   });
+
+  ngOnInit() {
+    this.cargarClases();
+  }
 
   cargarClases(){
     this.id = localStorage.getItem('id');

@@ -38,12 +38,20 @@ data-sidebar-position="fixed" data-header-position="fixed">
                   <p class="text-danger" *ngIf="!validarForm('Contraseña')">La Contraseña es obligatoria</p>
                   <div class="mb-3">
                     <label for="ID_Centro" class="form-label">Centro</label>
-                    <input class="form-control" formControlName="ID_Centro" id="ID_Centro">
+                    <select class="form-control" formControlName="ID_Centro" id="ID_Centro" (change)="ngOnChanges($event)">
+                      <option *ngFor="let centro of centrosData.centros" [value]="centro.ID_Centro">
+                        {{centro.Nombre}}
+                      </option>
+                    </select>
                   </div>
                   <p class="text-danger" *ngIf="!validarForm('ID_Centro')">El Centro es obligatorio</p>
                   <div class="mb-3">
                     <label for="ID_Clase" class="form-label">Clase</label>
-                    <input class="form-control" formControlName="ID_Clase" id="ID_Clase">
+                    <select class="form-control" formControlName="ID_Clase" id="ID_Clase">
+                      <option *ngFor="let clase of clasesData.clases" [value]="clase.ID_Clase">
+                        {{clase.Nombre}}
+                      </option>
+                    </select>
                   </div>
                   <p class="text-danger" *ngIf="!validarForm('ID_Clase')">La Clase es obligatoria</p>
                   <button class="btn btn-danger" (click)="crearProfesor()">Aceptar</button>
@@ -54,11 +62,10 @@ data-sidebar-position="fixed" data-header-position="fixed">
           </div>
         </div>
       </div>
-  </div>
-      
+    </div> 
     <div class="py-6 px-6 text-center">
-        <p class="copyright">&copy; 2023 Blooming. Proyecto académico de la Universidad de Alicante .</p>
-      </div>
+      <p class="copyright">&copy; 2023 Blooming. Proyecto académico de la Universidad de Alicante .</p>
+    </div>
   </div>
 </div>
 </div>

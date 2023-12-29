@@ -8,10 +8,9 @@ data-sidebar-position="fixed" data-header-position="fixed">
                 <div class="container-fluid">
                     <div class="card">
                         <div class="card-body">
-    
                             <div class="profile-container text-center">
                                 <img src="../assets/images/avatar.jpg" alt="Foto de perfil" class="profile-image rounded-circle">
-                                <h3>Lucía Martínez</h3> <span class="badge bg-success rounded-3 fw-semibold">Bueno</span>
+                                <h3>{{alumnosData.Nombre}}</h3> <span class="badge bg-success rounded-3 fw-semibold">Bueno</span>
                             </div>
                            <div class="card-body">
                             <div class="card">
@@ -35,7 +34,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                             </tr>
                                             <td class="border-bottom-0">
                                                 <!-- <a href="/profesores/actividad-reciente" class="btn btn-dark">Ver Cuestionario</a> -->
-                                                <a href="/profesores/dashboard" class="btn btn-light">Volver</a>
+                                                <button class="btn btn-light" (click)="volver()">Volver</button>
                                             </td>
                                         </tbody>
                                     </table>

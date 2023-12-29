@@ -45,6 +45,7 @@ import { EditarCentroComponent } from './centros/editar-centro/editar-centro.com
 import { PerfilProfesorComponent } from './profesores/perfil-profesor/perfil-profesor.component';
 import { EditarProfesorComponent } from './profesores/editar-profesor/editar-profesor.component';
 
+import {ThreejsComponent } from './alumnos/threejs/threejs.component';
 const routes: Routes = [
   { path: 'admin', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
     children: [
@@ -97,8 +98,9 @@ const routes: Routes = [
     path: 'alumnos', component: AlumnoLayoutComponent, canActivate: [ AuthGuard ],
     children: [
       { path: 'dashboard', component: AlumnosComponent},
+      { path: 'sidebar', component: SidebarComponent },
+      { path: 'threejs', component: ThreejsComponent}
   ]},
-  { path: 'sidebar', component: SidebarComponent },
   /*{ 
     path: 'dashboard', component: DashboardComponent,
     children: [

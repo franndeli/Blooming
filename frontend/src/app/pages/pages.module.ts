@@ -55,6 +55,9 @@ import { EditarCentroComponent } from './centros/editar-centro/editar-centro.com
 import { PerfilProfesorComponent } from './profesores/perfil-profesor/perfil-profesor.component';
 import { EditarProfesorComponent } from './profesores/editar-profesor/editar-profesor.component';
 
+import { ThreejsComponent } from './alumnos/threejs/threejs.component';
+import { PruebaComponent } from './alumnos/prueba/prueba.component';
+
 
 @NgModule({
   declarations: [
@@ -100,7 +103,9 @@ import { EditarProfesorComponent } from './profesores/editar-profesor/editar-pro
       PerfilCentroComponent,
       EditarCentroComponent,
       PerfilProfesorComponent,
-      EditarProfesorComponent
+      EditarProfesorComponent,
+      ThreejsComponent,
+      PruebaComponent
   ],
   exports: [
     AdminLayoutComponent,

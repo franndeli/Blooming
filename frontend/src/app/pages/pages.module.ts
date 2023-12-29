@@ -53,6 +53,7 @@ import { ConversacionComponent } from './alumnos/conversacion/conversacion.compo
 
 
 
+
 @NgModule({
   declarations: [
     /*SidebarComponent,
@@ -93,7 +94,8 @@ import { ConversacionComponent } from './alumnos/conversacion/conversacion.compo
       EditarClasesCComponent,
       AlumnosComponent,
       ThreejsComponent,
-      ConversacionComponent
+      ConversacionComponent,
+
   ],
   exports: [
     AdminLayoutComponent,

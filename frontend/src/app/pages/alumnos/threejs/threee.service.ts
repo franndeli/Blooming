@@ -17,7 +17,7 @@ export class ThreeService {
   camera: THREE.PerspectiveCamera;
   renderer: THREE.WebGLRenderer;
   avatar: Modelo;
-
+  //cuestionario: Cuestionario;
   constructor() {
     this.renderer = new THREE.WebGLRenderer();
     this.scene = new Scene(this.renderer);
@@ -25,6 +25,8 @@ export class ThreeService {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.avatar = new Modelo();
     document.body.appendChild(this.renderer.domElement);
+
+    //this.cuestionario = new Cuestionario('¿Como estás?', ['Bien', 'Mal', 'Regular', 'No te sabría decir']);
 
     this.camera.position.z = 5;
 
@@ -54,5 +56,6 @@ export class ThreeService {
     this.avatar.update(delta);
     this.renderer.render(this.scene, this.camera);
     // ... más lógica de actualización de Three.js
+
   }
 }

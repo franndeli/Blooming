@@ -48,6 +48,12 @@ import { EditarProfesoresCComponent } from './centros/editar-profesores-c/editar
 import { EditarClasesCComponent } from './centros/editar-clases-c/editar-clases-c.component';
 import { AlumnoLayoutComponent } from '../layouts/alumno-layout/alumno-layout.component';
 import { AlumnosComponent } from './alumnos/alumnos.component';
+import { PerfilAdminComponent } from './admin/perfil-admin/perfil-admin.component';
+import { EditarAdminComponent } from './admin/editar-admin/editar-admin.component';
+import { PerfilCentroComponent } from './centros/perfil-centro/perfil-centro.component';
+import { EditarCentroComponent } from './centros/editar-centro/editar-centro.component';
+import { PerfilProfesorComponent } from './profesores/perfil-profesor/perfil-profesor.component';
+import { EditarProfesorComponent } from './profesores/editar-profesor/editar-profesor.component';
 
 
 @NgModule({
@@ -88,7 +94,13 @@ import { AlumnosComponent } from './alumnos/alumnos.component';
       EditarAlumnosCComponent,
       EditarProfesoresCComponent,
       EditarClasesCComponent,
-      AlumnosComponent
+      AlumnosComponent,
+      PerfilAdminComponent,
+      EditarAdminComponent,
+      PerfilCentroComponent,
+      EditarCentroComponent,
+      PerfilProfesorComponent,
+      EditarProfesorComponent
   ],
   exports: [
     AdminLayoutComponent,

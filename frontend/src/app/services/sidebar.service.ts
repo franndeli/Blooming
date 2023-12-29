@@ -15,7 +15,7 @@ export class SidebarService {
   menuAlumno: sidebarItem[] = [];
   menuProfesor: sidebarItem[] = [
     { titulo: 'Alumnos', icono: 'ti ti-friends', url: '/profesores/ver-alumnos'},
-    { titulo: 'Clases', icono: 'ti ti-school', url: '/profesores/ver-clases'}
+    { titulo: 'Actividad reciente', icono: 'ti ti-users', url: '/profesores/actividad-reciente'}
   ];
   menuCentro: sidebarItem[] = [
     { titulo: 'Profesores', icono: 'ti ti-users', url: '/centros/ver-profesores'},

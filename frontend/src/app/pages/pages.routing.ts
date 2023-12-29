@@ -38,6 +38,12 @@ import { EditarClasesCComponent } from './centros/editar-clases-c/editar-clases-
 import { AlumnoLayoutComponent } from '../layouts/alumno-layout/alumno-layout.component';
 import { AlumnosComponent } from './alumnos/alumnos.component';
 import { SidebarComponent } from '../commons/sidebar/sidebar.component';
+import { PerfilAdminComponent } from './admin/perfil-admin/perfil-admin.component';
+import { EditarAdminComponent } from './admin/editar-admin/editar-admin.component';
+import { PerfilCentroComponent } from './centros/perfil-centro/perfil-centro.component';
+import { EditarCentroComponent } from './centros/editar-centro/editar-centro.component';
+import { PerfilProfesorComponent } from './profesores/perfil-profesor/perfil-profesor.component';
+import { EditarProfesorComponent } from './profesores/editar-profesor/editar-profesor.component';
 
 const routes: Routes = [
   { path: 'admin', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
@@ -55,6 +61,8 @@ const routes: Routes = [
       { path: 'editar-centros', component: EditarCentrosComponent},
       { path: 'editar-clases', component: EditarClasesComponent},
       { path: 'editar-profesores', component: EditarProfesoresComponent},
+      { path: 'perfil', component: PerfilAdminComponent},
+      { path: 'editar-admin', component: EditarAdminComponent},
       { path: '**', redirectTo: 'dashboard'},
   ]},
   {
@@ -70,6 +78,8 @@ const routes: Routes = [
       { path: 'editar-alumnos', component: EditarAlumnosCComponent},
       { path: 'editar-profesores', component: EditarProfesoresCComponent},
       { path: 'editar-clases', component: EditarClasesCComponent},
+      { path: 'perfil', component: PerfilCentroComponent},
+      { path: 'editar-centro', component: EditarCentroComponent},
   ]},
   {
     path: 'profesores', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
@@ -79,6 +89,8 @@ const routes: Routes = [
       { path: 'ver-perfil-alumno', component: VerPerfilAlumnoComponent},
       { path: 'actividad-reciente', component: ActividadRecienteComponent},
       { path: 'ver-alumnos', component: VerAlumnosPComponent},
+      { path: 'perfil', component: PerfilProfesorComponent},
+      { path: 'editar-profesor', component: EditarProfesorComponent},
     ]
   },
   { 

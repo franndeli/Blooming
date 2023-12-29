@@ -15,7 +15,31 @@ export class LoginComponent implements OnInit {
 
   constructor(private fb:FormBuilder, private authService: AuthService, private router: Router){}
 
-  ngOnInit() {}
+  ngOnInit(): void {
+    this.authService.validarToken()
+      .subscribe(({ valido, rol }) => {
+        console.log('valor:', valido);
+        console.log('rol:', rol);
+        if (valido) {
+          switch (rol) {
+            case 'Admin':
+              this.router.navigate(['admin/dashboard']);
+              break;
+            case 'Centro':
+              this.router.navigate(['centros/dashboard']);
+              break;
+            case 'Alumno':
+              this.router.navigate(['alumnos/dashboard']);
+              break;
+            case 'Profesor':
+              this.router.navigate(['profesores/dashboard']);
+              break;
+            default:
+              localStorage.removeItem('token');
+          }
+        }
+      });
+  }
 
   public form = this.fb.group({
     Usuario: [localStorage.getItem('usuario') || '', [Validators.required]],

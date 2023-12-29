@@ -48,28 +48,30 @@ export class AuthService {
     return this.http.post(`${environment.base_url}/centros`, formData);
   }
 
-  validarToken() {
+  validarToken(): Observable<{ valido: boolean, rol?: string }> {
     const token = localStorage.getItem('token') || '';
-
+  
     if (token === ''){
-      return of (false);
+      return of({ valido: false });
     }
-
+  
     return this.http.get<TokenResponse>(`${environment.base_url}/login/token`, {
       headers: {
         'x-token': token
       }
     }).pipe(
-      tap( (res: any) => {
+      tap((res: any) => {
         localStorage.setItem('token', res.token.token);
+        localStorage.setItem('rol', res.rol);
       }),
-      map ( resp => {
-        return true;
-      }),
-      catchError ( err => {
+      map(resp => ({
+        valido: true,
+        rol: resp.rol
+      })),
+      catchError(err => {
         console.warn(err);
-        return of(false);
+        return of({ valido: false });
       })
-    )
+    );
   }
 }

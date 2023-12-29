@@ -38,6 +38,7 @@ import { EditarClasesCComponent } from './centros/editar-clases-c/editar-clases-
 import { AlumnoLayoutComponent } from '../layouts/alumno-layout/alumno-layout.component';
 import { AlumnosComponent } from './alumnos/alumnos.component';
 import {ThreejsComponent } from './alumnos/threejs/threejs.component';
+import { ConversacionComponent } from './alumnos/conversacion/conversacion.component';
 const routes: Routes = [
   { path: 'admin', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
     children: [
@@ -85,7 +86,8 @@ const routes: Routes = [
     children: [
       { path: 'dashboard', component: AlumnosComponent},
       //nuevo
-      { path: 'threejs', component: ThreejsComponent}
+      { path: 'threejs', component: ThreejsComponent},
+      { path: 'conversacion', component: ConversacionComponent}
   ]}
   /*{ 
     path: 'dashboard', component: DashboardComponent,

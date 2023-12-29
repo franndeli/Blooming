@@ -1,0 +1,12 @@
+/* app.component.css o el archivo de estilos principal */
+.canvas-container {
+    position: relative;
+  }
+  
+  .conversation-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1; /* Asegura que la conversación esté por encima de Three.js */
+  }
+  

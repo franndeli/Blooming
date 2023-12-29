@@ -42,6 +42,11 @@ export class ProfesorService {
     return this.http.get(this.basePath, this.httpOptions );
   }
 
+  getProfesorID(id: any){
+    this.getHeader();
+    return this.http.get(this.basePath+'?ID_Profesor='+id, this.httpOptions );
+  }
+
   deleteProfesor(id:number){
     this.getHeader();
     return this.http.delete(this.basePath+id, this.httpOptions);
@@ -55,6 +60,11 @@ export class ProfesorService {
   putProfesor(formData: any){
     this.getHeader();
     return this.http.put(this.basePath+formData.ID_Profesor, formData, this.httpOptions);
+  }
+
+  getProfesoresCentro(id: any){
+    this.getHeader();
+    return this.http.get(this.basePath+'?ID_Centro='+id, this.httpOptions);
   }
 
 }

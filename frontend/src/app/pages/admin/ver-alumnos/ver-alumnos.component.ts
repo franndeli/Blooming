@@ -29,7 +29,6 @@ export class VerAlumnosComponent implements AfterViewInit{
 
   getAlumnos(){
     this.alumnoService.getAlumnos().subscribe(res => {
-      console.log(res);
       this.alumnosData = res;
     })
   }

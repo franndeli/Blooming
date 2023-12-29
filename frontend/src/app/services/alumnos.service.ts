@@ -56,4 +56,14 @@ export class AlumnoService {
     return this.http.put(this.basePath+formData.ID_Alumno, formData, this.httpOptions);
   }
 
+  getAlumnosCentro(id: any){
+    this.getHeader();
+    return this.http.get(this.basePath+'?ID_Centro='+id, this.httpOptions);
+  }
+
+  getAlumnosClase(id: any){
+    this.getHeader();
+    return this.http.get(this.basePath+'?ID_Clase='+id, this.httpOptions);
+  }
+
 }

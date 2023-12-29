@@ -20,15 +20,15 @@ const getClases = (req, res) => {
         }
 
         if(req.query.ID_Clase){
-            conditions.push("ID_Clase = ?");
+            conditions.push("clase.ID_Clase = ?");
             values.push(req.query.ID_Clase);
         }
         if(req.query.Nombre){
-            conditions.push("Nombre LIKE ?");
+            conditions.push("clase.Nombre LIKE ?");
             values.push(`%${req.query.Nombre}%`);
         }
         if(req.query.NumAlumnos){
-            conditions.push("NumAlumnos = ?");
+            conditions.push("clase.NumAlumnos = ?");
             values.push(req.query.NumAlumnos);
         }
         if(req.query.ID_Centro){
@@ -40,7 +40,10 @@ const getClases = (req, res) => {
             query += ' WHERE ' + conditions.join(' AND ');
         }
 
-        query += ` LIMIT ${tam} OFFSET ${desde}`;
+        //quitar este if, solo para pruebas de get
+        if(req.query.desde){
+            query += ` LIMIT ${tam} OFFSET ${desde}`;
+        }
 
         connection.query(query, values, (error, results) => {
             if (error) {
@@ -77,7 +80,7 @@ const createClase = (req, res) => {
 
             if (results.length > 0) {
                 // Si ya existe una clase con el mismo nombre y ID_Centro, rechazar la creación
-                return reject({ statusCode: 400, message: "Ya existe una clase con este nombre en el centro especificado"});
+                return reject({ statusCode: 400, message: "Ya existe esta clase en el centro"});
             }
 
             // Si no existe, proceder con la creación de la nueva clase

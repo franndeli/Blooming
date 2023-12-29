@@ -21,31 +21,27 @@ const getProfesores = (req, res) => {
         }
 
         if(req.query.ID_Profesor){
-            conditions.push("ID_Profesor = ?");
+            conditions.push("profesor.ID_Profesor = ?");
             values.push(req.query.ID_Profesor);
         }
         if(req.query.Nombre){
-            conditions.push("Nombre LIKE ?");
+            conditions.push("profesor.Nombre LIKE ?");
             values.push(`${req.query.Nombre}%`);
         }
         if(req.query.Apellido){
-            conditions.push("Apellidos LIKE ?");
+            conditions.push("profesor.Apellidos LIKE ?");
             values.push(`${req.query.Apellidos}%`);
         }
         if(req.query.Email){
-            conditions.push("Email LIKE ?");
+            conditions.push("profesor.Email LIKE ?");
             values.push(`${req.query.Email}%`);
         }
-        if(req.query.Contraseña){
-            conditions.push("Contraseña = ?");
-            values.push(req.query.Contraseña);
-        }
         if(req.query.ID_Clase){
-            conditions.push("ID_Clase = ?");
+            conditions.push("profesor.ID_Clase = ?");
             values.push(req.query.ID_Clase);
         }
         if(req.query.ID_Centro){
-            conditions.push("ID_Centro = ?");
+            conditions.push("profesor.ID_Centro = ?");
             values.push(req.query.ID_Centro);
         }
 
@@ -87,7 +83,7 @@ const createProfesor = (req, res) => {
                 reject({ statusCode: 500, message: "Error al verificar el email"});
             } else if (results.length > 0) {
                 //Si se encuentra profesor con el mismo email, rechaza la petición
-                reject({ statusCode: 400, message: "El email de este profesor ya existe en el centro especificado"});
+                reject({ statusCode: 400, message: "El email de este profesor ya está registrado en el centro"});
             } else {
                 // Cifrar la contraseña antes de insertar
                 const hashedPassword = hashPassword(req.body.Contraseña);

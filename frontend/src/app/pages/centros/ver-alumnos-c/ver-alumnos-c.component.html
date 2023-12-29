@@ -36,7 +36,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                         <td class="border-bottom-0">{{alumno.NomClase}}</td>
                                         <td class="border-bottom-0">{{alumno.NomCentro}}</td>
                                         <td class="border-bottom-0">
-                                          <a href="./centros/editar-alumnos" class="btn btn-secondary">M</a>
+                                          <button class="btn btn-primary" (click)="editarAlumno(alumno)">M</button>
                                           <button class="btn btn-danger" (click)="eliminarAlumno(alumno.ID_Alumno)">E</button>
                                         </td>
                                     </tr>

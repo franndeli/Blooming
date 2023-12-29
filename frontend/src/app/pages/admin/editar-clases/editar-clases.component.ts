@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
-
 import { ClaseService } from '../../../services/clases.service';
+import { CentroService } from '../../../services/centros.service';
 
 @Component({
   selector: 'app-editar-clases',
@@ -12,8 +12,11 @@ import { ClaseService } from '../../../services/clases.service';
 export class EditarClasesComponent implements OnInit {
 
   clasesData: any = [];
+  centrosData: any;
 
-  constructor(private fb:FormBuilder, private claseService: ClaseService, private router: Router, private activatedRoute: ActivatedRoute){}
+  constructor(private fb:FormBuilder, private claseService: ClaseService, private router: Router, private activatedRoute: ActivatedRoute, private centroService: CentroService){
+    this.centrosData = [];
+  }
 
   public form = this.fb.group({
     ID_Clase: [''],
@@ -32,6 +35,14 @@ export class EditarClasesComponent implements OnInit {
         NumAlumnos: this.clasesData.NumAlumnos
       });
     });
+
+    this.cargarCentros();
+  }
+
+  cargarCentros(){
+    this.centroService.getCentros().subscribe(res => {
+      this.centrosData = res;
+    })
   }
 
   actualizarClase(){

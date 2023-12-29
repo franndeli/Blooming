@@ -60,8 +60,8 @@ export class AuthService {
         'x-token': token
       }
     }).pipe(
-      tap( res => {
-        localStorage.setItem('token', res.token);
+      tap( (res: any) => {
+        localStorage.setItem('token', res.token.token);
       }),
       map ( resp => {
         return true;

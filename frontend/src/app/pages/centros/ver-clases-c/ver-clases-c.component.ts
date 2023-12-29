@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ClaseService } from '../../../services/clases.service';
 import Swal from 'sweetalert2'
 
@@ -7,24 +8,22 @@ import Swal from 'sweetalert2'
   templateUrl: './ver-clases-c.component.html',
   styleUrl: './ver-clases-c.component.css'
 })
-export class VerClasesCComponent {
+export class VerClasesCComponent implements OnInit {
 
   clasesData: any;
+  private id: any;
 
-  constructor(private claseService: ClaseService){
+  constructor(private claseService: ClaseService, private router: Router){
     this.clasesData = [];
   }
 
-  ngAfterViewInit() {
-    this.tryLocalStorage();
-  }
-
-  tryLocalStorage(){
+  ngOnInit() {
     this.getClases();
   }
 
   getClases(){
-    this.claseService.getClases().subscribe(res => {
+    this.id = localStorage.getItem('id');
+    this.claseService.getClasesCentro(this.id).subscribe(res => {
       this.clasesData = res;
     })
   }
@@ -49,6 +48,10 @@ export class VerClasesCComponent {
         });
       }
     });
+  }
+
+  editarClase(clase: any){
+    this.router.navigate(['centros/editar-clases'], {state: {clase}});
   }
 
 }

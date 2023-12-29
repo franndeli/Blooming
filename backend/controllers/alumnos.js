@@ -9,11 +9,12 @@ const getAlumnos = (req, res) => {
     const desde = Number(req.query.desde) || 0;
 
     return new Promise(function(resolve, reject) {
-        let query = 'SELECT alumno.*, clase.Nombre AS NomClase, centro_escolar.Nombre AS NomCentro FROM alumno LEFT JOIN clase ON alumno.ID_Clase = clase.ID_Clase LEFT JOIN centro_escolar ON clase.ID_Centro = centro_escolar.ID_Centro';
+        let query = 'SELECT alumno.*, clase.Nombre AS NomClase, centro_escolar.Nombre AS NomCentro FROM alumno LEFT JOIN clase ON alumno.ID_Clase = clase.ID_Clase LEFT JOIN centro_escolar ON alumno.ID_Centro = centro_escolar.ID_Centro';
+
         let conditions = [];
         let values = [];
 
-        let validParams = ['ID_Alumno', 'Nombre', 'Apellidos', 'Usuario', 'Contraseña', 'FechaNacimiento', 'ID_Clase', 'desde'];
+        let validParams = ['ID_Alumno', 'Nombre', 'Apellidos', 'Usuario', 'Contraseña', 'FechaNacimiento', 'ID_Clase', 'ID_Centro', 'desde'];
 
         let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
 
@@ -22,29 +23,32 @@ const getAlumnos = (req, res) => {
         }
 
         if(req.query.ID_Alumno){
-            conditions.push("ID_Alumno = ?");
+            conditions.push("alumno.ID_Alumno = ?");
             values.push(req.query.ID_Alumno);
         }
         if(req.query.Nombre){
-            conditions.push("Nombre LIKE ?");
+            conditions.push("alumno.Nombre LIKE ?");
             values.push(`${req.query.Nombre}%`);
         }
         if(req.query.Apellidos){
-            conditions.push("Apellidos LIKE ?");
+            conditions.push("alumno.Apellidos LIKE ?");
             values.push(`${req.query.Apellidos}%`);
         }
         if(req.query.Usuario){
-            conditions.push("Usuario LIKE ?");
+            conditions.push("alumno.Usuario LIKE ?");
             values.push(`${req.query.Usuario}%`);
         }
-        // No se incluye Contraseña por motivos de seguridad
         if(req.query.FechaNacimiento){
-            conditions.push("FechaNacimiento = ?");
+            conditions.push("alumno.FechaNacimiento = ?");
             values.push(req.query.FechaNacimiento);
         }
         if(req.query.ID_Clase){
-            conditions.push("ID_Clase = ?");
+            conditions.push("alumno.ID_Clase = ?");
             values.push(req.query.ID_Clase);
+        }
+        if(req.query.ID_Centro){
+            conditions.push("alumno.ID_Centro = ?");
+            values.push(req.query.ID_Centro);
         }
 
         if(conditions.length > 0){
@@ -73,6 +77,7 @@ const getAlumnos = (req, res) => {
     });
 }
 
+
 function obtenerApellidos(apellidos) {
     const partes = apellidos.split(' ');
 
@@ -87,6 +92,13 @@ function generarUsuario(nombre, apellidos, id) {
     // Separar los apellidos
     const { apellido1, apellido2 } = obtenerApellidos(apellidos);
 
+    //Obtener el primer nombre
+    const nombres = nombre.split(' ');
+    const nombre1 = nombres.length > 0 ? nombres[0] : '';
+
+    // Obtener la primera inicial del segundo nombre
+    const inicialN2 = nombres.length > 1 ? nombres[1].charAt(0).toLowerCase() : '';
+
     // Obtener las iniciales del primer y segundo apellido
     const inicialApellido1 = apellido1.charAt(0).toLowerCase();
     const inicialApellido2 = apellido2.charAt(0).toLowerCase();
@@ -94,7 +106,7 @@ function generarUsuario(nombre, apellidos, id) {
     //const numero = Math.floor(Math.random() * (50 - 1 + 1)) + 1;
 
     // Crear el nombre de usuario concatenando los elementos
-    const username = `${nombre.toLowerCase()}${inicialApellido1}${inicialApellido2}${id}`;
+    const username = `${nombre1.toLowerCase()}${inicialN2}${inicialApellido1}${inicialApellido2}${id}`;
 
     return username;
 }

@@ -77,12 +77,13 @@ const login = async (req, res) => {
             });
         }
 
-        const token = await generarJWT(usuario);
+        const { token, userID } = await generarJWT(usuario);
+        console.log(usuario);
         res.json({
             ok: true,
             message: `login ${usuario.Rol}`,
             rol: usuario.Rol,
-            id: usuario.ID,
+            id: userID,
             token
         });
     } catch (error) {

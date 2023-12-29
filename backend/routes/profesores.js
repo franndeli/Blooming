@@ -9,7 +9,7 @@ const { validarJWT } = require('../middleware/validar-jwt');
 
 const router = Router();
 
-router.get('/', validarJWT, validarRol(['Centro', 'Admin']), (req, res) => {
+router.get('/', validarJWT, validarRol(['Centro', 'Admin', 'Profesor']), (req, res) => {
     getProfesores(req, res).catch(error => {
         res.status(error.statusCode || 500).json({ error: error.message });
     });

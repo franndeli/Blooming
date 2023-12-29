@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ProfesorService } from '../../../services/profesores.service';
 import Swal from 'sweetalert2'
 
@@ -7,24 +8,22 @@ import Swal from 'sweetalert2'
   templateUrl: './ver-profesores-c.component.html',
   styleUrl: './ver-profesores-c.component.css'
 })
-export class VerProfesoresCComponent {
+export class VerProfesoresCComponent implements OnInit {
 
   profesoresData: any;
+  private id: any;
 
-  constructor(private profesorService: ProfesorService){
+  constructor(private profesorService: ProfesorService, private router: Router){
     this.profesoresData = [];
   }
 
-  ngAfterViewInit() {
-    this.tryLocalStorage();
-  }
-
-  tryLocalStorage(){
+  ngOnInit() {
     this.getProfesores();
   }
 
   getProfesores(){
-    this.profesorService.getProfesores().subscribe(res => {
+    this.id = localStorage.getItem('id');
+    this.profesorService.getProfesoresCentro(this.id).subscribe(res => {
       this.profesoresData = res;
     })
   }
@@ -41,7 +40,6 @@ export class VerProfesoresCComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         this.profesorService.deleteProfesor(id).subscribe(res => {
-          console.log(res);
           this.getProfesores();
         })
         Swal.fire({
@@ -50,6 +48,10 @@ export class VerProfesoresCComponent {
         });
       }
     });
+  }
+
+  editarProfesor(profesor: any){
+    this.router.navigate(['centros/editar-profesores'], {state: {profesor}});
   }
 
 }

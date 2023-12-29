@@ -9,19 +9,15 @@ data-sidebar-position="fixed" data-header-position="fixed">
             <div class="card">
                 <div class="card-body">
                   <div class="row">
-        
-                    <div class="col-md-4">
+                    <div class="col-md-4" *ngFor="let clase of clasesData.clases">
                         <div class="card">
                           <div class="card-body">
-                            <h5 class="card-title">1ºA</h5>
-                            <a href="/profesores/ver-alumnos" class="card-link">Ver Clase</a>
-                            <a href="#" class="card-link">Eliminar Clase</a>
+                            <h5 class="card-title">{{clase.Nombre}}</h5>
+                            <button class="btn btn-primary" (click)="verClase(clase.ID_Clase)">Ver Clase</button>
+                            <button class="btn btn-danger" (click)="eliminarClase(clase.ID_Clase)">Eliminar</button>
                           </div>
                         </div>
                     </div>
-        
-                    
-                    
                 </div>
               </div>
             </div>

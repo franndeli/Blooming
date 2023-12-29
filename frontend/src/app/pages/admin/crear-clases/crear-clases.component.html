@@ -23,7 +23,11 @@ data-sidebar-position="fixed" data-header-position="fixed">
                   <p class="text-danger" *ngIf="!validarForm('Nombre')">El Nombre es obligatorio</p>
                   <div class="mb-3">
                     <label for="ID_Centro" class="form-label">Centro</label>
-                    <input class="form-control" formControlName="ID_Centro" id="ID_Centro">
+                    <select class="form-control" formControlName="ID_Centro" id="ID_Centro">
+                      <option *ngFor="let centro of centrosData.centros" [value]="centro.ID_Centro">
+                        {{centro.Nombre}}
+                      </option>
+                    </select>
                   </div>
                   <p class="text-danger" *ngIf="!validarForm('ID_Centro')">El Centro es obligatorio</p>
                   <div class="mb-3">

@@ -1,4 +1,5 @@
-import { Component, AfterViewInit  } from '@angular/core';
+import { Component, OnInit  } from '@angular/core';
+import { Router } from '@angular/router';
 import { AlumnoService } from '../../../services/alumnos.service';
 import Swal from 'sweetalert2'
 
@@ -7,25 +8,22 @@ import Swal from 'sweetalert2'
   templateUrl: './ver-alumnos-c.component.html',
   styleUrl: './ver-alumnos-c.component.css'
 })
-export class VerAlumnosCComponent {
+export class VerAlumnosCComponent implements OnInit{
 
   alumnosData: any;
+  private id: any;
 
-  constructor(private alumnoService: AlumnoService){
+  constructor(private alumnoService: AlumnoService, private router: Router){
     this.alumnosData = [];
   }
 
-  ngAfterViewInit() {
-    this.tryLocalStorage();
-  }
-
-  tryLocalStorage(){
-    this.getAlumnos();
+  ngOnInit() {
+    this.getAlumnos();;
   }
 
   getAlumnos(){
-    this.alumnoService.getAlumnos().subscribe(res => {
-      console.log(res);
+    this.id = localStorage.getItem('id');
+    this.alumnoService.getAlumnosCentro(this.id).subscribe(res => {
       this.alumnosData = res;
     })
   }
@@ -50,6 +48,10 @@ export class VerAlumnosCComponent {
         });
       }
     });
+  }
+
+  editarAlumno(alumno: any){
+    this.router.navigate(['centros/editar-alumnos'], {state: {alumno}});
   }
 
 }

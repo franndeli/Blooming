@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ClaseService } from '../../../services/clases.service';
+import { CentroService } from '../../../services/centros.service';
 import Swal from 'sweetalert2'
 
 @Component({
@@ -9,16 +10,30 @@ import Swal from 'sweetalert2'
   templateUrl: './crear-clases.component.html',
   styleUrl: './crear-clases.component.css'
 })
-export class CrearClasesComponent {
+export class CrearClasesComponent implements OnInit {
+  
   sendForm: boolean=false;
+  centrosData: any;
 
-  constructor(private fb:FormBuilder, private claseService: ClaseService, private router: Router){}
+  constructor(private fb:FormBuilder, private claseService: ClaseService, private router: Router, private centroService: CentroService){
+    this.centrosData = [];
+  }
 
   public form = this.fb.group({
     Nombre: ['', [Validators.required]],
     ID_Centro: ['', [Validators.required]],
     NumAlumnos: ['', [Validators.required]]
   });
+
+  ngOnInit() {
+    this.cargarCentros();
+  }
+
+  cargarCentros(){
+    this.centroService.getCentros().subscribe(res => {
+      this.centrosData = res;
+    })
+  }
 
   crearClase(){
     this.sendForm=true;

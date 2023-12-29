@@ -55,9 +55,9 @@ export class CentroService {
     return this.http.put(this.basePath+formData.ID_Centro, formData, this.httpOptions);
   }
 
-  /*getIdCentro(usuario: any){
+  getCentro(id: any){
     this.getHeader();
-    return this.http.get(this.basePath+'?Email='+usuario, this.httpOptions);
-  }*/
+    return this.http.get(this.basePath+'?ID_Centro='+id, this.httpOptions);
+  }
 
 }

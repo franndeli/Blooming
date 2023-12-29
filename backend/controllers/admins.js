@@ -122,6 +122,7 @@ const updateAdmin = (req, res) => {
     });
 };
 
+
 const deleteAdmin = (req, res) => {
     return new Promise(function(resolve, reject) {
         const id = req.params.ID_Admin;

@@ -1,7 +1,8 @@
 const { dbConnection } = require('../database/configdb');
 const connection = dbConnection();
 const hashPassword = require('../middleware/hashHelper');
-
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const Profesor = require('../models/profesor');
 
 const getProfesores = (req, res) => {
@@ -129,6 +130,71 @@ const updateProfesor = (req, res) => {
     });
 };
 
+
+    function verify(token) {
+        try {
+            const decodedToken = jwt.verify(token, process.env.JWTSECRET);
+            return decodedToken;
+        } catch (error) {
+            return false;
+        }
+    }
+
+const updateProfesorPwd = (req, res) => {
+    return new Promise(function(resolve, reject){
+        const token = req.header('x-token');
+        const id = req.params.ID_Profesor;
+        const { Contraseña, newPassword, newPassword2 } = req.body;
+
+        if(!(verify(token).Rol == 'Profesor' && verify(token).ID == id)){
+            return res.status(400).json({
+                ok: false,
+                message: 'No tienes permisos para actualizar la contraseña',
+            });
+        }
+
+        connection.query('SELECT Nombre, Contraseña FROM profesor WHERE ID_Profesor = ?', [id], (error, datos) => {
+            if (error) {
+                reject({ statusCode: 500, message: "Error al buscar el Profesor"});
+            } else if (datos.affectedRows === 0) {
+                reject({ statusCode: 404, message: "Profesor no encontrado"});
+            } else {
+                const pwdOk = bcrypt.compareSync(Contraseña, datos[0].Contraseña);
+                if(verify(token).ID == id){
+                    if(newPassword !== newPassword2){
+                        return res.status(400).json({
+                            ok: false,
+                            message: 'Las contraseñas no coinciden',
+                        });
+                    }
+                    if(!pwdOk){
+                        return res.status(400).json({
+                            ok: false,
+                            message: 'Contraseña incorrecta',
+                        });
+                    }
+                }
+                const hashedPassword = hashPassword(newPassword);
+                const newPwd = hashedPassword;
+
+                connection.query('UPDATE profesor SET Contraseña = ? WHERE ID_Profesor = ?', [newPwd, id], (setError, setResults) => {
+                    if (setError) {
+                        reject({ statusCode: 500, message: "Error al cambiar la contraseña"});
+                    } else {
+                        resolve(
+                            res.json({
+                                ok: true,
+                                msg: 'Contraseña actualizada de Profesor'
+                            })
+                        );
+                    }
+                })
+            }
+        });
+    });
+};
+
+
 const deleteProfesor = (req, res) => {
     return new Promise(function(resolve, reject) {
         const id = req.params.ID_Profesor;
@@ -158,4 +224,4 @@ const deleteProfesor = (req, res) => {
     });
 }
 
-module.exports = { getProfesores, createProfesor, updateProfesor, deleteProfesor };
+module.exports = { getProfesores, createProfesor, updateProfesor, deleteProfesor, updateProfesorPwd };

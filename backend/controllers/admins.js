@@ -4,7 +4,6 @@ const hashPassword = require('../middleware/hashHelper');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const Admin = require('../models/admin');
-const { json } = require('express');
 
 const getAdmins = (req, res) => {
     const tam = Number(process.env.TAMPORPAG);
@@ -179,7 +178,7 @@ const updateAdminPwd = (req, res) => {
                         resolve(
                             res.json({
                                 ok: true,
-                                msg: 'Contraseña actualizada'
+                                msg: 'Contraseña actualizada de Admin'
                             })
                         );
                     }

@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
       console.log('login');
       this.authService.login(formData).subscribe(
         (response:any) => {
-          localStorage.setItem('token', response.token);
+          //localStorage.setItem('token', response.token);
           if (this.form.get('Remember')?.value ?? ''){
             localStorage.setItem('usuario', this.form.get('Usuario')?.value ?? '');
           } else {

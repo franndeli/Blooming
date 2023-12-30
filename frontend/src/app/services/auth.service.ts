@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment';
 import { tap, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { TokenResponse } from '../interfaces/token-response';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ import { TokenResponse } from '../interfaces/token-response';
 
 export class AuthService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+              private router: Router) { }
 
   httpOptions= {
     headers: new HttpHeaders ({
@@ -44,6 +46,27 @@ export class AuthService {
         })
       );
   }
+
+  logout() {
+    // Comprobar y eliminar 'id' si existe
+    if (localStorage.getItem('id')) {
+      localStorage.removeItem('id');
+    }
+  
+    // Comprobar y eliminar 'rol' si existe
+    if (localStorage.getItem('rol')) {
+      localStorage.removeItem('rol');
+    }
+  
+    // Comprobar y eliminar 'token' si existe
+    if (localStorage.getItem('token')) {
+      localStorage.removeItem('token');
+    }
+  
+    // Redirigir al usuario a la página de login
+    this.router.navigateByUrl('/login');
+  }
+  
 
   registro(formData: any){
     return this.http.post(`${environment.base_url}/centros`, formData);

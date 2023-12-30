@@ -39,6 +39,7 @@ export class AuthService {
     return this.http.post(`${environment.base_url}/login`, formData)
       .pipe(
         tap( (res:any) => {
+          localStorage.setItem('token', res.token);
           localStorage.setItem('rol', res.rol);
         })
       );

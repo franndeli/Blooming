@@ -39,7 +39,12 @@ export class AdminService {
     //LLAMADAS API  
     getAdmin(id:any){
       this.getHeader();
-      return this.http.get(this.basePath+'?ID_Admin='+id, this.httpOptions );
+      return this.http.get(this.basePath+'?ID_Admin='+id, this.httpOptions);
+    }
+
+    updateAdminPwd(formData: any){
+      this.getHeader();
+      return this.http.put(this.basePath+'/newp/'+formData.ID_Admin, formData, this.httpOptions);
     }
   
   }

@@ -31,5 +31,4 @@ const generarJWT = (usuario) => {
     });
 };
 
-
 module.exports = { generarJWT }

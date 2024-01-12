@@ -41,6 +41,11 @@ export class CentroService {
     return this.http.get(this.basePath, this.httpOptions );
   }
 
+  getCentro(id: any){
+    this.getHeader();
+    return this.http.get(this.basePath+'?ID_Centro='+id, this.httpOptions);
+  }
+
   deleteCentro(id:number){
     this.getHeader();
     return this.http.delete(this.basePath+id, this.httpOptions);
@@ -55,9 +60,9 @@ export class CentroService {
     return this.http.put(this.basePath+formData.ID_Centro, formData, this.httpOptions);
   }
 
-  /*getIdCentro(usuario: any){
+  updateCentroPwd(formData: any){
     this.getHeader();
-    return this.http.get(this.basePath+'?Email='+usuario, this.httpOptions);
-  }*/
+    return this.http.put(this.basePath+'/newp/'+formData.ID_Centro, formData, this.httpOptions);
+  }
 
 }

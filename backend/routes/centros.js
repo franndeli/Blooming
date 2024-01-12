@@ -1,7 +1,7 @@
 /* RUTA BASE '/api/centros' */
 
 const { Router } = require('express');
-const { getCentros, createCentro, updateCentro, deleteCentro } = require('../controllers/centros');
+const { getCentros, createCentro, updateCentro, deleteCentro, updateCentroPwd } = require('../controllers/centros');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middleware/validaciones');
 const { validarRol } = require('../middleware/validar-rol');
@@ -9,7 +9,7 @@ const { validarJWT } = require('../middleware/validar-jwt');
 
 const router = Router();
 
-router.get('/', validarJWT, validarRol(['Admin']), (req, res) => {
+router.get('/', validarJWT, validarRol(['Admin', 'Centro']), (req, res) => {
     getCentros(req, res).catch(error => {
         res.status(error.statusCode || 500).json({ error: error.message });
     });
@@ -44,6 +44,20 @@ router.put('/:ID_Centro', [
         validarCampos
     ], (req, res) => {
         updateCentro(req, res).catch(error => {
+            res.status(error.statusCode || 500).json({ error: error.message });
+        });
+    });
+
+    router.put('/newp/:ID_Centro', [
+        validarJWT, validarRol(['Centro']),
+    //Campos opcionales, no es necesario ponerlos todos para hacer una llamada PUT
+        check('ID_Centro').isInt().withMessage('El campo "ID_Centro" debe ser un número entero'),
+        check('Contraseña').not().isEmpty().withMessage('El argumento "Contraseña" no debe estar vacío'),
+        check('newPassword').not().isEmpty().withMessage('El argumento "newPassword" no debe estar vacío'),
+        check('newPassword2').not().isEmpty().withMessage('El argumento "newPassword2" no debe estar vacío'),
+        validarCampos
+    ], (req, res) => {
+        updateCentroPwd(req, res).catch(error => {
             res.status(error.statusCode || 500).json({ error: error.message });
         });
     });

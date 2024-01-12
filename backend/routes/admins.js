@@ -1,7 +1,7 @@
 /* RUTA BASE '/api/admins' */
 
 const { Router } = require('express');
-const { getAdmins, createAdmin, updateAdmin, deleteAdmin } = require('../controllers/admins');
+const { getAdmins, createAdmin, updateAdmin, deleteAdmin, updateAdminPwd } = require('../controllers/admins');
 const { check, Result } = require('express-validator');
 const { validarCampos } = require('../middleware/validaciones');
 const { validarRol } = require('../middleware/validar-rol');
@@ -36,6 +36,20 @@ router.put('/:ID_Admin', [
         validarCampos
     ], (req, res) => {
         updateAdmin(req, res).catch(error => {
+            res.status(error.statusCode || 500).json({ error: error.message });
+        });
+    });
+
+router.put('/newp/:ID_Admin', [
+        validarJWT, validarRol(['Admin']),
+    //Campos opcionales, no es necesario ponerlos todos para hacer una llamada PUT
+        check('ID_Admin').isInt().withMessage('El campo "ID_Admin" debe ser un número entero'),
+        check('Contraseña').not().isEmpty().withMessage('El argumento "Contraseña" no debe estar vacío'),
+        check('newPassword').not().isEmpty().withMessage('El argumento "newPassword" no debe estar vacío'),
+        check('newPassword2').not().isEmpty().withMessage('El argumento "newPassword2" no debe estar vacío'),
+        validarCampos
+    ], (req, res) => {
+        updateAdminPwd(req, res).catch(error => {
             res.status(error.statusCode || 500).json({ error: error.message });
         });
     });

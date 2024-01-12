@@ -1,7 +1,8 @@
 const { dbConnection } = require('../database/configdb');
 const connection = dbConnection();
 const hashPassword = require('../middleware/hashHelper');
-
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const Admin = require('../models/admin');
 
 const getAdmins = (req, res) => {
@@ -59,6 +60,7 @@ const getAdmins = (req, res) => {
         });
     });
 }
+
 
 
 const createAdmin = (req, res) => {
@@ -122,6 +124,71 @@ const updateAdmin = (req, res) => {
     });
 };
 
+
+    function verify(token) {
+        try {
+            const decodedToken = jwt.verify(token, process.env.JWTSECRET);
+            return decodedToken;
+        } catch (error) {
+            return false;
+        }
+    }
+
+const updateAdminPwd = (req, res) => {
+    return new Promise(function(resolve, reject){
+        const token = req.header('x-token');
+        const id = req.params.ID_Admin;
+        const { Contraseña, newPassword, newPassword2 } = req.body;
+
+        if(!(verify(token).Rol == 'Admin' && verify(token).ID == id)){
+            return res.status(400).json({
+                ok: false,
+                message: 'No tienes permisos para actualizar la contraseña',
+            });
+        }
+
+        connection.query('SELECT Nombre, Contraseña FROM admin WHERE ID_Admin = ?', [id], (error, datos) => {
+            if (error) {
+                reject({ statusCode: 500, message: "Error al buscar el Admin"});
+            } else if (datos.affectedRows === 0) {
+                reject({ statusCode: 404, message: "Admin no encontrado"});
+            } else {
+                const pwdOk = bcrypt.compareSync(Contraseña, datos[0].Contraseña);
+                if(verify(token).ID == id){
+                    if(newPassword !== newPassword2){
+                        return res.status(400).json({
+                            ok: false,
+                            message: 'Las contraseñas no coinciden',
+                        });
+                    }
+                    if(!pwdOk){
+                        return res.status(400).json({
+                            ok: false,
+                            message: 'Contraseña incorrecta',
+                        });
+                    }
+                }
+                const hashedPassword = hashPassword(newPassword);
+                const newPwd = hashedPassword;
+
+                connection.query('UPDATE admin SET Contraseña = ? WHERE ID_Admin = ?', [newPwd, id], (setError, setResults) => {
+                    if (setError) {
+                        reject({ statusCode: 500, message: "Error al cambiar la contraseña"});
+                    } else {
+                        resolve(
+                            res.json({
+                                ok: true,
+                                msg: 'Contraseña actualizada de Admin'
+                            })
+                        );
+                    }
+                })
+            }
+        });
+    });
+};
+
+
 const deleteAdmin = (req, res) => {
     return new Promise(function(resolve, reject) {
         const id = req.params.ID_Admin;
@@ -151,4 +218,4 @@ const deleteAdmin = (req, res) => {
     });
 }
 
-module.exports = { getAdmins, createAdmin, updateAdmin, deleteAdmin };
+module.exports = { getAdmins, createAdmin, updateAdmin, deleteAdmin, updateAdminPwd };

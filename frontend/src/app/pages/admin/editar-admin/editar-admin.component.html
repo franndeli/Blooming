@@ -14,27 +14,23 @@ data-sidebar-position="fixed" data-header-position="fixed">
         <div class="container-fluid">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title fw-semibold mb-4">Editar mi perfil</h5>
+              <h5 class="card-title fw-semibold mb-4">Cambiar Contraseña</h5>
               <div class="card">
                 <div class="card-body">
-                  <form>
-                    <!--<div class="mb-3">
-                      <label for="Nombre" class="form-label">Nombre</label>
-                      <input class="form-control" formControlName="Nombre" id="Nombre">
-                    </div>
-                    <div class="mb-3">
-                      <label for="Email" class="form-label">Email</label>
-                      <input class="form-control" formControlName="Email" id="Email">
-                      </div>
+                  <form [formGroup]="form">
                     <div class="mb-3">
                       <label for="Contraseña" class="form-label">Contraseña</label>
-                      <input class="form-control" formControlName="Contraseña" id="Contraseña">
+                      <input type="password" class="form-control" formControlName="Contraseña" id="Contraseña">
                     </div>
                     <div class="mb-3">
-                        <label for="Usuario" class="form-label">Repetir contraseña</label>
-                        <input class="form-control" formControlName="Usuario" id="Usuario">
-                      </div> -->
-                    <button class="btn btn-danger">Aceptar</button>
+                      <label for="newPassword" class="form-label">Nueva contraseña</label>
+                      <input type="password" class="form-control" formControlName="newPassword" id="newPassword">
+                    </div> 
+                    <div class="mb-3">
+                      <label for="newPassword2" class="form-label">Repetir contraseña</label>
+                      <input type="password" class="form-control" formControlName="newPassword2" id="newPassword2">
+                    </div>
+                    <button class="btn btn-danger" (click)="cambiarPwd()">Aceptar</button>
                     <a routerLink="/admin/perfil" class="btn btn-danger">Volver</a>
                   </form>
                 </div>

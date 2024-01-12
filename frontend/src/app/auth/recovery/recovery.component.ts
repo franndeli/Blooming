@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-recovery',
@@ -6,5 +7,16 @@ import { Component } from '@angular/core';
   styleUrl: './recovery.component.css'
 })
 export class RecoveryComponent {
+  constructor() { }
 
+  ngOnInit(): void {
+  }
+
+  recover() {
+    Swal.fire( {
+      title:'Recuperar desactivado', 
+      text: 'Para recuperar tu contraseña ponte en contacto con blooming.abo@gmail.com', 
+      icon: 'warning', 
+      allowOutsideClick: false});
+  }
 }

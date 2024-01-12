@@ -33,6 +33,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                 <a class="text-primary fw-bold" [routerLink]="['/recovery']">¿Has olvidado tu contraseña?</a>
               </div>
               <button class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2" (click)="login()">Entrar</button>
+              <button [routerLink]="['/inicio']" class="btn btn-secondary w-100 py-8 fs-4 mb-4 rounded-2">Volver</button>
               <div class="d-flex align-items-center justify-content-center">
                 <p class="fs-4 mb-0 fw-bold">¿Eres un Centro?</p>
                 <a class="text-primary fw-bold ms-2" [routerLink]="['/registro']">Regístrate</a>

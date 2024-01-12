@@ -1,0 +1,21 @@
+<!-- conversacion.component.html -->
+
+<div class="canvas-container">
+    <app-threejs></app-threejs>
+  </div>
+  
+  <div class="conversation-container">
+    <div>
+      <p>{{ dialogText }}</p>
+      <ul>
+        <li *ngFor="let respuesta of respuestas; let i = index"
+            (click)="seleccionarRespuesta(respuesta)"
+            (mouseover)="onMouseOver(i)" 
+            (mouseout)="onMouseOut()"
+            [ngStyle]="{'color': preguntaActualIndex === i ? 'red' : 'black'}">
+          {{ respuesta }}
+        </li>
+      </ul>
+    </div>
+  </div>
+  

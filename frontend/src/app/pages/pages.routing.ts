@@ -46,6 +46,7 @@ import { PerfilProfesorComponent } from './profesores/perfil-profesor/perfil-pro
 import { EditarProfesorComponent } from './profesores/editar-profesor/editar-profesor.component';
 
 import {ThreejsComponent } from './alumnos/threejs/threejs.component';
+import { ConversacionComponent } from './alumnos/conversacion/conversacion.component';
 const routes: Routes = [
   { path: 'admin', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
     children: [
@@ -99,8 +100,9 @@ const routes: Routes = [
     children: [
       { path: 'dashboard', component: AlumnosComponent},
       { path: 'sidebar', component: SidebarComponent },
-      { path: 'threejs', component: ThreejsComponent}
-  ]},
+      { path: 'threejs', component: ThreejsComponent},
+      { path: 'conversacion', component: ConversacionComponent}
+  ]}
   /*{ 
     path: 'dashboard', component: DashboardComponent,
     children: [

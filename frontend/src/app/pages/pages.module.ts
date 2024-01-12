@@ -56,7 +56,9 @@ import { PerfilProfesorComponent } from './profesores/perfil-profesor/perfil-pro
 import { EditarProfesorComponent } from './profesores/editar-profesor/editar-profesor.component';
 
 import { ThreejsComponent } from './alumnos/threejs/threejs.component';
-import { PruebaComponent } from './alumnos/prueba/prueba.component';
+import { ConversacionComponent } from './alumnos/conversacion/conversacion.component';
+
+
 
 
 @NgModule({
@@ -105,7 +107,8 @@ import { PruebaComponent } from './alumnos/prueba/prueba.component';
       PerfilProfesorComponent,
       EditarProfesorComponent,
       ThreejsComponent,
-      PruebaComponent
+      ConversacionComponent,
+
   ],
   exports: [
     AdminLayoutComponent,

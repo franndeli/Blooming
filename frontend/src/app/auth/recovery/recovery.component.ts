@@ -15,7 +15,7 @@ export class RecoveryComponent {
   recover() {
     Swal.fire( {
       title:'Recuperar desactivado', 
-      text: 'Para recuperar tu contraseña ponte en contacto con blooming.abo@gmail.com', 
+      text: 'Para recuperar tu contraseña ponte en contacto con blooming.abp@gmail.com', 
       icon: 'warning', 
       allowOutsideClick: false});
   }

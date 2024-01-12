@@ -18,6 +18,9 @@ app.use('/api/centros', require('./routes/centros'));
 app.use('/api/clases', require('./routes/clases'));
 app.use('/api/admins', require('./routes/admins'));
 app.use('/api/profesores', require('./routes/profesores'));
+app.use('/api/preguntas', require('./routes/preguntas'));
+app.use('/api/opciones', require('./routes/opciones_respuestas'));
+app.use('/api/resultados', require('./routes/respuestas'));
 
 //Autenticación
 app.use('/api/login', require('./routes/auth'));

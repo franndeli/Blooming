@@ -6,8 +6,8 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 
-export class OpcionService {
-    private basePath=`${environment.base_url}/opciones/`;
+export class ResultadoService {
+    private basePath=`${environment.base_url}/resultados/`;
     constructor(private http: HttpClient) {}
 
     private httpOptions = {
@@ -17,11 +17,16 @@ export class OpcionService {
     }
 
     //LLAMADAS API
-    getOpciones(){
+    getResultados(){
         return this.http.get(this.basePath);
     }
 
-    getOpcionesPregunta(id: any){
-        return this.http.get(this.basePath+'?ID_Pregunta='+id);
+    getResultadoAlumno(id: any){
+        return this.http.get(this.basePath+'?ID_Alumno='+id);
     }
+
+    postResultado(resultadoData: any){
+        return this.http.post(this.basePath, resultadoData, this.httpOptions);
+    }
+
 }

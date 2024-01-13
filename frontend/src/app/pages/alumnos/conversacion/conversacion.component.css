@@ -1,23 +1,40 @@
 /* three.component.css */
 .canvas-container {
-    position: relative;
-  }
-  
-  .conversation-container {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    background-color: white;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    z-index: 2; /* Asegura que esté encima de la escena Three.js */
+  /* position: relative;*/
+}
+ 
+ .conversation-container {
+   position: absolute;
+   top: 20px;
+   left: 20px;
+   background-color: white;
+   padding: 10px;
+   border: 1px solid #ccc;
+   border-radius: 5px;
+   z-index: 2; /* Asegura que esté encima de la escena Three.js */
 
-    top: 280px; /* Cambia el valor según sea necesario para ajustar la posición vertical */
-    left: 820px;
+   top: 280px; /* Cambia el valor según sea necesario para ajustar la posición vertical */
+   left: 820px;
 
-    width: 300px; /* Establece un ancho fijo */
-    height: 150px; /* Establece una altura fija  */
-    text-align: center;
-  }
-  
+   width: 300px; /* Establece un ancho fijo */
+   height: 150px; /* Establece una altura fija  */
+   text-align: center;
+
+ }
+
+ @media screen and (min-width:1716px) {
+   .conversation-container {
+       /* Estilos específicos para pantallas más grandes */
+       top: 380px; /* Cambia el valor según sea necesario para ajustar la posición vertical */
+       left: 1220px;
+   
+       width: 300px; /* Establece un ancho fijo */
+       height: 150px; /* Establece una altura fija  */
+   }
+}
+
+
+ /* Estilo para las respuestas */
+.conversation-container ul li {
+ cursor: pointer; /* Cambia el cursor a una mano al pasar sobre las respuestas */
+}

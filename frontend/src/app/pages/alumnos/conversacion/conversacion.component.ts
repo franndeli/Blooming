@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { PreguntaService } from '../../../services/preguntas.service';
 import { OpcionService } from '../../../services/opciones.service';
+import { ResultadoService } from '../../../services/resultados.service';
 
 @Component({
   selector: 'app-conversacion',
@@ -11,14 +12,15 @@ export class ConversacionComponent implements OnInit {
   dialogText: string;
   preguntas: any;
   opcionesData: any;
+  resultado: any;
   idPregunta: number;
   opcionActualIndex: number;
 
-
-  constructor(private preguntaService: PreguntaService, private opcionService: OpcionService) {
+  constructor(private preguntaService: PreguntaService, private opcionService: OpcionService, private resultadoService: ResultadoService) {
     this.dialogText = '';
     this.preguntas = [];
     this.opcionesData = [];
+    this.resultado = {};
     this.idPregunta = 1;
     this.opcionActualIndex = -1;
   }
@@ -50,12 +52,30 @@ export class ConversacionComponent implements OnInit {
     });
   }
 
+  guardarResultado(opcionId: number, preguntaId: number){
+    this.resultado = {
+      Respuesta: opcionId,
+      ID_Alumno: localStorage.getItem('id'),
+      ID_Pregunta: preguntaId
+    }
+
+    this.resultadoService.postResultado(JSON.stringify(this.resultado)).subscribe(
+      (response) => {
+        console.log('Resultado guardado correctamente:', response);
+      }, (error) => {
+        console.error('Error al guadar el resultado:', error);
+      }
+    );
+
+  }
+
   mostrarPregunta() {
     this.dialogText = this.preguntas[0];
   }
 
   seleccionarRespuesta(respuesta: any) {
     this.idPregunta = respuesta.ID_PreguntaSiguiente;
+    this.guardarResultado(respuesta.ID_Opcion, respuesta.ID_Pregunta);
     this.actualizarDialogo();
   }
 

@@ -21,22 +21,22 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                             <tr>
                                                 <th class="border-bottom-0">Preguntas</th>
                                                 <th class="border-bottom-0">Respuesta</th>
+                                                <th class="border-bottom-0">Fecha</th>
+                                                <th class="border-bottom-0">Hora</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody *ngFor="let resultado of resultadosData">
                                             <tr>
-                                                <td class="border-bottom-0">¿Qué es lo que más te gusta hacer?</td>
-                                                <td class="border-bottom-0">Jugar con mis compañeros</td>
+                                                <td class="border-bottom-0">{{resultado.ID_Pregunta}}</td>
+                                                <td class="border-bottom-0">{{resultado.Respuesta}}</td>
+                                                <td class="border-bottom-0">{{resultado.Fecha}}</td>
+                                                <td class="border-bottom-0">{{resultado.Hora}}</td>
                                             </tr>
-                                            <tr>
-                                                <td class="border-bottom-0">¿Qué es lo que más te gusta hacer?</td>
-                                                <td class="border-bottom-0">Jugar con mis compañeros</td>
-                                            </tr>
-                                            <td class="border-bottom-0">
-                                                <!-- <a href="/profesores/actividad-reciente" class="btn btn-dark">Ver Cuestionario</a> -->
-                                                <button class="btn btn-light" (click)="volver()">Volver</button>
-                                            </td>
                                         </tbody>
+                                        <td class="border-bottom-0">
+                                            <!-- <a href="/profesores/actividad-reciente" class="btn btn-dark">Ver Cuestionario</a> -->
+                                            <button class="btn btn-light" (click)="volver()">Volver</button>
+                                        </td>
                                     </table>
                                 </div>
                             </div>

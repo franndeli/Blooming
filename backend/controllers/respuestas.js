@@ -8,7 +8,10 @@ const getRespuestas = (req, res) => {
     const desde = Number(req.query.desde) || 0;
 
     return new Promise(function(resolve, reject) {
-        let query = 'SELECT * FROM respuesta';
+        let query = 'SELECT respuesta.ID_Respuesta, opciones_respuesta.TextoOpcion AS Respuesta, respuesta.ID_Alumno, pregunta.TextoPregunta AS ID_Pregunta, DATE_FORMAT(respuesta.FechaRespuesta, "%d-%m-%Y") AS Fecha, DATE_FORMAT(respuesta.FechaRespuesta, "%H:%i:%s") AS Hora, respuesta.ID_Sesion FROM respuesta ';
+        query += 'INNER JOIN opciones_respuesta ON respuesta.Respuesta = opciones_respuesta.ID_Opcion ';
+        query += 'INNER JOIN pregunta ON respuesta.ID_Pregunta = pregunta.ID_Pregunta';
+
         let conditions = [];
         let values = [];
         let validParams = ['ID_Respuesta', 'Respuesta', 'ID_Alumno', 'ID_Pregunta', 'ID_Sesion', 'FechaRespuesta'];

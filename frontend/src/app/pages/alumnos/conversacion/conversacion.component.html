@@ -8,12 +8,8 @@
     <div>
       <p>{{ dialogText }}</p>
       <ul>
-        <li *ngFor="let respuesta of respuestas; let i = index"
-            (click)="seleccionarRespuesta(respuesta)"
-            (mouseover)="onMouseOver(i)" 
-            (mouseout)="onMouseOut()"
-            [ngStyle]="{'color': preguntaActualIndex === i ? 'red' : 'black'}">
-          {{ respuesta }}
+        <li *ngFor="let opcion of opcionesData; let i = index" (click)="seleccionarRespuesta(opcion)" (mouseover)="onMouseOver(i)" (mouseout)="onMouseOut()" [ngStyle]="{'color': opcionActualIndex === i ? 'red' : 'black'}">
+          {{ opcion.TextoOpcion }}
         </li>
       </ul>
     </div>

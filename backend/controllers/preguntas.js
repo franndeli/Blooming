@@ -8,7 +8,7 @@ const getPreguntas = (req, res) => {
     const desde = Number(req.query.desde) || 0;
 
     return new Promise(function (resolve, reject) {
-        let query = 'SELECT * FROM pregunta';
+        let query = 'SELECT pregunta.* FROM pregunta';
         let conditions = [];
         let values = [];
         let validParams = ['ID_Pregunta'];
@@ -22,6 +22,10 @@ const getPreguntas = (req, res) => {
         if(req.query.ID_Pregunta){
             conditions.push("pregunta.ID_Pregunta = ?");
             values.push(req.query.ID_Pregunta);
+        }
+
+        if(conditions.length > 0){
+            query += ' WHERE ' + conditions.join(' AND ');
         }
 
         connection.query(query, values, (error, results) => {

@@ -1,6 +1,6 @@
-// conversacion.component.ts
-
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { PreguntaService } from '../../../services/preguntas.service';
+import { OpcionService } from '../../../services/opciones.service';
 
 @Component({
   selector: 'app-conversacion',
@@ -9,78 +9,76 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ConversacionComponent implements OnInit {
   dialogText: string;
-  selectedResponse: string | null;
-  respuestas: string[];
-  currentIndex: number;
-  preguntaActualIndex: number;
+  preguntas: any;
+  opcionesData: any;
+  idPregunta: number;
+  opcionActualIndex: number;
 
-  conversacion: Pregunta[] = [
-    { pregunta: '¿Cómo ha ido la semana?', respuestas: ['Bastante bien 😄', ' No ha sido mi mejor semana😢', 'Horrible😠'] },
-    { pregunta: '¿Tienes algún problema con algún compañero?', respuestas: ['Me llevo genial con todos', 'Con algunos si', 'No tengo amigos'] },
-    // Agrega más preguntas según sea necesario
-  ];
 
-  constructor() {
+  constructor(private preguntaService: PreguntaService, private opcionService: OpcionService) {
     this.dialogText = '';
-    this.respuestas = [];
-    this.selectedResponse = null;
-    this.currentIndex = 0;
-    this.preguntaActualIndex = -1;
+    this.preguntas = [];
+    this.opcionesData = [];
+    this.idPregunta = 1;
+    this.opcionActualIndex = -1;
+  }
+  
+  ngOnInit() {
+    Promise.all([
+      this.cargarPregunta(),
+      this.cargarOpciones()
+    ]).then(() => {
+      this.mostrarPregunta();
+    });
   }
 
-  ngOnInit() {
-    this.mostrarPregunta();
+  cargarPregunta(): Promise<void>{
+    return new Promise<void>((resolve) => {
+      this.preguntaService.getPreguntaID(this.idPregunta).subscribe((res: any) => {
+        this.preguntas = res.preguntas.map((pregunta: { TextoPregunta: string }) => pregunta.TextoPregunta);
+        resolve();
+      });
+    });
+  }
+
+  cargarOpciones(): Promise<void>{
+    return new Promise<void>((resolve) => {
+      this.opcionService.getOpcionesPregunta(this.idPregunta).subscribe((res: any) => {
+        this.opcionesData = res.opciones;
+        resolve();
+      });
+    });
   }
 
   mostrarPregunta() {
-    const preguntaActual = this.conversacion[this.currentIndex];
-    this.dialogText = preguntaActual.pregunta;
-    this.respuestas = preguntaActual.respuestas;
+    this.dialogText = this.preguntas[0];
   }
 
-  seleccionarRespuesta(respuesta: string) {
-    this.selectedResponse = respuesta;
+  seleccionarRespuesta(respuesta: any) {
+    this.idPregunta = respuesta.ID_PreguntaSiguiente;
     this.actualizarDialogo();
-
-    this.currentIndex++;
-    this.mostrarPregunta();
   }
 
   actualizarDialogo() {
-    switch (this.currentIndex) {
-      case 0:
-        // Lógica para la primera pregunta
-        // ...
-        break;
-      case 1:
-        // Lógica para la segunda pregunta
-        // ...
-        break;
-      case 2:
-        // Lógica para la tercera pregunta
-        // ...
-        break;
-      case 3:
-        // Lógica para el caso de despedida
-        this.dialogText = '¡Gracias por participar en la conversación!';
-        this.respuestas = []; // Configura respuestas como un array vacío
-        break;
-      default:
-        this.dialogText = '¡Gracias por participar en la conversación!';
-        break;
+    if(this.idPregunta !== 0){
+      Promise.all([
+        this.cargarPregunta(),
+        this.cargarOpciones()
+      ]).then(() => {
+        this.mostrarPregunta();
+      });
+    }else{
+      this.dialogText = '¡Gracias por participar en la conversación!';
+      this.opcionesData = [];
     }
   }
 
   onMouseOver(index: number) {
-    this.preguntaActualIndex = index;
+    this.opcionActualIndex = index;
   }
 
   onMouseOut() {
-    this.preguntaActualIndex = -1;
+    this.opcionActualIndex = -1;
   }
 }
 
-interface Pregunta {
-  pregunta: string;
-  respuestas: string[];
-}

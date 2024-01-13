@@ -21,7 +21,7 @@ export class ConversacionComponent implements OnInit {
     this.preguntas = [];
     this.opcionesData = [];
     this.resultado = {};
-    this.idPregunta = 1;
+    this.idPregunta = 4;
     this.opcionActualIndex = -1;
   }
   

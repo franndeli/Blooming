@@ -1,6 +1,7 @@
-// conversacion.component.ts
-
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
+//nuevo
+//import { Texto3DService } from './ruta-hacia/texto-3d.service'; 
+import * as THREE from 'three';
 
 @Component({
   selector: 'app-conversacion',
@@ -13,6 +14,7 @@ export class ConversacionComponent implements OnInit {
   respuestas: string[];
   currentIndex: number;
   preguntaActualIndex: number;
+  //private texto3D: THREE.Mesh;
 
   conversacion: Pregunta[] = [
     { pregunta: '¿Cómo ha ido la semana?', respuestas: ['Bastante bien 😄', ' No ha sido mi mejor semana😢', 'Horrible😠'] },
@@ -20,7 +22,7 @@ export class ConversacionComponent implements OnInit {
     // Agrega más preguntas según sea necesario
   ];
 
-  constructor() {
+  constructor(private zone: NgZone) {
     this.dialogText = '';
     this.respuestas = [];
     this.selectedResponse = null;
@@ -30,6 +32,7 @@ export class ConversacionComponent implements OnInit {
 
   ngOnInit() {
     this.mostrarPregunta();
+    //this.inicializarTexto3D();
   }
 
   mostrarPregunta() {
@@ -40,35 +43,23 @@ export class ConversacionComponent implements OnInit {
 
   seleccionarRespuesta(respuesta: string) {
     this.selectedResponse = respuesta;
-    this.actualizarDialogo();
 
-    this.currentIndex++;
-    this.mostrarPregunta();
+    // Utiliza NgZone.run para asegurarte de que Angular detecte los cambios
+    this.zone.run(() => {
+      this.currentIndex++;
+
+      if (this.currentIndex < this.conversacion.length) {
+        this.mostrarPregunta();
+      } else {
+        this.finalizarConversacion();
+      }
+    });
   }
 
-  actualizarDialogo() {
-    switch (this.currentIndex) {
-      case 0:
-        // Lógica para la primera pregunta
-        // ...
-        break;
-      case 1:
-        // Lógica para la segunda pregunta
-        // ...
-        break;
-      case 2:
-        // Lógica para la tercera pregunta
-        // ...
-        break;
-      case 3:
-        // Lógica para el caso de despedida
-        this.dialogText = '¡Gracias por participar en la conversación!';
-        this.respuestas = []; // Configura respuestas como un array vacío
-        break;
-      default:
-        this.dialogText = '¡Gracias por participar en la conversación!';
-        break;
-    }
+  finalizarConversacion() {
+    // Lógica para el caso de despedida
+    this.dialogText = '¡Gracias por participar en la conversación!';
+    this.respuestas = []; // Configura respuestas como un array vacío
   }
 
   onMouseOver(index: number) {
@@ -78,6 +69,15 @@ export class ConversacionComponent implements OnInit {
   onMouseOut() {
     this.preguntaActualIndex = -1;
   }
+  /*
+  private inicializarTexto3D() {
+    // Llama al servicio para obtener el texto 3D y agrégalo a la escena
+    this.texto3D = this.texto3DService.crearTexto3D('Texto 3D Aquí');
+    // Configura la posición del texto3D según tus necesidades
+    this.texto3D.position.set(0, 0, -5); // Ajusta la posición según tus necesidades
+    // Agrega texto3D a tu escena Three.js
+    this.texto3DService.agregarTexto3DAScene(this.texto3D);
+  }*/
 }
 
 interface Pregunta {

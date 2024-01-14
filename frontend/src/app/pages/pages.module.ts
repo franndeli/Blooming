@@ -38,6 +38,9 @@ import { EditarCentrosComponent } from './admin/editar-centros/editar-centros.co
 //PROFESORES
 import { ProfesoresComponent } from './profesores/profesores.component';
 import { VerClasesPComponent } from './profesores/ver-clases-p/ver-clases-p.component';
+
+
+
 import { VerAlumnosPComponent } from './profesores/ver-alumnos-p/ver-alumnos-p.component';
 import { VerPerfilAlumnoComponent } from './profesores/ver-perfil-alumno/ver-perfil-alumno.component';
 import { ActividadRecienteComponent } from './profesores/actividad-reciente/actividad-reciente.component';
@@ -50,6 +53,7 @@ import { AlumnoLayoutComponent } from '../layouts/alumno-layout/alumno-layout.co
 import { AlumnosComponent } from './alumnos/alumnos.component';
 import { ThreejsComponent } from './alumnos/threejs/threejs.component';
 import { ConversacionComponent } from './alumnos/conversacion/conversacion.component';
+import { CargaComponent } from './alumnos/carga/carga.component';
 
 
 
@@ -95,6 +99,7 @@ import { ConversacionComponent } from './alumnos/conversacion/conversacion.compo
       AlumnosComponent,
       ThreejsComponent,
       ConversacionComponent,
+      CargaComponent,
 
   ],
   exports: [
@@ -106,7 +111,8 @@ import { ConversacionComponent } from './alumnos/conversacion/conversacion.compo
     RouterModule,
     CommonsModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+   
   ]
 })
 export class PagesModule { }

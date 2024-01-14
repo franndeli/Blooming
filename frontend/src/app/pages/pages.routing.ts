@@ -39,6 +39,8 @@ import { AlumnoLayoutComponent } from '../layouts/alumno-layout/alumno-layout.co
 import { AlumnosComponent } from './alumnos/alumnos.component';
 import {ThreejsComponent } from './alumnos/threejs/threejs.component';
 import { ConversacionComponent } from './alumnos/conversacion/conversacion.component';
+import { CargaComponent } from './alumnos/carga/carga.component';
+
 const routes: Routes = [
   { path: 'admin', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
     children: [
@@ -87,7 +89,8 @@ const routes: Routes = [
       { path: 'dashboard', component: AlumnosComponent},
       //nuevo
       { path: 'threejs', component: ThreejsComponent},
-      { path: 'conversacion', component: ConversacionComponent}
+      {path: 'conversacion',component: ConversacionComponent},
+      { path: 'carga', component: CargaComponent }
   ]}
   /*{ 
     path: 'dashboard', component: DashboardComponent,

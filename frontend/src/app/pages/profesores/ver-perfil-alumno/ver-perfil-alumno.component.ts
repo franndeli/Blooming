@@ -35,6 +35,34 @@ export class VerPerfilAlumnoComponent implements OnInit {
     })
   }
 
+  getGravedadClass(gravedad: string): string {
+    switch (gravedad) {
+      case 'Nula':
+        return 'nula-gravedad';
+      case 'Leve':
+        return 'leve-gravedad';
+      case 'Grave':
+        return 'grave-gravedad';
+      default:
+        return '';
+    }
+  }
+
+  getClaseEstado(): string {
+    let clase = "";
+    if(this.alumnosData.Estado === 'Bueno'){
+      clase = 'badge bg-success rounded-3 fw-semibold';
+    }
+    if(this.alumnosData.Estado === 'Normal'){
+      clase = 'badge bg-warning rounded-3 fw-semibold';
+    }
+    if(this.alumnosData.Estado === 'Malo'){
+      clase = 'badge bg-danger rounded-3 fw-semibold';
+    }
+
+    return clase;
+  }
+
   volver(){
     this.router.navigate(['profesores/ver-alumnos'], {state: {claseID: this.claseID}});
   }

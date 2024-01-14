@@ -10,7 +10,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                         <div class="card-body">
                             <div class="profile-container text-center">
                                 <img src="../assets/images/avatar.jpg" alt="Foto de perfil" class="profile-image rounded-circle">
-                                <h3>{{alumnosData.Nombre}}</h3> <span class="badge bg-success rounded-3 fw-semibold">Bueno</span>
+                                <h3>{{alumnosData.Nombre}}</h3> <span [ngClass]="getClaseEstado()">{{alumnosData.Estado}}</span>
                             </div>
                            <div class="card-body">
                             <div class="card">
@@ -23,6 +23,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                                 <th class="border-bottom-0">Respuesta</th>
                                                 <th class="border-bottom-0">Fecha</th>
                                                 <th class="border-bottom-0">Hora</th>
+                                                <th class="border-bottom-0"> </th>
                                             </tr>
                                         </thead>
                                         <tbody *ngFor="let resultado of resultadosData">
@@ -31,6 +32,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                                 <td class="border-bottom-0">{{resultado.Respuesta}}</td>
                                                 <td class="border-bottom-0">{{resultado.Fecha}}</td>
                                                 <td class="border-bottom-0">{{resultado.Hora}}</td>
+                                                <td class="border-bottom-0 gravedad-circle" [ngClass]="getGravedadClass(resultado.Gravedad)"></td> 
                                             </tr>
                                         </tbody>
                                         <td class="border-bottom-0">

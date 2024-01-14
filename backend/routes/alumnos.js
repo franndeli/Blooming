@@ -40,6 +40,18 @@ router.put('/:ID_Alumno', [
         check('FechaNacimiento').optional().not().isEmpty().withMessage('El argumento "FechaNacimiento" no debe estar vacío'),
         check('ID_Centro').optional().isInt().withMessage('El argumento "ID_Centro" debe ser un número entero'),
         check('ID_Clase').optional().isInt().withMessage('El argumento "ID_Clase" debe ser un número entero'),
+        check('Estado').optional().not().isEmpty().withMessage('El argumento "Estado2" no debe estar vacío'),
+        check('ID_Alumno').isInt().withMessage('El campo "ID_Alumno" debe ser un número entero'),
+        validarCampos
+    ], (req, res) => {
+        updateAlumno(req, res).catch(error => {
+            res.status(error.statusCode || 500).json({ error: error.message });
+        });
+    });
+
+router.put('/estado/:ID_Alumno', [
+        validarJWT, validarRol(['Alumno', 'Admin']),
+        check('Estado').optional().not().isEmpty().withMessage('El argumento "Estado2" no debe estar vacío'),
         check('ID_Alumno').isInt().withMessage('El campo "ID_Alumno" debe ser un número entero'),
         validarCampos
     ], (req, res) => {

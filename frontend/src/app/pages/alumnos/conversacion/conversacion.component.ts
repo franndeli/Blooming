@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { PreguntaService } from '../../../services/preguntas.service';
 import { OpcionService } from '../../../services/opciones.service';
 import { ResultadoService } from '../../../services/resultados.service';
+import { AlumnoService } from '../../../services/alumnos.service';
 
 @Component({
   selector: 'app-conversacion',
@@ -12,17 +13,21 @@ export class ConversacionComponent implements OnInit {
   dialogText: string;
   preguntas: any;
   opcionesData: any;
-  resultado: any;
+  nivelEstado: any;
+  estado: any;
   idPregunta: number;
   opcionActualIndex: number;
+  //index: any;
 
-  constructor(private preguntaService: PreguntaService, private opcionService: OpcionService, private resultadoService: ResultadoService) {
+  constructor(private preguntaService: PreguntaService, private opcionService: OpcionService, private resultadoService: ResultadoService, private alumnoService: AlumnoService) {
     this.dialogText = '';
     this.preguntas = [];
     this.opcionesData = [];
-    this.resultado = {};
+    this.nivelEstado = 0;
+    this.estado = "";
     this.idPregunta = 4;
     this.opcionActualIndex = -1;
+    //this.index = 0;
   }
   
   ngOnInit() {
@@ -53,13 +58,13 @@ export class ConversacionComponent implements OnInit {
   }
 
   guardarResultado(opcionId: number, preguntaId: number){
-    this.resultado = {
+    const resultado = {
       Respuesta: opcionId,
       ID_Alumno: localStorage.getItem('id'),
       ID_Pregunta: preguntaId
     }
 
-    this.resultadoService.postResultado(JSON.stringify(this.resultado)).subscribe(
+    this.resultadoService.postResultado(JSON.stringify(resultado)).subscribe(
       (response) => {
         console.log('Resultado guardado correctamente:', response);
       }, (error) => {
@@ -75,7 +80,9 @@ export class ConversacionComponent implements OnInit {
 
   seleccionarRespuesta(respuesta: any) {
     this.idPregunta = respuesta.ID_PreguntaSiguiente;
+    this.actualizarEstado(respuesta.Gravedad);
     this.guardarResultado(respuesta.ID_Opcion, respuesta.ID_Pregunta);
+    //this.index++;
     this.actualizarDialogo();
   }
 
@@ -90,7 +97,43 @@ export class ConversacionComponent implements OnInit {
     }else{
       this.dialogText = '¡Gracias por participar en la conversación!';
       this.opcionesData = [];
+      this.guardarEstado();
     }
+  }
+
+  actualizarEstado(gravedad: any){
+    if(gravedad === 'Grave'){
+      this.nivelEstado++;
+    }
+    if(gravedad === 'Leve'){
+      this.nivelEstado += 0.5;
+    }
+  }
+
+  guardarEstado(){
+    if(this.nivelEstado <= 1){
+      this.estado = 'Bueno';
+    }
+    if(this.nivelEstado > 1 && this.nivelEstado <= 1.5){
+      this.estado = 'Normal';
+    }
+    if(this.nivelEstado > 1.5){
+      this.estado = 'Malo';
+    }
+    
+    const estadoData = {
+      ID_Alumno: localStorage.getItem('id'),
+      Estado: this.estado
+    }
+    
+    this.alumnoService.putEstadoAlumno(estadoData).subscribe(
+      (response) => {
+        console.log('Estado actualizado correctamente:', response);
+      }, (error) => {
+        console.error('Error al actualizar el estado:', error);
+      }
+    );
+
   }
 
   onMouseOver(index: number) {

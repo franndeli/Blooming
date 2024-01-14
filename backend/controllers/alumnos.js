@@ -14,7 +14,7 @@ const getAlumnos = (req, res) => {
         let conditions = [];
         let values = [];
 
-        let validParams = ['ID_Alumno', 'Nombre', 'Apellidos', 'Usuario', 'Contraseña', 'FechaNacimiento', 'ID_Clase', 'ID_Centro', 'desde'];
+        let validParams = ['ID_Alumno', 'Nombre', 'Apellidos', 'Usuario', 'Contraseña', 'FechaNacimiento', 'ID_Clase', 'ID_Centro', 'Estado', 'desde'];
 
         let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
 
@@ -49,6 +49,10 @@ const getAlumnos = (req, res) => {
         if(req.query.ID_Centro){
             conditions.push("alumno.ID_Centro = ?");
             values.push(req.query.ID_Centro);
+        }
+        if(req.query.Estado){
+            conditions.push("alumno.Estado LIKE ?");
+            values.push(`${req.query.Estado}%`);
         }
 
         if(conditions.length > 0){

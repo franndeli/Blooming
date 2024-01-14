@@ -1,12 +1,55 @@
 
 .profile-container {
-    margin-top: 50px; /* Ajusta según sea necesario */
-  }
+  margin-top: 50px; /* Ajusta según sea necesario */
+}
 
-  .profile-image {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    border: 3px solid #fff; /* Ajusta el grosor y color del borde según sea necesario */
-  }
+.profile-image {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border: 3px solid #fff; /* Ajusta el grosor y color del borde según sea necesario */
+}  
 
+
+.gravedad-circle {
+  width: 8px; /* Ajusta el tamaño del círculo según sea necesario */
+  height: 8px; /* Ajusta el tamaño del círculo según sea necesario */
+  border-radius: 75%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  overflow: hidden;
+  border-bottom: 1px solid transparent;
+}
+
+.nula-gravedad {
+  background-color: rgba(0, 128, 0, 0.786);
+  color: white;
+  /* Agrega otros estilos según sea necesario */
+}
+
+.leve-gravedad {
+  background-color: rgb(255, 174, 31);
+  color: white;
+  /* Agrega otros estilos según sea necesario */
+}
+  
+.grave-gravedad {
+  background-color: rgba(233, 31, 31, 0.855);
+  color: white;
+  /* Agrega otros estilos según sea necesario */
+}
+
+.bg-danger {
+  background-color: rgb(233, 31, 31) !important;
+}
+
+.bg-warning {
+  background-color: rgb(255, 174, 31) !important;
+}
+
+.bg-success {
+  background-color: green !important;
+}
+  

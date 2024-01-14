@@ -28,11 +28,20 @@ export class ConversacionComponent implements OnInit {
     this.selectedResponse = null;
     this.currentIndex = 0;
     this.preguntaActualIndex = -1;
+   
   }
-
+  divVisible: boolean = false;
   ngOnInit() {
-    this.mostrarPregunta();
+    //this.mostrarPregunta();
     //this.inicializarTexto3D();
+     // Simular carga de preguntas después de 2 segundos
+    // Simular carga de preguntas después de 2 segundos
+    setTimeout(() => {
+      this.zone.run(() => {
+        this.divVisible = true;
+        this.mostrarPregunta();
+      });
+    },2000);
   }
 
   mostrarPregunta() {
@@ -44,7 +53,7 @@ export class ConversacionComponent implements OnInit {
   seleccionarRespuesta(respuesta: string) {
     this.selectedResponse = respuesta;
 
-    // Utiliza NgZone.run para asegurarte de que Angular detecte los cambios
+  
     this.zone.run(() => {
       this.currentIndex++;
 

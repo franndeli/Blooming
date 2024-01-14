@@ -51,6 +51,7 @@ import { EditarProfesoresCComponent } from './centros/editar-profesores-c/editar
 import { EditarClasesCComponent } from './centros/editar-clases-c/editar-clases-c.component';
 import { AlumnoLayoutComponent } from '../layouts/alumno-layout/alumno-layout.component';
 import { AlumnosComponent } from './alumnos/alumnos.component';
+
 import { ThreejsComponent } from './alumnos/threejs/threejs.component';
 import { ConversacionComponent } from './alumnos/conversacion/conversacion.component';
 import { CargaComponent } from './alumnos/carga/carga.component';

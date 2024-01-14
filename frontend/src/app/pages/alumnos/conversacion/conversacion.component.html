@@ -2,9 +2,9 @@
 
 <div class="canvas-container">
     <app-threejs></app-threejs>
-  </div>
+</div>
   
-  <div class="conversation-container">
+  <div  *ngIf="divVisible" class="conversation-container">
     <div>
       <p>{{ dialogText }}</p>
       <ul>
@@ -18,4 +18,4 @@
       </ul>
     </div>
   </div>
-  
+

@@ -30,7 +30,23 @@ export class VerAlumnosPComponent implements OnInit{
   getAlumnos(){
       this.alumnoService.getAlumnosClase(this.claseID).subscribe(res => {
         this.alumnosData = res;
+        console.log(this.alumnosData);
       })
+  }
+
+  getClaseEstado(estado: any): string {
+    let clase = "";
+    if(estado === 'Bueno'){
+      clase = 'badge bg-success rounded-3 fw-semibold';
+    }
+    if(estado === 'Normal'){
+      clase = 'badge bg-warning rounded-3 fw-semibold';
+    }
+    if(estado === 'Malo'){
+      clase = 'badge bg-danger rounded-3 fw-semibold';
+    }
+
+    return clase;
   }
 
   verPerfil(alumno: any){

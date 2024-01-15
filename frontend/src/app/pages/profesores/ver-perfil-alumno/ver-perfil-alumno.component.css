@@ -1,19 +1,19 @@
 
 .profile-container {
-  margin-top: 50px; /* Ajusta según sea necesario */
+  margin-top: 50px;
 }
 
 .profile-image {
   width: 150px;
   height: 150px;
   object-fit: cover;
-  border: 3px solid #fff; /* Ajusta el grosor y color del borde según sea necesario */
+  border: 3px solid #fff;
 }  
 
 
 .gravedad-circle {
-  width: 8px; /* Ajusta el tamaño del círculo según sea necesario */
-  height: 8px; /* Ajusta el tamaño del círculo según sea necesario */
+  width: 8px;
+  height: 8px;
   border-radius: 75%;
   display: flex;
   align-items: center;
@@ -26,19 +26,16 @@
 .nula-gravedad {
   background-color: rgba(0, 128, 0, 0.786);
   color: white;
-  /* Agrega otros estilos según sea necesario */
 }
 
 .leve-gravedad {
   background-color: rgb(255, 174, 31);
   color: white;
-  /* Agrega otros estilos según sea necesario */
 }
   
 .grave-gravedad {
   background-color: rgba(233, 31, 31, 0.855);
   color: white;
-  /* Agrega otros estilos según sea necesario */
 }
 
 .bg-danger {

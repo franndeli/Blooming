@@ -34,7 +34,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                             <td class="border-bottom-0">{{alumno.NomCentro}}</td>
                                             <td class="border-bottom-0">
                                                 <div class="d-flex align-items-center gap-2">
-                                                  <span class="badge bg-success rounded-3 fw-semibold">Bueno</span>
+                                                    <span [ngClass]="getClaseEstado(alumno.Estado)">{{alumno.Estado}}</span>
                                                 </div>
                                             </td>
                                             <td class="border-bottom-0">

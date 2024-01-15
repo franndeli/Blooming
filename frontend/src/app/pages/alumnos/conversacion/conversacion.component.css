@@ -2,39 +2,56 @@
 .canvas-container {
   /* position: relative;*/
 }
- 
- .conversation-container {
-   position: absolute;
-   top: 20px;
-   left: 20px;
-   background-color: white;
-   padding: 10px;
-   border: 1px solid #ccc;
-   border-radius: 5px;
-   z-index: 2; /* Asegura que esté encima de la escena Three.js */
 
-   top: 280px; /* Cambia el valor según sea necesario para ajustar la posición vertical */
-   left: 820px;
+.conversation-container {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: white;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  z-index: 2; /* Asegura que esté encima de la escena Three.js */
 
-   width: 300px; /* Establece un ancho fijo */
-   height: 150px; /* Establece una altura fija  */
-   text-align: center;
+  top: 280px; /* Cambia el valor según sea necesario para ajustar la posición vertical */
+  left: 820px;
 
- }
-
- @media screen and (min-width:1716px) {
-   .conversation-container {
-       /* Estilos específicos para pantallas más grandes */
-       top: 380px; /* Cambia el valor según sea necesario para ajustar la posición vertical */
-       left: 1220px;
-   
-       width: 300px; /* Establece un ancho fijo */
-       height: 150px; /* Establece una altura fija  */
-   }
+  width: 300px; /* Establece un ancho fijo */
+  height: 150px; /* Establece una altura fija  */
+  text-align: center;
 }
 
-
- /* Estilo para las respuestas */
+/* Estilo para las respuestas */
 .conversation-container ul li {
- cursor: pointer; /* Cambia el cursor a una mano al pasar sobre las respuestas */
+  cursor: pointer; /* Cambia el cursor a una mano al pasar sobre las respuestas */
+  max-width: 400px;
+  width: auto; /* Establece un ancho fijo */
+  height: auto; /* Establece una altura fija  */
+
+  text-align: center;
+  box-shadow: 10px 10px 20px rgba(255, 255, 255, 0.3); /* Agrega una sombra clara */
+}
+
+@media screen and (min-width:1716px) {
+  .conversation-container {
+      /* Estilos específicos para pantallas más grandes */
+      top: 380px; /* Cambia el valor según sea necesario para ajustar la posición vertical */
+      left: 1220px;
+  
+      width: 300px; /* Establece un ancho fijo */
+      height: 150px; /* Establece una altura fija  */
+  }
+}
+   
+@media screen and (min-width:1716px) {
+  .conversation-container {
+    /* Estilos específicos para pantallas más grandes */
+    top: 380px; /* Cambia el valor según sea necesario para ajustar la posición vertical */
+    left: 1220px;
+
+    width: auto; /* Establece un ancho fijo */
+    height: auto; /* Establece una altura fija  */
+    min-width: 400px;
+    box-shadow: 10px 10px 20px rgba(239, 228, 182, 0.3), -10px -10px 20px rgba(255, 255, 255, 0.3); /* Agrega una sombra clara */   
+  }
 }

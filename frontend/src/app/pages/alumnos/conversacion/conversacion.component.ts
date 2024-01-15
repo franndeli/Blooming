@@ -3,6 +3,8 @@ import { PreguntaService } from '../../../services/preguntas.service';
 import { OpcionService } from '../../../services/opciones.service';
 import { ResultadoService } from '../../../services/resultados.service';
 import { AlumnoService } from '../../../services/alumnos.service';
+//import { Texto3DService } from './ruta-hacia/texto-3d.service'; 
+import * as THREE from 'three';
 
 @Component({
   selector: 'app-conversacion',
@@ -143,5 +145,14 @@ export class ConversacionComponent implements OnInit {
   onMouseOut() {
     this.opcionActualIndex = -1;
   }
+  /*
+  private inicializarTexto3D() {
+    // Llama al servicio para obtener el texto 3D y agrégalo a la escena
+    this.texto3D = this.texto3DService.crearTexto3D('Texto 3D Aquí');
+    // Configura la posición del texto3D según tus necesidades
+    this.texto3D.position.set(0, 0, -5); // Ajusta la posición según tus necesidades
+    // Agrega texto3D a tu escena Three.js
+    this.texto3DService.agregarTexto3DAScene(this.texto3D);
+  }*/
 }
 

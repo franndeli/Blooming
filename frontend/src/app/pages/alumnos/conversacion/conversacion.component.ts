@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, NgZone } from '@angular/core';
 import { PreguntaService } from '../../../services/preguntas.service';
 import { OpcionService } from '../../../services/opciones.service';
 import { ResultadoService } from '../../../services/resultados.service';
@@ -21,7 +21,7 @@ export class ConversacionComponent implements OnInit {
   opcionActualIndex: number;
   //index: any;
 
-  constructor(private preguntaService: PreguntaService, private opcionService: OpcionService, private resultadoService: ResultadoService, private alumnoService: AlumnoService) {
+  constructor(private preguntaService: PreguntaService, private opcionService: OpcionService, private resultadoService: ResultadoService, private alumnoService: AlumnoService, private zone: NgZone) {
     this.dialogText = '';
     this.preguntas = [];
     this.opcionesData = [];
@@ -31,13 +31,22 @@ export class ConversacionComponent implements OnInit {
     this.opcionActualIndex = -1;
     //this.index = 0;
   }
+  divVisible: boolean = false;
   
   ngOnInit() {
+    // Carga la pregunta y las opciones primero
     Promise.all([
       this.cargarPregunta(),
       this.cargarOpciones()
     ]).then(() => {
-      this.mostrarPregunta();
+      // Después de que se carguen la pregunta y las opciones, espera 2 segundos
+      setTimeout(() => {
+        // Usa 'zone.run' para asegurarte de que los cambios en la vista se detecten en Angular
+        this.zone.run(() => {
+          this.divVisible = true;
+          this.mostrarPregunta();
+        });
+      }, 2000);
     });
   }
 

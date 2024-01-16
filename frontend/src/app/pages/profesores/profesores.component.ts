@@ -13,6 +13,7 @@ export class ProfesoresComponent implements OnInit{
 
   clasesData: any;
   private id: any;
+  private clasID: any;
   private centroID: any;
 
   constructor(private claseService: ClaseService, private profesorService: ProfesorService, private router: Router){
@@ -57,7 +58,13 @@ export class ProfesoresComponent implements OnInit{
   }
 
   verClase(claseID: any){
+    this.clasID = claseID;
+    this.setClaseID();
     this.router.navigate(['profesores/ver-alumnos'], {state: {claseID}});
+  }
+
+  setClaseID(){
+    this.claseService.setClaseID(this.clasID);
   }
   
 }

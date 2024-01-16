@@ -22,14 +22,12 @@ export class EditarProfesorComponent {
 
   cambiarPwd(){
     if(!this.form.valid){
-      console.log('Errores en el formulario');
     }else{
       this.profesorService.updateProfesorPwd(this.form.value).subscribe(
         (response: any) => {
           this.router.navigate(['profesores/perfil']);
         },
         (error) => {
-          console.error('Error: ', error.error);
           Swal.fire(error.error.message);
         }
       );

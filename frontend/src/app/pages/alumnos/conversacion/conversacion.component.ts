@@ -3,7 +3,6 @@ import { PreguntaService } from '../../../services/preguntas.service';
 import { OpcionService } from '../../../services/opciones.service';
 import { ResultadoService } from '../../../services/resultados.service';
 import { AlumnoService } from '../../../services/alumnos.service';
-//import { Texto3DService } from './ruta-hacia/texto-3d.service'; 
 import * as THREE from 'three';
 
 @Component({
@@ -19,6 +18,8 @@ export class ConversacionComponent implements OnInit {
   estado: any;
   idPregunta: number;
   opcionActualIndex: number;
+
+  alumnoData: any;
   //index: any;
 
   constructor(private preguntaService: PreguntaService, private opcionService: OpcionService, private resultadoService: ResultadoService, private alumnoService: AlumnoService, private zone: NgZone) {
@@ -29,25 +30,33 @@ export class ConversacionComponent implements OnInit {
     this.estado = "";
     this.idPregunta = 4;
     this.opcionActualIndex = -1;
+
+    this.alumnoData = [];
     //this.index = 0;
   }
   divVisible: boolean = false;
   
   ngOnInit() {
-    // Carga la pregunta y las opciones primero
     Promise.all([
       this.cargarPregunta(),
       this.cargarOpciones()
     ]).then(() => {
-      // Después de que se carguen la pregunta y las opciones, espera 2 segundos
       setTimeout(() => {
-        // Usa 'zone.run' para asegurarte de que los cambios en la vista se detecten en Angular
         this.zone.run(() => {
           this.divVisible = true;
           this.mostrarPregunta();
         });
       }, 2000);
     });
+
+    this.obtenerAlumno();
+  }
+
+  obtenerAlumno(){
+    let id = localStorage.getItem('id');
+    this.alumnoService.getAlumnoID(id).subscribe((res: any) => {
+      this.alumnoData = res.alumnos[0];
+    })
   }
 
   cargarPregunta(): Promise<void>{
@@ -77,9 +86,7 @@ export class ConversacionComponent implements OnInit {
 
     this.resultadoService.postResultado(JSON.stringify(resultado)).subscribe(
       (response) => {
-        console.log('Resultado guardado correctamente:', response);
       }, (error) => {
-        console.error('Error al guadar el resultado:', error);
       }
     );
 
@@ -106,7 +113,7 @@ export class ConversacionComponent implements OnInit {
         this.mostrarPregunta();
       });
     }else{
-      this.dialogText = '¡Gracias por participar en la conversación!';
+      this.dialogText = '¡Nos vemos mañana '+ this.alumnoData.Nombre +' !';
       this.opcionesData = [];
       this.guardarEstado();
     }
@@ -139,9 +146,7 @@ export class ConversacionComponent implements OnInit {
     
     this.alumnoService.putEstadoAlumno(estadoData).subscribe(
       (response) => {
-        console.log('Estado actualizado correctamente:', response);
       }, (error) => {
-        console.error('Error al actualizar el estado:', error);
       }
     );
 
@@ -154,14 +159,5 @@ export class ConversacionComponent implements OnInit {
   onMouseOut() {
     this.opcionActualIndex = -1;
   }
-  /*
-  private inicializarTexto3D() {
-    // Llama al servicio para obtener el texto 3D y agrégalo a la escena
-    this.texto3D = this.texto3DService.crearTexto3D('Texto 3D Aquí');
-    // Configura la posición del texto3D según tus necesidades
-    this.texto3D.position.set(0, 0, -5); // Ajusta la posición según tus necesidades
-    // Agrega texto3D a tu escena Three.js
-    this.texto3DService.agregarTexto3DAScene(this.texto3D);
-  }*/
 }
 

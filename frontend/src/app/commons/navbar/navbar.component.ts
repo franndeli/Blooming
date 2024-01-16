@@ -16,7 +16,6 @@ export class NavbarComponent {
 
   ngOnInit(): void {
     this.menu1 = this.navbar.getnavbar();
-    console.log(this.menu1);
   }
 
   logout(){

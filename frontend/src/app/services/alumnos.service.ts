@@ -71,4 +71,9 @@ export class AlumnoService {
     return this.http.get(this.basePath+'?ID_Clase='+id, this.httpOptions);
   }
 
+  getAlumnoID(id: any){
+    this.getHeader();
+    return this.http.get(this.basePath+'id/?ID_Alumno='+id, this.httpOptions);
+  }
+
 }

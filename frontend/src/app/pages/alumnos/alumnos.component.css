@@ -1,3 +1,10 @@
+.background-container {
+    background-image: url('../../../assets/images/backgrounds/fondo2.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+} 
+  
 .container {
     display: flex;
     flex-direction: column;
@@ -9,14 +16,117 @@
     margin-top: 50px;
     margin-bottom: 50px;
 }
+
 h1 {
-    color: #3498db;
+    color: #68A63C;
+    font-weight: bold;
+    font-size: 4em;
+    margin: 0;
+    animation: flotar 1s linear infinite alternate;
 }
+
+h2 {
+    color: #345f15;
+    font-weight: bold;
+}
+
 .comenzar-btn {
-    
+    background-color: #68A63C;
+    color: white;
     font-size: 16px;
     padding: 10px 20px;
     cursor: pointer;
     border-radius: 5px;
     margin-top: 20px;
+}
+
+.comenzar-btn:hover {
+    transform: scale(1.1);
+    font-weight: bold;
+  }
+
+@keyframes flotar {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-10px);
+    }   
+}
+
+.burbujas {
+    position: relative;
+    bottom: 0;
+}
+
+.burbujas div {
+    background: #68A63C;
+    border-radius: 100%;
+    position: absolute;
+    bottom: 0;
+    animation: animarburbujas 4s linear infinite;
+    transform-origin: bottom;
+}
+
+.burbujas div:nth-child(1) {
+    background: #68A63C;
+    width: 50px;
+    height: 45px;
+    left: 40px;
+    animation-duration: 4s;
+}
+  
+.burbujas div:nth-child(2) {
+    background: #68A63C;
+    width: 60px;
+    height: 55px;
+    left: 25%;
+    animation-duration: 8s;
+}
+  
+.burbujas div:nth-child(3) {
+    background: #68A63C;
+    width: 30px;
+    height: 27px;
+    left: 40%;
+    animation-duration: 5s;
+}
+  
+.burbujas div:nth-child(4) {
+    background: #68A63C;
+    width: 65px;
+    height: 60px;
+    left: 50%;
+    animation-duration: 10s;
+}
+  
+.burbujas div:nth-child(5) {
+    background: #68A63C;
+    width: 55px;
+    height: 50px;
+    left: 65%;
+    animation-duration: 6.5s;
+}
+  
+.burbujas div:nth-child(6) {
+    background: #68A63C;
+    width: 50px;
+    height: 48px;
+    left: 85%;
+    animation-duration: 9s;
+}
+  
+.burbujas div:nth-child(7) {
+    background: #68A63C;
+    width: 35px;
+    height: 32px;
+    left: 90%;
+    animation-duration: 6s;
+}
+
+@keyframes animarburbujas {
+    0% { width: 0; height: 0; }
+    3% { width: 30px; height: 27px; }
+    50% { margin-left: 20px; opacity: 0.5; }
+    100% { transform: rotate(90deg); bottom: 100vh; background: #345f15;  }
 }

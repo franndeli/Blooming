@@ -31,7 +31,6 @@ export class VerPerfilAlumnoComponent implements OnInit {
   getResultados(){
     this.resultadoService.getResultadoAlumno(this.alumnosData.ID_Alumno).subscribe( (res: any) => {
       this.resultadosData = res.respuestas;
-      console.log(this.resultadosData);
     })
   }
 

@@ -18,8 +18,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.authService.validarToken()
       .subscribe(({ valido, rol }) => {
-        console.log('valor:', valido);
-        console.log('rol:', rol);
+        const aux = true;
         if (valido) {
           switch (rol) {
             case 'Admin':
@@ -29,7 +28,7 @@ export class LoginComponent implements OnInit {
               this.router.navigate(['centros/dashboard']);
               break;
             case 'Alumno':
-              this.router.navigate(['alumnos/dashboard']);
+              this.router.navigate(['alumnos/dashboard'], {state: {aux}});
               break;
             case 'Profesor':
               this.router.navigate(['profesores/dashboard']);
@@ -48,10 +47,8 @@ export class LoginComponent implements OnInit {
   });
 
   login(){
-    this.sendForm=true
-    console.log(this.sendForm);
+    this.sendForm=true;
     if(!this.form.valid){
-      console.log('Errores en el formulario');
     }else{
       const formData: loginForm = {
         ...this.form.value,
@@ -59,33 +56,29 @@ export class LoginComponent implements OnInit {
         Contraseña: this.form.value.Contraseña || '',
         Remember: !!this.form.value.Remember
       };
-      console.log('login');
       this.authService.login(formData).subscribe(
         (response:any) => {
-          //localStorage.setItem('token', response.token);
+          const aux = false;
           if (this.form.get('Remember')?.value ?? ''){
             localStorage.setItem('usuario', this.form.get('Usuario')?.value ?? '');
           } else {
             localStorage.removeItem('usuario');
           }
-          console.log('Respuesta del servidor:', response);
           localStorage.setItem('id', response.id);
           if(response.rol == 'Admin'){
             this.router.navigate(['admin/dashboard']);
           }
-          
           if(response.rol == 'Centro'){
             this.router.navigate(['centros/dashboard']);
           }
           if(response.rol == 'Alumno'){
-            this.router.navigate(['alumnos/dashboard']);
+            this.router.navigate(['alumnos/dashboard'], {state: {aux}});
           }
           if(response.rol == 'Profesor'){
             this.router.navigate(['profesores/dashboard']);
           }
         },
         (error) => {
-          console.error('Error de autenticación:', error);
           Swal.fire(error.error.message);
         }
       );

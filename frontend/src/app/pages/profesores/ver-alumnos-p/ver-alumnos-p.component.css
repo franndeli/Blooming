@@ -1,0 +1,11 @@
+.bg-danger {
+    background-color: rgb(233, 31, 31) !important;
+  }
+  
+  .bg-warning {
+    background-color: rgb(255, 174, 31) !important;
+  }
+  
+  .bg-success {
+    background-color: green !important;
+  }

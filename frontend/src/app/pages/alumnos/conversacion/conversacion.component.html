@@ -8,7 +8,7 @@
     <div>
       <p>{{ dialogText }}</p>
       <ul>
-        <li *ngFor="let opcion of opcionesData; let i = index" (click)="seleccionarRespuesta(opcion)" (mouseover)="onMouseOver(i)" (mouseout)="onMouseOut()" [ngStyle]="{'color': opcionActualIndex === i ? 'red' : 'black'}">
+        <li *ngFor="let opcion of opcionesData; let i = index" (click)="seleccionarRespuesta(opcion)" (mouseover)="onMouseOver(i)" (mouseout)="onMouseOut()">
           {{ opcion.TextoOpcion }}
         </li>
       </ul>

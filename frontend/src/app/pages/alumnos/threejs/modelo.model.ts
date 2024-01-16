@@ -24,12 +24,12 @@ export class Modelo {
     loader.setPath('../assets/images/threejs/');
 
     loader.load('avatar.fbx', (fbx: Group) => {
-      console.log('Modelo cargado:', fbx);
 
       if (fbx instanceof Group) {
         fbx.scale.setScalar(0.03);
                         //x y z
-        fbx.position.set(0, -3.3, 0);
+        fbx.position.set(-1, -3.3, 0);
+        fbx.rotation.set(0, Math.PI/70, 0);
 
         this.avatar.add(fbx);
 

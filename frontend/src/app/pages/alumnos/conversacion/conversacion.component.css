@@ -1,57 +1,77 @@
-/* three.component.css */
-.canvas-container {
-  /* position: relative;*/
-}
-
 .conversation-container {
   position: absolute;
-  top: 20px;
-  left: 20px;
+ 
   background-color: white;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   z-index: 2; /* Asegura que esté encima de la escena Three.js */
+ 
+  max-width: 555px;
 
   top: 280px; /* Cambia el valor según sea necesario para ajustar la posición vertical */
-  left: 820px;
-
-  width: 300px; /* Establece un ancho fijo */
-  height: 150px; /* Establece una altura fija  */
+  left: 700px;
   text-align: center;
+  box-shadow: 10px 10px 20px rgba(98, 132, 225, 0.5), -10px -10px 20px  rgba(98, 132, 225, 0.5); /* Agrega una sombra clara */   
+  padding: 5px; /* Ajusta el espacio alrededor del contenido */
+}
+.conversation-container p {
+  font-size: 20px; /* Tamaño de fuente para las preguntas */
 }
 
 /* Estilo para las respuestas */
 .conversation-container ul li {
-  cursor: pointer; /* Cambia el cursor a una mano al pasar sobre las respuestas */
+  cursor: pointer; /* Cambia el cursor a una mano al pasar sobre las respuestas */
   max-width: 400px;
   width: auto; /* Establece un ancho fijo */
   height: auto; /* Establece una altura fija  */
-
+  font-size: 18px; /* Tamaño de fuente para las opciones */
   text-align: center;
-  box-shadow: 10px 10px 20px rgba(255, 255, 255, 0.3); /* Agrega una sombra clara */
+  transition: color 0.3s ease; /* Agrega una transición suave al cambiar el color */
+}
+.conversation-container ul li:hover {
+  color: rgb(214, 84, 207); /* Cambia el color al pasar el ratón */
+  transform: translate(0, -5px); /* Mueve la respuesta hacia arriba al pasar el ratón */
+  font-weight: bold;
 }
 
-@media screen and (min-width:1716px) {
+/* Estilo específico para pantallas más grandes */
+@media screen and (min-width:1500px) {
   .conversation-container {
-      /* Estilos específicos para pantallas más grandes */
-      top: 380px; /* Cambia el valor según sea necesario para ajustar la posición vertical */
-      left: 1220px;
-  
-      width: 300px; /* Establece un ancho fijo */
-      height: 150px; /* Establece una altura fija  */
-  }
-}
-   
-@media screen and (min-width:1716px) {
-  .conversation-container {
-    /* Estilos específicos para pantallas más grandes */
-    top: 380px; /* Cambia el valor según sea necesario para ajustar la posición vertical */
-    left: 1220px;
-
-    width: auto; /* Establece un ancho fijo */
-    height: auto; /* Establece una altura fija  */
+    top: 380px;
+    left: 1020px;
+    width: auto;
+    height: auto;
     min-width: 400px;
-    box-shadow: 10px 10px 20px rgba(239, 228, 182, 0.3), -10px -10px 20px rgba(255, 255, 255, 0.3); /* Agrega una sombra clara */   
+    box-shadow: 10px 10px 20px rgba(98, 132, 225, 0.5), -10px -10px 20px  rgba(98, 132, 225, 0.5); /* Agrega una sombra clara */  
+    text-align: center; 
+  }
+
+  /* Estilo para preguntas */
+  .conversation-container p {
+    font-size: 30px; /* Tamaño de fuente para las preguntas */
+    text-align: center;
+    margin-bottom: 10px; /* Añade margen inferior para separar la pregunta de las respuestas */
+  }
+
+  /* Estilo para respuestas */
+  .conversation-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .conversation-container ul li {
+    font-size: 20px; /* Tamaño de fuente para las opciones */
+    text-align: center;
+    margin: 5px 0; /* Añade margen vertical entre las respuestas */
+  }
+  .conversation-container ul li:hover {
+    color: rgb(214, 84, 207); /* Cambia el color al pasar el ratón */
+    transform: translate(0, -5px); /* Mueve la respuesta hacia arriba al pasar el ratón */
+    font-weight: bold;
   }
 }

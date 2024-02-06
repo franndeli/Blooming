@@ -20,7 +20,6 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                     <tr>
                                         <th class="border-bottom-0">Nombre</th>
                                         <th class="border-bottom-0">NºAlumnos</th>
-                                        <th class="border-bottom-0">Centro</th>
                                         <th class="border-bottom-0"></th>
                                     </tr>
                                 </thead>
@@ -28,7 +27,6 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                     <tr>
                                         <td class="border-bottom-0">{{clase.Nombre}}</td>
                                         <td class="border-bottom-0">{{clase.NumAlumnos}}</td>
-                                        <td class="border-bottom-0">{{clase.NomCentro}}</td>
                                         <td class="border-bottom-0">
                                             <button class="btn btn-primary" (click)="editarClase(clase)">M</button>
                                             <button class="btn btn-danger" (click)="eliminarClase(clase.ID_Clase)">E</button>

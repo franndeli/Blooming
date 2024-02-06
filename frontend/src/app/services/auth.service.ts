@@ -68,7 +68,8 @@ export class AuthService {
   }
 
   validarToken(): Observable<{ valido: boolean, rol?: string }> {
-    const token = localStorage.getItem('token') || '';
+    // const token = localStorage.getItem('token') || '';
+    const token = typeof localStorage !== 'undefined' ? localStorage.getItem('token') || '' : '';
   
     if (token === ''){
       return of({ valido: false });

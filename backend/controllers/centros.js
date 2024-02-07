@@ -10,7 +10,7 @@ const getCentros = (req, res) => {
     const desde = Number(req.query.desde) || 0;
 
     return new Promise(function(resolve, reject) {
-        let query = 'SELECT * FROM centro_escolar';
+        let query = 'SELECT * FROM centro';
         let conditions = [];
         let values = [];
         let validParams = ['ID_Centro', 'Nombre', 'Email', 'Localidad', 'Provincia', 'Calle', 'CP', 'desde'];
@@ -22,31 +22,31 @@ const getCentros = (req, res) => {
         }
 
         if(req.query.ID_Centro){
-            conditions.push("centro_escolar.ID_Centro = ?");
+            conditions.push("centro.ID_Centro = ?");
             values.push(req.query.ID_Centro);
         }
         if(req.query.Nombre){
-            conditions.push("centro_escolar.Nombre LIKE ?");
+            conditions.push("centro.Nombre LIKE ?");
             values.push(`${req.query.Nombre}%`);
         }
         if(req.query.Email){
-            conditions.push("centro_escolar.Email LIKE ?");
+            conditions.push("centro.Email LIKE ?");
             values.push(`${req.query.Email}%`);
         }
         if(req.query.Localidad){
-            conditions.push("centro_escolar.Localidad LIKE ?");
+            conditions.push("centro.Localidad LIKE ?");
             values.push(`${req.query.Localidad}%`);
         }
         if(req.query.Provincia){
-            conditions.push("centro_escolar.Provincia LIKE ?");
+            conditions.push("centro.Provincia LIKE ?");
             values.push(`${req.query.Provincia}%`);
         }
         if(req.query.Calle){
-            conditions.push("centro_escolar.Calle LIKE ?");
+            conditions.push("centro.Calle LIKE ?");
             values.push(`%${req.query.Calle}%`);
         }
         if(req.query.CP){
-            conditions.push("centro_escolar.CP LIKE ?");
+            conditions.push("centro.CP LIKE ?");
             values.push(`%${req.query.CP}%`);
         }
 
@@ -86,7 +86,7 @@ const createCentro = (req, res) => {
         const email = req.body.Email;
 
         //Comprueba si el email ya existe
-        connection.query('SELECT * FROM centro_escolar WHERE Email = ?', [email], (error, results) => {
+        connection.query('SELECT * FROM centro WHERE Email = ?', [email], (error, results) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al verificar el email"});
             } else if (results.length > 0) {
@@ -97,7 +97,7 @@ const createCentro = (req, res) => {
                 const hashedPassword = hashPassword(req.body.Contraseña);
                 const newCentro = { ...req.body, Contraseña: hashedPassword };
 
-                connection.query('INSERT INTO centro_escolar SET ?', [newCentro], (insertError, insertResults) => {
+                connection.query('INSERT INTO centro SET ?', [newCentro], (insertError, insertResults) => {
                     if (insertError) {
                         reject({ statusCode: 500, message: "Error al crear el centro"});
                     } else {
@@ -125,7 +125,7 @@ const updateCentro = (req, res) => {
             req.body.Contraseña = hashedPassword;
         }
 
-        connection.query('UPDATE centro_escolar SET ? WHERE ID_Centro = ?', [req.body, id], (error, results) => {
+        connection.query('UPDATE centro SET ? WHERE ID_Centro = ?', [req.body, id], (error, results) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al actualizar el Centro"});
             } else if (results.affectedRows === 0) {
@@ -165,7 +165,7 @@ const updateCentroPwd = (req, res) => {
             });
         }
 
-        connection.query('SELECT Nombre, Contraseña FROM centro_escolar WHERE ID_Centro = ?', [id], (error, datos) => {
+        connection.query('SELECT Nombre, Contraseña FROM centro WHERE ID_Centro = ?', [id], (error, datos) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al buscar el Centro"});
             } else if (datos.affectedRows === 0) {
@@ -189,7 +189,7 @@ const updateCentroPwd = (req, res) => {
                 const hashedPassword = hashPassword(newPassword);
                 const newPwd = hashedPassword;
 
-                connection.query('UPDATE centro_escolar SET Contraseña = ? WHERE ID_Centro = ?', [newPwd, id], (setError, setResults) => {
+                connection.query('UPDATE centro SET Contraseña = ? WHERE ID_Centro = ?', [newPwd, id], (setError, setResults) => {
                     if (setError) {
                         reject({ statusCode: 500, message: "Error al cambiar la contraseña"});
                     } else {
@@ -210,7 +210,7 @@ const updateCentroPwd = (req, res) => {
 const deleteCentro = (req, res) => {
     return new Promise(function(resolve, reject) {
         const id = req.params.ID_Centro;
-        connection.query('SELECT * FROM centro_escolar WHERE ID_Centro = ?', [id], (error, rows) => {
+        connection.query('SELECT * FROM centro WHERE ID_Centro = ?', [id], (error, rows) => {
             if(error){
                 reject({ statusCode: 500, message: "Error al buscar el centro"});
             }else if(rows.length === 0){
@@ -235,7 +235,7 @@ const deleteCentro = (req, res) => {
                                 return reject({ statusCode: 500, message: "Error al eliminar clases del centro" });
                             }
                             // Finalmente, eliminar el centro
-                            connection.query('DELETE FROM centro_escolar WHERE ID_Centro = ?', [id], (error) => {
+                            connection.query('DELETE FROM centro WHERE ID_Centro = ?', [id], (error) => {
                                 if (error) {
                                     console.log(error);
                                     return reject({ statusCode: 500, message: "Error al eliminar el centro" });

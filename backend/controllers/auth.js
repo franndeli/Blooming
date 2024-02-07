@@ -100,7 +100,7 @@ async function buscarUsuario(usuario) {
     const tablas = [
         { nombre: 'alumno', campoUsuario: 'Usuario', rolEsperado: 'Alumno' },
         { nombre: 'profesor', campoUsuario: 'Email', rolEsperado: 'Profesor' },
-        { nombre: 'centro_escolar', campoUsuario: 'Email', rolEsperado: 'Centro' },
+        { nombre: 'centro', campoUsuario: 'Email', rolEsperado: 'Centro' },
         { nombre: 'admin', campoUsuario: 'Email', rolEsperado: 'Admin' }
     ];
 
@@ -150,7 +150,7 @@ function obtenerTablaPorRol(rol) {
     switch (rol) {
         case 'Alumno': return { nombre: 'alumno', campoID: 'ID_Alumno' };
         case 'Profesor': return { nombre: 'profesor', campoID: 'ID_Profesor' };
-        case 'Centro': return { nombre: 'centro_escolar', campoID: 'ID_Centro' };
+        case 'Centro': return { nombre: 'centro', campoID: 'ID_Centro' };
         case 'Admin': return { nombre: 'admin', campoID: 'ID_Admin' };
         default: return null;
     }

@@ -10,7 +10,7 @@ const getProfesores = (req, res) => {
     const desde = Number(req.query.desde) || 0;
 
     return new Promise(function(resolve, reject) {
-        let query = 'SELECT profesor.*, centro_escolar.Nombre AS NomCentro, clase.Nombre AS NomClase FROM profesor LEFT JOIN centro_escolar ON profesor.ID_Centro = centro_escolar.ID_Centro LEFT JOIN clase ON profesor.ID_Clase = clase.ID_Clase';
+        let query = 'SELECT profesor.*, centro.Nombre AS NomCentro, clase.Nombre AS NomClase FROM profesor LEFT JOIN centro ON profesor.ID_Centro = centro.ID_Centro LEFT JOIN clase ON profesor.ID_Clase = clase.ID_Clase';
         let conditions = [];
         let values = [];
         let validParams = ['ID_Profesor', 'Nombre', 'Apellidos', 'Email', 'Contraseña', 'ID_Clase', 'ID_Centro', 'desde'];

@@ -8,7 +8,7 @@ const getClases = (req, res) => {
     const desde = Number(req.query.desde) || 0;
 
     return new Promise(function(resolve, reject) {
-        let query = 'SELECT clase.*, centro_escolar.Nombre AS NomCentro FROM clase LEFT JOIN centro_escolar ON clase.ID_Centro = centro_escolar.ID_Centro';
+        let query = 'SELECT clase.*, centro.Nombre AS NomCentro FROM clase LEFT JOIN centro ON clase.ID_Centro = centro.ID_Centro';
         let conditions = [];
         let values = [];
         let validParams = ['ID_Clase', 'Nombre', 'NumAlumnos', 'ID_Centro', 'desde'];

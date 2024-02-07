@@ -1,7 +1,19 @@
-
-<div class="container">
-    <h1>¡Bienvenido de nuevo a Blooming!</h1>
-    <!--<a href="/alumnos/threejs" class="btn btn-success comenzar-btn ">Comenzar</a>-->
-    <a href="/alumnos/carga" class="btn btn-success comenzar-btn ">Comenzar</a>
-  <!--  <a href="/alumnos/carga" class="btn btn-success comenzar-btn ">carga</a>   --> 
-</div>
+  <div class="container background-container">
+    <div class="titulo">
+      <h1 *ngIf="aux; else notWelcomeMessage">¡{{alumnoData.Nombre}}, bienvenido de nuevo a Blooming!</h1>
+      <h2>{{obtenerFechaFormato()}}</h2>
+      <ng-template #notWelcomeMessage>
+          <h1>¡Hola {{alumnoData.Nombre}}! Bienvenido a Blooming</h1>
+      </ng-template>
+    </div>
+    <button routerLink="/alumnos/carga" class="btn comenzar-btn ">Comenzar</button>
+  </div>
+  <div class="burbujas">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>

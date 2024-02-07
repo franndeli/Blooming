@@ -13,8 +13,7 @@ export class InicioComponent {
   ngOnInit(): void {
     this.authService.validarToken()
       .subscribe(({ valido, rol }) => {
-        console.log('valor:', valido);
-        console.log('rol:', rol);
+        const aux = true;
         if (valido) {
           switch (rol) {
             case 'Admin':
@@ -24,7 +23,7 @@ export class InicioComponent {
               this.router.navigate(['centros/dashboard']);
               break;
             case 'Alumno':
-              this.router.navigate(['alumnos/dashboard']);
+              this.router.navigate(['alumnos/dashboard'], {state: {aux}});
               break;
             case 'Profesor':
               this.router.navigate(['profesores/dashboard']);

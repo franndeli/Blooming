@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AlumnoService } from '../../../services/alumnos.service';
+import { ClaseService } from '../../../services/clases.service';
 
 @Component({
   selector: 'app-ver-alumnos-p',
@@ -13,25 +14,27 @@ export class VerAlumnosPComponent implements OnInit{
   claseData: any;
   private claseID: any;
 
-  constructor(private alumnoService: AlumnoService, private router: Router, private activatedRoute: ActivatedRoute){
+  constructor(private alumnoService: AlumnoService, private router: Router, private activatedRoute: ActivatedRoute, private claseService: ClaseService){
     this.alumnosData = [];
     this.claseData = [];
   }
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(params => {
-      this.claseID = history.state.claseID;
-      console.log( history.state);
+        this.claseID = history.state.claseID;
     });
 
+    if(this.claseID === '' || undefined){
+      this.claseID = this.claseService.getClaseID();
+    }
+   
     this.getAlumnos();
   }
 
   getAlumnos(){
-      this.alumnoService.getAlumnosClase(this.claseID).subscribe(res => {
-        this.alumnosData = res;
-        console.log(this.alumnosData);
-      })
+    this.alumnoService.getAlumnosClase(this.claseID).subscribe(res => {
+      this.alumnosData = res;
+    })
   }
 
   getClaseEstado(estado: any): string {

@@ -6,6 +6,7 @@ const { check, Result } = require('express-validator');
 const { validarCampos } = require('../middleware/validaciones');
 const { validarRol } = require('../middleware/validar-rol');
 const { validarJWT } = require('../middleware/validar-jwt');
+const Alumno = require('../models/alumno');
 
 const router = Router();
 
@@ -14,6 +15,12 @@ router.get('/', validarJWT, validarRol(['Profesor', 'Centro', 'Admin']), (req, r
         res.status(error.statusCode || 500).json({ error: error.message });
     });
 });
+
+router.get('/id/', validarJWT, validarRol(['Profesor', 'Centro', 'Admin', 'Alumno']), (req, res) => {
+    getAlumnos(req, res).catch(error => {
+        res.status(error.statusCode || 500).json({ error: error.message });
+    });
+})
 
 router.post('/', [
         validarJWT, validarRol(['Centro', 'Admin']),

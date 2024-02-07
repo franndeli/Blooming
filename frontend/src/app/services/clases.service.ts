@@ -9,6 +9,8 @@ import { environment } from '../../environments/environment';
 
 export class ClaseService {
 
+  private claseID: any;
+
     private basePath=`${environment.base_url}/clases/`;
     private httpOptions: any;
     constructor(private http: HttpClient) { 
@@ -61,6 +63,15 @@ export class ClaseService {
     getClasesCentro(id: any){
       this.getHeader();
       return this.http.get(this.basePath+'?ID_Centro='+id, this.httpOptions);
+    }
+
+
+    setClaseID(id: any){
+      this.claseID = id;
+    }
+
+    getClaseID(){
+      return this.claseID;
     }
 
 }

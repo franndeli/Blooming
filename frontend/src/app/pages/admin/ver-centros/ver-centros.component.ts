@@ -1,28 +1,28 @@
-import { Component, AfterViewInit  } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { CentroService } from '../../../services/centros.service';
 
 import Swal from 'sweetalert2';
+import { pairwise } from 'rxjs';
 
 @Component({
   selector: 'app-centros',
   templateUrl: './ver-centros.component.html',
   styleUrl: './ver-centros.component.css'
 })
-export class VerCentrosComponent {
+export class VerCentrosComponent implements OnInit{
 
   centrosData: any;
+  public totalReg = 25;
+  public posActual = 0;
+  public regPag = 5;
 
   constructor(private centroService: CentroService, private router: Router){
     this.centrosData = [];
   }
 
-  ngAfterViewInit() {
-    this.tryLocalStorage();
-  }
-
-  tryLocalStorage(){
+  ngOnInit() {
     this.getCentros();
   }
 
@@ -56,6 +56,11 @@ export class VerCentrosComponent {
 
   editarCentro(centro: any){
     this.router.navigate(['admin/editar-centros'], {state: {centro}});
+  }
+
+  cambiarPagina( pagina: any){
+    pagina = (pagina < 0 ? 0 : pagina);
+    this.posActual = ((pagina - 1) * this.regPag >= 0 ? (pagina - 1) * this.regPag : 0);
   }
 
 }

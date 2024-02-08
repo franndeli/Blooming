@@ -10,6 +10,7 @@ import { AdminComponent } from './admin/admin.component';
 import { AdminLayoutComponent } from '../layouts/admin-layout/admin-layout.component';
 
 import { CommonsModule } from '../commons/commons.module';
+import { ComponentsModule } from '../components/components.module'
 
 //CENTROS
 import { VerProfesoresCComponent } from './centros/ver-profesores-c/ver-profesores-c.component';
@@ -115,7 +116,7 @@ import { CargaComponent } from './alumnos/carga/carga.component';
     CommonsModule,
     FormsModule,
     ReactiveFormsModule,
-   
+    ComponentsModule
   ]
 })
 export class PagesModule { }

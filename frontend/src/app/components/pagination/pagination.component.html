@@ -1,0 +1,27 @@
+<div class="mr-2" *ngIf="texto">
+    <div role="status" aria-live="polite" *ngIf="totalRegistros > 0">
+        Mostrando {{registroActual}} - {{registroHasta}} de {{totalRegistros}}
+    </div>
+    <div role="status" aria-live="polite" *ngIf="totalRegistros <= 0">
+        No hay registros
+    </div>
+</div>
+<nav aria-label="...">
+    <ul class="pagination justify-content-center mb-0 mt-4">
+      <li class="page-item" [ngClass]="{'disabled' : pagActual==1}" (click)="cambiaPagina(pagActual-1)">
+        <span class="page-link border-0 rounded-circle text-dark round-32 d-flex align-items-center justify-content-center"><i class="ti ti-chevron-left"></i></span>
+      </li>
+      <li class="page-item" [ngClass]="{'active': numPag===pagActual}" *ngFor="let numPag of listaPags" aria-current="page">
+        <span class="page-link border-0 rounded-circle round-32 mx-1 d-flex align-items-center justify-content-center" (click)="cambiaPagina(numPag)">{{numPag}}</span>
+      </li>
+      <!-- <li class="page-item">
+        <span class="page-link border-0 rounded-circle text-dark round-32 mx-1 d-flex align-items-center justify-content-center">...</span>
+      </li>
+      <li class="page-item" [ngClass]="{'disabled' : pagActual==ultimaPag}" (click)="cambiaPagina(ultimaPag)">
+        <span class="page-link border-0 rounded-circle round-32 mx-1 d-flex align-items-center justify-content-center">{{ultimaPag}}</span>
+      </li> -->
+      <li class="page-item" [ngClass]="{'disabled' : pagActual==ultimaPag}" (click)="cambiaPagina(pagActual+1)">
+        <span class="page-link border-0 rounded-circle text-dark round-32 d-flex align-items-center justify-content-center"><i class="ti ti-chevron-right"></i></span>
+      </li>
+    </ul>
+  </nav>

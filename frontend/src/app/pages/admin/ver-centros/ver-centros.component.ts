@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
 import { CentroService } from '../../../services/centros.service';
-
+import { environment } from '../../../../environments/environment.produccion';
 import Swal from 'sweetalert2';
-import { pairwise } from 'rxjs';
 
 @Component({
   selector: 'app-centros',
@@ -14,21 +12,38 @@ import { pairwise } from 'rxjs';
 export class VerCentrosComponent implements OnInit{
 
   centrosData: any;
-  public totalReg = 25;
+  public totalCentros = 0;
   public posActual = 0;
-  public regPag = 5;
+  public regPag = environment.registrosPag;
+  private busqueda = '';
+
 
   constructor(private centroService: CentroService, private router: Router){
-    this.centrosData = [];
+    // this.centrosData = [];
   }
 
   ngOnInit() {
-    this.getCentros();
+    this.obtenerCentros(this.busqueda);
   }
 
-  getCentros(){
-    this.centroService.getCentros().subscribe(res => {
-      this.centrosData = res;
+  obtenerCentros(buscar: string){
+    this.busqueda = buscar;
+    this.centroService.getCentrosPaginados(this.posActual, buscar).subscribe((res: any) => {
+      if(res["centros"].length === 0){
+        if(this.posActual > 0){
+          this.posActual = this.posActual - this.regPag;
+          if(this.posActual < 0){
+            this.posActual = 0
+          }
+          this.obtenerCentros(this.busqueda);
+        }else {
+          this.centrosData = [];
+          this.totalCentros = 0;
+        }
+      }else {
+        this.centrosData = res.centros;
+        this.totalCentros = res.page.total;
+      }
     })
   }
 
@@ -44,7 +59,7 @@ export class VerCentrosComponent implements OnInit{
     }).then((result) => {
       if (result.isConfirmed) {
         this.centroService.deleteCentro(id).subscribe(res => {
-          this.getCentros();
+          this.obtenerCentros(this.busqueda);
         })
         Swal.fire({
           title: "Centro Eliminado",
@@ -61,6 +76,7 @@ export class VerCentrosComponent implements OnInit{
   cambiarPagina( pagina: any){
     pagina = (pagina < 0 ? 0 : pagina);
     this.posActual = ((pagina - 1) * this.regPag >= 0 ? (pagina - 1) * this.regPag : 0);
+    this.obtenerCentros(this.busqueda);
   }
 
 }

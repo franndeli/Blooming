@@ -20,7 +20,7 @@
                                         <th class="border-bottom-0"></th>
                                     </tr>
                                 </thead>
-                                <tbody *ngFor="let centro of centrosData.centros">
+                                <tbody *ngFor="let centro of centrosData">
                                   <tr>
                                     <td class="border-bottom-0">{{centro.Nombre}}</td>
                                     <td class="border-bottom-0">{{centro.Email}}</td>
@@ -36,7 +36,7 @@
                               </tbody>
                             </table>
                             <br>
-                            <app-pagination (cambiarPag)="cambiarPagina($event)" [texto]="true" [totalRegistros]="totalReg" [registroActual]="posActual+1" [registroPag]="regPag"></app-pagination>
+                            <app-pagination (cambiarPagina)="cambiarPagina($event)" [texto]="true" [totalRegistros]="totalCentros" [registroActual]="posActual+1" [registroPag]="regPag"></app-pagination>
                         </div>
                     </div>
                     <button  routerLink="/admin/crear-centros"class="btn btn-danger">Crear Centro</button>

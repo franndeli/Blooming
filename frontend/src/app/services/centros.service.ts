@@ -23,7 +23,7 @@ export class CentroService {
       let token;
       if (typeof localStorage !== 'undefined') {
         token = localStorage.getItem('token');
-      } 
+      }
       return token;
     }
 
@@ -44,6 +44,17 @@ export class CentroService {
   getCentro(id: any){
     this.getHeader();
     return this.http.get(this.basePath+'?ID_Centro='+id, this.httpOptions);
+  }
+
+  getCentrosPaginados(desde: number, textoBusqueda?: string){
+    this.getHeader();
+    if(!desde){
+      desde = 0;
+    }
+    if(!textoBusqueda){
+      textoBusqueda = '';
+    }
+    return this.http.get(this.basePath+'?desde='+desde+'&texto='+textoBusqueda+'&paginado='+true, this.httpOptions);
   }
 
   deleteCentro(id:number){

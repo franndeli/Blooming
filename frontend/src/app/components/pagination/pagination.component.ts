@@ -12,7 +12,7 @@ export class PaginationComponent implements OnInit, OnChanges {
   @Input() registroPag: number = 5;
   @Input() texto: boolean = false;
   
-  @Output() cambiarPag:EventEmitter<number> = new EventEmitter();
+  @Output() cambiarPagina:EventEmitter<number> = new EventEmitter();
 
   public pagActual = 0;
   public ultimaPag = 0;
@@ -52,8 +52,8 @@ export class PaginationComponent implements OnInit, OnChanges {
     }
   }
 
-  cambiaPagina( nueva: number){
-    this.cambiarPag.emit(nueva);
+  cambiaPag( nueva: number){
+    this.cambiarPagina.emit(nueva);
   }
   
 }

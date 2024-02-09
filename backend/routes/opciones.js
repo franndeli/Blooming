@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getOpciones, createOpciones, updateOpcion, deleteOpcion } = require('../controllers/opciones_respuestas');
+const { getOpciones, createOpciones, updateOpcion, deleteOpcion } = require('../controllers/opciones');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middleware/validaciones');
 

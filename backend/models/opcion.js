@@ -1,4 +1,4 @@
-class Opciones_respuesta {
+class opciones {
     ID_Opcion;
     TextoOpcion;
     ID_Pregunta;
@@ -9,4 +9,4 @@ class Opciones_respuesta {
     }
 }
 
-module.exports = Opciones_respuesta;
+module.exports = opciones;

@@ -8,8 +8,8 @@ const getRespuestas = (req, res) => {
     const desde = Number(req.query.desde) || 0;
 
     return new Promise(function(resolve, reject) {
-        let query = 'SELECT respuesta.ID_Respuesta, opciones_respuesta.TextoOpcion AS Respuesta, opciones_respuesta.Gravedad AS Gravedad, respuesta.ID_Alumno, pregunta.TextoPregunta AS ID_Pregunta, DATE_FORMAT(respuesta.FechaRespuesta, "%d-%m-%Y") AS Fecha, DATE_FORMAT(respuesta.FechaRespuesta, "%H:%i:%s") AS Hora, respuesta.ID_Sesion FROM respuesta ';
-        query += 'INNER JOIN opciones_respuesta ON respuesta.Respuesta = opciones_respuesta.ID_Opcion ';
+        let query = 'SELECT respuesta.ID_Respuesta, opciones.TextoOpcion AS Respuesta, opciones.Gravedad AS Gravedad, respuesta.ID_Alumno, pregunta.TextoPregunta AS ID_Pregunta, DATE_FORMAT(respuesta.FechaRespuesta, "%d-%m-%Y") AS Fecha, DATE_FORMAT(respuesta.FechaRespuesta, "%H:%i:%s") AS Hora, respuesta.ID_Sesion FROM respuesta ';
+        query += 'INNER JOIN opciones ON respuesta.Respuesta = opciones.ID_Opcion ';
         query += 'INNER JOIN pregunta ON respuesta.ID_Pregunta = pregunta.ID_Pregunta';
         
 

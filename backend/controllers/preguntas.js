@@ -55,7 +55,7 @@ const createPregunta = (req,res) => {
         const { ID_Pregunta } = req.body;
 
         // Primero verificar si ya existe una pregunta con el mismo ID_Pregunta
-        connection.query('SELECT * FROM opciones_respuesta WHERE ID_Pregunta = ?', [ID_Pregunta], (error, results) => {
+        connection.query('SELECT * FROM opciones WHERE ID_Pregunta = ?', [ID_Pregunta], (error, results) => {
             if (error) {
                 console.log(error);
                 return reject({ statusCode: 500, message: "Error al verificar si existe la pregunta"});

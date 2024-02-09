@@ -6,12 +6,20 @@ const Clase = require('../models/clase');
 const getClases = (req, res) => {
     const tam = Number(process.env.TAMPORPAG);
     const desde = Number(req.query.desde) || 0;
+    const texto = req.query.texto;
+    let textoBusqueda = '';
+    const paginado = req.query.paginado || false;
+
+    if(texto){
+        textoBusqueda = new RegExp(texto, 'i');
+        console.log('texto', texto, ' textoBusqueda', textoBusqueda);
+    }
 
     return new Promise(function(resolve, reject) {
         let query = 'SELECT clase.*, centro_escolar.Nombre AS NomCentro FROM clase LEFT JOIN centro_escolar ON clase.ID_Centro = centro_escolar.ID_Centro';
         let conditions = [];
         let values = [];
-        let validParams = ['ID_Clase', 'Nombre', 'NumAlumnos', 'ID_Centro', 'desde'];
+        let validParams = ['ID_Clase', 'Nombre', 'NumAlumnos', 'ID_Centro', 'desde', 'texto', 'paginado'];
 
         let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
 
@@ -40,8 +48,7 @@ const getClases = (req, res) => {
             query += ' WHERE ' + conditions.join(' AND ');
         }
 
-        //quitar este if, solo para pruebas de get
-        if(req.query.desde){
+        if(paginado){
             query += ` LIMIT ${tam} OFFSET ${desde}`;
         }
 
@@ -49,18 +56,30 @@ const getClases = (req, res) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al obtener la clase"});
             } else{
-                const clases = results.map(row => {
-                    const clase = new Clase();
-                    Object.assign(clase, row);
-                    return clase.toJSON();
-                });
-                resolve(
-                    res.json({
-                        ok: true,
-                        msg: 'getClases',
-                        clases
-                    })
-                );
+                connection.query('SELECT COUNT(*) AS total FROM clase', (error, countRes) => {
+                    if(error){
+                        reject({ statusCode: 500, message: "Error al obtener el número total de clases"});
+                    }else {
+                        const total = countRes[0].total;
+                        const clases = results.map(row => {
+                            const clase = new Clase();
+                            Object.assign(clase, row);
+                            return clase.toJSON();
+                        });
+                        resolve(
+                            res.json({
+                                ok: true,
+                                msg: 'getClases',
+                                clases,
+                                page: {
+                                    desde,
+                                    tam,
+                                    total
+                                }
+                            })
+                        );
+                    }
+                })
             }
         });
     });

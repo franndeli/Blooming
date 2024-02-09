@@ -18,9 +18,7 @@ export class VerCentrosComponent implements OnInit{
   private busqueda = '';
 
 
-  constructor(private centroService: CentroService, private router: Router){
-    // this.centrosData = [];
-  }
+  constructor(private centroService: CentroService, private router: Router){}
 
   ngOnInit() {
     this.obtenerCentros(this.busqueda);

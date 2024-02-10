@@ -36,9 +36,20 @@ export class AlumnoService {
     }
 
   //LLAMADAS API  
-  getAlumnos(){
+  // getAlumnos(){
+  //   this.getHeader();
+  //   return this.http.get(this.basePath, this.httpOptions );
+  // }
+
+  getAlumnos(desde: number, textoBusqueda?: string){
     this.getHeader();
-    return this.http.get(this.basePath, this.httpOptions );
+    if(!desde){
+      desde = 0;
+    }
+    if(!textoBusqueda){
+      textoBusqueda = '';
+    }
+    return this.http.get(this.basePath+'?desde='+desde+'&texto='+textoBusqueda, this.httpOptions );
   }
 
   deleteAlumno(id:number){

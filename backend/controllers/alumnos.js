@@ -7,14 +7,20 @@ const Alumno = require('../models/alumno');
 const getAlumnos = (req, res) => {
     const tam = Number(process.env.TAMPORPAG);
     const desde = Number(req.query.desde) || 0;
+    const texto = req.query.texto;
+    let textoBusqueda = '';
+    const paginado = req.query.paginado || false;
+
+    if(texto){
+        textoBusqueda = new RegExp(texto, 'i');
+        console.log('texto', texto, ' textoBusqueda', textoBusqueda);
+    }
 
     return new Promise(function(resolve, reject) {
         let query = 'SELECT alumno.*, clase.Nombre AS NomClase, centro_escolar.Nombre AS NomCentro FROM alumno LEFT JOIN clase ON alumno.ID_Clase = clase.ID_Clase LEFT JOIN centro_escolar ON alumno.ID_Centro = centro_escolar.ID_Centro';
-
         let conditions = [];
         let values = [];
-
-        let validParams = ['ID_Alumno', 'Nombre', 'Apellidos', 'Usuario', 'Contraseña', 'FechaNacimiento', 'ID_Clase', 'ID_Centro', 'Estado', 'desde'];
+        let validParams = ['ID_Alumno', 'Nombre', 'Apellidos', 'Usuario', 'Contraseña', 'FechaNacimiento', 'ID_Clase', 'ID_Centro', 'Estado', 'desde', 'texto'];
 
         let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
 
@@ -65,17 +71,31 @@ const getAlumnos = (req, res) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al obtener el alumno"});
             } else {
-                const alumnos = results.map(row => {
-                    const alumno = new Alumno();
-                    Object.assign(alumno, row);
-                    alumno.ajustarFechas();
-                    return alumno.toJSON();
-                });
-                resolve(res.json({
-                    ok: true,
-                    msg: 'getAlumnos',
-                    alumnos
-                }));
+                connection.query('SELECT COUNT(*) AS total FROM alumno', (error, countRes) => {
+                    if(error){
+                        reject({ statusCode: 500, message: "Error al obtener el número total de alumnos"});
+                    }else {
+                        const total = countRes[0].total;
+                        const alumnos = results.map(row => {
+                            const alumno = new Alumno();
+                            Object.assign(alumno, row);
+                            alumno.ajustarFechas();
+                            return alumno.toJSON();
+                        });
+                        resolve(
+                            res.json({
+                                ok: true,
+                                msg: 'getAlumnos',
+                                alumnos,
+                                page: {
+                                    desde,
+                                    tam,
+                                    total
+                                }
+                            })
+                        );
+                    }
+                })
             }
         });
     });

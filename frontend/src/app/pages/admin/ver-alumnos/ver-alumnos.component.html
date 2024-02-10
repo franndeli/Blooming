@@ -27,7 +27,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                         <th class="border-bottom-0"></th>
                                     </tr>
                                 </thead>
-                                <tbody *ngFor="let alumno of alumnosData.alumnos">
+                                <tbody *ngFor="let alumno of alumnosData">
                                     <tr>
                                         <td class="border-bottom-0">{{alumno.Nombre}}</td>
                                         <td class="border-bottom-0">{{alumno.Apellidos}}</td>
@@ -42,6 +42,8 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                     </tr>
                                 </tbody>
                             </table>
+                            <br>
+                            <app-pagination (cambiarPagina)="cambiarPagina($event)" [texto]="true" [totalRegistros]="totalAlumnos" [registroActual]="posActual+1" [registroPag]="regPag"></app-pagination>
                         </div>
                     </div>
                     <a href="/admin/crear-alumnos" class="btn btn-danger">Crear Alumno</a>

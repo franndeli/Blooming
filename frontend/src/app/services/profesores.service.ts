@@ -37,9 +37,20 @@ export class ProfesorService {
     }
 
   //LLAMADAS API  
-  getProfesores(){
+  // getProfesores(){
+  //   this.getHeader();
+  //   return this.http.get(this.basePath, this.httpOptions );
+  // }
+
+  getProfesores(desde: number, textoBusqueda?: string){
     this.getHeader();
-    return this.http.get(this.basePath, this.httpOptions );
+    if(!desde){
+      desde = 0;
+    }
+    if(!textoBusqueda){
+      textoBusqueda = '';
+    }
+    return this.http.get(this.basePath+'?desde='+desde+'&texto='+textoBusqueda, this.httpOptions );
   }
 
   getProfesorID(id: any){

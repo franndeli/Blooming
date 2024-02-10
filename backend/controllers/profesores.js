@@ -8,12 +8,20 @@ const Profesor = require('../models/profesor');
 const getProfesores = (req, res) => {
     const tam = Number(process.env.TAMPORPAG);
     const desde = Number(req.query.desde) || 0;
+    const texto = req.query.texto;
+    let textoBusqueda = '';
+    const paginado = req.query.paginado || false;
+
+    if(texto){
+        textoBusqueda = new RegExp(texto, 'i');
+        console.log('texto', texto, ' textoBusqueda', textoBusqueda);
+    }
 
     return new Promise(function(resolve, reject) {
         let query = 'SELECT profesor.*, centro_escolar.Nombre AS NomCentro, clase.Nombre AS NomClase FROM profesor LEFT JOIN centro_escolar ON profesor.ID_Centro = centro_escolar.ID_Centro LEFT JOIN clase ON profesor.ID_Clase = clase.ID_Clase';
         let conditions = [];
         let values = [];
-        let validParams = ['ID_Profesor', 'Nombre', 'Apellidos', 'Email', 'Contraseña', 'ID_Clase', 'ID_Centro', 'desde'];
+        let validParams = ['ID_Profesor', 'Nombre', 'Apellidos', 'Email', 'Contraseña', 'ID_Clase', 'ID_Centro', 'desde', 'texto'];
 
         let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
 
@@ -56,18 +64,30 @@ const getProfesores = (req, res) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al obtener el profesor"});
             } else {
-                const profesores = results.map(row => {
-                    const profesor = new Profesor();
-                    Object.assign(profesor, row);
-                    return profesor.toJSON();
-                });
-                resolve(
-                    res.json({
-                        ok: true,
-                        msg: 'getProfesores',
-                        profesores
-                    })
-                );
+                connection.query('SELECT COUNT(*) AS total FROM profesor', (error, countRes) => {
+                    if(error){
+                        reject({ statusCode: 500, message: "Error al obtener el número total de profesores"});
+                    }else {
+                        const total = countRes[0].total;
+                        const profesores = results.map(row => {
+                            const profesor = new Profesor();
+                            Object.assign(profesor, row);
+                            return profesor.toJSON();
+                        });
+                        resolve(
+                            res.json({
+                                ok: true,
+                                msg: 'getProfesores',
+                                profesores,
+                                page: {
+                                    desde,
+                                    tam,
+                                    total
+                                }
+                            })
+                        );
+                    }
+                })
             }
         });
     });

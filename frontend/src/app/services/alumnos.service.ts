@@ -35,11 +35,7 @@ export class AlumnoService {
       });
     }
 
-  //LLAMADAS API  
-  // getAlumnos(){
-  //   this.getHeader();
-  //   return this.http.get(this.basePath, this.httpOptions );
-  // }
+  //LLAMADAS API 
 
   getAlumnos(desde: number, textoBusqueda?: string){
     this.getHeader();
@@ -50,6 +46,27 @@ export class AlumnoService {
       textoBusqueda = '';
     }
     return this.http.get(this.basePath+'?desde='+desde+'&texto='+textoBusqueda, this.httpOptions );
+  }
+
+  getAlumnosCentro(id: any, desde: number, textoBusqueda?: string){
+    this.getHeader();
+    if(!desde){
+      desde = 0;
+    }
+    if(!textoBusqueda){
+      textoBusqueda = '';
+    }
+    return this.http.get(this.basePath+'?ID_Centro='+id+'?desde='+desde+'&texto='+textoBusqueda, this.httpOptions);
+  }
+
+  getAlumnosClase(id: any){
+    this.getHeader();
+    return this.http.get(this.basePath+'?ID_Clase='+id, this.httpOptions);
+  }
+
+  getAlumnoID(id: any){
+    this.getHeader();
+    return this.http.get(this.basePath+'id/?ID_Alumno='+id, this.httpOptions);
   }
 
   deleteAlumno(id:number){
@@ -70,21 +87,6 @@ export class AlumnoService {
   putEstadoAlumno(estadoData: any){
     this.getHeader();
     return this.http.put(this.basePath+'estado/'+estadoData.ID_Alumno, estadoData, this.httpOptions);
-  }
-
-  getAlumnosCentro(id: any){
-    this.getHeader();
-    return this.http.get(this.basePath+'?ID_Centro='+id, this.httpOptions);
-  }
-
-  getAlumnosClase(id: any){
-    this.getHeader();
-    return this.http.get(this.basePath+'?ID_Clase='+id, this.httpOptions);
-  }
-
-  getAlumnoID(id: any){
-    this.getHeader();
-    return this.http.get(this.basePath+'id/?ID_Alumno='+id, this.httpOptions);
   }
 
 }

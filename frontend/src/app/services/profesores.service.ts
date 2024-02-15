@@ -36,11 +36,7 @@ export class ProfesorService {
       });
     }
 
-  //LLAMADAS API  
-  // getProfesores(){
-  //   this.getHeader();
-  //   return this.http.get(this.basePath, this.httpOptions );
-  // }
+  //LLAMADAS API
 
   getProfesores(desde: number, textoBusqueda?: string){
     this.getHeader();
@@ -53,14 +49,20 @@ export class ProfesorService {
     return this.http.get(this.basePath+'?desde='+desde+'&texto='+textoBusqueda, this.httpOptions );
   }
 
+  getProfesoresCentro(id: any, desde: number, textoBusqueda?: string){
+    this.getHeader();
+    if(!desde){
+      desde = 0;
+    }
+    if(!textoBusqueda){
+      textoBusqueda = '';
+    }
+    return this.http.get(this.basePath+'?ID_Centro='+id+'?desde='+desde+'&texto='+textoBusqueda, this.httpOptions);
+  }
+
   getProfesorID(id: any){
     this.getHeader();
     return this.http.get(this.basePath+'?ID_Profesor='+id, this.httpOptions );
-  }
-
-  getProfesoresCentro(id: any){
-    this.getHeader();
-    return this.http.get(this.basePath+'?ID_Centro='+id, this.httpOptions);
   }
 
   deleteProfesor(id:number){

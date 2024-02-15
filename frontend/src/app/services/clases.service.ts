@@ -45,6 +45,11 @@ export class ClaseService {
       return this.http.get(this.basePath, this.httpOptions );
     }
 
+    getClasesCentro(id: any){
+      this.getHeader();
+      return this.http.get(this.basePath+'?ID_Centro='+id, this.httpOptions);
+    }
+
     getClasesPaginadas(desde: number, textoBusqueda?: string){
       this.getHeader();
       if(!desde){
@@ -54,6 +59,11 @@ export class ClaseService {
         textoBusqueda = '';
       }
       return this.http.get(this.basePath+'?desde='+desde+'&texto='+textoBusqueda+'&paginado='+true, this.httpOptions);
+    }
+
+    getClasesCentroPag(id: any, desde: number, textoBusqueda?: string){
+      this.getHeader();
+      return this.http.get(this.basePath+'?ID_Centro='+id+'&desde='+desde+'&texto='+textoBusqueda+'&paginado='+true, this.httpOptions);
     }
   
     deleteClase(id:number){
@@ -70,12 +80,6 @@ export class ClaseService {
       this.getHeader();
       return this.http.put(this.basePath+formData.ID_Clase, formData, this.httpOptions);
     }
-
-    getClasesCentro(id: any){
-      this.getHeader();
-      return this.http.get(this.basePath+'?ID_Centro='+id, this.httpOptions);
-    }
-
 
     setClaseID(id: any){
       this.claseID = id;

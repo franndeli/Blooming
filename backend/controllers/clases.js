@@ -19,7 +19,7 @@ const getClases = (req, res) => {
         let query = 'SELECT clase.*, centro_escolar.Nombre AS NomCentro FROM clase LEFT JOIN centro_escolar ON clase.ID_Centro = centro_escolar.ID_Centro';
         let conditions = [];
         let values = [];
-        let validParams = ['ID_Clase', 'Nombre', 'NumAlumnos', 'ID_Centro', 'desde', 'texto', 'paginado'];
+        let validParams = ['ID_Clase', 'Nombre', 'NumAlumnos', 'ID_Centro', 'desde', 'texto', 'regpaginas', 'paginado'];
 
         let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
 
@@ -47,7 +47,7 @@ const getClases = (req, res) => {
         if(conditions.length > 0){
             query += ' WHERE ' + conditions.join(' AND ');
         }
-
+        
         if(paginado){
             query += ` LIMIT ${tam} OFFSET ${desde}`;
         }

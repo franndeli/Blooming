@@ -21,17 +21,15 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                         <th class="border-bottom-0">Nombre</th>
                                         <th class="border-bottom-0">Apellidos</th>
                                         <th class="border-bottom-0">Usuario</th>
-                                        <th class="border-bottom-0">Fecha de nacimiento</th>
                                         <th class="border-bottom-0">Clase</th>
                                         <th class="border-bottom-0"></th>
                                     </tr>
                                 </thead>
-                                <tbody *ngFor="let alumno of alumnosData.alumnos">
+                                <tbody *ngFor="let alumno of alumnosData">
                                     <tr>
                                         <td class="border-bottom-0">{{alumno.Nombre}}</td>
                                         <td class="border-bottom-0">{{alumno.Apellidos}}</td>
                                         <td class="border-bottom-0">{{alumno.Usuario}}</td>
-                                        <td class="border-bottom-0">{{alumno.FechaNacimiento}}</td>
                                         <td class="border-bottom-0">{{alumno.NomClase}}</td>
                                         <td class="border-bottom-0">
                                           <button class="btn btn-primary" (click)="editarAlumno(alumno)">M</button>
@@ -40,6 +38,8 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                     </tr>
                                 </tbody>
                             </table>
+                            <br>
+                            <app-pagination (cambiarPagina)="cambiarPagina($event)" [texto]="true" [totalRegistros]="totalAlumnos" [registroActual]="posActual+1" [registroPag]="regPag"></app-pagination>
                         </div>
                     </div>
                     <a href="/centros/crear-alumnos" class="btn btn-secondary">Crear Alumno</a>

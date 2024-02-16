@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, SimpleChanges, EventEmitter, Input, Output } from '@angular/core';
+import { Component, OnInit, OnChanges, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-pagination',
@@ -9,9 +9,10 @@ export class PaginationComponent implements OnInit, OnChanges {
 
   @Input() totalRegistros: number = 0;
   @Input() registroActual: number = 0;
-  @Input() registroPag: number = 5;
+  @Input() registroPag: number = 0;
   @Input() texto: boolean = false;
   
+  @Output() filasPagina: EventEmitter<number> = new EventEmitter();
   @Output() cambiarPagina:EventEmitter<number> = new EventEmitter();
 
   public pagActual = 0;
@@ -19,6 +20,8 @@ export class PaginationComponent implements OnInit, OnChanges {
   public prepost = 1;
   public listaPags: any;
   public registroHasta = 0;
+  public filas = 5;
+
   constructor(){
     this.listaPags = []
   }
@@ -54,6 +57,12 @@ export class PaginationComponent implements OnInit, OnChanges {
 
   cambiaPag( nueva: number){
     this.cambiarPagina.emit(nueva);
+  }
+
+  cambiaFilasPaginas(event: any){
+    const rows = event.target?.value;
+    this.filas = rows;
+    this.filasPagina.emit(this.filas);
   }
   
 }

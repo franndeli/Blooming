@@ -6,11 +6,10 @@ const bcrypt = require('bcryptjs');
 const Centro = require('../models/centro');
 
 const getCentros = (req, res) => {
-    const tam = Number(process.env.TAMPORPAG);
+    const tam = Number(req.query.numFilas) || 0;
     const desde = Number(req.query.desde) || 0;
     const texto = req.query.texto;
     let textoBusqueda = '';
-    const paginado = req.query.paginado || false;
 
     if(texto){
         textoBusqueda = new RegExp(texto, 'i');
@@ -21,7 +20,7 @@ const getCentros = (req, res) => {
         let query = 'SELECT * FROM centro_escolar';
         let conditions = [];
         let values = [];
-        let validParams = ['ID_Centro', 'Nombre', 'Email', 'Localidad', 'Provincia', 'Calle', 'CP', 'desde', 'texto', 'paginado'];
+        let validParams = ['ID_Centro', 'Nombre', 'Email', 'Localidad', 'Provincia', 'Calle', 'CP', 'desde', 'texto', 'numFilas'];
 
         let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
 
@@ -61,8 +60,9 @@ const getCentros = (req, res) => {
         if(conditions.length > 0){
             query += ' WHERE ' + conditions.join(' AND ');
         }
-
-        if(paginado){
+        console.log('Numero filas: '+ tam);
+        if(tam > 0){
+            console.log('paginado');
             query += ` LIMIT ${tam} OFFSET ${desde}`;
         }
 

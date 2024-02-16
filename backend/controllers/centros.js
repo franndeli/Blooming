@@ -60,9 +60,8 @@ const getCentros = (req, res) => {
         if(conditions.length > 0){
             query += ' WHERE ' + conditions.join(' AND ');
         }
-        console.log('Numero filas: '+ tam);
+
         if(tam > 0){
-            console.log('paginado');
             query += ` LIMIT ${tam} OFFSET ${desde}`;
         }
 

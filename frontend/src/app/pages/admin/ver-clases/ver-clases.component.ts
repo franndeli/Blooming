@@ -14,12 +14,10 @@ export class VerClasesComponent implements OnInit {
   clasesData: any;
   public totalClases = 0;
   public posActual = 0;
-  public regPag = environment.registrosPag;
+  public filPag = 5;
   private busqueda = '';
 
-  constructor(private claseService: ClaseService, private router: Router){
-    this.clasesData = [];
-  }
+  constructor(private claseService: ClaseService, private router: Router){}
 
   ngOnInit() {
     this.obtenerClases(this.busqueda);
@@ -27,10 +25,10 @@ export class VerClasesComponent implements OnInit {
 
   obtenerClases(buscar: string){
     this.busqueda = buscar;
-    this.claseService.getClasesPaginadas(this.posActual, buscar).subscribe((res: any) => {
+    this.claseService.getClases(this.posActual, this.filPag, buscar).subscribe((res: any) => {
       if(res["clases"].length === 0){
         if(this.posActual > 0){
-          this.posActual = this.posActual - this.regPag;
+          this.posActual = this.posActual - this.filPag;
           if(this.posActual < 0){
             this.posActual = 0
           }
@@ -74,8 +72,13 @@ export class VerClasesComponent implements OnInit {
 
   cambiarPagina( pagina: any){
     pagina = (pagina < 0 ? 0 : pagina);
-    this.posActual = ((pagina - 1) * this.regPag >= 0 ? (pagina - 1) * this.regPag : 0);
+    this.posActual = ((pagina - 1) * this.filPag >= 0 ? (pagina - 1) * this.filPag : 0);
     this.obtenerClases(this.busqueda);
+  }
+
+  cambiarFilasPagina(filas: any){
+    this.filPag = filas;
+    this.cambiarPagina(1);
   }
 
 }

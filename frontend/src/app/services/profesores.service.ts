@@ -38,15 +38,18 @@ export class ProfesorService {
 
   //LLAMADAS API
 
-  getProfesores(desde: number, textoBusqueda?: string){
+  getProfesores(desde?: number, filas?: number, textoBusqueda?: string){
     this.getHeader();
     if(!desde){
       desde = 0;
     }
+    if(!filas){
+      filas = 0;
+    }
     if(!textoBusqueda){
       textoBusqueda = '';
     }
-    return this.http.get(this.basePath+'?desde='+desde+'&texto='+textoBusqueda, this.httpOptions );
+    return this.http.get(this.basePath+'?numFilas='+filas+'&desde='+desde+'&texto='+textoBusqueda, this.httpOptions );
   }
 
   getProfesoresCentro(id: any, desde: number, textoBusqueda?: string){

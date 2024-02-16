@@ -4,7 +4,7 @@ const connection = dbConnection();
 const Clase = require('../models/clase');
 
 const getClases = (req, res) => {
-    const tam = Number(process.env.TAMPORPAG);
+    const tam = Number(req.query.numFilas) || 0;
     const desde = Number(req.query.desde) || 0;
     const texto = req.query.texto;
     let textoBusqueda = '';
@@ -19,7 +19,7 @@ const getClases = (req, res) => {
         let query = 'SELECT clase.*, centro_escolar.Nombre AS NomCentro FROM clase LEFT JOIN centro_escolar ON clase.ID_Centro = centro_escolar.ID_Centro';
         let conditions = [];
         let values = [];
-        let validParams = ['ID_Clase', 'Nombre', 'NumAlumnos', 'ID_Centro', 'desde', 'texto', 'regpaginas', 'paginado'];
+        let validParams = ['ID_Clase', 'Nombre', 'NumAlumnos', 'ID_Centro', 'desde', 'texto', 'numFilas'];
 
         let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
 
@@ -48,7 +48,7 @@ const getClases = (req, res) => {
             query += ' WHERE ' + conditions.join(' AND ');
         }
         
-        if(paginado){
+        if(tam > 0){
             query += ` LIMIT ${tam} OFFSET ${desde}`;
         }
 

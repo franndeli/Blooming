@@ -6,11 +6,10 @@ const bcrypt = require('bcryptjs');
 const Profesor = require('../models/profesor');
 
 const getProfesores = (req, res) => {
-    const tam = Number(process.env.TAMPORPAG);
+    const tam = Number(req.query.numFilas) || 0;
     const desde = Number(req.query.desde) || 0;
     const texto = req.query.texto;
     let textoBusqueda = '';
-    const paginado = req.query.paginado || false;
 
     if(texto){
         textoBusqueda = new RegExp(texto, 'i');
@@ -21,7 +20,7 @@ const getProfesores = (req, res) => {
         let query = 'SELECT profesor.*, centro_escolar.Nombre AS NomCentro, clase.Nombre AS NomClase FROM profesor LEFT JOIN centro_escolar ON profesor.ID_Centro = centro_escolar.ID_Centro LEFT JOIN clase ON profesor.ID_Clase = clase.ID_Clase';
         let conditions = [];
         let values = [];
-        let validParams = ['ID_Profesor', 'Nombre', 'Apellidos', 'Email', 'Contraseña', 'ID_Clase', 'ID_Centro', 'desde', 'texto'];
+        let validParams = ['ID_Profesor', 'Nombre', 'Apellidos', 'Email', 'Contraseña', 'ID_Clase', 'ID_Centro', 'desde', 'texto', 'numFilas'];
 
         let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
 
@@ -58,7 +57,9 @@ const getProfesores = (req, res) => {
             query += ' WHERE ' + conditions.join(' AND ');
         }
 
-        query += ` LIMIT ${tam} OFFSET ${desde}`;
+        if(tam > 0){
+            query += ` LIMIT ${tam} OFFSET ${desde}`;
+        }
 
         connection.query(query, values, (error, results) => {
             if (error) {

@@ -40,25 +40,28 @@ export class ClaseService {
       }
   
     //LLAMADAS API  
-    getClases(){
-      this.getHeader();
-      return this.http.get(this.basePath, this.httpOptions );
-    }
+    // getClases(){
+    //   this.getHeader();
+    //   return this.http.get(this.basePath, this.httpOptions );
+    // }
 
     getClasesCentro(id: any){
       this.getHeader();
       return this.http.get(this.basePath+'?ID_Centro='+id, this.httpOptions);
     }
 
-    getClasesPaginadas(desde: number, textoBusqueda?: string){
+    getClases(desde?: number, filas?: number, textoBusqueda?: string){
       this.getHeader();
       if(!desde){
         desde = 0;
       }
+      if(!filas){
+        filas = 0;
+      }
       if(!textoBusqueda){
         textoBusqueda = '';
       }
-      return this.http.get(this.basePath+'?desde='+desde+'&texto='+textoBusqueda+'&paginado='+true, this.httpOptions);
+      return this.http.get(this.basePath+'?numFilas='+filas+'&desde='+desde+'&texto='+textoBusqueda, this.httpOptions);
     }
 
     getClasesCentroPag(id: any, desde: number, textoBusqueda?: string){

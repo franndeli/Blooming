@@ -52,15 +52,18 @@ export class ProfesorService {
     return this.http.get(this.basePath+'?numFilas='+filas+'&desde='+desde+'&texto='+textoBusqueda, this.httpOptions );
   }
 
-  getProfesoresCentro(id: any, desde: number, textoBusqueda?: string){
+  getProfesoresCentro(id: any, desde?: number, filas?: number, textoBusqueda?: string){
     this.getHeader();
     if(!desde){
       desde = 0;
     }
+    if(!filas){
+      filas = 0;
+    }
     if(!textoBusqueda){
       textoBusqueda = '';
     }
-    return this.http.get(this.basePath+'?ID_Centro='+id+'?desde='+desde+'&texto='+textoBusqueda, this.httpOptions);
+    return this.http.get(this.basePath+'?ID_Centro='+id+'&numFilas='+filas+'&desde='+desde+'&texto='+textoBusqueda, this.httpOptions);
   }
 
   getProfesorID(id: any){

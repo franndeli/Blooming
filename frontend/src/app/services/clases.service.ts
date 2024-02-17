@@ -39,16 +39,7 @@ export class ClaseService {
         });
       }
   
-    //LLAMADAS API  
-    // getClases(){
-    //   this.getHeader();
-    //   return this.http.get(this.basePath, this.httpOptions );
-    // }
-
-    getClasesCentro(id: any){
-      this.getHeader();
-      return this.http.get(this.basePath+'?ID_Centro='+id, this.httpOptions);
-    }
+    //LLAMADAS API
 
     getClases(desde?: number, filas?: number, textoBusqueda?: string){
       this.getHeader();
@@ -64,9 +55,18 @@ export class ClaseService {
       return this.http.get(this.basePath+'?numFilas='+filas+'&desde='+desde+'&texto='+textoBusqueda, this.httpOptions);
     }
 
-    getClasesCentroPag(id: any, desde: number, textoBusqueda?: string){
+    getClasesCentro(id: any, desde?: number, filas?: number, textoBusqueda?: string){
       this.getHeader();
-      return this.http.get(this.basePath+'?ID_Centro='+id+'&desde='+desde+'&texto='+textoBusqueda+'&paginado='+true, this.httpOptions);
+      if(!desde){
+        desde = 0;
+      }
+      if(!filas){
+        filas = 0;
+      }
+      if(!textoBusqueda){
+        textoBusqueda = '';
+      }
+      return this.http.get(this.basePath+'?ID_Centro='+id+'&numFilas='+filas+'&desde='+desde+'&texto='+textoBusqueda, this.httpOptions);
     }
   
     deleteClase(id:number){

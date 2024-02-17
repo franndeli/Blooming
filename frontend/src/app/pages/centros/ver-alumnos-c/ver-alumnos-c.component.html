@@ -39,7 +39,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                 </tbody>
                             </table>
                             <br>
-                            <!-- <app-pagination (cambiarPagina)="cambiarPagina($event)" [texto]="true" [totalRegistros]="totalAlumnos" [registroActual]="posActual+1" [registroPag]="regPag"></app-pagination> -->
+                            <app-pagination (cambiarPagina)="cambiarPagina($event)" [texto]="true" [totalRegistros]="totalAlumnos" [registroActual]="posActual+1" (filasPagina)="cambiarFilasPagina($event)" [registroPag]="filPag"></app-pagination>
                         </div>
                     </div>
                     <a href="/centros/crear-alumnos" class="btn btn-secondary">Crear Alumno</a>

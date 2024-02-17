@@ -15,7 +15,7 @@ export class VerClasesCComponent implements OnInit {
   private id: any;
   public totalClases = 0;
   public posActual = 0;
-  public regPag = 5;
+  public filPag = 5;
   private busqueda = '';
 
   constructor(private claseService: ClaseService, private router: Router){}
@@ -27,10 +27,10 @@ export class VerClasesCComponent implements OnInit {
   obtenerClases(buscar: string){
     this.busqueda = buscar;
     this.id = localStorage.getItem('id');
-    this.claseService.getClasesCentroPag(this.id, this.posActual, buscar).subscribe((res: any) => {
+    this.claseService.getClasesCentro(this.id, this.posActual, this.filPag, buscar).subscribe((res: any) => {
       if(res["clases"].length === 0){
         if(this.posActual > 0){
-          this.posActual = this.posActual - this.regPag;
+          this.posActual = this.posActual - this.filPag;
           if(this.posActual < 0){
             this.posActual = 0
           }
@@ -74,8 +74,13 @@ export class VerClasesCComponent implements OnInit {
 
   cambiarPagina( pagina: any){
     pagina = (pagina < 0 ? 0 : pagina);
-    this.posActual = ((pagina - 1) * this.regPag >= 0 ? (pagina - 1) * this.regPag : 0);
+    this.posActual = ((pagina - 1) * this.filPag >= 0 ? (pagina - 1) * this.filPag : 0);
     this.obtenerClases(this.busqueda);
+  }
+
+  cambiarFilasPagina(filas: any){
+    this.filPag = filas;
+    this.cambiarPagina(1);
   }
 
 }

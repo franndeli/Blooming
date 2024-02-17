@@ -37,31 +37,46 @@ export class AlumnoService {
 
   //LLAMADAS API 
 
-  getAlumnos(desde: number, textoBusqueda?: string){
+  getAlumnos(desde?: number, filas?: number, textoBusqueda?: string){
     this.getHeader();
     if(!desde){
       desde = 0;
     }
+    if(!filas){
+      filas = 0;
+    }
     if(!textoBusqueda){
       textoBusqueda = '';
     }
-    return this.http.get(this.basePath+'?desde='+desde+'&texto='+textoBusqueda, this.httpOptions );
+    return this.http.get(this.basePath+'?numFilas='+filas+'&desde='+desde+'&texto='+textoBusqueda, this.httpOptions );
   }
 
-  getAlumnosCentro(id: any, desde: number, textoBusqueda?: string){
+  getAlumnosCentro(id: any, desde?: number, filas?: number, textoBusqueda?: string){
     this.getHeader();
     if(!desde){
       desde = 0;
     }
+    if(!filas){
+      filas = 0;
+    }
     if(!textoBusqueda){
       textoBusqueda = '';
     }
-    return this.http.get(this.basePath+'?ID_Centro='+id+'?desde='+desde+'&texto='+textoBusqueda, this.httpOptions);
+    return this.http.get(this.basePath+'?ID_Centro='+id+'&numFilas='+filas+'&desde='+desde+'&texto='+textoBusqueda, this.httpOptions);
   }
 
-  getAlumnosClase(id: any){
+  getAlumnosClase(id: any, desde?: number, filas?: number, textoBusqueda?: string){
     this.getHeader();
-    return this.http.get(this.basePath+'?ID_Clase='+id, this.httpOptions);
+    if(!desde){
+      desde = 0;
+    }
+    if(!filas){
+      filas = 0;
+    }
+    if(!textoBusqueda){
+      textoBusqueda = '';
+    }
+    return this.http.get(this.basePath+'?ID_Clase='+id+'&numFilas='+filas+'&desde='+desde+'&texto='+textoBusqueda, this.httpOptions);
   }
 
   getAlumnoID(id: any){

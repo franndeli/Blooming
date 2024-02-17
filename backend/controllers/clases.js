@@ -17,7 +17,9 @@ const getClases = (req, res) => {
 
     return new Promise(function(resolve, reject) {
         let query = 'SELECT clase.*, centro_escolar.Nombre AS NomCentro FROM clase LEFT JOIN centro_escolar ON clase.ID_Centro = centro_escolar.ID_Centro';
+        let countQuery = 'SELECT COUNT(*) AS total FROM clase';
         let conditions = [];
+        let countConditions = [];
         let values = [];
         let validParams = ['ID_Clase', 'Nombre', 'NumAlumnos', 'ID_Centro', 'desde', 'texto', 'numFilas'];
 
@@ -41,11 +43,16 @@ const getClases = (req, res) => {
         }
         if(req.query.ID_Centro){
             conditions.push("clase.ID_Centro = ?");
+            countConditions.push("clase.ID_Centro = ?");
             values.push(req.query.ID_Centro);
         }
 
         if(conditions.length > 0){
             query += ' WHERE ' + conditions.join(' AND ');
+        }
+
+        if (countConditions.length > 0) {
+            countQuery += ' WHERE ' + countConditions.join(' AND ');
         }
         
         if(tam > 0){
@@ -56,7 +63,7 @@ const getClases = (req, res) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al obtener la clase"});
             } else{
-                connection.query('SELECT COUNT(*) AS total FROM clase', (error, countRes) => {
+                connection.query(countQuery, values, (error, countRes) => {
                     if(error){
                         reject({ statusCode: 500, message: "Error al obtener el número total de clases"});
                     }else {

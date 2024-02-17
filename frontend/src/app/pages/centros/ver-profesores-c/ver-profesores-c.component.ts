@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProfesorService } from '../../../services/profesores.service';
-import { environment } from '../../../../environments/environment.produccion';
 import Swal from 'sweetalert2'
 
 @Component({
@@ -15,7 +14,7 @@ export class VerProfesoresCComponent implements OnInit {
   private id: any;
   public totalProfesores = 0;
   public posActual = 0;
-  public regPag = environment.registrosPag;
+  public filPag = 5;
   private busqueda = '';
 
   constructor(private profesorService: ProfesorService, private router: Router){}
@@ -27,10 +26,10 @@ export class VerProfesoresCComponent implements OnInit {
   obtenerProfesores(buscar: string){
     this.busqueda = buscar;
     this.id = localStorage.getItem('id');
-    this.profesorService.getProfesoresCentro(this.id, this.posActual, buscar).subscribe((res: any) => {
+    this.profesorService.getProfesoresCentro(this.id, this.posActual, this.filPag, buscar).subscribe((res: any) => {
       if(res["profesores"].length === 0){
         if(this.posActual > 0){
-          this.posActual = this.posActual - this.regPag;
+          this.posActual = this.posActual - this.filPag;
           if(this.posActual < 0){
             this.posActual = 0
           }
@@ -42,6 +41,7 @@ export class VerProfesoresCComponent implements OnInit {
       }else {
         this.profesoresData = res.profesores;
         this.totalProfesores = res.page.total;
+        console.log(this.totalProfesores);
       }
     })
   }
@@ -74,8 +74,13 @@ export class VerProfesoresCComponent implements OnInit {
 
   cambiarPagina( pagina: any){
     pagina = (pagina < 0 ? 0 : pagina);
-    this.posActual = ((pagina - 1) * this.regPag >= 0 ? (pagina - 1) * this.regPag : 0);
+    this.posActual = ((pagina - 1) * this.filPag >= 0 ? (pagina - 1) * this.filPag : 0);
     this.obtenerProfesores(this.busqueda);
+  }
+
+  cambiarFilasPagina(filas: any){
+    this.filPag = filas;
+    this.cambiarPagina(1);
   }
 
 }

@@ -18,7 +18,9 @@ const getProfesores = (req, res) => {
 
     return new Promise(function(resolve, reject) {
         let query = 'SELECT profesor.*, centro_escolar.Nombre AS NomCentro, clase.Nombre AS NomClase FROM profesor LEFT JOIN centro_escolar ON profesor.ID_Centro = centro_escolar.ID_Centro LEFT JOIN clase ON profesor.ID_Clase = clase.ID_Clase';
+        let countQuery = 'SELECT COUNT(*) AS total FROM profesor';
         let conditions = [];
+        let countConditions = [];
         let values = [];
         let validParams = ['ID_Profesor', 'Nombre', 'Apellidos', 'Email', 'Contraseña', 'ID_Clase', 'ID_Centro', 'desde', 'texto', 'numFilas'];
 
@@ -46,15 +48,21 @@ const getProfesores = (req, res) => {
         }
         if(req.query.ID_Clase){
             conditions.push("profesor.ID_Clase = ?");
+            countConditions.push("profesor.ID_Clase = ?");
             values.push(req.query.ID_Clase);
         }
         if(req.query.ID_Centro){
             conditions.push("profesor.ID_Centro = ?");
+            countConditions.push("profesor.ID_Centro = ?");
             values.push(req.query.ID_Centro);
         }
 
         if(conditions.length > 0){
             query += ' WHERE ' + conditions.join(' AND ');
+        }
+
+        if (countConditions.length > 0) {
+            countQuery += ' WHERE ' + countConditions.join(' AND ');
         }
 
         if(tam > 0){
@@ -65,8 +73,9 @@ const getProfesores = (req, res) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al obtener el profesor"});
             } else {
-                connection.query('SELECT COUNT(*) AS total FROM profesor', (error, countRes) => {
+                connection.query(countQuery, values, (error, countRes) => {
                     if(error){
+                        console.log(countQuery);
                         reject({ statusCode: 500, message: "Error al obtener el número total de profesores"});
                     }else {
                         const total = countRes[0].total;

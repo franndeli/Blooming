@@ -62,6 +62,7 @@ import { ThreejsComponent } from './alumnos/threejs/threejs.component';
 import { ConversacionComponent } from './alumnos/conversacion/conversacion.component';
 import { CargaComponent } from './alumnos/carga/carga.component';
 import { InterfazComponent } from './alumnos/interfaz/interfaz.component';
+import { Interfaz2Component } from './alumnos/interfaz2/interfaz2.component';
 
 
 
@@ -115,6 +116,7 @@ import { InterfazComponent } from './alumnos/interfaz/interfaz.component';
       ConversacionComponent,
       CargaComponent,
       InterfazComponent,
+      Interfaz2Component,
 
   ],
   exports: [

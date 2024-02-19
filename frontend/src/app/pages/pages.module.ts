@@ -61,6 +61,7 @@ import { EditarProfesorComponent } from './profesores/editar-profesor/editar-pro
 import { ThreejsComponent } from './alumnos/threejs/threejs.component';
 import { ConversacionComponent } from './alumnos/conversacion/conversacion.component';
 import { CargaComponent } from './alumnos/carga/carga.component';
+import { InterfazComponent } from './alumnos/interfaz/interfaz.component';
 
 
 
@@ -113,6 +114,7 @@ import { CargaComponent } from './alumnos/carga/carga.component';
       ThreejsComponent,
       ConversacionComponent,
       CargaComponent,
+      InterfazComponent,
 
   ],
   exports: [

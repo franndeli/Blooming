@@ -41,10 +41,10 @@ export class LoginComponent implements OnInit {
   }
 
   public form = this.fb.group({
-    // Usuario: [localStorage.getItem('usuario') || '', [Validators.required]],
+     Usuario: [localStorage.getItem('usuario') || '', [Validators.required]],
     // Contraseña: ['', [Validators.required]],
     // Remember: [ false || localStorage.getItem('usuario') ]
-    Usuario: [(typeof localStorage !== 'undefined' ? localStorage.getItem('usuario') : '') || '', [Validators.required]],
+    //Usuario: [(typeof localStorage !== 'undefined' ? localStorage.getItem('usuario') : '') || '', [Validators.required]],
     Contraseña: ['', [Validators.required]],
     Remember: [false || (typeof localStorage !== 'undefined' ? localStorage.getItem('usuario') : '')]
   });

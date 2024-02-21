@@ -69,7 +69,7 @@ const getCentros = (req, res) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al obtener el centro"});
             } else{
-                connection.query('SELECT COUNT(*) AS total FROM centro_escolar', (error, countRes) => {
+                connection.query('SELECT COUNT(*) AS total FROM centro', (error, countRes) => {
                     if(error){
                         reject({ statusCode: 500, message: "Error al obtener el número total de centros"});
                     }else {

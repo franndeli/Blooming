@@ -5,16 +5,24 @@ const hashPassword = require('../middleware/hashHelper');
 const Alumno = require('../models/alumno');
 
 const getAlumnos = (req, res) => {
-    const tam = Number(process.env.TAMPORPAG);
+    const tam = Number(req.query.numFilas) || 0;
     const desde = Number(req.query.desde) || 0;
+    const texto = req.query.texto;
+    let textoBusqueda = '';
+    const paginado = req.query.paginado || false;
+
+    if(texto){
+        textoBusqueda = new RegExp(texto, 'i');
+        console.log('texto', texto, ' textoBusqueda', textoBusqueda);
+    }
 
     return new Promise(function(resolve, reject) {
         let query = 'SELECT alumno.*, clase.Nombre AS NomClase, centro.Nombre AS NomCentro FROM alumno LEFT JOIN clase ON alumno.ID_Clase = clase.ID_Clase LEFT JOIN centro ON alumno.ID_Centro = centro.ID_Centro';
-
+        let countQuery = 'SELECT COUNT(*) AS total FROM alumno';
         let conditions = [];
+        let countConditions = [];
         let values = [];
-
-        let validParams = ['ID_Alumno', 'Nombre', 'Apellidos', 'Usuario', 'Contraseña', 'FechaNacimiento', 'ID_Clase', 'ID_Centro', 'Estado', 'desde'];
+        let validParams = ['ID_Alumno', 'Nombre', 'Apellidos', 'Usuario', 'Contraseña', 'FechaNacimiento', 'ID_Clase', 'ID_Centro', 'Estado', 'desde', 'texto', 'numFilas'];
 
         let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
 
@@ -44,10 +52,12 @@ const getAlumnos = (req, res) => {
         }
         if(req.query.ID_Clase){
             conditions.push("alumno.ID_Clase = ?");
+            countConditions.push("alumno.ID_Clase = ?");
             values.push(req.query.ID_Clase);
         }
         if(req.query.ID_Centro){
             conditions.push("alumno.ID_Centro = ?");
+            countConditions.push("alumno.ID_Centro = ?");
             values.push(req.query.ID_Centro);
         }
         if(req.query.Estado){
@@ -59,23 +69,43 @@ const getAlumnos = (req, res) => {
             query += ' WHERE ' + conditions.join(' AND ');
         }
 
-        query += ` LIMIT ${tam} OFFSET ${desde}`;
+        if (countConditions.length > 0) {
+            countQuery += ' WHERE ' + countConditions.join(' AND ');
+        }
+
+        if(tam > 0){
+            query += ` LIMIT ${tam} OFFSET ${desde}`;
+        }
 
         connection.query(query, values, (error, results) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al obtener el alumno"});
             } else {
-                const alumnos = results.map(row => {
-                    const alumno = new Alumno();
-                    Object.assign(alumno, row);
-                    alumno.ajustarFechas();
-                    return alumno.toJSON();
-                });
-                resolve(res.json({
-                    ok: true,
-                    msg: 'getAlumnos',
-                    alumnos
-                }));
+                connection.query(countQuery, values, (error, countRes) => {
+                    if(error){
+                        reject({ statusCode: 500, message: "Error al obtener el número total de alumnos"});
+                    }else {
+                        const total = countRes[0].total;
+                        const alumnos = results.map(row => {
+                            const alumno = new Alumno();
+                            Object.assign(alumno, row);
+                            alumno.ajustarFechas();
+                            return alumno.toJSON();
+                        });
+                        resolve(
+                            res.json({
+                                ok: true,
+                                msg: 'getAlumnos',
+                                alumnos,
+                                page: {
+                                    desde,
+                                    tam,
+                                    total
+                                }
+                            })
+                        );
+                    }
+                })
             }
         });
     });

@@ -23,7 +23,7 @@ export class CentroService {
       let token;
       if (typeof localStorage !== 'undefined') {
         token = localStorage.getItem('token');
-      } 
+      }
       return token;
     }
 
@@ -35,10 +35,19 @@ export class CentroService {
       });
     }
 
-  //LLAMADAS API  
-  getCentros(){
+  //LLAMADAS API
+  getCentros(desde?: number, filas?: number, textoBusqueda?: string){
     this.getHeader();
-    return this.http.get(this.basePath, this.httpOptions );
+    if(!desde){
+      desde = 0;
+    }
+    if(!filas){
+      filas = 0;
+    }
+    if(!textoBusqueda){
+      textoBusqueda = '';
+    }
+    return this.http.get(this.basePath+'?numFilas='+filas+'&desde='+desde+'&texto='+textoBusqueda, this.httpOptions);
   }
 
   getCentro(id: any){

@@ -4,13 +4,13 @@ import { RouterModule } from '@angular/router';
 import { SidebarComponent } from '../commons/sidebar/sidebar.component';
 import { NavbarComponent } from '../commons/navbar/navbar.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { UsuariosComponent } from './usuarios/usuarios.component';
 
 import { SidebarCentroComponent } from '../commons/sidebar-centro/sidebar-centro.component';
 import { AdminComponent } from './admin/admin.component';
 import { AdminLayoutComponent } from '../layouts/admin-layout/admin-layout.component';
 
 import { CommonsModule } from '../commons/commons.module';
+import { ComponentsModule } from '../components/components.module'
 
 //CENTROS
 import { VerProfesoresCComponent } from './centros/ver-profesores-c/ver-profesores-c.component';
@@ -37,7 +37,6 @@ import { EditarCentrosComponent } from './admin/editar-centros/editar-centros.co
 
 //PROFESORES
 import { ProfesoresComponent } from './profesores/profesores.component';
-import { VerClasesPComponent } from './profesores/ver-clases-p/ver-clases-p.component';
 
 
 
@@ -67,13 +66,6 @@ import { CargaComponent } from './alumnos/carga/carga.component';
 
 @NgModule({
   declarations: [
-    /*SidebarComponent,
-    SidebarCentroComponent,
-    NavbarComponent,
-    DashboardComponent,
-    UsuariosComponent,
-    CentrosVistaComponent,
-    AdminComponent*/
     AdminLayoutComponent,
     AlumnoLayoutComponent,
     AdmindashboardComponent,
@@ -88,7 +80,6 @@ import { CargaComponent } from './alumnos/carga/carga.component';
       EditarProfesoresComponent,
       EditarCentrosComponent,
       ProfesoresComponent,
-      VerClasesPComponent,
       VerAlumnosPComponent,
       VerPerfilAlumnoComponent,
       ActividadRecienteComponent,
@@ -125,7 +116,7 @@ import { CargaComponent } from './alumnos/carga/carga.component';
     CommonsModule,
     FormsModule,
     ReactiveFormsModule,
-   
+    ComponentsModule
   ]
 })
 export class PagesModule { }

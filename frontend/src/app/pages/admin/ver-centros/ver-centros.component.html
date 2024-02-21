@@ -7,7 +7,7 @@
                 <div class="card-body">
                     <h5 class="card-title fw-semibold mb-4">Centros</h5>
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-body table-responsive">
                             <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
                                 <thead class="text-dark fs-4">
                                     <tr>
@@ -20,7 +20,7 @@
                                         <th class="border-bottom-0"></th>
                                     </tr>
                                 </thead>
-                                <tbody *ngFor="let centro of centrosData.centros">
+                                <tbody *ngFor="let centro of centrosData">
                                   <tr>
                                     <td class="border-bottom-0">{{centro.Nombre}}</td>
                                     <td class="border-bottom-0">{{centro.Email}}</td>
@@ -29,12 +29,14 @@
                                     <td class="border-bottom-0">{{centro.Calle}}</td>
                                     <td class="border-bottom-0">{{centro.CP}}</td>
                                     <td class="border-bottom-0">
-                                      <button class="btn btn-primary" (click)="editarCentro(centro)">M</button>
-                                      <button class="btn btn-danger" (click)="eliminarCentro(centro.ID_Centro)">E</button>
+                                      <button class="btn btn-primary ti ti-pencil fs-5" (click)="editarCentro(centro)"></button>
+                                      <button class="btn btn-danger ti ti-trash fs-5" (click)="eliminarCentro(centro.ID_Centro)"></button>
                                     </td>
                                 </tr>
                               </tbody>
                             </table>
+                            <br>
+                            <app-pagination (cambiarPagina)="cambiarPagina($event)" [texto]="true" [totalRegistros]="totalCentros" [registroActual]="posActual+1" (filasPagina)="cambiarFilasPagina($event)" [registroPag]="filPag"></app-pagination>
                         </div>
                     </div>
                     <button  routerLink="/admin/crear-centros"class="btn btn-danger">Crear Centro</button>

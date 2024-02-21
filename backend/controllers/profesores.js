@@ -6,14 +6,23 @@ const bcrypt = require('bcryptjs');
 const Profesor = require('../models/profesor');
 
 const getProfesores = (req, res) => {
-    const tam = Number(process.env.TAMPORPAG);
+    const tam = Number(req.query.numFilas) || 0;
     const desde = Number(req.query.desde) || 0;
+    const texto = req.query.texto;
+    let textoBusqueda = '';
+
+    if(texto){
+        textoBusqueda = new RegExp(texto, 'i');
+        console.log('texto', texto, ' textoBusqueda', textoBusqueda);
+    }
 
     return new Promise(function(resolve, reject) {
         let query = 'SELECT profesor.*, centro.Nombre AS NomCentro, clase.Nombre AS NomClase FROM profesor LEFT JOIN centro ON profesor.ID_Centro = centro.ID_Centro LEFT JOIN clase ON profesor.ID_Clase = clase.ID_Clase';
+        let countQuery = 'SELECT COUNT(*) AS total FROM profesor';
         let conditions = [];
+        let countConditions = [];
         let values = [];
-        let validParams = ['ID_Profesor', 'Nombre', 'Apellidos', 'Email', 'Contraseña', 'ID_Clase', 'ID_Centro', 'desde'];
+        let validParams = ['ID_Profesor', 'Nombre', 'Apellidos', 'Email', 'Contraseña', 'ID_Clase', 'ID_Centro', 'desde', 'texto', 'numFilas'];
 
         let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
 
@@ -39,10 +48,12 @@ const getProfesores = (req, res) => {
         }
         if(req.query.ID_Clase){
             conditions.push("profesor.ID_Clase = ?");
+            countConditions.push("profesor.ID_Clase = ?");
             values.push(req.query.ID_Clase);
         }
         if(req.query.ID_Centro){
             conditions.push("profesor.ID_Centro = ?");
+            countConditions.push("profesor.ID_Centro = ?");
             values.push(req.query.ID_Centro);
         }
 
@@ -50,24 +61,43 @@ const getProfesores = (req, res) => {
             query += ' WHERE ' + conditions.join(' AND ');
         }
 
-        query += ` LIMIT ${tam} OFFSET ${desde}`;
+        if (countConditions.length > 0) {
+            countQuery += ' WHERE ' + countConditions.join(' AND ');
+        }
+
+        if(tam > 0){
+            query += ` LIMIT ${tam} OFFSET ${desde}`;
+        }
 
         connection.query(query, values, (error, results) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al obtener el profesor"});
             } else {
-                const profesores = results.map(row => {
-                    const profesor = new Profesor();
-                    Object.assign(profesor, row);
-                    return profesor.toJSON();
-                });
-                resolve(
-                    res.json({
-                        ok: true,
-                        msg: 'getProfesores',
-                        profesores
-                    })
-                );
+                connection.query(countQuery, values, (error, countRes) => {
+                    if(error){
+                        console.log(countQuery);
+                        reject({ statusCode: 500, message: "Error al obtener el número total de profesores"});
+                    }else {
+                        const total = countRes[0].total;
+                        const profesores = results.map(row => {
+                            const profesor = new Profesor();
+                            Object.assign(profesor, row);
+                            return profesor.toJSON();
+                        });
+                        resolve(
+                            res.json({
+                                ok: true,
+                                msg: 'getProfesores',
+                                profesores,
+                                page: {
+                                    desde,
+                                    tam,
+                                    total
+                                }
+                            })
+                        );
+                    }
+                })
             }
         });
     });

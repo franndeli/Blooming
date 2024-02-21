@@ -12,19 +12,37 @@ export class VerProfesoresCComponent implements OnInit {
 
   profesoresData: any;
   private id: any;
+  public totalProfesores = 0;
+  public posActual = 0;
+  public filPag = 5;
+  private busqueda = '';
 
-  constructor(private profesorService: ProfesorService, private router: Router){
-    this.profesoresData = [];
-  }
+  constructor(private profesorService: ProfesorService, private router: Router){}
 
   ngOnInit() {
-    this.getProfesores();
+    this.obtenerProfesores(this.busqueda);
   }
 
-  getProfesores(){
+  obtenerProfesores(buscar: string){
+    this.busqueda = buscar;
     this.id = localStorage.getItem('id');
-    this.profesorService.getProfesoresCentro(this.id).subscribe(res => {
-      this.profesoresData = res;
+    this.profesorService.getProfesoresCentro(this.id, this.posActual, this.filPag, buscar).subscribe((res: any) => {
+      if(res["profesores"].length === 0){
+        if(this.posActual > 0){
+          this.posActual = this.posActual - this.filPag;
+          if(this.posActual < 0){
+            this.posActual = 0
+          }
+          this.obtenerProfesores(this.busqueda);
+        }else {
+          this.profesoresData = [];
+          this.totalProfesores = 0;
+        }
+      }else {
+        this.profesoresData = res.profesores;
+        this.totalProfesores = res.page.total;
+        console.log(this.totalProfesores);
+      }
     })
   }
 
@@ -40,7 +58,7 @@ export class VerProfesoresCComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.profesorService.deleteProfesor(id).subscribe(res => {
-          this.getProfesores();
+          this.obtenerProfesores(this.busqueda);
         })
         Swal.fire({
           title: "Profesor Eliminado",
@@ -52,6 +70,17 @@ export class VerProfesoresCComponent implements OnInit {
 
   editarProfesor(profesor: any){
     this.router.navigate(['centros/editar-profesores'], {state: {profesor}});
+  }
+
+  cambiarPagina( pagina: any){
+    pagina = (pagina < 0 ? 0 : pagina);
+    this.posActual = ((pagina - 1) * this.filPag >= 0 ? (pagina - 1) * this.filPag : 0);
+    this.obtenerProfesores(this.busqueda);
+  }
+
+  cambiarFilasPagina(filas: any){
+    this.filPag = filas;
+    this.cambiarPagina(1);
   }
 
 }

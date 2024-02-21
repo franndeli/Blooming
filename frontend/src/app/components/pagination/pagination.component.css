@@ -1,0 +1,17 @@
+li.page-item.disabled>span.page-link:hover,
+li.page-item.active>span.page-link:hover {
+    cursor:default;
+    color: white;
+}
+
+.page-link:hover{
+    cursor: pointer;
+    color:#76c24f;
+}
+
+.pagination {
+    --bs-pagination-disabled-bg: none;
+    /* --bs-pagination-active-bg: #fa896b; */
+    --bs-pagination-active-bg: #76c24f;
+    --bs-pagination-color: black;
+}

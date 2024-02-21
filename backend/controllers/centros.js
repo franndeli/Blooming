@@ -6,14 +6,21 @@ const bcrypt = require('bcryptjs');
 const Centro = require('../models/centro');
 
 const getCentros = (req, res) => {
-    const tam = Number(process.env.TAMPORPAG);
+    const tam = Number(req.query.numFilas) || 0;
     const desde = Number(req.query.desde) || 0;
+    const texto = req.query.texto;
+    let textoBusqueda = '';
+
+    if(texto){
+        textoBusqueda = new RegExp(texto, 'i');
+        console.log('texto', texto, ' textoBusqueda', textoBusqueda);
+    }
 
     return new Promise(function(resolve, reject) {
         let query = 'SELECT * FROM centro';
         let conditions = [];
         let values = [];
-        let validParams = ['ID_Centro', 'Nombre', 'Email', 'Localidad', 'Provincia', 'Calle', 'CP', 'desde'];
+        let validParams = ['ID_Centro', 'Nombre', 'Email', 'Localidad', 'Provincia', 'Calle', 'CP', 'desde', 'texto', 'numFilas'];
 
         let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
 
@@ -54,8 +61,7 @@ const getCentros = (req, res) => {
             query += ' WHERE ' + conditions.join(' AND ');
         }
 
-        //quitar este if, solo para pruebas de get
-        if(req.query.desde){
+        if(tam > 0){
             query += ` LIMIT ${tam} OFFSET ${desde}`;
         }
 
@@ -63,18 +69,30 @@ const getCentros = (req, res) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al obtener el centro"});
             } else{
-                const centros = results.map(row => {
-                    const centro = new Centro();
-                    Object.assign(centro, row);
-                    return centro.toJSON();
-                });
-                resolve(
-                    res.json({
-                        ok: true,
-                        msg: 'getCentros',
-                        centros
-                    })
-                );
+                connection.query('SELECT COUNT(*) AS total FROM centro_escolar', (error, countRes) => {
+                    if(error){
+                        reject({ statusCode: 500, message: "Error al obtener el número total de centros"});
+                    }else {
+                        const total = countRes[0].total;
+                        const centros = results.map(row => {
+                            const centro = new Centro();
+                            Object.assign(centro, row);
+                            return centro.toJSON();
+                        });
+                        resolve(
+                            res.json({
+                                ok: true,
+                                msg: 'getCentros',
+                                centros,
+                                page: {
+                                    desde,
+                                    tam,
+                                    total
+                                }
+                            })
+                        );
+                    }
+                })
             }
         });
     });

@@ -2,9 +2,9 @@
   <div class="d-flex align-items-center justify-content-end py-1">
     <p class="mb-0 fs-3">Filas por página:</p>
     <select class="form-select w-auto ms-0 ms-sm-2 me-8 py-1 pe-7 ps-2 border-0" (change)="cambiaFilasPaginas($event)">
-      <option value="5">5</option>
-      <option value="10">10</option>
-      <option value="15">15</option>
+      <option value=5>5</option>
+      <option value=10>10</option>
+      <option value=15>15</option>
     </select>
     <div role="status" aria-live="polite" *ngIf="totalRegistros > 0">
       Mostrando {{registroActual}} - {{registroHasta}} de {{totalRegistros}}

@@ -20,7 +20,7 @@ export class PaginationComponent implements OnInit, OnChanges {
   public prepost = 1;
   public listaPags: any;
   public registroHasta = 0;
-  public filas = 5;
+  public filas: number = 5;
 
   constructor(){
     this.listaPags = []
@@ -41,7 +41,9 @@ export class PaginationComponent implements OnInit, OnChanges {
       this.listaPags = [];
       return;
     }
+
     this.registroHasta = ( this.registroActual + this.registroPag - 1 <= this.totalRegistros ? this.registroActual + this.registroPag - 1 : this.totalRegistros);
+    
     if(this.registroActual > this.totalRegistros){
       this.registroActual = this.totalRegistros;
     }
@@ -60,8 +62,7 @@ export class PaginationComponent implements OnInit, OnChanges {
   }
 
   cambiaFilasPaginas(event: any){
-    const rows = event.target?.value;
-    this.filas = rows;
+    this.filas = parseInt(event.target?.value);
     this.filasPagina.emit(this.filas);
   }
   

@@ -14,8 +14,8 @@ export class VerClasesCComponent implements OnInit {
   clasesData: any;
   private id: any;
   public totalClases = 0;
-  public posActual = 0;
-  public filPag = 5;
+  public posActual: number = 0;
+  public filPag: number = 5;
   private busqueda = '';
 
   constructor(private claseService: ClaseService, private router: Router){}
@@ -72,13 +72,13 @@ export class VerClasesCComponent implements OnInit {
     this.router.navigate(['centros/editar-clases'], {state: {clase}});
   }
 
-  cambiarPagina( pagina: any){
+  cambiarPagina( pagina: number){
     pagina = (pagina < 0 ? 0 : pagina);
     this.posActual = ((pagina - 1) * this.filPag >= 0 ? (pagina - 1) * this.filPag : 0);
     this.obtenerClases(this.busqueda);
   }
 
-  cambiarFilasPagina(filas: any){
+  cambiarFilasPagina(filas: number){
     this.filPag = filas;
     this.cambiarPagina(1);
   }

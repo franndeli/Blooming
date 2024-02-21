@@ -1,0 +1,15 @@
+.botones{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+@media (max-width: 920px) {
+    .botones{
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+    .btn{
+        margin: .1em;
+    }
+}
+  

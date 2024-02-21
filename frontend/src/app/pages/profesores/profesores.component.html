@@ -13,8 +13,10 @@ data-sidebar-position="fixed" data-header-position="fixed">
                         <div class="card">
                           <div class="card-body">
                             <h5 class="card-title">{{clase.Nombre}}</h5>
-                            <button class="btn btn-primary" (click)="verClase(clase.ID_Clase)">Ver Clase</button>
-                            <button class="btn btn-danger" (click)="eliminarClase(clase.ID_Clase)">Eliminar</button>
+                            <div class="botones">
+                              <button class="btn btn-primary" (click)="verClase(clase.ID_Clase)">Ver Clase</button>
+                              <button class="btn btn-danger" (click)="eliminarClase(clase.ID_Clase)">Eliminar</button>
+                            </div>
                           </div>
                         </div>
                     </div>

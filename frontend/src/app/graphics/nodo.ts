@@ -1,25 +1,31 @@
 import { mat4, vec3 } from 'gl-matrix';
 
 export class TNodo {
-    constructor(entidad = null, padre = null) {
+    public entidad: any; // Considera definir un tipo más específico si es posible
+    public hijos: TNodo[];
+    public padre: TNodo | null;
+    public traslacion: vec3;
+    public rotacion: vec3;
+    public escalado: vec3;
+    public matrizTransf: mat4;
+
+    constructor(entidad: any = null, padre: TNodo | null = null) {
         this.entidad = entidad;
         this.hijos = [];
         this.padre = padre;
         this.traslacion = vec3.create();
         this.rotacion = vec3.create();
-        this.escalado = vec3.fromValues(1, 1, 1); //Por defecto a 1,1,1
+        this.escalado = vec3.fromValues(1, 1, 1); // Por defecto a 1,1,1
         this.matrizTransf = mat4.create();
     }
 
-    // Añadir un hijo al nodo actual
-    addHijo(hijo) {
+    addHijo(hijo: TNodo): number {
         hijo.padre = this;
         this.hijos.push(hijo);
         return this.hijos.length;
     }
 
-    // Eliminar un hijo del nodo actual
-    removeHijo(hijo) {
+    removeHijo(hijo: TNodo): boolean {
         const index = this.hijos.indexOf(hijo);
         if (index !== -1) {
             hijo.padre = null;
@@ -29,19 +35,19 @@ export class TNodo {
         return false;
     }
 
-    setEntidad(entidad) {
+    setEntidad(entidad: any): void {
         this.entidad = entidad;
     }
 
-    getEntidad() {
+    getEntidad(): any { // Considera definir un tipo más específico
         return this.entidad;
     }
 
-    getPadre() {
+    getPadre(): TNodo | null {
         return this.padre;
     }
 
-    recorrer(matrizPadre) {
+    recorrer(matrizPadre: mat4): void {
         let matrizLocal = mat4.clone(matrizPadre);
         mat4.translate(matrizLocal, matrizLocal, this.traslacion);
         mat4.rotateX(matrizLocal, matrizLocal, this.rotacion[0]);
@@ -49,53 +55,52 @@ export class TNodo {
         mat4.rotateZ(matrizLocal, matrizLocal, this.rotacion[2]);
         mat4.scale(matrizLocal, matrizLocal, this.escalado);
 
-        //Creo que aquí hay que dibujar pero eso ya no sé cómo
-        
+        mat4.copy(this.matrizTransf, matrizLocal);
+
         this.hijos.forEach(hijo => hijo.recorrer(matrizLocal));
     }
 
-    setTraslacion(traslacion) {
+    setTraslacion(traslacion: vec3): void {
         vec3.copy(this.traslacion, traslacion);
     }
 
-    setRotacion(rotacion) {
+    setRotacion(rotacion: vec3): void {
         vec3.copy(this.rotacion, rotacion);
     }
 
-    setEscalado(escalado) {
+    setEscalado(escalado: vec3): void {
         vec3.copy(this.escalado, escalado);
     }
 
-    trasladar(delta) {
+    trasladar(delta: vec3): void {
         vec3.add(this.traslacion, this.traslacion, delta);
     }
 
-    rotar(angulo) {
+    rotar(angulo: vec3): void {
         vec3.add(this.rotacion, this.rotacion, angulo);
     }
 
-    escalar(factor) {
+    escalar(factor: vec3): void {
         vec3.multiply(this.escalado, this.escalado, factor);
     }
 
-    getTraslacion() {
+    getTraslacion(): vec3 {
         return this.traslacion;
     }
 
-    getRotacion() {
+    getRotacion(): vec3 {
         return this.rotacion;
     }
 
-    getEscalado() {
+    getEscalado(): vec3 {
         return this.escalado;
     }
 
-    setMatrizTransf(matriz) {
+    setMatrizTransf(matriz: mat4): void {
         mat4.copy(this.matrizTransf, matriz);
     }
 
-    getMatrizTransf() {
+    getMatrizTransf(): mat4 {
         return this.matrizTransf;
     }
-
 }

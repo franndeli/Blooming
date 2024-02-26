@@ -1,4 +1,4 @@
-import Recurso from './recurso';
+import {Recurso} from './recurso';
 
 class TRecursoMalla extends Recurso {
   private vertices: Float32Array | null = null;

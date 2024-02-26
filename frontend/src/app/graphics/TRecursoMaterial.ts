@@ -1,4 +1,4 @@
-import Recurso from './recurso';
+import {Recurso} from './recurso';
 
 class TRecusroMaterial extends Recurso {
   private coeficientesLuz: number[] = [];
@@ -9,16 +9,14 @@ class TRecusroMaterial extends Recurso {
   }
 
   cargarFichero(nombre: string): void {
-    // Implementa la lógica para cargar el fichero de coeficientes de luz y texturas
+    // Lógica para cargar el fichero de coeficientes de luz y texturas
     console.log(`Cargando fichero para el material ${this.getNombre()}`);
-    // Asigna valores a coeficientesLuz y texturas
+
+    // Asignar valores a coeficientesLuz y texturas
     this.coeficientesLuz = [/* ... */];
     this.texturas = [/* ... */];
   }
 
-  // Otros métodos específicos de TRecusroMaterial, si los necesitas
-
-  // Puedes implementar el método cargarRecurso si quieres proporcionar
   // una implementación específica para la carga de recursos de material
   cargarRecurso(): void {
     this.cargarFichero("nombre_por_defecto"); // Puedes llamar a cargarFichero aquí o proporcionar otra lógica

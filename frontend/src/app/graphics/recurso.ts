@@ -1,4 +1,4 @@
-abstract class Recurso {
+export abstract class Recurso {
     protected nombre: string;
   
     constructor(nombre: string) {
@@ -15,5 +15,3 @@ abstract class Recurso {
       this.nombre = nuevoNombre;
     }
 }
-  
-export default Recurso;

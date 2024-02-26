@@ -1,4 +1,4 @@
-import Recurso from './recurso';
+import {Recurso} from './recurso';
 
 class TRecursoTextura extends Recurso {
   private id: WebGLTexture | null = null;

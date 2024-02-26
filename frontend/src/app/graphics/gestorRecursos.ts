@@ -1,4 +1,4 @@
-import Recurso from './recurso';
+import {Recurso} from './recurso';
 import RMalla from './TRecursoMalla';
 import RTextura from './TRecursoTextura';
 

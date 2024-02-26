@@ -1,4 +1,4 @@
-import Recurso from './recurso';
+import {Recurso} from './recurso';
 
 class TRecursoShader extends Recurso {
   private id: WebGLProgram | null = null;

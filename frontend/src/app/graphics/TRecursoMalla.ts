@@ -1,6 +1,6 @@
-import {Recurso} from './recurso';
+import { Recurso } from './recurso';
 
-class TRecursoMalla extends Recurso {
+export default class TRecursoMalla extends Recurso {
   private vertices: Float32Array | null = null;
   private normales: Float32Array | null = null;
   private coordTexturas: Float32Array | null = null;
@@ -10,14 +10,18 @@ class TRecursoMalla extends Recurso {
     super(nombre);
   }
 
-  cargarRecurso(): void {
-    // Implementa la lógica para cargar el fichero según tus necesidades
-    console.log(`Cargando fichero para la malla ${this.getNombre()}`);
-    // Asigna valores a vertices, normales, coordTexturas, indices
-    this.vertices = new Float32Array(/* ... */);
-    this.normales = new Float32Array(/* ... */);
-    this.coordTexturas = new Float32Array(/* ... */);
-    this.indices = new Int32Array(/* ... */);
+  async cargarRecurso(url: string): Promise<void> {
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      this.vertices = new Float32Array(data.vertices);
+      this.normales = new Float32Array(data.normales);
+      this.coordTexturas = new Float32Array(data.coordTexturas);
+      this.indices = new Int32Array(data.indices);
+      console.log(`Malla ${this.getNombre()} cargada correctamente.`);
+    } catch (error) {
+      console.error(`Error al cargar la malla ${this.getNombre()}:`, error);
+    }
   }
 
   draw(): void {
@@ -26,5 +30,3 @@ class TRecursoMalla extends Recurso {
     // Utiliza this.vertices, this.normales, this.coordTexturas, this.indices
   }
 }
-
-export default TRecursoMalla;

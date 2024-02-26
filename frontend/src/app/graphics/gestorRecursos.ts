@@ -1,30 +1,29 @@
-import {Recurso} from './recurso';
-import RMalla from './TRecursoMalla';
-import RTextura from './TRecursoTextura';
+import { Recurso } from './recurso';
+import { CreadorRecurso } from './creadorRecursos';
 
 class GestorRecursos {
-  private recursos: Recurso[] = [];
+  private recursos: Map<string, Recurso> = new Map();
+  private factories: Map<string, CreadorRecurso> = new Map();
+
+  registrarTipoRecurso(tipo: string, factory: CreadorRecurso): void {
+    this.factories.set(tipo, factory);
+  }
 
   getRecurso(nombre: string, tipo: string): Recurso {
-    let rec: Recurso | undefined = this.recursos.find(r => r.getNombre() === nombre);
+    const clave = `${tipo}:${nombre}`;
+    let recurso = this.recursos.get(clave);
 
-    if (!rec) {
-      switch (tipo) {
-        case 'malla':
-          rec = new RMalla(nombre);
-          break;
-        case 'textura':
-          rec = new RTextura(nombre);
-          break;
-        default:
-          throw new Error(`Tipo de recurso no válido: ${tipo}`);
+    if (!recurso) {
+      const factory = this.factories.get(tipo);
+      if (!factory) {
+        throw new Error(`Fábrica para el tipo de recurso '${tipo}' no registrada.`);
       }
-
-      rec.cargarRecurso();
-      this.recursos.push(rec);
+      recurso = factory.crearRecurso(nombre);
+      recurso.cargarRecurso("hola");
+      this.recursos.set(clave, recurso);
     }
 
-    return rec;
+    return recurso;
   }
 }
 

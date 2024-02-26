@@ -11,17 +11,22 @@ const getPreguntas = (req, res) => {
         let query = 'SELECT pregunta.* FROM pregunta';
         let conditions = [];
         let values = [];
-        let validParams = ['ID_Pregunta'];
+        let validParams = ['ID_Pregunta', 'AmbitoPregunta'];
 
         let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
 
         if (!isValidQuery) {
-            return reject({ statusCode: 400, message: "Parámetros de búsqueda no válidos en Opciones respuesta" });
+            return reject({ statusCode: 400, message: "Parámetros de búsqueda no válidos en pregunta" });
         }
 
         if(req.query.ID_Pregunta){
             conditions.push("pregunta.ID_Pregunta = ?");
             values.push(req.query.ID_Pregunta);
+        }
+
+        if(req.query.AmbitoPregunta){
+            conditions.push("pregunta.AmbitoPregunta = ?");
+            values.push(req.query.AmbitoPregunta);
         }
 
         if(conditions.length > 0){
@@ -48,6 +53,42 @@ const getPreguntas = (req, res) => {
         });
     })
 } 
+
+const getPreguntasPorAmbito = (req, res) => {
+    const desde = Number(req.query.desde) || 0;
+    const ID_Ambito = req.query.ID_Ambito;
+    const cantidad = Number(req.query.cantidad) || 5; // Cantidad de preguntas a seleccionar
+
+    return new Promise(function (resolve, reject) {
+        let query = `
+            SELECT pregunta.*
+            FROM pregunta
+            INNER JOIN ambito ON pregunta.AmbitoPregunta = ambito.ID_Ambito
+            WHERE ambito.ID_Ambito = ?
+            ORDER BY RAND()
+            LIMIT ?
+        `;
+
+        connection.query(query, [ID_Ambito, cantidad], (error, results) => {
+            if (error) {
+                reject({ statusCode: 500, message: "Error al obtener las preguntas por ámbito"});
+            } else {
+                const preguntas = results.map(row => {
+                    const pregunta = new Pregunta();
+                    Object.assign(pregunta, row);
+                    return pregunta.toJSON();
+                });
+                resolve(
+                    res.json({
+                        ok: true,
+                        msg: 'getPreguntasPorAmbito',
+                        preguntas
+                    })
+                );
+            }
+        });
+    });
+};
 
 
 const createPregunta = (req,res) => {
@@ -146,4 +187,4 @@ const deletePregunta = (req, res) => {
 };
 
 
-module.exports = { getPreguntas, createPregunta, updatePregunta, deletePregunta };
+module.exports = { getPreguntas, createPregunta, updatePregunta, deletePregunta, getPreguntasPorAmbito };

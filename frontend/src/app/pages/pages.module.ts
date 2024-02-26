@@ -37,9 +37,6 @@ import { EditarCentrosComponent } from './admin/editar-centros/editar-centros.co
 
 //PROFESORES
 import { ProfesoresComponent } from './profesores/profesores.component';
-
-
-
 import { VerAlumnosPComponent } from './profesores/ver-alumnos-p/ver-alumnos-p.component';
 import { VerPerfilAlumnoComponent } from './profesores/ver-perfil-alumno/ver-perfil-alumno.component';
 import { ActividadRecienteComponent } from './profesores/actividad-reciente/actividad-reciente.component';
@@ -57,12 +54,11 @@ import { EditarCentroComponent } from './centros/editar-centro/editar-centro.com
 import { PerfilProfesorComponent } from './profesores/perfil-profesor/perfil-profesor.component';
 import { EditarProfesorComponent } from './profesores/editar-profesor/editar-profesor.component';
 
+//ALUMNOS
 import { ThreejsComponent } from './alumnos/threejs/threejs.component';
 import { ConversacionComponent } from './alumnos/conversacion/conversacion.component';
 import { CargaComponent } from './alumnos/carga/carga.component';
-
-
-
+import { SistemaPreguntasComponent } from './alumnos/sistema-preguntas/sistema-preguntas.component';
 
 @NgModule({
   declarations: [
@@ -104,6 +100,7 @@ import { CargaComponent } from './alumnos/carga/carga.component';
       ThreejsComponent,
       ConversacionComponent,
       CargaComponent,
+      SistemaPreguntasComponent,
 
   ],
   exports: [

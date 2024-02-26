@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getPreguntas, createPregunta, updatePregunta, deletePregunta } = require('../controllers/preguntas');
+const { getPreguntas, createPregunta, updatePregunta, deletePregunta, getPreguntasPorAmbito } = require('../controllers/preguntas');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middleware/validaciones');
 
@@ -7,6 +7,12 @@ const router = Router();
 
 router.get('/', (req, res) => {
     getPreguntas(req, res).catch(error => {
+        res.status(error.statusCode || 500).json({ error: error.message });
+    });
+});
+
+router.get('/porAmbito', (req, res) => {
+    getPreguntasPorAmbito(req, res).catch(error => {
         res.status(error.statusCode || 500).json({ error: error.message });
     });
 });

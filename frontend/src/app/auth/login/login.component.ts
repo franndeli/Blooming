@@ -41,12 +41,9 @@ export class LoginComponent implements OnInit {
   }
 
   public form = this.fb.group({
-     Usuario: [localStorage.getItem('usuario') || '', [Validators.required]],
-    // Contraseña: ['', [Validators.required]],
-    // Remember: [ false || localStorage.getItem('usuario') ]
-    //Usuario: [(typeof localStorage !== 'undefined' ? localStorage.getItem('usuario') : '') || '', [Validators.required]],
+    Usuario: [this.getLocalStorageItem('usuario') || '', [Validators.required]],
     Contraseña: ['', [Validators.required]],
-    Remember: [false || (typeof localStorage !== 'undefined' ? localStorage.getItem('usuario') : '')]
+    Remember: [false || this.getLocalStorageItem('usuario')]
   });
 
   login(){
@@ -63,11 +60,11 @@ export class LoginComponent implements OnInit {
         (response:any) => {
           const aux = false;
           if (this.form.get('Remember')?.value ?? ''){
-            localStorage.setItem('usuario', this.form.get('Usuario')?.value ?? '');
+            this.setLocalStorageItem('usuario', formData.Usuario);
           } else {
-            localStorage.removeItem('usuario');
+            this.removeLocalStorageItem('usuario');
           }
-          localStorage.setItem('id', response.id);
+          this.setLocalStorageItem('id', response.id);
           if(response.rol == 'Admin'){
             this.router.navigate(['admin/dashboard']);
           }
@@ -92,4 +89,20 @@ export class LoginComponent implements OnInit {
     return this.form.get(campo)?.valid || !this.sendForm
   }
   
+  private getLocalStorageItem(key: string): string | null {
+    return typeof localStorage !== 'undefined' ? localStorage.getItem(key) : null;
+  }
+
+  private setLocalStorageItem(key: string, value: string): void {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(key, value);
+    }
+  }
+
+  private removeLocalStorageItem(key: string): void {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem(key);
+    }
+  }
+
 }

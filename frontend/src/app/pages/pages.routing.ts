@@ -46,6 +46,7 @@ import { EditarProfesorComponent } from './profesores/editar-profesor/editar-pro
 import {ThreejsComponent } from './alumnos/threejs/threejs.component';
 import { ConversacionComponent } from './alumnos/conversacion/conversacion.component';
 import { CargaComponent } from './alumnos/carga/carga.component';
+import { SistemaPreguntasComponent } from './alumnos/sistema-preguntas/sistema-preguntas.component';
 
 const routes: Routes = [
   { path: 'admin', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
@@ -100,8 +101,9 @@ const routes: Routes = [
       { path: 'dashboard', component: AlumnosComponent},
       { path: 'sidebar', component: SidebarComponent },
       { path: 'threejs', component: ThreejsComponent},
-      {path: 'conversacion',component: ConversacionComponent},
-      { path: 'carga', component: CargaComponent }
+      { path: 'conversacion',component: ConversacionComponent},
+      { path: 'carga', component: CargaComponent },
+      { path: 'sistema-preguntas', component: SistemaPreguntasComponent }
   ]}
 ];
 

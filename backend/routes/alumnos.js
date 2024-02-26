@@ -28,7 +28,6 @@ router.post('/', [
         check('Apellidos', 'El argumento "Apellidos" es obligatorio').not().isEmpty(),
         check('Contraseña', 'El argumento "Contraseña" es obligatorio').not().isEmpty(),
         check('FechaNacimiento', 'El argumento "FechaNacimiento" es obligatorio').not().isEmpty(),
-        check('ID_Centro', 'El argumento "ID_Centro" es obligatorio').not().isEmpty(),
         check('ID_Clase', 'El argumento "ID_Clase" es obligatorio').not().isEmpty(),
         validarCampos
     ], (req, res) => {

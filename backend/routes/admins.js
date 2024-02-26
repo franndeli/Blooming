@@ -42,7 +42,6 @@ router.put('/:ID_Admin', [
 
 router.put('/newp/:ID_Admin', [
         validarJWT, validarRol(['Admin']),
-    //Campos opcionales, no es necesario ponerlos todos para hacer una llamada PUT
         check('ID_Admin').isInt().withMessage('El campo "ID_Admin" debe ser un número entero'),
         check('Contraseña').not().isEmpty().withMessage('El argumento "Contraseña" no debe estar vacío'),
         check('newPassword').not().isEmpty().withMessage('El argumento "newPassword" no debe estar vacío'),

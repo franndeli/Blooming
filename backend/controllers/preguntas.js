@@ -61,12 +61,21 @@ const getPreguntasPorAmbito = (req, res) => {
 
     return new Promise(function (resolve, reject) {
         let query = `
-            SELECT pregunta.*
-            FROM pregunta
+        SELECT 
+            pregunta.ID_Pregunta,
+            CASE 
+                WHEN RAND() < 0.35 THEN pregunta.TextoPregunta
+                ELSE (SELECT TextoVariante FROM variante_pregunta WHERE variante_pregunta.ID_Pregunta = pregunta.ID_Pregunta ORDER BY RAND() LIMIT 1)
+            END AS TextoPreguntaElegido,
+            pregunta.*
+        FROM 
+            pregunta
             INNER JOIN ambito ON pregunta.AmbitoPregunta = ambito.ID_Ambito
-            WHERE ambito.ID_Ambito = ?
-            ORDER BY RAND()
-            LIMIT ?
+        WHERE 
+            ambito.ID_Ambito = ?
+        ORDER BY 
+            RAND()
+        LIMIT ?
         `;
 
         connection.query(query, [ID_Ambito, cantidad], (error, results) => {

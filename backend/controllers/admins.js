@@ -128,7 +128,7 @@ const updateAdminPwd = async (req, res) => {
             });
         }
     
-        if (decodedToken.ID == id) {
+        if (decodedToken.ID === id) {
             if (newPassword !== newPassword2) {
                 return res.status(400).json({
                     ok: false,

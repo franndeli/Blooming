@@ -3,6 +3,7 @@
     <ul>
         <li *ngFor="let pregunta of preguntas">
             {{ pregunta.TextoPreguntaElegido ? pregunta.TextoPreguntaElegido : pregunta.TextoPregunta }}
+            {{ " " + pregunta.AmbitoPregunta }}
         </li>
     </ul>
 </div>

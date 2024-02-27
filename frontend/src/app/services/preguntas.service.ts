@@ -11,12 +11,24 @@ type PreguntasPorSeleccionar = {
     [ambito: string]: number;
 };
 
+type Frecuencias = {
+  [ambito: string]: number;
+};
+
 @Injectable({
   providedIn: 'root'
 })
 export class PreguntaService {
     private basePath = `${environment.base_url}/preguntas/`;
     constructor(private http: HttpClient) {}
+
+    private conteoAmbitosTratados: { [ambito: string]: number } = {
+      'Clase': 0,
+      'Amigos': 0,
+      'Emociones': 0,
+      'Familia': 0,
+      'Fuera de clase': 0
+  };
 
     private httpOptions = {
         headers: new HttpHeaders({
@@ -34,42 +46,56 @@ export class PreguntaService {
     }
 
     seleccionarPreguntas(): Observable<any> {
-        // Generar puntuaciones aleatorias directamente dentro de este método
-        const ambitos = ['Clase', 'Amigos', 'Emociones', 'Familia', 'Fuera de clase'];
-        const puntuaciones: Puntuaciones = {};
-        ambitos.forEach(ambito => {
-            puntuaciones[ambito] = Math.floor(Math.random() * 11); // Genera un número aleatorio entre 0 y 10
-        });
-
-        console.log(puntuaciones);
-
-        const ambitosPorDebajoDe5 = Object.keys(puntuaciones).filter(ambito => puntuaciones[ambito] <= 5);
-        let preguntasPorSeleccionar: PreguntasPorSeleccionar = {};
-
-        console.log(ambitosPorDebajoDe5);
-        if (ambitosPorDebajoDe5.length === 0) {
-            Object.keys(puntuaciones).forEach(ambito => preguntasPorSeleccionar[ambito] = 1);
-        } else {
-            ambitosPorDebajoDe5.forEach(ambito => preguntasPorSeleccionar[ambito] = 2);
-
-            const ambitosRestantes = Object.keys(puntuaciones).filter(ambito => !ambitosPorDebajoDe5.includes(ambito));
-            ambitosRestantes.forEach(ambito => preguntasPorSeleccionar[ambito] = ambitosPorDebajoDe5.length <= 2 ? 1 : 0);
-
-            if (ambitosPorDebajoDe5.length > 3) {
-                ambitosPorDebajoDe5.sort((a, b) => puntuaciones[a] - puntuaciones[b]).slice(0, 3).forEach(ambito => preguntasPorSeleccionar[ambito] = 2);
-                Object.keys(preguntasPorSeleccionar).forEach(ambito => {
-                    if (!ambitosPorDebajoDe5.slice(0, 3).includes(ambito)) {
-                        preguntasPorSeleccionar[ambito] = 0;
-                    }
-                });
-            }
-        }
-
-        console.log(preguntasPorSeleccionar);
-
-        // Asumiendo que tienes un endpoint que acepta 'preguntasPorSeleccionar' para devolver las preguntas específicas
-        return this.obtenerPreguntasSeleccionadas(preguntasPorSeleccionar);
-    }
+      const ambitos = ['Clase', 'Amigos', 'Emociones', 'Familia', 'Fuera de clase'];
+      const puntuaciones: Puntuaciones = {};
+      const frecuencias: Frecuencias = {}; // Nueva estructura para almacenar la frecuencia de selección de cada ámbito
+      
+      // Generar puntuaciones aleatorias
+      ambitos.forEach(ambito => {
+          puntuaciones[ambito] = Math.floor(Math.random() * 101);
+          frecuencias[ambito] = Math.random(); // Simula la frecuencia con un número aleatorio entre 0 y 1
+      });
+  
+      console.log(puntuaciones);
+      console.log(frecuencias);
+  
+      const totalPreguntas = 8; // Máximo de preguntas a seleccionar
+      let preguntasPorSeleccionar: PreguntasPorSeleccionar = {};
+  
+      // Filtrar ámbitos con puntuaciones por debajo de 50
+      const ambitosPorDebajoDe50 = Object.keys(puntuaciones).filter(ambito => puntuaciones[ambito] <= 50);
+      if (ambitosPorDebajoDe50.length === 0) {
+          // Si no hay ámbitos por debajo de 50, seleccionar 1 pregunta de cada ámbito
+          Object.keys(puntuaciones).forEach(ambito => preguntasPorSeleccionar[ambito] = 1);
+      } else {
+          // Asignar preguntas basado en puntuaciones y ajustar según frecuencias de aparición
+          let preguntasAsignadas = 0;
+          ambitosPorDebajoDe50.forEach(ambito => {
+              if (preguntasAsignadas < totalPreguntas) {
+                  const asignacionBasadaEnFrecuencia = frecuencias[ambito] < 0.5 ? 2 : 1; // Menor frecuencia, mayor prioridad
+                  preguntasPorSeleccionar[ambito] = Math.min(asignacionBasadaEnFrecuencia, totalPreguntas - preguntasAsignadas);
+                  preguntasAsignadas += preguntasPorSeleccionar[ambito];
+              }
+          });
+  
+          // Ajustar asignaciones para ámbitos restantes si aún hay espacio
+          const ambitosRestantes = Object.keys(puntuaciones).filter(ambito => !ambitosPorDebajoDe50.includes(ambito));
+          ambitosRestantes.forEach(ambito => {
+              if (preguntasAsignadas < totalPreguntas) {
+                  preguntasPorSeleccionar[ambito] = 1;
+                  preguntasAsignadas += 1;
+              } else if (!preguntasPorSeleccionar.hasOwnProperty(ambito)) {
+                  preguntasPorSeleccionar[ambito] = 0; // Asegura que todos los ámbitos estén representados
+              }
+          });
+      }
+  
+      console.log(preguntasPorSeleccionar);
+  
+      // Asumiendo que existe una función obtenerPreguntasSeleccionadas que acepta este input
+      return this.obtenerPreguntasSeleccionadas(preguntasPorSeleccionar);
+  }
+  
 
     // Método ajustado para realizar llamadas individuales por ámbito
     obtenerPreguntasSeleccionadas(preguntasPorSeleccionar: { [ambito: string]: number }): Observable<any> {
@@ -91,13 +117,26 @@ export class PreguntaService {
           }
           return acc;
         }, [] as Observable<any>[]); // Aquí proporcionamos una anotación de tipo explícita para el valor inicial
-      
-        // Usar forkJoin para ejecutar todas las solicitudes simultáneamente y combinar sus resultados
+        
+        function barajarArray(array: any[]): any[] {
+          for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+        
+            // Intercambiar elementos array[i] y array[j]
+            [array[i], array[j]] = [array[j], array[i]];
+          }
+          return array;
+        }
+
+        //Ejecutar resultados simultánemente
         return forkJoin(requests).pipe(
           map(responses => {
-            // Aplanar y combinar todas las preguntas en un solo array
             const todasLasPreguntas = responses.map(resp => resp.preguntas).flat();
-            console.log(todasLasPreguntas); // Mostrar en consola todas las preguntas obtenidas
+        
+            // Mezclar de forma aleatoria el array de preguntas usando Fisher-Yates
+            barajarArray(todasLasPreguntas);
+        
+            console.log(todasLasPreguntas); // Mostrar en consola todas las preguntas mezcladas
             return todasLasPreguntas;
           })
         );

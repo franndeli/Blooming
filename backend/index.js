@@ -17,6 +17,7 @@ app.use('/api/alumnos', require('./routes/alumnos'));
 app.use('/api/preguntas', require('./routes/preguntas'));
 app.use('/api/opciones', require('./routes/opciones'));
 app.use('/api/resultados', require('./routes/respuestas'));
+app.use('/api/sesiones', require('./routes/sesiones'));
 
 app.use('/api/login', require('./routes/auth'));
 

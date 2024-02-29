@@ -41,7 +41,7 @@ const Centro = sequelize.define('Centro', {
     }
 }, {
     tableName: 'centro',
-    timestamps: true
+    timestamps: false
 });
 
 module.exports = Centro;

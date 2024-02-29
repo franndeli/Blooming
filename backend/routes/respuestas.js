@@ -8,7 +8,7 @@ const { Router } = require('express');
 const router = Router();
 
 router.get('/', (req, res) => {
-    validarJWT, validarRol(['Alumno', 'Profesor', 'Centro']),
+    validarJWT, validarRol(['Alumno', 'Profesor', 'Centro', 'Admin']),
     getRespuestas(req, res).catch(error => {
         res.status(error.statusCode || 500).json({ error: error.message });
     });

@@ -48,8 +48,11 @@ import { EditarProfesorComponent } from './profesores/editar-profesor/editar-pro
 import {ThreejsComponent } from './alumnos/threejs/threejs.component';
 import { ConversacionComponent } from './alumnos/conversacion/conversacion.component';
 import { CargaComponent } from './alumnos/carga/carga.component';
+
 import { InterfazComponent } from './alumnos/interfaz/interfaz.component';
 import { Interfaz2Component } from './alumnos/interfaz2/interfaz2.component';
+import { Interfaz3Component } from './alumnos/interfaz3/interfaz3.component';
+
 const routes: Routes = [
   { path: 'admin', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
     children: [
@@ -107,7 +110,9 @@ const routes: Routes = [
       {path: 'conversacion',component: ConversacionComponent},
       { path: 'carga', component: CargaComponent },
       { path: 'interfaz', component: InterfazComponent },
-      { path: 'interfaz2', component: Interfaz2Component }
+      { path: 'interfaz2', component: Interfaz2Component },
+      { path: 'interfaz3', component: Interfaz3Component }
+      
   ]}
   /*{ 
     path: 'dashboard', component: DashboardComponent,

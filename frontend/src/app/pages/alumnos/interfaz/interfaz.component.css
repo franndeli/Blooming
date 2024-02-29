@@ -4,7 +4,7 @@
     left: 50%;
     transform: translateX(-50%);
     font-size: 24px;
-    color: white;
+    color: black;
     text-align: center;
     z-index: 2; /* Asegura que esté encima de la escena Three.js */
  

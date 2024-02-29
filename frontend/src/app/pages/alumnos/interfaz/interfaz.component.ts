@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 import * as THREE from 'three';
 import { ElementRef, OnInit, ViewChild , HostListener} from '@angular/core';
-
-
+import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 @Component({
   selector: 'app-interfaz',
@@ -11,52 +12,51 @@ import { ElementRef, OnInit, ViewChild , HostListener} from '@angular/core';
 })
 export class InterfazComponent {
   @ViewChild('rendererContainer', { static: true }) rendererContainer!: ElementRef;
-
+  
   scene: any;
   camera: any;
   renderer: any;
   cube: any;
   mouse:any;
   lastMouse: any;
-  selectedFaceIndex: number | null;
- 
+  draggableObjects: any; 
+  controls: any;
+  dcontrols: any;
 
-  constructor() {
-    this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.renderer = new THREE.WebGLRenderer();
-    this.cube = null;
-    this.mouse= THREE.Vector2
-    this.lastMouse= THREE.Vector2;
-    this.selectedFaceIndex = null;
-  }
+
 
   ngOnInit(): void {
     this.initScene();
+    this.addResizeHandler();
     this.animate();
-    this.addListeners();
+
   }
 
   initScene(): void {
     this.scene = new THREE.Scene();
 
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.camera.position.z = 5;
-
+    this.camera.position.z = 4.2;
+    this.camera.position.set(0, 2, 4.2); // Cambia la posición de la cámara
+    
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.setClearColor(0xadd8e6, 1); // Establece el fondo a color azul claro
+    this.renderer.setClearColor(0xbfd1e5, 1); // Establece el fondo a color azul claro
     this.rendererContainer.nativeElement.appendChild(this.renderer.domElement);
 
-    const materials = [
-      new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.8 }), // Derecha - Rojo
-      new THREE.MeshBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.8 }), // Izquierda - Verde
-      new THREE.MeshBasicMaterial({ color: 0x0000ff, transparent: true, opacity: 0.8 }), // Arriba - Azul
-      new THREE.MeshBasicMaterial({ color: 0xffff00, transparent: true, opacity: 0.8 }), // Abajo - Amarillo
-      new THREE.MeshBasicMaterial({ color: 0xffa500, transparent: true, opacity: 0.8 }), // Frente - Naranja
-      new THREE.MeshBasicMaterial({ color: 0xff00ff, transparent: true, opacity: 0.8 })  // Atrás - Magenta
-    ];
+    // Cargamos las texturas para cada cara del cubo
+    const textureLoader = new THREE.TextureLoader();
+    // textureLoader.load('ruta_de_la_imagen_para_la_cara_1')
+    const textures = [
+      textureLoader.load('assets/images/threejs/feliz.avif'),
+      textureLoader.load('assets/images/threejs/jugando.avif'),
+      textureLoader.load('assets/images/threejs/llorando.avif'),
+      textureLoader.load('assets/images/threejs/pensativo.avif'),
+      textureLoader.load('assets/images/threejs/riendo.avif'),
+      textureLoader.load('assets/images/threejs/acosada.avif')
 
+    ];
+    const materials = textures.map(texture => new THREE.MeshBasicMaterial({ map: texture }));
     const geometry = new THREE.BoxGeometry(2, 2, 2);
     this.cube = new THREE.Mesh(geometry, materials);
     this.scene.add(this.cube);
@@ -64,44 +64,47 @@ export class InterfazComponent {
   
     this.mouse = new THREE.Vector2();
     this.lastMouse = new THREE.Vector2();
+
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.draggableObjects = [];
+
   }
 
-  addListeners(): void {
-    this.renderer.domElement.addEventListener('mousemove', this.onMouseMove.bind(this), false);
-    window.addEventListener('resize', this.onWindowResize.bind(this), false);
-  }
+  
+  private addResizeHandler() {
+    // Función para manejar el redimensionamiento de la ventana
+    const onWindowResize = () => {
+      this.camera.aspect = window.innerWidth / window.innerHeight;
+      this.camera.updateProjectionMatrix();
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
+    };
 
-  onMouseMove(event: MouseEvent): void {
-    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-    if (this.lastMouse.x && this.lastMouse.y) {
-      const dx = this.mouse.x - this.lastMouse.x;
-      const dy = this.mouse.y - this.lastMouse.y;
-
-      this.cube.rotation.y -= dx *5;
-      this.cube.rotation.x -= dy *5;
-    }
-
-    this.lastMouse.x = this.mouse.x;
-    this.lastMouse.y = this.mouse.y;
-
-    this.render();
-  }
-
-  onWindowResize(): void {
-    this.camera.aspect = window.innerWidth / window.innerHeight;
-    this.camera.updateProjectionMatrix();
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.render();
+    // Agregamos el oyente de eventos de redimensionamiento de ventana
+    window.addEventListener('resize', onWindowResize);
   }
 
   animate(): void {
     requestAnimationFrame(() => this.animate());
     this.render();
   }
-
+  
   render(): void {
     this.renderer.render(this.scene, this.camera);
+  }
+  @HostListener('document:click', ['$event'])
+  onClick(event: MouseEvent) {
+    // Normalizar las coordenadas del mouse
+    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    // Raycaster para detectar la intersección con el objeto (y su cara)
+    const raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(this.mouse, this.camera);
+    const intersects = raycaster.intersectObject(this.cube);
+
+    // Si hay intersecciones, mostrar la cara seleccionada en la consola
+    if (intersects.length > 0) {
+      console.log(`Seleccionada la cara ${intersects[0].faceIndex}`);
+    }
   }
 }

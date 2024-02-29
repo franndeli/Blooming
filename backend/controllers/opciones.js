@@ -5,7 +5,7 @@ const Opcion = require('../models/opcion');
 
 const getOpciones = (req, res) => {
     return new Promise(function(resolve, reject) {
-        let query = 'SELECT * FROM opciones';
+        let query = 'SELECT * FROM opcion';
         let conditions = [];
         let values = [];
         let validParams = ['ID_Opcion', 'TextoOpcion', 'ID_Pregunta', 'ID_PreguntaSiguiente'];
@@ -17,11 +17,11 @@ const getOpciones = (req, res) => {
         }
 
         if(req.query.ID_Opcion){
-            conditions.push("opciones.ID_Opcion = ?");
+            conditions.push("opcion.ID_Opcion = ?");
             values.push(req.query.ID_Opcion);
         }
         if(req.query.ID_Pregunta){
-            conditions.push("opciones.ID_Pregunta = ?");
+            conditions.push("opcion.ID_Pregunta = ?");
             values.push(req.query.ID_Pregunta);
         }
 
@@ -55,7 +55,7 @@ const createOpciones = (req, res) => {
         const { TextoOpcion, ID_Pregunta, ID_PreguntaSiguiente } = req.body;
 
         // Primero verificar si ya existe una opción de respuesta con el mismo TextoOpcion y ID_Pregunta
-        connection.query('SELECT * FROM opciones WHERE TextoOpcion = ? AND ID_Pregunta = ?', [TextoOpcion, ID_Pregunta], (error, results) => {
+        connection.query('SELECT * FROM opcion WHERE TextoOpcion = ? AND ID_Pregunta = ?', [TextoOpcion, ID_Pregunta], (error, results) => {
             if (error) {
                 console.log(error);
                 return reject({ statusCode: 500, message: "Error al verificar la opción de respuesta"});
@@ -72,7 +72,7 @@ const createOpciones = (req, res) => {
                 ID_Pregunta: ID_Pregunta,
                 ID_PreguntaSiguiente: ID_PreguntaSiguiente
             };
-            connection.query('INSERT INTO opciones SET ?', nuevaOpcion, (error, results) => {
+            connection.query('INSERT INTO opcion SET ?', nuevaOpcion, (error, results) => {
                 if (error) {
                     console.log(error);
                     reject({ statusCode: 500, message: "Error al crear la opción de respuesta"});
@@ -92,7 +92,7 @@ const updateOpcion = (req, res) => {
     return new Promise(function(resolve, reject) {
         const id = req.params.ID_Opcion;
 
-        connection.query('UPDATE opciones SET ? WHERE ID_Opcion = ?', [req.body, id], (error, results) => {
+        connection.query('UPDATE opcion SET ? WHERE ID_Opcion = ?', [req.body, id], (error, results) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al actualizar la opción de respuesta"});
             } else if (results.affectedRows === 0) {
@@ -115,7 +115,7 @@ const deleteOpcion = (req, res) => {
         const id = req.params.ID_Opcion;
         
         // Primero verificar si la opción de respuesta existe
-        connection.query('SELECT * FROM opciones WHERE ID_Opcion = ?', [id], (error, rows) => {
+        connection.query('SELECT * FROM opcion WHERE ID_Opcion = ?', [id], (error, rows) => {
             if (error) {
                 reject({ statusCode: 500, message: "Error al eliminar la opción de respuesta"});
             } else {
@@ -124,7 +124,7 @@ const deleteOpcion = (req, res) => {
                     reject({ statusCode: 404, message: "Opción de respuesta no encontrada" });
                 } else {
                     // Si la opción de respuesta existe, proceder con la eliminación
-                    connection.query('DELETE FROM opciones WHERE ID_Opcion = ?', [id], (error, results) => {
+                    connection.query('DELETE FROM opcion WHERE ID_Opcion = ?', [id], (error, results) => {
                         if (error) {
                             console.log(error);
                             reject({ statusCode: 500, message: "Error al eliminar la opción de respuesta"});

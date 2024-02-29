@@ -32,7 +32,7 @@ const Centro = sequelize.define('Centro', {
         allowNull: false
     },
     CP: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     Rol: {
@@ -41,7 +41,7 @@ const Centro = sequelize.define('Centro', {
     }
 }, {
     tableName: 'centro',
-    timestamps: false
+    timestamps: true
 });
 
 module.exports = Centro;

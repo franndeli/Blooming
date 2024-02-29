@@ -62,7 +62,7 @@ const createCentro = async (req, res) => {
 
         const existCentro = await Centro.findOne({ where: { Email: email } });
         if (existCentro) {
-            return res.status(400).json({ statusCode: 400, message: "El email ya existe en otro centro" });
+            return res.status(400).json({ statusCode: 400, message: "Ya existe otro centro con el mismo email" });
         }
 
         const hashedPassword = hashPassword(req.body.Contraseña);
@@ -183,11 +183,11 @@ const deleteCentro = async (req, res) => {
             return res.status(404).json({ statusCode: 404, message: "Centro no encontrado" });
         }
 
-        // await Alumno.destroy({ where: { ID_Centro: id } });
+        await Alumno.destroy({ where: { ID_Centro: id } });
 
-        // await Profesor.destroy({ where: { ID_Centro: id } });
+        await Profesor.destroy({ where: { ID_Centro: id } });
 
-        // await Clase.destroy({ where: { ID_Centro: id } });
+        await Clase.destroy({ where: { ID_Centro: id } });
 
         await Centro.destroy({ where: { ID_Centro: id } });
 

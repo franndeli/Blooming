@@ -1,12 +1,27 @@
-class Clase {
-    ID_Clase;
-    Nombre;
-    NumAlumnos;
-    ID_Centro;
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../database/configdb');
 
-    toJSON() {
-        return { ...this };
+const Clase = sequelize.define('Clase', {
+    ID_Clase: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    Nombre: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    NumAlumnos: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    ID_Centro: {
+        type: DataTypes.INTEGER,
+        allowNull: false
     }
-}
+}, {
+    tableName: 'clase',
+    timestamps: false
+});
 
 module.exports = Clase;

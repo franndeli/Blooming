@@ -1,20 +1,26 @@
-const { Router } = require('express');
 const { getRespuestas, createRespuesta, updateRespuesta, deleteRespuesta } = require('../controllers/respuestas');
-const { check } = require('express-validator');
 const { validarCampos } = require('../middleware/validaciones');
+const { validarRol } = require('../middleware/validar-rol');
+const { validarJWT } = require('../middleware/validar-jwt');
+const { check } = require('express-validator');
+const { Router } = require('express');
 
 const router = Router();
 
 router.get('/', (req, res) => {
+    validarJWT, validarRol(['Alumno', 'Profesor', 'Centro']),
     getRespuestas(req, res).catch(error => {
         res.status(error.statusCode || 500).json({ error: error.message });
     });
 });
 
 router.post('/', [
-        check('Respuesta', 'El argumento "Respuesta" es obligatorio').not().isEmpty(),
+        validarJWT, validarRol(['Admin', 'Alumno']),
+        check('TextoPregunta', 'El argumento "TextoPregunta" es obligatorio').not().isEmpty(),
+        check('TextoRespuesta', 'El argumento "TextoRespuesta" es obligatorio').not().isEmpty(),
+        check('FechaRespuesta', 'El argumento "FechaRespuesta" es obligatorio').not().isEmpty(),
         check('ID_Alumno', 'El argumento "ID_Alumno" es obligatorio').not().isEmpty(),
-        check('ID_Pregunta', 'El argumento "ID_Pregunta" es obligatorio').not().isEmpty(),
+        check('ID_Sesion', 'El argumento "ID_Sesion" es obligatorio').not().isEmpty(),
         validarCampos
     ], (req, res) => {
         createRespuesta(req, res).catch(error => {
@@ -23,12 +29,12 @@ router.post('/', [
 });
 
 router.put('/:ID_Respuesta', [
-        //Campos opcionales, no es necesario ponerlos todos para hacer una llamada PUT
-        check('Pregunta').optional().not().isEmpty().withMessage('El argumento "TextoOpcion" es obligatorio'),
-        check('ID_Alumno').optional().not().isEmpty().withMessage('El argumento "ID_Pregunta" es obligatorio'),
-        check('ID_Pregunta').optional().not().isEmpty().withMessage('El argumento "ID_PreguntaSiguiente" es obligatorio'),
-        check('ID_Sesion').optional().not().isEmpty().withMessage('El campo "ID_Opcion" debe ser un número entero'),
-        check('FechaRespuesta').optional().not().isEmpty().withMessage('El campo "ID_Opcion" debe ser un número entero'),
+        validarJWT, validarRol(['Admin']),
+        check('TextoPregunta').optional().not().isEmpty().withMessage('Error en el argumento "TextoPregunta"'),
+        check('TextoRespuesta').optional().not().isEmpty().withMessage('Error en el argumento "TextoRespuesta"'),
+        check('FechaRespuesta').optional().not().isEmpty().withMessage('Error en el argumento "FechaRespuesta"'),
+        check('ID_Alumno').optional().not().isEmpty().withMessage('Error en el argumento "ID_Alumno"'),
+        check('ID_Sesion').optional().not().isEmpty().withMessage('Error en el argumento "ID_Sesion"'),
         check('ID_Respuesta').isInt().withMessage('El campo "ID_Respuesta" debe ser un número entero'),
         validarCampos
     ], (req, res) => {
@@ -39,6 +45,7 @@ router.put('/:ID_Respuesta', [
 
 
 router.delete('/:ID_Respuesta', [
+        validarJWT, validarRol(['Admin']),
         check('ID_Respuesta').isInt().withMessage('El campo "ID_Respuesta" debe ser un número entero'),
         validarCampos
     ], (req, res) => {

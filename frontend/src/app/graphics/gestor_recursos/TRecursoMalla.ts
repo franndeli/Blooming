@@ -14,6 +14,7 @@ export default class TRecursoMalla extends Recurso {
     try {
       const response = await fetch(url);
       const data = await response.json();
+      console.log(data);
       this.vertices = new Float32Array(data.vertices);
       this.normales = new Float32Array(data.normales);
       this.coordTexturas = new Float32Array(data.coordTexturas);

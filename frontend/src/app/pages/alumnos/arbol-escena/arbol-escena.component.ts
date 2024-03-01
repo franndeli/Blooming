@@ -1,5 +1,5 @@
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { TNodo, TCamara, TLuz, TMalla } from '../../../graphics';
+import { TNodo, TCamara, TLuz, TMalla, GestorRecursos } from '../../../graphics';
 import { vec3, mat4 } from 'gl-matrix';
 
 @Component({
@@ -9,10 +9,11 @@ import { vec3, mat4 } from 'gl-matrix';
 })
 export class ArbolEscenaComponent implements AfterViewInit {
   @ViewChild('canvasWebGL') canvasRef!: ElementRef<HTMLCanvasElement>;
+  private gestorRecursos = new GestorRecursos();
 
   constructor() { }
 
-  ngAfterViewInit(): void {
+  async ngAfterViewInit() {
     this.iniciarEscena();
   }
 
@@ -23,7 +24,7 @@ export class ArbolEscenaComponent implements AfterViewInit {
     }
   }
 
-  iniciarEscena(): void {
+  async  iniciarEscena(): Promise<void> {
     if (this.canvasRef && this.canvasRef.nativeElement) {
       const canvas = this.canvasRef.nativeElement;
       const gl = canvas.getContext('webgl');
@@ -93,6 +94,33 @@ export class ArbolEscenaComponent implements AfterViewInit {
       this.imprimirMatrizTransformacion(nodoCamara, "cámara actualizada");
 
       console.log("Escena inicializada y lista para renderizar");
+
+      try {
+        await this.gestorRecursos.cargarRecurso('mallaEjemplo', 'malla', '../../../../assets/json/malla.json');
+        this.actualizarInformacion("Malla 'mallaEjemplo' cargada y almacenada en memoria.");
+        
+        // Intentamos cargar la misma malla de nuevo para verificar que se recupera de memoria:
+        await this.gestorRecursos.cargarRecurso('mallaEjemplo', 'malla', '../../../../assets/json/malla.json');
+        this.actualizarInformacion("Verificación completada: La malla 'mallaEjemplo' se ha recuperado de la memoria sin necesidad de recargarla.");
+
+      } catch (error) {
+        console.error("Error al cargar la malla:", error);
+        this.actualizarInformacion(`Error al cargar la malla: ${error}`);
+      }
+
+      try{
+        await this.gestorRecursos.cargarRecurso('materialEjemplo', 'material', '../../../../assets/json/material.json');
+        this.actualizarInformacion("Material 'materialEjemplo' cargado y almacenado en memoria.");
+
+        await this.gestorRecursos.cargarRecurso('mallaEjemplo', 'malla', '../../../../assets/json/material.json');
+        this.actualizarInformacion("Verificación completada: El material 'materialEjemplo' se ha recuperado de la memoria sin necesidad de recargarla.");
+
+        await this.gestorRecursos.cargarRecurso('materialEjemplo2', 'material', '../../../../assets/json/material.json');
+        this.actualizarInformacion("Material 'materialEjemplo2' cargado y almacenado en memoria.");
+      } catch (error){
+        console.error("Error al cargar el material:", error);
+        this.actualizarInformacion(`Error al cargar el material: ${error}`);
+      }
     }
 
     else {

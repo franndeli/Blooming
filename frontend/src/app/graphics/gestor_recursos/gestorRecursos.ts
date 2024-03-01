@@ -1,30 +1,39 @@
 import { Recurso } from './recurso';
-import { CreadorRecurso } from './creadorRecursos';
+import TRecursoMalla from './TRecursoMalla';
+//import TRecursoTextura from './TRecursoTextura';
+//import TRecursoShader from './TRecursoShader';
+import TRecusroMaterial from './TRecursoMaterial';
 
-class GestorRecursos {
+export class GestorRecursos {
   private recursos: Map<string, Recurso> = new Map();
-  private factories: Map<string, CreadorRecurso> = new Map();
 
-  registrarTipoRecurso(tipo: string, factory: CreadorRecurso): void {
-    this.factories.set(tipo, factory);
-  }
-
-  getRecurso(nombre: string, tipo: string): Recurso {
+  async cargarRecurso(nombre: string, tipo: string, url: string): Promise<Recurso> {
     const clave = `${tipo}:${nombre}`;
     let recurso = this.recursos.get(clave);
 
     if (!recurso) {
-      const factory = this.factories.get(tipo);
-      if (!factory) {
-        throw new Error(`Fábrica para el tipo de recurso '${tipo}' no registrada.`);
+      switch (tipo) {
+        case 'malla':
+          recurso = new TRecursoMalla(nombre);
+          break;
+        /*case 'textura':
+          recurso = new TRecursoTextura(nombre);
+          break;
+        case 'shader':
+          recurso = new TRecursoShader(nombre);
+          break;*/
+        case 'material':
+          recurso = new TRecusroMaterial(nombre);
+          break;
+        default:
+          throw new Error(`Tipo de recurso '${tipo}' no reconocido.`);
       }
-      recurso = factory.crearRecurso(nombre);
-      recurso.cargarRecurso("hola");
+
+      await recurso.cargarRecurso(url);
+      console.log("Recurso cogido del disco y metido en memoria");
       this.recursos.set(clave, recurso);
     }
 
     return recurso;
   }
 }
-
-export default GestorRecursos;

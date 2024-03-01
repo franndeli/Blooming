@@ -16,13 +16,9 @@ const Opcion = sequelize.define('Opcion', {
         allowNull: false
     },
     Gravedad: {
-        type: DataTypes.ENUM('Muy bien', 'Bien', 'Normal', 'Mal', 'Muy mal'),
-        allowNull: false
-    },
-    ID_Ambito: {
         type: DataTypes.INTEGER,
         allowNull: false
-    }
+    },
 }, {
     tableName: 'opcion',
     timestamps: false

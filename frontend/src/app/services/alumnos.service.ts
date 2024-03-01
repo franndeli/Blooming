@@ -48,7 +48,7 @@ export class AlumnoService {
     if(!textoBusqueda){
       textoBusqueda = '';
     }
-    return this.http.get(this.basePath+'?numFilas='+filas+'&desde='+desde+'&texto='+textoBusqueda, this.httpOptions );
+    return this.http.get(this.basePath+'?numFilas='+filas+'&desde='+desde, this.httpOptions );
   }
 
   getAlumnosCentro(id: any, desde?: number, filas?: number, textoBusqueda?: string){
@@ -62,7 +62,7 @@ export class AlumnoService {
     if(!textoBusqueda){
       textoBusqueda = '';
     }
-    return this.http.get(this.basePath+'?ID_Centro='+id+'&numFilas='+filas+'&desde='+desde+'&texto='+textoBusqueda, this.httpOptions);
+    return this.http.get(this.basePath+'?ID_Centro='+id+'&numFilas='+filas+'&desde='+desde, this.httpOptions);
   }
 
   getAlumnosClase(id: any, desde?: number, filas?: number, textoBusqueda?: string){
@@ -76,7 +76,7 @@ export class AlumnoService {
     if(!textoBusqueda){
       textoBusqueda = '';
     }
-    return this.http.get(this.basePath+'?ID_Clase='+id+'&numFilas='+filas+'&desde='+desde+'&texto='+textoBusqueda, this.httpOptions);
+    return this.http.get(this.basePath+'?ID_Clase='+id+'&numFilas='+filas+'&desde='+desde, this.httpOptions);
   }
 
   getAlumnoID(id: any){

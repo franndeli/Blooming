@@ -6,8 +6,6 @@ const Opcion = require('./opcion');
 const Profesor = require('./profesor');
 const Pregunta = require('./pregunta');
 
-
-
 // Relaciones entre tablas Clase-Centro, obtener el nombre del Centro en la tabla Clase
 Clase.belongsTo(Centro, { foreignKey: 'ID_Centro' });
 Centro.hasMany(Clase, { foreignKey: 'ID_Centro' });
@@ -30,6 +28,4 @@ Ambito.hasMany(Pregunta, { foreignKey: 'ID_Pregunta' });
 
 // Relaciones entre tablas Opcion-PreguntayAmbito, obtener el nombre del Ambito y la Pregunta en la tabla Opcion
 Opcion.belongsTo(Pregunta, { foreignKey: 'ID_Pregunta' });
-Opcion.belongsTo(Ambito, { foreignKey: 'ID_Ambito' });
 Pregunta.hasMany(Opcion, { foreignKey: 'ID_Pregunta' });
-Ambito.hasMany(Opcion, { foreignKey: 'ID_Ambito' });

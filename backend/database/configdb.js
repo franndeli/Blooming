@@ -3,7 +3,7 @@ const Sequelize = require('sequelize');
 const sequelize = new Sequelize('blooming', 'root', '', {
     host: 'localhost',
     dialect: 'mysql',
-    // logging: false,
+    logging: false,
 });
 
-module.exports = { sequelize, Op: Sequelize.Op };
+module.exports = { sequelize, Op: Sequelize.Op, QueryTypes: Sequelize.QueryTypes }

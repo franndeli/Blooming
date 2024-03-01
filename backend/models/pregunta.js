@@ -11,10 +11,6 @@ const Pregunta = sequelize.define('Pregunta', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    TipoPregunta: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
     ID_Ambito: {
         type: DataTypes.INTEGER,
         allowNull: false

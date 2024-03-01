@@ -47,7 +47,7 @@ export class CentroService {
     if(!textoBusqueda){
       textoBusqueda = '';
     }
-    return this.http.get(this.basePath+'?numFilas='+filas+'&desde='+desde+'&texto='+textoBusqueda, this.httpOptions);
+    return this.http.get(this.basePath+'?numFilas='+filas+'&desde='+desde, this.httpOptions);
   }
 
   getCentro(id: any){

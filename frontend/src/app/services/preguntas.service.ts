@@ -19,7 +19,7 @@ type Frecuencias = {
   providedIn: 'root'
 })
 export class PreguntaService {
-  private basePath = `${environment.base_url}/preguntas/`;
+  private basePath = `${environment.base_url}/preguntas`;
   private basePathOpcion = `${environment.base_url}/opciones`
   constructor(private http: HttpClient) {}
 

@@ -7,7 +7,7 @@ const getOpciones = async (req, res) => {
     try {
         const queryParams = req.query;
 
-        const validParams = ['ID_Opcion', 'TextoOpcion', 'ID_Pregunta', 'Gravedad', 'AmbitoOpcion'];
+        const validParams = ['ID_Opcion', 'TextoOpcion', 'ID_Pregunta', 'Gravedad'];
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {
@@ -32,10 +32,6 @@ const getOpciones = async (req, res) => {
                     model: Pregunta,
                     attributes: ['TextoPregunta']
                 },
-                {
-                    model: Ambito,
-                    attributes: ['Nombre']
-                }
             ]
         });
 

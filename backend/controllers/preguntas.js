@@ -1,4 +1,4 @@
-const sequelize = require('../database/configdb');
+const {sequelize, QueryTypes} = require('../database/configdb');
 const Pregunta = require('../models/pregunta');
 const Ambito = require('../models/ambito');
 
@@ -7,7 +7,7 @@ const getPreguntas = async (req, res) => {
     try {
         const queryParams = req.query;
 
-        const validParams = ['ID_Pregunta', 'TextoPregunta', 'TipoPregunta', 'AmbitoPregunta', 'NivelPregunta'];
+        const validParams = ['ID_Pregunta', 'TextoPregunta', 'TipoPregunta', 'ID_Ambito', 'NivelPregunta'];
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {
@@ -44,6 +44,44 @@ const getPreguntas = async (req, res) => {
     }
 }
 
+const getPreguntasPorAmbito = async (req, res) => {
+    const ID_Ambito = req.query.ID_Ambito;
+    const cantidad = Number(req.query.cantidad) || 5;
+
+    const query = `
+        SELECT 
+            pregunta.ID_Pregunta,
+            CASE 
+                WHEN RAND() < 0.35 THEN pregunta.TextoPregunta
+                ELSE (SELECT TextoVariante FROM variante_pregunta WHERE variante_pregunta.ID_Pregunta = pregunta.ID_Pregunta ORDER BY RAND() LIMIT 1)
+            END AS TextoPreguntaElegido,
+            pregunta.*
+        FROM 
+            pregunta
+            INNER JOIN ambito ON pregunta.ID_Ambito = ambito.ID_Ambito
+        WHERE 
+            ambito.ID_Ambito = :ID_Ambito
+        ORDER BY 
+            RAND()
+        LIMIT :cantidad
+    `;
+
+    try {
+        const preguntas = await sequelize.query(query, {
+            replacements: { ID_Ambito: ID_Ambito, cantidad: cantidad }, // Aquí se corrige el error
+            type: QueryTypes.SELECT
+        });
+
+        res.json({
+            ok: true,
+            msg: 'getPreguntasPorAmbito',
+            preguntas
+        });
+    } catch (error) {
+        console.error("Error al obtener las preguntas por ámbito:", error);
+        res.status(500).json({ statusCode: 500, message: "Error al obtener las preguntas por ámbito" });
+    }
+};
 
 const createPregunta = async (req, res) => {
     try {
@@ -112,4 +150,4 @@ const deletePregunta = async (req, res) => {
 };
 
 
-module.exports = { getPreguntas, createPregunta, updatePregunta, deletePregunta };
+module.exports = { getPreguntas, createPregunta, updatePregunta, deletePregunta, getPreguntasPorAmbito };

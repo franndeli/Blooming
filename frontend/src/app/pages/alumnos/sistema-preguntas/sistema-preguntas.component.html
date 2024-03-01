@@ -4,7 +4,7 @@
         <div *ngIf="preguntaActual">
             <p>
                 {{ preguntaActual.TextoPreguntaElegido ? preguntaActual.TextoPreguntaElegido : preguntaActual.TextoPregunta }}
-                {{ " " + preguntaActual.AmbitoPregunta }}
+                {{ " " + preguntaActual.ID_Ambito }}
             </p>
             <ul>
                 <li *ngFor="let opcion of preguntaActual.respuestas.opciones">

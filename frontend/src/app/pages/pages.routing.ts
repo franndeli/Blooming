@@ -45,9 +45,10 @@ import { EditarCentroComponent } from './centros/editar-centro/editar-centro.com
 import { PerfilProfesorComponent } from './profesores/perfil-profesor/perfil-profesor.component';
 import { EditarProfesorComponent } from './profesores/editar-profesor/editar-profesor.component';
 
-import {ThreejsComponent } from './alumnos/threejs/threejs.component';
+import { ThreejsComponent } from './alumnos/threejs/threejs.component';
 import { ConversacionComponent } from './alumnos/conversacion/conversacion.component';
 import { CargaComponent } from './alumnos/carga/carga.component';
+import { ArbolEscenaComponent } from './alumnos/arbol-escena/arbol-escena.component';
 
 const routes: Routes = [
   { path: 'admin', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
@@ -103,8 +104,9 @@ const routes: Routes = [
       { path: 'dashboard', component: AlumnosComponent},
       { path: 'sidebar', component: SidebarComponent },
       { path: 'threejs', component: ThreejsComponent},
-      {path: 'conversacion',component: ConversacionComponent},
-      { path: 'carga', component: CargaComponent }
+      { path: 'conversacion',component: ConversacionComponent},
+      { path: 'carga', component: CargaComponent },
+      { path: 'arbol-escena', component: ArbolEscenaComponent }
   ]}
   /*{ 
     path: 'dashboard', component: DashboardComponent,

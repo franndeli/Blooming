@@ -61,9 +61,7 @@ import { EditarProfesorComponent } from './profesores/editar-profesor/editar-pro
 import { ThreejsComponent } from './alumnos/threejs/threejs.component';
 import { ConversacionComponent } from './alumnos/conversacion/conversacion.component';
 import { CargaComponent } from './alumnos/carga/carga.component';
-
-
-
+import { ArbolEscenaComponent } from './alumnos/arbol-escena/arbol-escena.component';
 
 @NgModule({
   declarations: [
@@ -113,6 +111,7 @@ import { CargaComponent } from './alumnos/carga/carga.component';
       ThreejsComponent,
       ConversacionComponent,
       CargaComponent,
+      ArbolEscenaComponent,
 
   ],
   exports: [

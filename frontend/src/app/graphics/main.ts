@@ -1,7 +1,7 @@
-import { TNodo } from './nodo';
-import { TCamara } from './camara';
-import { TLuz } from './luz';
-import { TMalla } from './malla';
+import { TNodo } from './arbol_escena/nodo';
+import { TCamara } from './arbol_escena/camara';
+import { TLuz } from './arbol_escena/luz';
+import { TMalla } from './arbol_escena/malla';
 import { vec3, mat4 } from 'gl-matrix';
 
 // Función para imprimir la matriz de transformación
@@ -74,4 +74,3 @@ raiz.recorrer(matrizInicial);
 
 console.log("Después de actualizar transformaciones:");
 imprimirMatrizTransformacion(nodoCamara, "cámara actualizada");
-

@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var nodo_1 = require("./nodo");
-var camara_1 = require("./camara");
-var luz_1 = require("./luz");
-var malla_1 = require("./malla");
+var nodo_1 = require("./arbol_escena/nodo");
+var camara_1 = require("./arbol_escena/camara");
+var luz_1 = require("./arbol_escena/luz");
+var malla_1 = require("./arbol_escena/malla");
 var gl_matrix_1 = require("gl-matrix");
 // Función para imprimir la matriz de transformación
 function imprimirMatrizTransformacion(nodo, nombre) {

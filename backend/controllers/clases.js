@@ -1,7 +1,9 @@
 const sequelize = require('../database/configdb');
 const Profesor = require('../models/profesor');
 const Alumno = require('../models/alumno');
+const Centro = require('../models/centro');
 const Clase = require('../models/clase');
+
 
 
 const getClases = async (req, res) => {
@@ -32,7 +34,11 @@ const getClases = async (req, res) => {
 
         const clases = await Clase.findAll({
             where: queryOptions,
-            ...paginationOptions
+            ...paginationOptions,
+            include: [{
+                model: Centro,
+                attributes: ['Nombre']
+            }]
         });
 
         const total = await Clase.count({ where: queryOptions});

@@ -29,7 +29,7 @@ const Profesor = sequelize.define('Profesor', {
     },
     ID_Centro: {
         type: DataTypes.INTEGER,
-        allowNull: true
+        allowNull: false
     },
     Rol: {
         type: DataTypes.STRING,

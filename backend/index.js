@@ -1,7 +1,9 @@
-const sequelize = require('./database/configdb');
 const express = require('express');
+require('./models/associations');
+require('./database/configdb');
 const cors = require('cors');
 require('dotenv').config();
+
 
 const app = express();
 

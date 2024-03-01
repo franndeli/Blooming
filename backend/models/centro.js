@@ -1,5 +1,5 @@
-const { DataTypes } = require('sequelize');
 const { sequelize } = require('../database/configdb');
+const { DataTypes } = require('sequelize');
 
 const Centro = sequelize.define('Centro', {
     ID_Centro: {
@@ -32,7 +32,7 @@ const Centro = sequelize.define('Centro', {
         allowNull: false
     },
     CP: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false
     },
     Rol: {

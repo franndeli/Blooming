@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const Clase = require('../models/clase');
+const Centro = require('../models/centro');
 const Profesor = require('../models/profesor');
 const sequelize = require('../database/configdb');
 const hashPassword = require('../middleware/hashHelper');
@@ -34,7 +36,19 @@ const getProfesores = async (req, res) => {
         const profesores = await Profesor.findAll({
             where: queryOptions,
             ...paginationOptions,
-            attributes: { exclude: ['Contraseña'] }
+            attributes: { exclude: ['Contraseña'] },
+            include: [
+                {
+                    model: Clase,
+                    attributes: ['Nombre'],
+                    as: 'Clase'
+                },
+                {
+                    model: Centro,
+                    attributes: ['Nombre'],
+                    as: 'Centro'
+                }
+            ]
         });
 
         const total = await Profesor.count({ where: queryOptions});

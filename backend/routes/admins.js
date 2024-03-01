@@ -16,6 +16,7 @@ router.get('/', validarJWT, validarRol(['Admin']), (req, res) => {
 });
 
 router.post('/', [
+        validarJWT, validarRol(['Admin']),
         check('Nombre', 'El argumento "Nombre" es obligatorio').not().isEmpty(),
         check('Email', 'El argumento "Email" es obligatorio').not().isEmpty(),
         check('Contraseña', 'El argumento "Contraseña" es obligatorio').not().isEmpty(),
@@ -28,10 +29,9 @@ router.post('/', [
 
 router.put('/:ID_Admin', [
         validarJWT, validarRol(['Admin']),
-    //Campos opcionales, no es necesario ponerlos todos para hacer una llamada PUT
-        check('Nombre').optional().not().isEmpty().withMessage('El argumento "Nombre" no debe estar vacío'),
-        check('Email').optional().not().isEmpty().withMessage('El argumento "Email" no debe estar vacío'),
-        check('Contraseña').optional().not().isEmpty().withMessage('El argumento "Contraseña" no debe estar vacío'),
+        check('Nombre').optional().not().isEmpty().withMessage('Error en el argumento "Nombre"'),
+        check('Email').optional().not().isEmpty().withMessage('Error en el argumento "Email"'),
+        check('Contraseña').optional().not().isEmpty().withMessage('Error en el argumento "Contraseña"'),
         check('ID_Admin').isInt().withMessage('El campo "ID_Admin" debe ser un número entero'),
         validarCampos
     ], (req, res) => {

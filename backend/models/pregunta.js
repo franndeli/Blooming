@@ -15,7 +15,7 @@ const Pregunta = sequelize.define('Pregunta', {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    AmbitoPregunta: {
+    ID_Ambito: {
         type: DataTypes.INTEGER,
         allowNull: false
     },

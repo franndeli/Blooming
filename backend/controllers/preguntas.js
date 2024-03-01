@@ -1,5 +1,6 @@
 const sequelize = require('../database/configdb');
 const Pregunta = require('../models/pregunta');
+const Ambito = require('../models/ambito');
 
 
 const getPreguntas = async (req, res) => {
@@ -25,7 +26,11 @@ const getPreguntas = async (req, res) => {
         }
 
         const preguntas = await Pregunta.findAll({
-            where: queryOptions
+            where: queryOptions,
+            include: [{
+                model: Ambito,
+                attributes: ['Nombre']
+            }]
         });
 
         res.json({

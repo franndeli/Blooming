@@ -1,3 +1,5 @@
+const Clase = require('../models/clase');
+const Centro = require('../models/centro');
 const Alumno = require('../models/alumno');
 const sequelize = require('../database/configdb');
 const hashPassword = require('../middleware/hashHelper');
@@ -32,7 +34,19 @@ const getAlumnos = async (req, res) => {
         const alumnos = await Alumno.findAll({
             where: queryOptions,
             ...paginationOptions,
-            attributes: { exclude: ['Contraseña'] }
+            attributes: { exclude: ['Contraseña'] },
+            include: [
+                {
+                    model: Clase,
+                    attributes: ['Nombre'],
+                    as: 'Clase'
+                },
+                {
+                    model: Centro,
+                    attributes: ['Nombre'],
+                    as: 'Centro'
+                }
+            ]
         });
 
         const total = await Alumno.count({ where: queryOptions});

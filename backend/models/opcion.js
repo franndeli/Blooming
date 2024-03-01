@@ -19,7 +19,7 @@ const Opcion = sequelize.define('Opcion', {
         type: DataTypes.ENUM('Muy bien', 'Bien', 'Normal', 'Mal', 'Muy mal'),
         allowNull: false
     },
-    AmbitoOpcion: {
+    ID_Ambito: {
         type: DataTypes.INTEGER,
         allowNull: false
     }

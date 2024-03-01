@@ -1,12 +1,31 @@
-class opciones {
-    ID_Opcion;
-    TextoOpcion;
-    ID_Pregunta;
-    ID_PreguntaSiguiente;
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../database/configdb');
 
-    toJSON() {
-        return { ...this };
+const Opcion = sequelize.define('Opcion', {
+    ID_Opcion: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    TextoOpcion: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    ID_Pregunta: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    Gravedad: {
+        type: DataTypes.ENUM('Muy bien', 'Bien', 'Normal', 'Mal', 'Muy mal'),
+        allowNull: false
+    },
+    ID_Ambito: {
+        type: DataTypes.INTEGER,
+        allowNull: false
     }
-}
+}, {
+    tableName: 'opcion',
+    timestamps: false
+});
 
-module.exports = opciones;
+module.exports = Opcion;

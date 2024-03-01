@@ -1,163 +1,114 @@
-const { dbConnection } = require('../database/configdb');
-const connection = dbConnection();
-const hashPassword = require('../middleware/hashHelper');
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const Centro = require('../models/centro');
+const sequelize = require('../database/configdb');
+const hashPassword = require('../middleware/hashHelper');
 
-const getCentros = (req, res) => {
-    const tam = Number(req.query.numFilas) || 0;
-    const desde = Number(req.query.desde) || 0;
-    const texto = req.query.texto;
-    let textoBusqueda = '';
 
-    if(texto){
-        textoBusqueda = new RegExp(texto, 'i');
-        console.log('texto', texto, ' textoBusqueda', textoBusqueda);
-    }
+const getCentros = async (req, res) => {
+    try {
+        const tam = Number(req.query.numFilas) || 0;
+        const desde = Number(req.query.desde) || 0;
+        const queryParams = req.query;
 
-    return new Promise(function(resolve, reject) {
-        let query = 'SELECT * FROM centro';
-        let conditions = [];
-        let values = [];
-        let validParams = ['ID_Centro', 'Nombre', 'Email', 'Localidad', 'Provincia', 'Calle', 'CP', 'desde', 'texto', 'numFilas'];
+        const validParams = ['ID_Centro', 'Nombre', 'Email', 'Localidad', 'Provincia', 'Calle', 'CP', 'numFilas', 'desde'];
 
-        let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
-
+        const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {
-            return reject({ statusCode: 400, message: "Parámetros de búsqueda no válidos en Centros" });
+            return res.status(400).json({ statusCode: 400, message: "Parámetros de búsqueda no válidos en Centros" });
+        }
+        
+        const queryOptions = {};
+        for (const param in queryParams) {
+            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde') {
+                if (param === 'ID_Centro') {
+                    queryOptions[param] = queryParams[param];
+                } else {
+                    queryOptions[param] = { [sequelize.Op.like]: `%${queryParams[param]}%` };
+                }
+            }
         }
 
-        if(req.query.ID_Centro){
-            conditions.push("centro.ID_Centro = ?");
-            values.push(req.query.ID_Centro);
-        }
-        if(req.query.Nombre){
-            conditions.push("centro.Nombre LIKE ?");
-            values.push(`${req.query.Nombre}%`);
-        }
-        if(req.query.Email){
-            conditions.push("centro.Email LIKE ?");
-            values.push(`${req.query.Email}%`);
-        }
-        if(req.query.Localidad){
-            conditions.push("centro.Localidad LIKE ?");
-            values.push(`${req.query.Localidad}%`);
-        }
-        if(req.query.Provincia){
-            conditions.push("centro.Provincia LIKE ?");
-            values.push(`${req.query.Provincia}%`);
-        }
-        if(req.query.Calle){
-            conditions.push("centro.Calle LIKE ?");
-            values.push(`%${req.query.Calle}%`);
-        }
-        if(req.query.CP){
-            conditions.push("centro.CP LIKE ?");
-            values.push(`%${req.query.CP}%`);
-        }
+        const paginationOptions = tam > 0 ? { limit: tam, offset: desde } : {};
 
-        if(conditions.length > 0){
-            query += ' WHERE ' + conditions.join(' AND ');
-        }
+        const centros = await Centro.findAll({
+            where: queryOptions,
+            ...paginationOptions,
+            attributes: { exclude: ['Contraseña'] }
+        });
 
-        if(tam > 0){
-            query += ` LIMIT ${tam} OFFSET ${desde}`;
-        }
+        const total = await Centro.count({ where: queryOptions});
 
-        connection.query(query, values, (error, results) => {
-            if (error) {
-                reject({ statusCode: 500, message: "Error al obtener el centro"});
-            } else{
-                connection.query('SELECT COUNT(*) AS total FROM centro', (error, countRes) => {
-                    if(error){
-                        reject({ statusCode: 500, message: "Error al obtener el número total de centros"});
-                    }else {
-                        const total = countRes[0].total;
-                        const centros = results.map(row => {
-                            const centro = new Centro();
-                            Object.assign(centro, row);
-                            return centro.toJSON();
-                        });
-                        resolve(
-                            res.json({
-                                ok: true,
-                                msg: 'getCentros',
-                                centros,
-                                page: {
-                                    desde,
-                                    tam,
-                                    total
-                                }
-                            })
-                        );
-                    }
-                })
+        res.json({
+            ok: true,
+            msg: 'getCentros',
+            centros,
+            page: {
+                desde,
+                tam,
+                total
             }
         });
-    });
+    } catch (error) {
+        console.error("Error al obtener los centros:", error);
+        res.status(500).json({ statusCode: 500, message: "Error al obtener los centros" });
+    }
 }
 
 
-const createCentro = (req, res) => {
-    return new Promise(function(resolve, reject) {
+const createCentro = async (req, res) => {
+    try {
         const email = req.body.Email;
 
-        //Comprueba si el email ya existe
-        connection.query('SELECT * FROM centro WHERE Email = ?', [email], (error, results) => {
-            if (error) {
-                reject({ statusCode: 500, message: "Error al verificar el email"});
-            } else if (results.length > 0) {
-                // Si se encuentra un centro con el mismo email, rechaza la petición
-                reject({ statusCode: 400, message: "El email ya existe en otro centro"});
-            } else {
-                //Ciframos la contraseña antes de insertar
-                const hashedPassword = hashPassword(req.body.Contraseña);
-                const newCentro = { ...req.body, Contraseña: hashedPassword };
+        const existCentro = await Centro.findOne({ where: { Email: email } });
+        if (existCentro) {
+            return res.status(400).json({ statusCode: 400, message: "Ya existe otro centro con el mismo email" });
+        }
 
-                connection.query('INSERT INTO centro SET ?', [newCentro], (insertError, insertResults) => {
-                    if (insertError) {
-                        reject({ statusCode: 500, message: "Error al crear el centro"});
-                    } else {
-                        resolve(
-                            res.json({
-                                ok: true,
-                                msg: 'createCentro',
-                                newCentro
-                            })
-                        );
-                    }
-                });
-            }
+        const hashedPassword = hashPassword(req.body.Contraseña);
+        req.body.Contraseña = hashedPassword;
+
+        const newCentro = await Centro.create(req.body);
+
+        delete newCentro.dataValues.Contraseña;
+
+        res.json({
+            ok: true,
+            msg: 'createCentro',
+            newCentro
         });
-    });
+    } catch (error) {
+        console.error("Error al crear el centro:", error);
+        res.status(500).json({ statusCode: 500, message: "Error al crear el centro" });
+    }
 };
 
 
-const updateCentro = (req, res) => {
-    return new Promise(function(resolve, reject) {
+const updateCentro = async (req, res) => {
+    try {
         const id = req.params.ID_Centro;
+
+        const existCentro = await Centro.findByPk(id);
+        if (!existCentro) {
+            return res.status(404).json({ statusCode: 404, message: "Centro no encontrado" });
+        }
 
         if (req.body.Contraseña) {
             const hashedPassword = hashPassword(req.body.Contraseña);
             req.body.Contraseña = hashedPassword;
         }
 
-        connection.query('UPDATE centro SET ? WHERE ID_Centro = ?', [req.body, id], (error, results) => {
-            if (error) {
-                reject({ statusCode: 500, message: "Error al actualizar el Centro"});
-            } else if (results.affectedRows === 0) {
-                // Ninguna fila fue afectada, es decir, no se encontró el Centro
-                reject({ statusCode: 404, message: "Centro no encontrado"});
-            } else {
-                resolve(res.json({
-                    ok: true,
-                    msg: 'updateCentro',
-                    id
-                }));
-            }
+        const [updatedRowsCount, updatedCentro] = await Centro.update(req.body, { where: { ID_Centro: id } });
+
+        res.json({
+            ok: true,
+            msg: 'updateCentro',
+            updatedCentro
         });
-    });
+    } catch (error) {
+        console.error("Error al actualizar el centro:", error);
+        res.status(500).json({ statusCode: 500, message: "Error al actualizar el centro" });
+    }
 };
 
 
@@ -170,107 +121,85 @@ const updateCentro = (req, res) => {
         }
     }
 
-const updateCentroPwd = (req, res) => {
-    return new Promise(function(resolve, reject){
+const updateCentroPwd = async (req, res) => {
+    try {
         const token = req.header('x-token');
         const id = req.params.ID_Centro;
         const { Contraseña, newPassword, newPassword2 } = req.body;
-
-        if(!(verify(token).Rol == 'Centro' && verify(token).ID == id)){
+        
+        const decodedToken = verify(token);
+        if (!(decodedToken && decodedToken.Rol === 'Centro' && decodedToken.ID === id)) {
             return res.status(400).json({
                 ok: false,
                 message: 'No tienes permisos para actualizar la contraseña',
             });
         }
-
-        connection.query('SELECT Nombre, Contraseña FROM centro WHERE ID_Centro = ?', [id], (error, datos) => {
-            if (error) {
-                reject({ statusCode: 500, message: "Error al buscar el Centro"});
-            } else if (datos.affectedRows === 0) {
-                reject({ statusCode: 404, message: "Centro no encontrado"});
-            } else {
-                const pwdOk = bcrypt.compareSync(Contraseña, datos[0].Contraseña);
-                if(verify(token).ID == id){
-                    if(newPassword !== newPassword2){
-                        return res.status(400).json({
-                            ok: false,
-                            message: 'Las contraseñas no coinciden',
-                        });
-                    }
-                    if(!pwdOk){
-                        return res.status(400).json({
-                            ok: false,
-                            message: 'Contraseña incorrecta',
-                        });
-                    }
-                }
-                const hashedPassword = hashPassword(newPassword);
-                const newPwd = hashedPassword;
-
-                connection.query('UPDATE centro SET Contraseña = ? WHERE ID_Centro = ?', [newPwd, id], (setError, setResults) => {
-                    if (setError) {
-                        reject({ statusCode: 500, message: "Error al cambiar la contraseña"});
-                    } else {
-                        resolve(
-                            res.json({
-                                ok: true,
-                                msg: 'Contraseña actualizada de Centro'
-                            })
-                        );
-                    }
-                })
-            }
-        });
-    });
-};
-
-
-const deleteCentro = (req, res) => {
-    return new Promise(function(resolve, reject) {
-        const id = req.params.ID_Centro;
-        connection.query('SELECT * FROM centro WHERE ID_Centro = ?', [id], (error, rows) => {
-            if(error){
-                reject({ statusCode: 500, message: "Error al buscar el centro"});
-            }else if(rows.length === 0){
-                reject({ statusCode: 404, message: "Centro no encontrado" });
-            }else{
-                // Eliminar alumnos de clases pertenecientes a este centro
-                connection.query('DELETE alumno FROM alumno INNER JOIN clase ON alumno.ID_Clase = clase.ID_Clase WHERE clase.ID_Centro = ?', [id], (error) => {
-                    if (error) {
-                        console.log(error);
-                        return reject({ statusCode: 500, message: "Error al eliminar alumnos del centro" });
-                    }
-                    // Eliminar profesores del centro
-                    connection.query('DELETE FROM profesor WHERE ID_Centro = ?', [id], (error) => {
-                        if (error) {
-                            console.log(error);
-                            return reject({ statusCode: 500, message: "Error al eliminar profesores del centro" });
-                        }
-                        // Eliminar clases del centro
-                        connection.query('DELETE FROM clase WHERE ID_Centro = ?', [id], (error) => {
-                            if (error) {
-                                console.log(error);
-                                return reject({ statusCode: 500, message: "Error al eliminar clases del centro" });
-                            }
-                            // Finalmente, eliminar el centro
-                            connection.query('DELETE FROM centro WHERE ID_Centro = ?', [id], (error) => {
-                                if (error) {
-                                    console.log(error);
-                                    return reject({ statusCode: 500, message: "Error al eliminar el centro" });
-                                } else {
-                                    resolve(res.json({
-                                        ok: true,
-                                        msg: 'Centro, clases, profesores y alumnos eliminados correctamente'
-                                    }));
-                                }
-                            });
-                        });
-                    });
+        
+        const centro = await Centro.findByPk(id);
+        if (!centro) {
+            return res.status(404).json({
+                ok: false,
+                message: 'Centro no encontrado',
+            });
+        }
+        
+        const pwdOk = await bcrypt.compare(Contraseña, centro.Contraseña);
+        if (!pwdOk) {
+            return res.status(400).json({
+                ok: false,
+                message: 'Contraseña incorrecta',
+            });
+        }
+        
+        if (decodedToken.ID === id) {
+            if (newPassword !== newPassword2) {
+                return res.status(400).json({
+                    ok: false,
+                    message: 'Las contraseñas no coinciden',
                 });
             }
+            const hashedPassword = hashPassword(newPassword);
+            centro.Contraseña = hashedPassword;
+            await centro.save();
+        }
+        
+        return res.json({
+            ok: true,
+            msg: 'Contraseña actualizada del Centro'
         });
-    });
+    } catch (error) {
+        console.error("Error al cambiar la contraseña del centro:", error);
+        return res.status(500).json({ statusCode: 500, message: "Error al cambiar la contraseña" });
+    }
 };
 
 
-module.exports = { getCentros, createCentro, updateCentro, deleteCentro, updateCentroPwd };
+const deleteCentro = async (req, res) => {
+    try {
+        const id = req.params.ID_Centro;
+
+        const centro = await Centro.findByPk(id);
+        if (!centro) {
+            return res.status(404).json({ statusCode: 404, message: "Centro no encontrado" });
+        }
+
+        await Alumno.destroy({ where: { ID_Centro: id } });
+
+        await Profesor.destroy({ where: { ID_Centro: id } });
+
+        await Clase.destroy({ where: { ID_Centro: id } });
+
+        await Centro.destroy({ where: { ID_Centro: id } });
+
+        res.json({
+            ok: true,
+            msg: 'Centro y sus clases, profesores y alumnos asociados eliminados correctamente'
+        });
+    } catch (error) {
+        console.error("Error al eliminar el centro y sus dependencias:", error);
+        res.status(500).json({ statusCode: 500, message: "Error al eliminar el centro y sus dependencias" });
+    }
+};
+
+
+module.exports = { getCentros, createCentro, updateCentro, updateCentroPwd, deleteCentro };

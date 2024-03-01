@@ -1,202 +1,133 @@
-const { dbConnection } = require('../database/configdb');
-const connection = dbConnection();
-
+const sequelize = require('../database/configdb');
+const Profesor = require('../models/profesor');
+const Alumno = require('../models/alumno');
+const Centro = require('../models/centro');
 const Clase = require('../models/clase');
 
-const getClases = (req, res) => {
-    const tam = Number(req.query.numFilas) || 0;
-    const desde = Number(req.query.desde) || 0;
-    const texto = req.query.texto;
-    let textoBusqueda = '';
-    const paginado = req.query.paginado || false;
 
-    if(texto){
-        textoBusqueda = new RegExp(texto, 'i');
-        console.log('texto', texto, ' textoBusqueda', textoBusqueda);
-    }
 
-    return new Promise(function(resolve, reject) {
-        let query = 'SELECT clase.*, centro.Nombre AS NomCentro FROM clase LEFT JOIN centro ON clase.ID_Centro = centro.ID_Centro';
-        let countQuery = 'SELECT COUNT(*) AS total FROM clase';
-        let conditions = [];
-        let countConditions = [];
-        let values = [];
-        let validParams = ['ID_Clase', 'Nombre', 'NumAlumnos', 'ID_Centro', 'desde', 'texto', 'numFilas'];
+const getClases = async (req, res) => {
+    try {
+        const tam = Number(req.query.numFilas) || 0;
+        const desde = Number(req.query.desde) || 0;
+        const queryParams = req.query;
 
-        let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
+        const validParams = ['ID_Clase', 'Nombre', 'NumAlumnos', 'ID_Centro', 'desde', 'numFilas'];
 
+        const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {
-            return reject({ statusCode: 400, message: "Parámetros de búsqueda no válidos en Clases" });
-        }
-
-        if(req.query.ID_Clase){
-            conditions.push("clase.ID_Clase = ?");
-            values.push(req.query.ID_Clase);
-        }
-        if(req.query.Nombre){
-            conditions.push("clase.Nombre LIKE ?");
-            values.push(`%${req.query.Nombre}%`);
-        }
-        if(req.query.NumAlumnos){
-            conditions.push("clase.NumAlumnos = ?");
-            values.push(req.query.NumAlumnos);
-        }
-        if(req.query.ID_Centro){
-            conditions.push("clase.ID_Centro = ?");
-            countConditions.push("clase.ID_Centro = ?");
-            values.push(req.query.ID_Centro);
-        }
-
-        if(conditions.length > 0){
-            query += ' WHERE ' + conditions.join(' AND ');
-        }
-
-        if (countConditions.length > 0) {
-            countQuery += ' WHERE ' + countConditions.join(' AND ');
+            return res.status(400).json({ statusCode: 400, message: "Parámetros de búsqueda no válidos en Clases" });
         }
         
-        if(tam > 0){
-            query += ` LIMIT ${tam} OFFSET ${desde}`;
+        const queryOptions = {};
+        for (const param in queryParams) {
+            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde') {
+                if (param === 'ID_Clase') {
+                    queryOptions[param] = queryParams[param];
+                } else {
+                    queryOptions[param] = { [sequelize.Op.like]: `%${queryParams[param]}%` };
+                }
+            }
         }
 
-        connection.query(query, values, (error, results) => {
-            if (error) {
-                reject({ statusCode: 500, message: "Error al obtener la clase"});
-            } else{
-                connection.query(countQuery, values, (error, countRes) => {
-                    if(error){
-                        reject({ statusCode: 500, message: "Error al obtener el número total de clases"});
-                    }else {
-                        const total = countRes[0].total;
-                        const clases = results.map(row => {
-                            const clase = new Clase();
-                            Object.assign(clase, row);
-                            return clase.toJSON();
-                        });
-                        resolve(
-                            res.json({
-                                ok: true,
-                                msg: 'getClases',
-                                clases,
-                                page: {
-                                    desde,
-                                    tam,
-                                    total
-                                }
-                            })
-                        );
-                    }
-                })
+        const paginationOptions = tam > 0 ? { limit: tam, offset: desde } : {};
+
+        const clases = await Clase.findAll({
+            where: queryOptions,
+            ...paginationOptions,
+            include: [{
+                model: Centro,
+                attributes: ['Nombre']
+            }]
+        });
+
+        const total = await Clase.count({ where: queryOptions});
+
+        res.json({
+            ok: true,
+            msg: 'getClases',
+            clases,
+            page: {
+                desde,
+                tam,
+                total
             }
         });
-    });
+    } catch (error) {
+        console.error("Error al obtener las clases:", error);
+        res.status(500).json({ statusCode: 500, message: "Error al obtener las clases" });
+    }
 }
 
 
-const createClase = (req, res) => {
-    return new Promise(function(resolve, reject) {
+const createClase = async (req, res) => {
+    try {
         const { Nombre, ID_Centro } = req.body;
 
-        // Primero verificar si ya existe una clase con el mismo nombre y ID_Centro
-        connection.query('SELECT * FROM clase WHERE Nombre = ? AND ID_Centro = ?', [Nombre, ID_Centro], (error, results) => {
-            if (error) {
-                console.log(error);
-                return reject({ statusCode: 500, message: "Error al verificar la clase"});
-            }
+        const existClase = await Clase.findOne({ where: { Nombre, ID_Centro } });
+        if (existClase) {
+            return res.status(400).json({ ok: false, msg: 'Ya existe esta clase en el centro' });
+        }
 
-            if (results.length > 0) {
-                // Si ya existe una clase con el mismo nombre y ID_Centro, rechazar la creación
-                return reject({ statusCode: 400, message: "Ya existe esta clase en el centro"});
-            }
+        const nuevaClase = await Clase.create(req.body);
 
-            // Si no existe, proceder con la creación de la nueva clase
-            connection.query('INSERT INTO clase SET ?', [req.body], (error, results) => {
-                if (error) {
-                    console.log(error);
-                    reject({ statusCode: 500, message: "Error al crear la clase"});
-                } else {
-                    resolve(res.json({
-                        ok: true,
-                        msg: 'createClase'
-                    }));
-                }
-            });
+        res.json({
+            ok: true, 
+            msg: 'createClase',
+            nuevaClase
         });
-    });
+    } catch (error) {
+        console.error("Error al crear la clase:", error);
+        res.status(500).json({ ok: false, msg: 'Error al crear la clase' });
+    }
 };
 
 
-const updateClase = (req, res) => {
-    return new Promise(function(resolve, reject) {
+const updateClase = async (req, res) => {
+    try {
         const id = req.params.ID_Clase;
-        connection.query('SELECT * FROM clase WHERE ID_Clase = ?', [id], (error, rows) => {
-            if(error){
-                reject({ statusCode: 500, message: "Error al actualizar la clase"});
-            }else{
-                if(rows.length === 0){
-                    reject({ statusCode: 404, message: "Clase no encontrada" });
-                }else{
-                    connection.query('UPDATE clase SET ? WHERE ID_Clase = ?', [req.body, id], (error, results) => {
-                        if (error) {
-                            console.log(error);
-                            return;
-                        }else{
-                            resolve(
-                                res.json({
-                                    ok: true,
-                                    msg: 'updateClase'
-                                })
-                            );
-                        }
-                    });
-                }
-            }
-        });
-    });
-}
 
-const deleteClase = (req, res) => {
-    return new Promise(function(resolve, reject) {
-        const id = req.params.ID_Clase;
-        connection.query('SELECT * FROM clase WHERE ID_Clase = ?', [id], (error, rows) => {
-            if(error){
-                reject({ statusCode: 500, message: "Error al buscar la clase"});
-            } else if(rows.length === 0){
-                reject({ statusCode: 404, message: "Clase no encontrada" });
-            } else {
-                // Primero, actualizar ID_Clase de los profesores a null
-                connection.query('UPDATE profesor SET ID_Clase = NULL WHERE ID_Clase = ?', [id], (error) => {
-                    if (error) {
-                        console.log(error);
-                        return reject({ statusCode: 500, message: "Error al actualizar los profesores de la clase"});
-                    }
+        const existClase = await Clase.findByPk(id);
+        if (!existClase) {
+            return res.status(404).json({ ok: false, msg: 'Clase no encontrada' });
+        }
 
-                    // Eliminar todos los alumnos que pertenecen a esta clase
-                    connection.query('DELETE FROM alumno WHERE ID_Clase = ?', [id], (error) => {
-                        if (error) {
-                            console.log(error);
-                            reject({ statusCode: 500, message: "Error al eliminar los alumnos de la clase"});
-                        } else {
-                            // Luego, eliminar la clase
-                            connection.query('DELETE FROM clase WHERE ID_Clase = ?', [id], (error) => {
-                                if (error) {
-                                    console.log(error);
-                                    reject({ statusCode: 500, message: "Error al eliminar la clase"});
-                                } else {
-                                    resolve(res.json({
-                                        ok: true,
-                                        msg: 'Profesores actualizados y alumnos y clase eliminados correctamente'
-                                    }));
-                                }
-                            });
-                        }
-                    });
-                });
-            }
+        const [updatedRowsCount, updatedClase] = await Clase.update(req.body, { where: { ID_Clase: id } });
+
+        res.json({
+            ok: true,
+            msg: 'updateClase',
+            updatedClase
         });
-    });
+    } catch (error) {
+        console.error("Error al actualizar la clase:", error);
+        res.status(500).json({ ok: false, msg: 'Error al actualizar la clase' });
+    }
 };
 
+
+const deleteClase = async (req, res) => {
+    try {
+        const id = req.params.ID_Clase;
+
+        const existClase = await Clase.findByPk(id);
+        if (!existClase) {
+            return res.status(404).json({ ok: false, msg: 'Clase no encontrada' });
+        }
+
+        await Profesor.update({ ID_Clase: null }, { where: { ID_Clase: id } });
+        await Alumno.destroy({ where: { ID_Clase: id } });
+        await Clase.destroy({ where: { ID_Clase: id } });
+
+        res.json({
+            ok: true,
+            msg: 'Profesores actualizados y alumnos y clase eliminados correctamente'
+        });
+    } catch (error) {
+        console.error("Error al eliminar la clase y sus dependencias:", error);
+        res.status(500).json({ok: false, msg: 'Error al eliminar la clase' });
+    }
+};
 
 
 module.exports = { getClases, createClase, updateClase, deleteClase };

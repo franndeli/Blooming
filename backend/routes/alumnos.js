@@ -38,15 +38,14 @@ router.post('/', [
 
 router.put('/:ID_Alumno', [
         validarJWT, validarRol(['Centro', 'Admin']),
-    //Campos opcionales, no es necesario ponerlos todos para hacer una llamada PUT
-        check('Nombre').optional().not().isEmpty().withMessage('El argumento "Nombre" no debe estar vacío'),
-        check('Apellidos').optional().not().isEmpty().withMessage('El argumento "Apellidos" no debe estar vacío'),
-        check('Usuario').optional().not().isEmpty().withMessage('El argumento "Usuario" no debe estar vacío'),
-        check('Contraseña').optional().not().isEmpty().withMessage('El argumento "Contraseña" no debe estar vacío'),
-        check('FechaNacimiento').optional().not().isEmpty().withMessage('El argumento "FechaNacimiento" no debe estar vacío'),
-        check('ID_Centro').optional().isInt().withMessage('El argumento "ID_Centro" debe ser un número entero'),
-        check('ID_Clase').optional().isInt().withMessage('El argumento "ID_Clase" debe ser un número entero'),
-        check('Estado').optional().not().isEmpty().withMessage('El argumento "Estado2" no debe estar vacío'),
+        check('Nombre').optional().not().isEmpty().withMessage('Error en el argumento "Nombre"'),
+        check('Apellidos').optional().not().isEmpty().withMessage('Error en el argumento "Apellidos"'),
+        check('Usuario').optional().not().isEmpty().withMessage('Error en el argumento "Usuario"'),
+        check('Contraseña').optional().not().isEmpty().withMessage('Error en el argumento "Contraseña"'),
+        check('FechaNacimiento').optional().not().isEmpty().withMessage('Error en el argumento "FechaNacimiento"'),
+        check('ID_Centro').optional().isInt().withMessage('Error en el argumento "ID_Centro"'),
+        check('ID_Clase').optional().isInt().withMessage('Error en el argumento "ID_Clase"'),
+        check('Estado').optional().not().isEmpty().withMessage('Error en el argumento "Estado"'),
         check('ID_Alumno').isInt().withMessage('El campo "ID_Alumno" debe ser un número entero'),
         validarCampos
     ], (req, res) => {
@@ -57,7 +56,7 @@ router.put('/:ID_Alumno', [
 
 router.put('/estado/:ID_Alumno', [
         validarJWT, validarRol(['Alumno', 'Admin']),
-        check('Estado').optional().not().isEmpty().withMessage('El argumento "Estado2" no debe estar vacío'),
+        check('Estado').optional().not().isEmpty().withMessage('El argumento "Estado" no debe estar vacío'),
         check('ID_Alumno').isInt().withMessage('El campo "ID_Alumno" debe ser un número entero'),
         validarCampos
     ], (req, res) => {

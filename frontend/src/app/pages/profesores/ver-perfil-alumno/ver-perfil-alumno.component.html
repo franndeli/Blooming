@@ -3,55 +3,49 @@ data-sidebar-position="fixed" data-header-position="fixed">
 
 <div class="body-wrapper" style="margin-left: 0;">
     <div class="container-fluid"> 
-        
         <div class="container-fluid">
-                <div class="container-fluid">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="profile-container text-center">
-                                <img src="../assets/images/avatar.jpg" alt="Foto de perfil" class="profile-image rounded-circle">
-                                <h3>{{alumnosData.Nombre}}</h3> <span [ngClass]="getClaseEstado()">{{alumnosData.Estado}}</span>
-                            </div>
-                           <div class="card-body">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title fw-semibold mb-4">Últimas respuestas</h5>
-                                    <table class="table text-nowrap mb-0 align-middle" style="background-color: rgb(250, 252, 251); border-radius: 1em;">
-                                        <thead class="text-dark fs-4">
-                                            <tr>
-                                                <th class="border-bottom-0">Preguntas</th>
-                                                <th class="border-bottom-0">Respuesta</th>
-                                                <th class="border-bottom-0">Fecha</th>
-                                                <th class="border-bottom-0">Hora</th>
-                                                <th class="border-bottom-0"> </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody *ngFor="let resultado of resultadosData">
-                                            <tr>
-                                                <td class="border-bottom-0">{{resultado.ID_Pregunta}}</td>
-                                                <td class="border-bottom-0">{{resultado.Respuesta}}</td>
-                                                <td class="border-bottom-0">{{resultado.Fecha}}</td>
-                                                <td class="border-bottom-0">{{resultado.Hora}}</td>
-                                                <td class="border-bottom-0 gravedad-circle" [ngClass]="getGravedadClass(resultado.Gravedad)"></td> 
-                                            </tr>
-                                        </tbody>
-                                        <td class="border-bottom-0">
-                                            <!-- <a href="/profesores/actividad-reciente" class="btn btn-dark">Ver Cuestionario</a> -->
-                                            <button class="btn btn-light" (click)="volver()">Volver</button>
-                                        </td>
-                                    </table>
-                                </div>
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="profile-container text-center">
+                            <img src="../assets/images/avatar.jpg" alt="Foto de perfil" class="profile-image rounded-circle">
+                            <h3>{{alumnosData.Nombre}}</h3> <span [ngClass]="getClaseEstado()">{{alumnosData.Estado}}</span>
+                        </div>
+                        <div class="card">
+                            <div class="card-body table-responsive">
+                                <h5 class="card-title fw-semibold mb-4">Últimas respuestas</h5>
+                                <table class="table text-nowrap mb-0 align-middle" style="background-color: rgb(250, 252, 251); border-radius: 1em;">
+                                    <thead class="text-dark fs-4">
+                                        <tr>
+                                            <th class="border-bottom-0">Preguntas</th>
+                                            <th class="border-bottom-0">Respuesta</th>
+                                            <th class="border-bottom-0">Fecha</th>
+                                            <th class="border-bottom-0">Hora</th>
+                                            <th class="border-bottom-0"> </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngFor="let resultado of resultadosData">
+                                        <tr>
+                                            <td class="border-bottom-0">{{resultado.ID_Pregunta}}</td>
+                                            <td class="border-bottom-0">{{resultado.Respuesta}}</td>
+                                            <td class="border-bottom-0">{{resultado.Fecha}}</td>
+                                            <td class="border-bottom-0">{{resultado.Hora}}</td>
+                                            <td class="border-bottom-0 gravedad-circle" [ngClass]="getGravedadClass(resultado.Gravedad)"></td> 
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br>
+                                <button class="btn btn-light" (click)="volver()">Volver</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <br>
-            <br>
-        
-            <div class="py-6 px-6 text-center">
-              <p class="copyright">&copy; 2023 Blooming. Proyecto académico de la Universidad de Alicante .</p>
-            </div>
         </div>
-
+        <br>
+        <br>
+        <div class="py-6 px-6 text-center">
+            <p class="copyright">&copy; 2023 Blooming. Proyecto académico de la Universidad de Alicante .</p>
+        </div>
+    </div>
 </div>

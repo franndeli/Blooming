@@ -1,23 +1,59 @@
+const { sequelize } = require('../database/configdb');
+const { DataTypes } = require('sequelize');
 const moment = require('moment');
 
-class Alumno {
-    ID_Alumno;
-    Nombre;
-    Apellidos;
-    Usuario;
-    Contraseña;
-    FechaNacimiento;
-    ID_Clase;
-    Rol;
-
-    toJSON() {
-        const { Contraseña, ...alumnoData } = this;
-        return alumnoData;
+const Alumno = sequelize.define('Alumno', {
+    ID_Alumno: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    Nombre: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    Apellidos: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    Usuario: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    Contraseña: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    FechaNacimiento: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        validate: {
+            isDate: true
+        },
+        get() {
+            return moment.utc(this.getDataValue('FechaNacimiento')).format('DD-MM-YYYY');
+        }
+    },
+    ID_Centro: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    ID_Clase: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    Estado: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    Rol: {
+        type: DataTypes.STRING,
+        allowNull: true
     }
+}, {
+    tableName: 'alumno',
+    timestamps: false
+});
 
-    ajustarFechas() {
-        this.FechaNacimiento = moment(this.FechaNacimiento).format('DD-MM-YYYY');
-    }
-}
 
 module.exports = Alumno;

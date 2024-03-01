@@ -29,10 +29,9 @@ router.post('/', [
 
 router.put('/:ID_Clase', [
         validarJWT, validarRol(['Centro', 'Profesor', 'Admin']),
-    //Campos opcionales, no es necesario ponerlos todos para hacer una llamada PUT
-        check('Nombre').optional().not().isEmpty().withMessage('El argumento "Nombre" es obligatorio'),
-        check('NumAlumnos').optional().not().isEmpty().withMessage('El argumento "NumAlumnos" es obligatorio'),
-        check('ID_Centro', 'El argumento "ID_Centro" es obligatorio').not().isEmpty(),
+        check('Nombre').optional().not().isEmpty().withMessage('Error en el argumento "Nombre"'),
+        check('NumAlumnos').optional().not().isEmpty().withMessage('Error en el argumento "NumAlumnos"'),
+        check('ID_Centro').optional().not().isEmpty().withMessage('Error en el argumento "ID_Centro"'),
         check('ID_Clase').isInt().withMessage('El campo "ID_Clase" debe ser un número entero'),
         validarCampos
     ], (req, res) => {

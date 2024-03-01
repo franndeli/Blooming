@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../guards/auth.guard';
 
 import { DashboardComponent } from '../pages/dashboard/dashboard.component';
-import { UsuariosComponent } from '../pages/usuarios/usuarios.component';
 import { CentrosComponent } from './centros/centros.component';
 import { AdminComponent } from './admin/admin.component';
 
@@ -28,7 +27,6 @@ import { EditarCentrosComponent } from './admin/editar-centros/editar-centros.co
 import { EditarClasesComponent } from './admin/editar-clases/editar-clases.component';
 import { EditarProfesoresComponent } from './admin/editar-profesores/editar-profesores.component';
 import { ProfesoresComponent } from './profesores/profesores.component';
-import { VerClasesPComponent } from './profesores/ver-clases-p/ver-clases-p.component';
 import { VerPerfilAlumnoComponent } from './profesores/ver-perfil-alumno/ver-perfil-alumno.component';
 import { ActividadRecienteComponent } from './profesores/actividad-reciente/actividad-reciente.component';
 import { VerAlumnosPComponent } from './profesores/ver-alumnos-p/ver-alumnos-p.component';
@@ -49,6 +47,7 @@ import { ThreejsComponent } from './alumnos/threejs/threejs.component';
 import { ConversacionComponent } from './alumnos/conversacion/conversacion.component';
 import { CargaComponent } from './alumnos/carga/carga.component';
 import { ArbolEscenaComponent } from './alumnos/arbol-escena/arbol-escena.component';
+import { SistemaPreguntasComponent } from './alumnos/sistema-preguntas/sistema-preguntas.component';
 
 const routes: Routes = [
   { path: 'admin', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
@@ -90,7 +89,6 @@ const routes: Routes = [
     path: 'profesores', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
     children: [
       { path: 'dashboard', component: ProfesoresComponent},
-      { path: 'ver-clases', component: VerClasesPComponent},
       { path: 'ver-perfil-alumno', component: VerPerfilAlumnoComponent},
       { path: 'actividad-reciente', component: ActividadRecienteComponent},
       { path: 'ver-alumnos', component: VerAlumnosPComponent},
@@ -106,15 +104,9 @@ const routes: Routes = [
       { path: 'threejs', component: ThreejsComponent},
       { path: 'conversacion',component: ConversacionComponent},
       { path: 'carga', component: CargaComponent },
-      { path: 'arbol-escena', component: ArbolEscenaComponent }
+      { path: 'arbol-escena', component: ArbolEscenaComponent },
+      { path: 'sistema-preguntas', component: SistemaPreguntasComponent }
   ]}
-  /*{ 
-    path: 'dashboard', component: DashboardComponent,
-    children: [
-    { path: '', component: DashboardComponent},
-    { path: '**', redirectTo: ''}
-  ]},*/
-  /*{ path: 'usuarios', component: UsuariosComponent}*/
 ];
 
 @NgModule({

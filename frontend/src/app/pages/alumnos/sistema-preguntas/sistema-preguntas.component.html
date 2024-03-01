@@ -1,0 +1,20 @@
+<div>
+    <p>sistema-preguntas works!</p>
+    <div *ngIf="!mostrarReiniciar">
+        <div *ngIf="preguntaActual">
+            <p>
+                {{ preguntaActual.TextoPreguntaElegido ? preguntaActual.TextoPreguntaElegido : preguntaActual.TextoPregunta }}
+                {{ " " + preguntaActual.ID_Ambito }}
+            </p>
+            <ul>
+                <li *ngFor="let opcion of preguntaActual.respuestas.opciones">
+                    {{ opcion.TextoOpcion }}
+                </li>
+            </ul>
+        </div>
+        <button (click)="siguientePregunta()" *ngIf="preguntaActual">Siguiente</button>
+    </div>
+    <div *ngIf="mostrarReiniciar">
+        <button (click)="reiniciar()">Reiniciar</button>
+    </div>
+</div>

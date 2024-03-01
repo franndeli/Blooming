@@ -18,8 +18,11 @@ export class Interfaz2Component implements OnInit {
   private clickMouse: any;
   private moveMouse: THREE.Vector2 = new THREE.Vector2();
   private draggable: any;
+  private quadrant: number; // Variable para almacenar el cuadrante actual
 
-  constructor() { }
+  constructor() { 
+    this.quadrant = 0; 
+  }
 
   ngOnInit() {
     this.initScene();
@@ -118,47 +121,59 @@ export class Interfaz2Component implements OnInit {
     this.raycaster.setFromCamera(mousePosition, this.camera);
     return this.raycaster.intersectObjects(this.scene.children, true);
   }
-
-  private dragObject() {
-    if (this.draggable) {
-      const intersection = this.intersect(this.moveMouse)[0];
-      if (intersection) {
-        const target = intersection.point;
-        const currentPosition = this.draggable.position.clone();
-        const movementVector = target.clone().sub(currentPosition);
-        // Normaliza el vector de movimiento para garantizar una distancia constante
-        movementVector.normalize();
-        // Define la distancia máxima que el cilindro puede moverse en una sola iteración
-        const maxDistance = 1; // Puedes ajustar este valor según sea necesario
-        // Multiplica el vector normalizado por la distancia máxima
-        movementVector.multiplyScalar(maxDistance);
-        // Establece la nueva posición del cilindro sumando el vector de movimiento a la posición actual
-        this.draggable.position.add(movementVector);
-      }
-    }
-  }
   
-  
-
-  @HostListener('click', ['$event'])
-  onMouseClick(event: MouseEvent) {
+  @HostListener('mousedown', ['$event'])
+  onMouseDown(event: MouseEvent) {
     const mousePosition = new THREE.Vector2(
       (event.clientX / window.innerWidth) * 2 - 1,
       -(event.clientY / window.innerHeight) * 2 + 1
     );
 
     const intersection = this.intersect(mousePosition)[0];
-    if (intersection && intersection.object.userData.draggable) {
-      this.draggable = intersection.object;
-    } else {
-      this.draggable = null;
+    if (intersection) {
+     // this.draggable = this.createCylinder();
+     console.log("objeto movido a un cuadrante");
+      const target = intersection.point;
+      this.draggable.position.set(target.x, this.draggable.position.y, target.z);
     }
   }
 
   @HostListener('mousemove', ['$event'])
   onMouseMove(event: MouseEvent) {
-    this.moveMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    this.moveMouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    this.dragObject();
+    if (this.draggable) {
+      const mousePosition = new THREE.Vector2(
+        (event.clientX / window.innerWidth) * 2 - 1,
+        -(event.clientY / window.innerHeight) * 2 + 1
+      );
+      const intersection = this.intersect(mousePosition)[0];
+      if (intersection) {
+        const target = intersection.point;
+        this.draggable.position.set(target.x, this.draggable.position.y, target.z);
+      }
+    }
   }
+
+@HostListener('mouseup')
+onMouseUp() {
+  // Determina el cuadrante cuando se suelta el objeto
+  if (this.draggable) {
+    const x = this.draggable.position.x;
+    const z = this.draggable.position.z;
+    this.draggable = null;
+    // Determina el cuadrante basado en las coordenadas
+    if (x < 0 && z < 0) {
+      this.quadrant = 3;
+    } else if (x >= 0 && z < 0) {
+      this.quadrant = 4;
+    } else if (x < 0 && z >= 0) {
+      this.quadrant = 2;
+    } else {
+      this.quadrant = 1;
+    }
+
+    console.log('Cuadrante:', this.quadrant);
+  }
+ 
+}
+
 }

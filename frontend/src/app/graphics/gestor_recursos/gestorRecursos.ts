@@ -1,5 +1,5 @@
 import { Recurso } from './recurso';
-import TRecursoMalla from './TRecursoMalla';
+import { TRecursoMalla } from './TRecursoMalla';
 //import TRecursoTextura from './TRecursoTextura';
 //import TRecursoShader from './TRecursoShader';
 import TRecusroMaterial from './TRecursoMaterial';

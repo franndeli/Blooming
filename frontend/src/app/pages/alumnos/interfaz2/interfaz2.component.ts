@@ -1,7 +1,9 @@
 import { Component, ElementRef, OnInit, HostListener, ViewChild } from '@angular/core';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+import { AnimationMixer, AnimationAction, Group } from 'three';
 @Component({
   selector: 'app-interfaz2',
   templateUrl: './interfaz2.component.html',
@@ -19,7 +21,7 @@ export class Interfaz2Component implements OnInit {
   private moveMouse: THREE.Vector2 = new THREE.Vector2();
   private draggable: any;
   private quadrant: number; // Variable para almacenar el cuadrante actual
-
+  private avatar: any;
   constructor() { 
     this.quadrant = 0; 
   }
@@ -43,15 +45,34 @@ export class Interfaz2Component implements OnInit {
     this.rendererContainer.nativeElement.appendChild(this.renderer.domElement);
 
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0xbfd1e5);
+     // Cargar el video y crear la textura
+    const video = document.createElement('video');
+    video.src = '../assets/images/threejs/gradiente.mp4';
+    video.loop = true;
+    video.muted = true;
+    video.play();
+
+    const videoTexture = new THREE.VideoTexture(video);
+    videoTexture.minFilter = THREE.LinearFilter;
+    videoTexture.magFilter = THREE.LinearFilter;
+    
+    // Crear un plano que cubra toda la escena
+    const planeGeometry = new THREE.PlaneGeometry(window.innerWidth, window.innerHeight);
+    const planeMaterial = new THREE.MeshBasicMaterial({ map: videoTexture });
+    const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
+    planeMesh.position.z = -100; // Coloca el plano detrás de los otros objetos
+    this.scene.add(planeMesh);
+
+   // this.scene.background = new THREE.Color(0xbfd1e5);
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
     this.raycaster = new THREE.Raycaster();
 
     this.createFloor();
-    this.createCylinder();
+ //   this.createCylinder();
     this.addLights();
+    this.loadAvatar();
   }
 
   private addResizeHandler() {
@@ -63,7 +84,7 @@ export class Interfaz2Component implements OnInit {
 
     window.addEventListener('resize', onWindowResize);
   }
-
+/*
   private createCylinder() {
     let radius = 4;
     let height = 6;
@@ -77,6 +98,29 @@ export class Interfaz2Component implements OnInit {
     this.draggable.receiveShadow = true;
     this.draggable.userData.draggable = true;
     this.scene.add(this.draggable);
+  }
+*/
+  private loadAvatar() {
+    const loader = new FBXLoader();
+
+    // ruta archivos
+    loader.setPath('../assets/images/threejs/');
+
+    loader.load('bolita_avatar.fbx', (fbx: Group) => {
+
+      if (fbx instanceof Group) {
+        fbx.scale.setScalar(0.04);
+        fbx.position.set(-1, -3.3, 0);
+        fbx.rotation.set(0, -Math.PI/2, 0);
+        //fbx.rotation.set(-Math.PI / 6, 0, 0); // Rotación en el eje X
+        this.draggable= fbx;
+        this.draggable.userData.draggable = true;
+        this.scene.add(this.draggable);
+
+      } else {
+        console.error('El modelo cargado no es una instancia de THREE.Group.');
+      }
+    });
   }
 
   private createFloor() {
@@ -93,10 +137,10 @@ export class Interfaz2Component implements OnInit {
   }
 
   private addLights() {
-    const hemiLight = new THREE.AmbientLight(0xffffff, 0.20);
+    const hemiLight = new THREE.AmbientLight(0xffffff, 0.80);
     this.scene.add(hemiLight);
 
-    const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 2);
     dirLight.position.set(-30, 50, -30);
     this.scene.add(dirLight);
     dirLight.castShadow = true;

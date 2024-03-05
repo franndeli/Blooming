@@ -52,7 +52,7 @@ export class ClaseService {
       if(!textoBusqueda){
         textoBusqueda = '';
       }
-      return this.http.get(this.basePath+'?numFilas='+filas+'&desde='+desde+'&texto='+textoBusqueda, this.httpOptions);
+      return this.http.get(this.basePath+'?numFilas='+filas+'&desde='+desde, this.httpOptions);
     }
 
     getClasesCentro(id: any, desde?: number, filas?: number, textoBusqueda?: string){
@@ -66,7 +66,7 @@ export class ClaseService {
       if(!textoBusqueda){
         textoBusqueda = '';
       }
-      return this.http.get(this.basePath+'?ID_Centro='+id+'&numFilas='+filas+'&desde='+desde+'&texto='+textoBusqueda, this.httpOptions);
+      return this.http.get(this.basePath+'?ID_Centro='+id+'&numFilas='+filas+'&desde='+desde, this.httpOptions);
     }
   
     deleteClase(id:number){

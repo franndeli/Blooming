@@ -49,7 +49,7 @@ export class ProfesorService {
     if(!textoBusqueda){
       textoBusqueda = '';
     }
-    return this.http.get(this.basePath+'?numFilas='+filas+'&desde='+desde+'&texto='+textoBusqueda, this.httpOptions );
+    return this.http.get(this.basePath+'?numFilas='+filas+'&desde='+desde, this.httpOptions );
   }
 
   getProfesoresCentro(id: any, desde?: number, filas?: number, textoBusqueda?: string){
@@ -63,7 +63,7 @@ export class ProfesorService {
     if(!textoBusqueda){
       textoBusqueda = '';
     }
-    return this.http.get(this.basePath+'?ID_Centro='+id+'&numFilas='+filas+'&desde='+desde+'&texto='+textoBusqueda, this.httpOptions);
+    return this.http.get(this.basePath+'?ID_Centro='+id+'&numFilas='+filas+'&desde='+desde, this.httpOptions);
   }
 
   getProfesorID(id: any){

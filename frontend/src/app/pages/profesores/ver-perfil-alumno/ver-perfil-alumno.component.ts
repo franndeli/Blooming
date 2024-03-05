@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AlumnoService } from '../../../services/alumnos.service';
+import { ClaseService } from '../../../services/clases.service';
 import { ResultadoService } from '../../../services/resultados.service';
 
 @Component({
@@ -23,7 +24,9 @@ export class VerPerfilAlumnoComponent implements OnInit {
     this.activatedRoute.paramMap.subscribe(params => {
       this.alumnosData = history.state.alumno;
       this.claseID = history.state.claseID;
+      
     });
+    console.log(this.alumnosData);
 
     this.getResultados();
   }

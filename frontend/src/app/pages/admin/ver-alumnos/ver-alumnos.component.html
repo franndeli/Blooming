@@ -14,7 +14,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                 <div class="card-body">
                     <h5 class="card-title fw-semibold mb-4">Alumnos</h5>
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-body table-responsive">
                             <table class="table text-nowrap mb-0 align-middle table-responsive-sm" style="background-color: white; border-radius: 1em;">
                                 <thead class="text-dark fs-4">
                                     <tr>
@@ -27,7 +27,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                         <th class="border-bottom-0"></th>
                                     </tr>
                                 </thead>
-                                <tbody *ngFor="let alumno of alumnosData.alumnos">
+                                <tbody *ngFor="let alumno of alumnosData">
                                     <tr>
                                         <td class="border-bottom-0">{{alumno.Nombre}}</td>
                                         <td class="border-bottom-0">{{alumno.Apellidos}}</td>
@@ -36,12 +36,14 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                         <td class="border-bottom-0">{{alumno.NomCentro}}</td>
                                         <td class="border-bottom-0">{{alumno.NomClase}}</td>
                                         <td class="border-bottom-0">
-                                            <button class="btn btn-primary" (click)="editarAlumno(alumno)">M</button>
-                                          <button class="btn btn-danger" (click)="eliminarAlumno(alumno.ID_Alumno)">E</button>
+                                            <button class="btn btn-primary ti ti-pencil fs-5" (click)="editarAlumno(alumno)"></button>
+                                            <button class="btn btn-danger ti ti-trash fs-5" (click)="eliminarAlumno(alumno.ID_Alumno)"></button>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
+                            <br>
+                            <app-pagination (cambiarPagina)="cambiarPagina($event)" [texto]="true" [totalRegistros]="totalAlumnos" [registroActual]="posActual+1" (filasPagina)="cambiarFilasPagina($event)" [registroPag]="filPag"></app-pagination>
                         </div>
                     </div>
                     <a href="/admin/crear-alumnos" class="btn btn-danger">Crear Alumno</a>

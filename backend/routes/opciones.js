@@ -1,20 +1,25 @@
-const { Router } = require('express');
-const { getOpciones, createOpciones, updateOpcion, deleteOpcion } = require('../controllers/opciones_respuestas');
-const { check } = require('express-validator');
+const { getOpciones, createOpciones, updateOpcion, deleteOpcion } = require('../controllers/opciones');
 const { validarCampos } = require('../middleware/validaciones');
+const { validarRol } = require('../middleware/validar-rol');
+const { validarJWT } = require('../middleware/validar-jwt');
+const { check } = require('express-validator');
+const { Router } = require('express');
+
 
 const router = Router();
 
 router.get('/', (req, res) => {
+    validarJWT, validarRol(['Alumno', 'Admin']),
     getOpciones(req, res).catch(error => {
         res.status(error.statusCode || 500).json({ error: error.message });
     });
 });
 
 router.post('/', [
+        validarJWT, validarRol(['Admin']),
         check('TextoOpcion', 'El argumento "TextoOpcion" es obligatorio').not().isEmpty(),
         check('ID_Pregunta', 'El argumento "ID_Pregunta" es obligatorio').not().isEmpty(),
-        check('ID_PreguntaSiguiente', 'El argumento "ID_PreguntaSiguiente" es obligatorio').not().isEmpty(),
+        check('Gravedad', 'El argumento "Gravedad" es obligatorio').not().isEmpty(),
         validarCampos
     ], (req, res) => {
         createOpciones(req, res).catch(error => {
@@ -23,10 +28,10 @@ router.post('/', [
 });
 
 router.put('/:ID_Opcion', [
-        //Campos opcionales, no es necesario ponerlos todos para hacer una llamada PUT
-        check('TextoOpcion').optional().not().isEmpty().withMessage('El argumento "TextoOpcion" es obligatorio'),
-        check('ID_Pregunta').optional().not().isEmpty().withMessage('El argumento "ID_Pregunta" es obligatorio'),
-        check('ID_PreguntaSiguiente').optional().not().isEmpty().withMessage('El argumento "ID_PreguntaSiguiente" es obligatorio'),
+        validarJWT, validarRol(['Admin']),
+        check('TextoOpcion').optional().not().isEmpty().withMessage('Error en el argumento "TextoOpcion"'),
+        check('ID_Pregunta').optional().not().isEmpty().withMessage('Error en el argumento "ID_Pregunta"'),
+        check('Gravedad').optional().not().isEmpty().withMessage('Error en el argumento "Gravedad"'),
         check('ID_Opcion').isInt().withMessage('El campo "ID_Opcion" debe ser un número entero'),
         validarCampos
     ], (req, res) => {
@@ -37,6 +42,7 @@ router.put('/:ID_Opcion', [
 
 
 router.delete('/:ID_Opcion', [
+        validarJWT, validarRol(['Admin']),
         check('ID_Opcion').isInt().withMessage('El campo "ID_Opcion" debe ser un número entero'),
         validarCampos
     ], (req, res) => {

@@ -3634,7 +3634,6 @@ fieldset:disabled .btn {
   --bs-btn-disabled-color: #fff;
   --bs-btn-disabled-bg: #fa896b;
   --bs-btn-disabled-border-color: #fa896b;
-    margin-left: 10px; /*NUEVOOOOOOOOO*/
 }
 .btn-light {
   --bs-btn-color: #000;

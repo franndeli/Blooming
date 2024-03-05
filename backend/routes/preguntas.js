@@ -1,18 +1,31 @@
-const { Router } = require('express');
-const { getPreguntas, createPregunta, updatePregunta, deletePregunta } = require('../controllers/preguntas');
-const { check } = require('express-validator');
+const { getPreguntas, createPregunta, updatePregunta, deletePregunta, getPreguntasPorAmbito } = require('../controllers/preguntas');
 const { validarCampos } = require('../middleware/validaciones');
+const { validarRol } = require('../middleware/validar-rol');
+const { validarJWT } = require('../middleware/validar-jwt');
+const { check } = require('express-validator');
+const { Router } = require('express');
 
 const router = Router();
 
 router.get('/', (req, res) => {
+    validarJWT, validarRol(['Alumno','Admin']),
     getPreguntas(req, res).catch(error => {
         res.status(error.statusCode || 500).json({ error: error.message });
     });
 });
 
+router.get('/porAmbito', (req, res) => {
+    validarJWT, validarRol(['Alumno','Admin', 'Profesor']),
+    getPreguntasPorAmbito(req, res).catch(error => {
+        res.status(error.statusCode || 500).json({ error: error.message });
+    });
+});
+
 router.post('/', [
+    validarJWT, validarRol(['Admin']),
     check('TextoPregunta', 'El argumento "TextoPregunta" es obligatorio').not().isEmpty(),
+    check('AmbitoPregunta', 'El argumento "AmbitoPregunta" es obligatorio').not().isEmpty(),
+    check('NivelPregunta', 'El argumento "NivelPregunta" es obligatorio').not().isEmpty(),
     validarCampos
 ], (req, res) => {
     createPregunta(req, res).catch(error => {
@@ -21,8 +34,10 @@ router.post('/', [
 });
 
 router.put('/:ID_Pregunta', [
-    //Campos opcionales, no es necesario ponerlos todos para hacer una llamada PUT
-    check('TextoPregunta').optional().not().isEmpty().withMessage('El argumento "TextoPregunta" es obligatorio'),
+    validarJWT, validarRol(['Admin']),
+    check('TextoPregunta').optional().not().isEmpty().withMessage('Error en el argumento "TextoPregunta"'),
+    check('AmbitoPregunta').optional().not().isEmpty().withMessage('Error en el argumento "AmbitoPregunta"'),
+    check('NivelPregunta').optional().not().isEmpty().withMessage('Error en el argumento "NivelPregunta"'),
     check('ID_Pregunta').isInt().withMessage('El campo "ID_Pregunta" debe ser un número entero'),
     validarCampos
 ], (req, res) => {
@@ -32,6 +47,7 @@ router.put('/:ID_Pregunta', [
 });
 
 router.delete('/:ID_Pregunta', [
+    validarJWT, validarRol(['Admin']),
     check('ID_Pregunta').isInt().withMessage('El campo "ID_Pregunta" debe ser un número entero'),
     validarCampos
 ], (req, res) => {

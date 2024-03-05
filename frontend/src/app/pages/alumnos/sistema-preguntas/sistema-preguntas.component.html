@@ -1,0 +1,25 @@
+<div>
+    <p>sistema-preguntas works!</p>
+    <div *ngIf="!mostrarReiniciar">
+        <div *ngIf="preguntaActual">
+            <p>
+                {{ preguntaActual.TextoPreguntaElegido ? preguntaActual.TextoPreguntaElegido : preguntaActual.TextoPregunta }}
+                {{ " " + preguntaActual.NombreAmbito }}
+            </p>
+            <ul>
+                <li *ngFor="let opcion of preguntaActual.respuestas.opciones">
+                    <button (click)="siguientePregunta(opcion.Gravedad)">{{ opcion.TextoOpcion + opcion.Gravedad }}</button>
+                </li>                
+            </ul>
+        </div>
+    </div>
+    <div *ngIf="mostrarReiniciar">
+        <p>Resultados por ámbito:</p>
+        <ul>
+            <li *ngFor="let ambito of objectKeys(gravedadesPorAmbito)">
+                {{ ambito }}: {{ gravedadesPorAmbito[ambito] }}
+            </li>
+        </ul>
+        <button (click)="reiniciar()">Reiniciar</button>
+    </div>
+</div>

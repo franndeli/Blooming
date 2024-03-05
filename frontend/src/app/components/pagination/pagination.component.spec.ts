@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { VerClasesPComponent } from './ver-clases-p.component';
+import { PaginationComponent } from './pagination.component';
 
-describe('VerClasesPComponent', () => {
-  let component: VerClasesPComponent;
-  let fixture: ComponentFixture<VerClasesPComponent>;
+describe('PaginationComponent', () => {
+  let component: PaginationComponent;
+  let fixture: ComponentFixture<PaginationComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [VerClasesPComponent]
+      declarations: [PaginationComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(VerClasesPComponent);
+    fixture = TestBed.createComponent(PaginationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

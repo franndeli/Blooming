@@ -4,13 +4,13 @@ import { RouterModule } from '@angular/router';
 import { SidebarComponent } from '../commons/sidebar/sidebar.component';
 import { NavbarComponent } from '../commons/navbar/navbar.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { UsuariosComponent } from './usuarios/usuarios.component';
 
 import { SidebarCentroComponent } from '../commons/sidebar-centro/sidebar-centro.component';
 import { AdminComponent } from './admin/admin.component';
 import { AdminLayoutComponent } from '../layouts/admin-layout/admin-layout.component';
 
 import { CommonsModule } from '../commons/commons.module';
+import { ComponentsModule } from '../components/components.module'
 
 //CENTROS
 import { VerProfesoresCComponent } from './centros/ver-profesores-c/ver-profesores-c.component';
@@ -37,10 +37,6 @@ import { EditarCentrosComponent } from './admin/editar-centros/editar-centros.co
 
 //PROFESORES
 import { ProfesoresComponent } from './profesores/profesores.component';
-import { VerClasesPComponent } from './profesores/ver-clases-p/ver-clases-p.component';
-
-
-
 import { VerAlumnosPComponent } from './profesores/ver-alumnos-p/ver-alumnos-p.component';
 import { VerPerfilAlumnoComponent } from './profesores/ver-perfil-alumno/ver-perfil-alumno.component';
 import { ActividadRecienteComponent } from './profesores/actividad-reciente/actividad-reciente.component';
@@ -58,26 +54,18 @@ import { EditarCentroComponent } from './centros/editar-centro/editar-centro.com
 import { PerfilProfesorComponent } from './profesores/perfil-profesor/perfil-profesor.component';
 import { EditarProfesorComponent } from './profesores/editar-profesor/editar-profesor.component';
 
+//ALUMNOS
 import { ThreejsComponent } from './alumnos/threejs/threejs.component';
 import { ConversacionComponent } from './alumnos/conversacion/conversacion.component';
 import { CargaComponent } from './alumnos/carga/carga.component';
+import { SistemaPreguntasComponent } from './alumnos/sistema-preguntas/sistema-preguntas.component';
 import { InterfazComponent } from './alumnos/interfaz/interfaz.component';
 import { Interfaz2Component } from './alumnos/interfaz2/interfaz2.component';
 import { Interfaz3Component } from './alumnos/interfaz3/interfaz3.component';
 import { EnrutamientoComponent } from './alumnos/enrutamiento/enrutamiento.component';
 
-
-
-
 @NgModule({
   declarations: [
-    /*SidebarComponent,
-    SidebarCentroComponent,
-    NavbarComponent,
-    DashboardComponent,
-    UsuariosComponent,
-    CentrosVistaComponent,
-    AdminComponent*/
     AdminLayoutComponent,
     AlumnoLayoutComponent,
     AdmindashboardComponent,
@@ -92,7 +80,6 @@ import { EnrutamientoComponent } from './alumnos/enrutamiento/enrutamiento.compo
       EditarProfesoresComponent,
       EditarCentrosComponent,
       ProfesoresComponent,
-      VerClasesPComponent,
       VerAlumnosPComponent,
       VerPerfilAlumnoComponent,
       ActividadRecienteComponent,
@@ -117,11 +104,11 @@ import { EnrutamientoComponent } from './alumnos/enrutamiento/enrutamiento.compo
       ThreejsComponent,
       ConversacionComponent,
       CargaComponent,
+      SistemaPreguntasComponent,
       InterfazComponent,
       Interfaz2Component,
       Interfaz3Component,
-      EnrutamientoComponent,
-
+      EnrutamientoComponent
   ],
   exports: [
     AdminLayoutComponent,
@@ -133,7 +120,7 @@ import { EnrutamientoComponent } from './alumnos/enrutamiento/enrutamiento.compo
     CommonsModule,
     FormsModule,
     ReactiveFormsModule,
-   
+    ComponentsModule
   ]
 })
 export class PagesModule { }

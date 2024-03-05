@@ -1,26 +1,40 @@
+/* CONTENEDOR */
 .conversation-container {
   position: absolute;
  
-  background-color: white;
+  /*background-color: white;*/
   padding: 10px;
-  border: 1px solid #ccc;
+  /* border: 1px solid #ccc; */
   border-radius: 5px;
   z-index: 2; /* Asegura que esté encima de la escena Three.js */
  
   max-width: 555px;
 
-  top: 280px; /* Cambia el valor según sea necesario para ajustar la posición vertical */
-  left: 700px;
+  /* top: 280px; *//* Cambia el valor según sea necesario para ajustar la posición vertical */
+  /* left: 700px; */
+
+  
+  left: 65%;
+  top: 50vh;
+  transform: translate(-50%, -50%);
+  
+
   text-align: center;
-  box-shadow: 10px 10px 20px rgba(98, 132, 225, 0.5), -10px -10px 20px  rgba(98, 132, 225, 0.5); /* Agrega una sombra clara */   
+  /*box-shadow: 10px 10px 20px rgba(98, 132, 225, 0.5), -10px -10px 20px  rgba(98, 132, 225, 0.5);*/ /* Agrega una sombra clara */   
   padding: 5px; /* Ajusta el espacio alrededor del contenido */
 }
+
+/* PREGUNTAS */
 .conversation-container p {
-  font-size: 20px; /* Tamaño de fuente para las preguntas */
+  font-size: 22px;
+  color: black;
+  font-weight: bold;
+  font-style: italic;
 }
 
-/* Estilo para las respuestas */
+/* OPCIONES */
 .conversation-container ul li {
+  color: black;
   cursor: pointer; /* Cambia el cursor a una mano al pasar sobre las respuestas */
   max-width: 400px;
   width: auto; /* Establece un ancho fijo */
@@ -30,31 +44,30 @@
   transition: color 0.3s ease; /* Agrega una transición suave al cambiar el color */
 }
 .conversation-container ul li:hover {
-  color: rgb(214, 84, 207); /* Cambia el color al pasar el ratón */
+  /* color: rgb(214, 84, 207); Cambia el color al pasar el ratón */
+  color: black;
   transform: translate(0, -5px); /* Mueve la respuesta hacia arriba al pasar el ratón */
   font-weight: bold;
 }
 
 /* Estilo específico para pantallas más grandes */
-@media screen and (min-width:1500px) {
+/* @media screen and (min-width:1600px) {
   .conversation-container {
     top: 380px;
     left: 1020px;
     width: auto;
     height: auto;
     min-width: 400px;
-    box-shadow: 10px 10px 20px rgba(98, 132, 225, 0.5), -10px -10px 20px  rgba(98, 132, 225, 0.5); /* Agrega una sombra clara */  
+    box-shadow: 10px 10px 20px rgba(98, 132, 225, 0.5), -10px -10px 20px  rgba(98, 132, 225, 0.5);
     text-align: center; 
   }
 
-  /* Estilo para preguntas */
   .conversation-container p {
-    font-size: 30px; /* Tamaño de fuente para las preguntas */
+    font-size: 30px;
     text-align: center;
-    margin-bottom: 10px; /* Añade margen inferior para separar la pregunta de las respuestas */
+    margin-bottom: 10px;
   }
 
-  /* Estilo para respuestas */
   .conversation-container ul {
     list-style: none;
     padding: 0;
@@ -65,13 +78,13 @@
   }
 
   .conversation-container ul li {
-    font-size: 20px; /* Tamaño de fuente para las opciones */
+    font-size: 20px;
     text-align: center;
-    margin: 5px 0; /* Añade margen vertical entre las respuestas */
+    margin: 5px 0;
   }
   .conversation-container ul li:hover {
-    color: rgb(214, 84, 207); /* Cambia el color al pasar el ratón */
-    transform: translate(0, -5px); /* Mueve la respuesta hacia arriba al pasar el ratón */
+    color: rgb(214, 84, 207);
+    transform: translate(0, -5px);
     font-weight: bold;
   }
-}
+} */

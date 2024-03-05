@@ -1,8 +1,6 @@
-import { Component, AfterViewInit  } from '@angular/core';
+import { Component, OnInit  } from '@angular/core';
 import { Router } from '@angular/router';
-
 import { AlumnoService } from '../../../services/alumnos.service';
-
 import Swal from 'sweetalert2';
 
 
@@ -11,25 +9,38 @@ import Swal from 'sweetalert2';
   templateUrl: './ver-alumnos.component.html',
   styleUrl: './ver-alumnos.component.css'
 })
-export class VerAlumnosComponent implements AfterViewInit{
+export class VerAlumnosComponent implements OnInit{
   
   alumnosData: any;
+  public totalAlumnos = 0;
+  public posActual = 0;
+  public filPag = 5;
+  private busqueda = '';
 
-  constructor(private alumnoService: AlumnoService, private router: Router){
-    this.alumnosData = [];
+  constructor(private alumnoService: AlumnoService, private router: Router){}
+
+  ngOnInit() {
+    this.obtenerAlumnos(this.busqueda);
   }
 
-  ngAfterViewInit() {
-    this.tryLocalStorage();
-  }
-
-  tryLocalStorage(){
-    this.getAlumnos();
-  }
-
-  getAlumnos(){
-    this.alumnoService.getAlumnos().subscribe(res => {
-      this.alumnosData = res;
+  obtenerAlumnos(buscar: string){
+    this.busqueda = buscar;
+    this.alumnoService.getAlumnos(this.posActual, this.filPag, buscar).subscribe((res: any) => {
+      if(res["alumnos"].length === 0){
+        if(this.posActual > 0){
+          this.posActual = this.posActual - this.filPag;
+          if(this.posActual < 0){
+            this.posActual = 0
+          }
+          this.obtenerAlumnos(this.busqueda);
+        }else {
+          this.alumnosData = [];
+          this.totalAlumnos = 0;
+        }
+      }else {
+        this.alumnosData = res.alumnos;
+        this.totalAlumnos = res.page.total;
+      }  
     })
   }
 
@@ -45,7 +56,7 @@ export class VerAlumnosComponent implements AfterViewInit{
     }).then((result) => {
       if (result.isConfirmed) {
         this.alumnoService.deleteAlumno(id).subscribe(res => {
-          this.getAlumnos();
+          this.obtenerAlumnos(this.busqueda);
         })
         Swal.fire({
           title: "Alumno Eliminado",
@@ -57,6 +68,17 @@ export class VerAlumnosComponent implements AfterViewInit{
 
   editarAlumno(alumno: any){
     this.router.navigate(['admin/editar-alumnos'], {state: {alumno}});
+  }
+
+  cambiarPagina( pagina: any){
+    pagina = (pagina < 0 ? 0 : pagina);
+    this.posActual = ((pagina - 1) * this.filPag >= 0 ? (pagina - 1) * this.filPag : 0);
+    this.obtenerAlumnos(this.busqueda);
+  }
+
+  cambiarFilasPagina(filas: any){
+    this.filPag = filas;
+    this.cambiarPagina(1);
   }
   
 }

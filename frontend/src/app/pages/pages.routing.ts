@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../guards/auth.guard';
 
 import { DashboardComponent } from '../pages/dashboard/dashboard.component';
-import { UsuariosComponent } from '../pages/usuarios/usuarios.component';
 import { CentrosComponent } from './centros/centros.component';
 import { AdminComponent } from './admin/admin.component';
 
@@ -28,7 +27,6 @@ import { EditarCentrosComponent } from './admin/editar-centros/editar-centros.co
 import { EditarClasesComponent } from './admin/editar-clases/editar-clases.component';
 import { EditarProfesoresComponent } from './admin/editar-profesores/editar-profesores.component';
 import { ProfesoresComponent } from './profesores/profesores.component';
-import { VerClasesPComponent } from './profesores/ver-clases-p/ver-clases-p.component';
 import { VerPerfilAlumnoComponent } from './profesores/ver-perfil-alumno/ver-perfil-alumno.component';
 import { ActividadRecienteComponent } from './profesores/actividad-reciente/actividad-reciente.component';
 import { VerAlumnosPComponent } from './profesores/ver-alumnos-p/ver-alumnos-p.component';
@@ -48,13 +46,12 @@ import { EditarProfesorComponent } from './profesores/editar-profesor/editar-pro
 import {ThreejsComponent } from './alumnos/threejs/threejs.component';
 import { ConversacionComponent } from './alumnos/conversacion/conversacion.component';
 import { CargaComponent } from './alumnos/carga/carga.component';
-
+import { SistemaPreguntasComponent } from './alumnos/sistema-preguntas/sistema-preguntas.component';
 import { InterfazComponent } from './alumnos/interfaz/interfaz.component';
 import { Interfaz2Component } from './alumnos/interfaz2/interfaz2.component';
 import { Interfaz3Component } from './alumnos/interfaz3/interfaz3.component';
 
 import { EnrutamientoComponent } from './alumnos/enrutamiento/enrutamiento.component';
-
 
 const routes: Routes = [
   { path: 'admin', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
@@ -96,7 +93,6 @@ const routes: Routes = [
     path: 'profesores', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
     children: [
       { path: 'dashboard', component: ProfesoresComponent},
-      { path: 'ver-clases', component: VerClasesPComponent},
       { path: 'ver-perfil-alumno', component: VerPerfilAlumnoComponent},
       { path: 'actividad-reciente', component: ActividadRecienteComponent},
       { path: 'ver-alumnos', component: VerAlumnosPComponent},
@@ -110,25 +106,17 @@ const routes: Routes = [
       { path: 'dashboard', component: AlumnosComponent},
       { path: 'sidebar', component: SidebarComponent },
       { path: 'threejs', component: ThreejsComponent},
-      {path: 'conversacion',component: ConversacionComponent},
+      { path: 'conversacion',component: ConversacionComponent},
       { path: 'carga', component: CargaComponent },
+      { path: 'sistema-preguntas', component: SistemaPreguntasComponent },
       { path: 'interfaz', component: InterfazComponent },
       { path: 'interfaz2', component: Interfaz2Component },
       { path: 'interfaz3', component: Interfaz3Component }
-      
   ]},
-  
+
   { 
     path: 'cuestionario', component: EnrutamientoComponent
   }
-
-  /*{ 
-    path: 'dashboard', component: DashboardComponent,
-    children: [
-    { path: '', component: DashboardComponent},
-    { path: '**', redirectTo: ''}
-  ]},*/
-  /*{ path: 'usuarios', component: UsuariosComponent}*/
 ];
 
 @NgModule({

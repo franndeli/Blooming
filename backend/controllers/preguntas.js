@@ -1,149 +1,154 @@
-const { dbConnection } = require('../database/configdb');
-const connection = dbConnection();
-
+const {sequelize, QueryTypes} = require('../database/configdb');
 const Pregunta = require('../models/pregunta');
+const Ambito = require('../models/ambito');
 
-const getPreguntas = (req, res) => {
-    const tam = Number(process.env.TAMPORPAG);
-    const desde = Number(req.query.desde) || 0;
 
-    return new Promise(function (resolve, reject) {
-        let query = 'SELECT pregunta.* FROM pregunta';
-        let conditions = [];
-        let values = [];
-        let validParams = ['ID_Pregunta'];
+const getPreguntas = async (req, res) => {
+    try {
+        const queryParams = req.query;
 
-        let isValidQuery = Object.keys(req.query).every(param => validParams.includes(param));
+        const validParams = ['ID_Pregunta', 'TextoPregunta', 'TipoPregunta', 'ID_Ambito', 'NivelPregunta'];
 
+        const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {
-            return reject({ statusCode: 400, message: "Parámetros de búsqueda no válidos en Opciones respuesta" });
+            return res.status(400).json({ statusCode: 400, message: "Parámetros de búsqueda no válidos en Preguntas" });
         }
-
-        if(req.query.ID_Pregunta){
-            conditions.push("pregunta.ID_Pregunta = ?");
-            values.push(req.query.ID_Pregunta);
-        }
-
-        if(conditions.length > 0){
-            query += ' WHERE ' + conditions.join(' AND ');
-        }
-
-        connection.query(query, values, (error, results) => {
-            if (error) {
-                reject({ statusCode: 500, message: "Error al obtener las preguntas"});
-            } else{
-                const preguntas = results.map(row => {
-                    const pregunta = new Pregunta();
-                    Object.assign(pregunta, row);
-                    return pregunta.toJSON();
-                });
-                resolve(
-                    res.json({
-                        ok: true,
-                        msg: 'getPregunta',
-                        preguntas
-                    })
-                );
-            }
-        });
-    })
-} 
-
-
-const createPregunta = (req,res) => {
-    return new Promise(function(resolve, reject) {
-        const { ID_Pregunta } = req.body;
-
-        // Primero verificar si ya existe una pregunta con el mismo ID_Pregunta
-        connection.query('SELECT * FROM opciones_respuesta WHERE ID_Pregunta = ?', [ID_Pregunta], (error, results) => {
-            if (error) {
-                console.log(error);
-                return reject({ statusCode: 500, message: "Error al verificar si existe la pregunta"});
-            }
-
-            if (results.length > 0) {
-                // Si ya existe una pregunta con el mismo ID_Pregunta, rechazar la creación
-                return reject({ statusCode: 400, message: "Ya existe esta pregunta"});
-            }
-
-            // Si no existe, proceder con la creación de la nueva pregunta
-            connection.query('INSERT INTO pregunta SET ?', [req.body], (error, results) => {
-                if (error) {
-                    console.log(error);
-                    reject({ statusCode: 500, message: "Error al crear la pregunta"});
-                } else {
-                    resolve(res.json({
-                        ok: true,
-                        msg: 'Pregunta creada exitosamente'
-                    }));
-                }
-            });
-        });
-    });
-}
-
-
-const updatePregunta = (req, res) => {
-    return new Promise(function(resolve, reject) {
-        const id = req.params.ID_Pregunta;
-        connection.query('SELECT * FROM pregunta WHERE ID_Pregunta = ?', [id], (error, rows) => {
-            if(error){
-                reject({ statusCode: 500, message: "Error al actualizar la pregunta"});
-            }else{
-                if(rows.length === 0){
-                    reject({ statusCode: 404, message: "Pregunta no encontrada" });
-                }else{
-                    connection.query('UPDATE pregunta SET ? WHERE ID_Pregunta = ?', [req.body, id], (error, results) => {
-                        if (error) {
-                            console.log(error);
-                            return;
-                        }else{
-                            resolve(
-                                res.json({
-                                    ok: true,
-                                    msg: 'updatePregunta'
-                                })
-                            );
-                        }
-                    });
-                }
-            }
-        });
-    });
-}
-
-
-const deletePregunta = (req, res) => {
-    return new Promise(function(resolve, reject) {
-        const id = req.params.ID_Pregunta;
         
-        // Primero verificar si la opción de respuesta existe
-        connection.query('SELECT * FROM pregunta WHERE ID_Pregunta = ?', [id], (error, rows) => {
-            if (error) {
-                reject({ statusCode: 500, message: "Error al eliminar la pregunta"});
-            } else {
-                if (rows.length === 0) {
-                    // Si la pregunta no existe
-                    reject({ statusCode: 404, message: "Pregunta no encontrada" });
+        const queryOptions = {};
+        for (const param in queryParams) {
+            if (validParams.includes(param)) {
+                if (param === 'ID_Pregunta') {
+                    queryOptions[param] = queryParams[param];
                 } else {
-                    // Si la pregunta existe, proceder con la eliminación
-                    connection.query('DELETE FROM pregunta WHERE ID_Pregunta = ?', [id], (error, results) => {
-                        if (error) {
-                            console.log(error);
-                            reject({ statusCode: 500, message: "Error al eliminar la pregunta"});
-                        } else {
-                            resolve(res.json({
-                                ok: true,
-                                msg: 'Pregunta eliminada',
-                                id
-                            }));
-                        }
-                    });
+                    queryOptions[param] = { [sequelize.Op.like]: `%${queryParams[param]}%` };
                 }
             }
+        }
+
+        const preguntas = await Pregunta.findAll({
+            where: queryOptions,
+            include: [{
+                model: Ambito,
+                attributes: ['Nombre']
+            }]
         });
-    });
+
+        res.json({
+            ok: true,
+            msg: 'getPreguntas',
+            preguntas
+        });
+    } catch (error) {
+        console.error("Error al obtener las preguntas:", error);
+        res.status(500).json({ statusCode: 500, message: "Error al obtener las preguntas" });
+    }
+}
+
+const getPreguntasPorAmbito = async (req, res) => {
+    const ID_Ambito = req.query.ID_Ambito;
+    const cantidad = Number(req.query.cantidad) || 5;
+
+    const query = `
+        SELECT 
+            pregunta.ID_Pregunta,
+            CASE 
+                WHEN RAND() < 0.35 THEN pregunta.TextoPregunta
+                ELSE (SELECT TextoVariante FROM variante_pregunta WHERE variante_pregunta.ID_Pregunta = pregunta.ID_Pregunta ORDER BY RAND() LIMIT 1)
+            END AS TextoPreguntaElegido,
+            pregunta.*,
+            ambito.Nombre AS NombreAmbito
+        FROM 
+            pregunta
+            INNER JOIN ambito ON pregunta.ID_Ambito = ambito.ID_Ambito
+        WHERE 
+            ambito.ID_Ambito = :ID_Ambito
+        ORDER BY 
+            RAND()
+        LIMIT :cantidad
+    `;
+
+    try {
+        const preguntas = await sequelize.query(query, {
+            replacements: { ID_Ambito: ID_Ambito, cantidad: cantidad }, // Aquí se corrige el error
+            type: QueryTypes.SELECT
+        });
+
+        res.json({
+            ok: true,
+            msg: 'getPreguntasPorAmbito',
+            preguntas
+        });
+    } catch (error) {
+        console.error("Error al obtener las preguntas por ámbito:", error);
+        res.status(500).json({ statusCode: 500, message: "Error al obtener las preguntas por ámbito" });
+    }
+};
+
+const createPregunta = async (req, res) => {
+    try {
+        const { TextoPregunta } = req.body;
+
+        const existPregunta = await Pregunta.findOne({ where: {TextoPregunta } });
+        if (existPregunta) {
+            return res.status(400).json({ ok: false, msg: 'Ya existe esta pregunta' });
+        }
+
+        const nuevaPregunta = await Pregunta.create(req.body);
+
+        res.json({
+            ok: true, 
+            msg: 'createPregunta',
+            nuevaPregunta
+        });
+    } catch (error) {
+        console.error("Error al crear la pregunta:", error);
+        res.status(500).json({ ok: false, msg: 'Error al crear la pregunta' });
+    }
+};
+
+const updatePregunta = async (req, res) => {
+    try {
+        const id = req.params.ID_Pregunta;
+
+        const existPregunta = await Pregunta.findByPk(id);
+        if (!existPregunta) {
+            return res.status(404).json({ ok: false, msg: 'Pregunta no encontrada' });
+        }
+
+        const [updatedRowsCount, updatedPregunta] = await Pregunta.update(req.body, { where: { ID_Pregunta: id } });
+
+        res.json({
+            ok: true,
+            msg: 'updatePregunta',
+            updatedPregunta
+        });
+    } catch (error) {
+        console.error("Error al actualizar la pregunta:", error);
+        res.status(500).json({ ok: false, msg: 'Error al actualizar la pregunta' });
+    }
 };
 
 
-module.exports = { getPreguntas, createPregunta, updatePregunta, deletePregunta };
+const deletePregunta = async (req, res) => {
+    try {
+        const id = req.params.ID_Pregunta;
+
+        const pregunta = await Pregunta.findByPk(id);
+        if (!pregunta) {
+            return res.status(404).json({ ok: false, msg: 'Pregunta no encontrada' });
+        }
+
+        await pregunta.destroy();
+
+        res.json({
+            ok: true,
+            msg: 'deletePregunta'
+        });
+    } catch (error) {
+        console.error("Error al eliminar la pregunta:", error);
+        res.status(500).json({ ok: false, msg: 'Error al eliminar la pregunta' });
+    }
+};
+
+
+module.exports = { getPreguntas, createPregunta, updatePregunta, deletePregunta, getPreguntasPorAmbito };

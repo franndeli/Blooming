@@ -1,0 +1,29 @@
+<div class="mr-2" *ngIf="texto">
+  <div class="d-flex align-items-center justify-content-end py-1">
+    <p class="mb-0 fs-3">Filas por página:</p>
+    <select class="form-select w-auto ms-0 ms-sm-2 me-8 py-1 pe-7 ps-2 border-0" (change)="cambiaFilasPaginas($event)">
+      <option value=5>5</option>
+      <option value=10>10</option>
+      <option value=15>15</option>
+    </select>
+    <div role="status" aria-live="polite" *ngIf="totalRegistros > 0">
+      Mostrando {{registroActual}} - {{registroHasta}} de {{totalRegistros}}
+    </div>
+    <div role="status" aria-live="polite" *ngIf="totalRegistros <= 0">
+      No hay registros
+    </div>
+  </div>
+</div>
+<nav aria-label="...">
+    <ul class="pagination justify-content-center mb-0 mt-4">
+      <li class="page-item" [ngClass]="{'disabled' : pagActual==1}" (click)="cambiaPag(pagActual-1)">
+        <span class="page-link border-0 rounded-circle text-dark round-32 d-flex align-items-center justify-content-center"><i class="ti ti-chevron-left"></i></span>
+      </li>
+      <li class="page-item" [ngClass]="{'active': numPag===pagActual}" *ngFor="let numPag of listaPags" aria-current="page">
+        <span class="page-link border-0 rounded-circle round-32 mx-1 d-flex align-items-center justify-content-center" (click)="cambiaPag(numPag)">{{numPag}}</span>
+      </li>
+      <li class="page-item" [ngClass]="{'disabled' : pagActual==ultimaPag}" (click)="cambiaPag(pagActual+1)">
+        <span class="page-link border-0 rounded-circle text-dark round-32 d-flex align-items-center justify-content-center"><i class="ti ti-chevron-right"></i></span>
+      </li>
+    </ul>
+  </nav>

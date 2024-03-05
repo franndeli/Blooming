@@ -32,13 +32,12 @@ router.post('/', [
 
 router.put('/:ID_Profesor', [
         validarJWT, validarRol(['Centro', 'Admin']),
-    //Campos opcionales, no es necesario ponerlos todos para hacer una llamada PUT
-        check('Nombre').optional().not().isEmpty().withMessage('El argumento "Nombre" no debe estar vacío'),
-        check('Apellidos').optional().not().isEmpty().withMessage('El argumento "Apellidos" no debe estar vacío'),
-        check('Email').optional().not().isEmpty().withMessage('El argumento "Email" no debe estar vacío'),
-        check('Contraseña').optional().not().isEmpty().withMessage('El argumento "Contraseña" no debe estar vacío'),
-        check('ID_Clase').optional().not().isEmpty().withMessage('El argumento "ID_Clase" es obligatorio'),
-        check('ID_Centro').optional().not().isEmpty().withMessage('El argumento "ID_Centro" es obligatorio'),
+        check('Nombre').optional().not().isEmpty().withMessage('Error en el argumento "Nombre"'),
+        check('Apellidos').optional().not().isEmpty().withMessage('Error en el argumento "Apellidos"'),
+        check('Email').optional().not().isEmpty().withMessage('Error en el argumento "Email"'),
+        //check('Contraseña').optional().not().isEmpty().withMessage('Error en el argumento "Contraseña"'),
+        check('ID_Clase').optional().not().isEmpty().withMessage('Error en el argumento "ID_Clase"'),
+        check('ID_Centro').optional().not().isEmpty().withMessage('Error en el argumento "ID_Centro"'),
         check('ID_Profesor').isInt().withMessage('El campo "ID_Profesor" debe ser un número entero'),
         validarCampos
     ], (req, res) => {
@@ -49,7 +48,6 @@ router.put('/:ID_Profesor', [
 
     router.put('/newp/:ID_Profesor', [
         validarJWT, validarRol(['Profesor']),
-    //Campos opcionales, no es necesario ponerlos todos para hacer una llamada PUT
         check('ID_Profesor').isInt().withMessage('El campo "ID_Profesor" debe ser un número entero'),
         check('Contraseña').not().isEmpty().withMessage('El argumento "Contraseña" no debe estar vacío'),
         check('newPassword').not().isEmpty().withMessage('El argumento "newPassword" no debe estar vacío'),

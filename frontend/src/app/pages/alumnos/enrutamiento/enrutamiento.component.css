@@ -1,0 +1,26 @@
+button {
+    background-color: #007bff; 
+    color: #ffffff; /* Color del texto */
+    border: none; 
+    border-radius: 5px; 
+    padding: 10px 20px; 
+    cursor: pointer; /* cursor al pasar por encima */
+    font-weight: bold;
+    
+    transition: background-color 0.3s ease;
+  }
+  
+ 
+  button:hover {
+    background-color: #fdfeff; /* Cambiamos el color de fondo al pasar el ratón */
+    color: #007bff; /* Color del texto */
+    font-weight: bold;
+}
+  
+ 
+  button {
+    position: fixed;
+    bottom: 20px; /* Distancia desde el borde inferior */
+    right: 20px; /* Distancia desde el borde derecho */
+  }
+  

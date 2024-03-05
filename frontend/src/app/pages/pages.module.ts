@@ -58,8 +58,11 @@ import { EditarProfesorComponent } from './profesores/editar-profesor/editar-pro
 import { ThreejsComponent } from './alumnos/threejs/threejs.component';
 import { ConversacionComponent } from './alumnos/conversacion/conversacion.component';
 import { CargaComponent } from './alumnos/carga/carga.component';
-import { ArbolEscenaComponent } from './alumnos/arbol-escena/arbol-escena.component';
 import { SistemaPreguntasComponent } from './alumnos/sistema-preguntas/sistema-preguntas.component';
+import { InterfazComponent } from './alumnos/interfaz/interfaz.component';
+import { Interfaz2Component } from './alumnos/interfaz2/interfaz2.component';
+import { Interfaz3Component } from './alumnos/interfaz3/interfaz3.component';
+import { EnrutamientoComponent } from './alumnos/enrutamiento/enrutamiento.component';
 
 @NgModule({
   declarations: [
@@ -101,9 +104,11 @@ import { SistemaPreguntasComponent } from './alumnos/sistema-preguntas/sistema-p
       ThreejsComponent,
       ConversacionComponent,
       CargaComponent,
-      ArbolEscenaComponent,
       SistemaPreguntasComponent,
-
+      InterfazComponent,
+      Interfaz2Component,
+      Interfaz3Component,
+      EnrutamientoComponent
   ],
   exports: [
     AdminLayoutComponent,

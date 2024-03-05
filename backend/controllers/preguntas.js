@@ -55,7 +55,8 @@ const getPreguntasPorAmbito = async (req, res) => {
                 WHEN RAND() < 0.35 THEN pregunta.TextoPregunta
                 ELSE (SELECT TextoVariante FROM variante_pregunta WHERE variante_pregunta.ID_Pregunta = pregunta.ID_Pregunta ORDER BY RAND() LIMIT 1)
             END AS TextoPreguntaElegido,
-            pregunta.*
+            pregunta.*,
+            ambito.Nombre AS NombreAmbito
         FROM 
             pregunta
             INNER JOIN ambito ON pregunta.ID_Ambito = ambito.ID_Ambito

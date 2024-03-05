@@ -43,11 +43,15 @@ import { EditarCentroComponent } from './centros/editar-centro/editar-centro.com
 import { PerfilProfesorComponent } from './profesores/perfil-profesor/perfil-profesor.component';
 import { EditarProfesorComponent } from './profesores/editar-profesor/editar-profesor.component';
 
-import { ThreejsComponent } from './alumnos/threejs/threejs.component';
+import {ThreejsComponent } from './alumnos/threejs/threejs.component';
 import { ConversacionComponent } from './alumnos/conversacion/conversacion.component';
 import { CargaComponent } from './alumnos/carga/carga.component';
-import { ArbolEscenaComponent } from './alumnos/arbol-escena/arbol-escena.component';
 import { SistemaPreguntasComponent } from './alumnos/sistema-preguntas/sistema-preguntas.component';
+import { InterfazComponent } from './alumnos/interfaz/interfaz.component';
+import { Interfaz2Component } from './alumnos/interfaz2/interfaz2.component';
+import { Interfaz3Component } from './alumnos/interfaz3/interfaz3.component';
+
+import { EnrutamientoComponent } from './alumnos/enrutamiento/enrutamiento.component';
 
 const routes: Routes = [
   { path: 'admin', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
@@ -104,9 +108,15 @@ const routes: Routes = [
       { path: 'threejs', component: ThreejsComponent},
       { path: 'conversacion',component: ConversacionComponent},
       { path: 'carga', component: CargaComponent },
-      { path: 'arbol-escena', component: ArbolEscenaComponent },
-      { path: 'sistema-preguntas', component: SistemaPreguntasComponent }
-  ]}
+      { path: 'sistema-preguntas', component: SistemaPreguntasComponent },
+      { path: 'interfaz', component: InterfazComponent },
+      { path: 'interfaz2', component: Interfaz2Component },
+      { path: 'interfaz3', component: Interfaz3Component }
+  ]},
+
+  { 
+    path: 'cuestionario', component: EnrutamientoComponent
+  }
 ];
 
 @NgModule({

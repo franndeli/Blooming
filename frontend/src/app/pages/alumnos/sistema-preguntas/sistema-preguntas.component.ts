@@ -14,6 +14,9 @@ export class SistemaPreguntasComponent implements OnInit {
   preguntaActual: any = null;
   mostrarReiniciar: boolean = false; // Añade esta línea para controlar la visualización del botón de reiniciar
 
+  objectKeys = Object.keys;
+
+
   constructor(private preguntaService: PreguntaService) {}
 
   ngOnInit() {
@@ -29,13 +32,27 @@ export class SistemaPreguntasComponent implements OnInit {
     });
   }
 
-  siguientePregunta() {
+  gravedadesPorAmbito: { [ambito: string]: number } = {};
+
+  siguientePregunta(gravedad: number) {
+    const ambitoActual = this.preguntaActual.NombreAmbito;
+
+    if (!this.gravedadesPorAmbito[ambitoActual] && ambitoActual !== "Inicio") {
+      this.gravedadesPorAmbito[ambitoActual] = 0;
+    }
+
+    if (ambitoActual !== "Inicio") {
+      this.gravedadesPorAmbito[ambitoActual] += gravedad;
+    }
+
     if (this.indiceActual < this.preguntas.length - 1) {
       this.indiceActual++;
       this.preguntaActual = this.preguntas[this.indiceActual];
     } else {
       this.mostrarReiniciar = true;
       this.preguntaActual = null;
+
+      console.log('Gravedades por ámbito al final:', this.gravedadesPorAmbito);
     }
   }
 

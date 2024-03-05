@@ -4,25 +4,30 @@
         <!--  Row 1 -->
         <div class="container-fluid">
             <div class="container-fluid">
-                <div class="card" >
+                <div class="card mx-auto" style="max-width: 600px;">
                     <div class="card-body">
                         <h5 class="card-title fw-semibold mb-4">Profesor</h5>
                         <div class="card">
                             <div class="card-body">
                                 <div class="mb-4">
-                                    <h4 class="card-title fw-semibold">Mi Perfil</h4>
+                                    <span class="card-title fw-semibold">Mi Perfil</span>
+                                    <span><i class="ti ti-user" style="font-size: 25px;"></i></span>
+                                </div>
+                                
+                                <div class="mb-4" >
+                                    <span><i class="ti ti-writing" style="font-size: 20px;"></i></span> 
+                                    <span> Nombre: {{profesoresData.Nombre}}</span>
                                 </div>
                                 <div class="mb-4">
-                                    <p>Nombre: {{profesoresData.Nombre}}</p>
+                                    <span><i class="ti ti-writing" style="font-size: 20px;"></i></span> 
+                                    <span> Apellidos: {{profesoresData.Apellidos}}</span>
                                 </div>
                                 <div class="mb-4">
-                                    <p>Apellidos: {{profesoresData.Apellidos}}</p>
+                                    <span><i class="ti ti-mail" style="font-size: 20px;"></i></span> 
+                                    <span> Email: {{profesoresData.Email}}</span>
                                 </div>
-                                <div class="mb-4">
-                                    <p>Email: {{profesoresData.Email}}</p>
-                                </div>
-                                <a href="/profesores/editar-profesor" class="btn btn-danger">Editar Perfil</a>
-                                <a href="/profesores/dashboard" class="btn btn-danger">Volver</a>
+                                <a href="/profesores/editar-profesor" class="btn btn-danger"><span><i class="ti ti-edit" style="font-size: 15px;"></i></span>Editar Perfil</a>
+                                <a href="/profesores/dashboard" class="btn btn-danger"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span>Volver</a>
                             </div>
                         </div>
                     </div>

@@ -29,7 +29,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                             </div>
                                         </td>
                                         <td class="border-bottom-0">
-                                            <button class="btn btn-light" (click)="verPerfil(alumno)">Ver Perfil</button>
+                                            <button class="btn btn-light" (click)="verPerfil(alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i></span>Ver Perfil</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -38,7 +38,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                             <app-pagination (cambiarPagina)="cambiarPagina($event)" [texto]="true" [totalRegistros]="totalAlumnos" [registroActual]="posActual+1" (filasPagina)="cambiarFilasPagina($event)" [registroPag]="filPag"></app-pagination>
                         </div>
                     </div>
-                    <a href="/profesores/dashboard" class="btn btn-light">Volver</a>
+                    <a href="/profesores/dashboard" class="btn btn-light"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span>Volver</a>
                 </div>
             </div>
         </div>

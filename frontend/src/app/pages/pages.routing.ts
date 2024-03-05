@@ -53,6 +53,9 @@ import { InterfazComponent } from './alumnos/interfaz/interfaz.component';
 import { Interfaz2Component } from './alumnos/interfaz2/interfaz2.component';
 import { Interfaz3Component } from './alumnos/interfaz3/interfaz3.component';
 
+import { EnrutamientoComponent } from './alumnos/enrutamiento/enrutamiento.component';
+
+
 const routes: Routes = [
   { path: 'admin', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
     children: [
@@ -113,7 +116,12 @@ const routes: Routes = [
       { path: 'interfaz2', component: Interfaz2Component },
       { path: 'interfaz3', component: Interfaz3Component }
       
-  ]}
+  ]},
+  
+  { 
+    path: 'cuestionario', component: EnrutamientoComponent
+  }
+
   /*{ 
     path: 'dashboard', component: DashboardComponent,
     children: [

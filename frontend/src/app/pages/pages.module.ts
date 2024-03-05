@@ -64,6 +64,7 @@ import { CargaComponent } from './alumnos/carga/carga.component';
 import { InterfazComponent } from './alumnos/interfaz/interfaz.component';
 import { Interfaz2Component } from './alumnos/interfaz2/interfaz2.component';
 import { Interfaz3Component } from './alumnos/interfaz3/interfaz3.component';
+import { EnrutamientoComponent } from './alumnos/enrutamiento/enrutamiento.component';
 
 
 
@@ -119,6 +120,7 @@ import { Interfaz3Component } from './alumnos/interfaz3/interfaz3.component';
       InterfazComponent,
       Interfaz2Component,
       Interfaz3Component,
+      EnrutamientoComponent,
 
   ],
   exports: [

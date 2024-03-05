@@ -1,0 +1,19 @@
+
+<ng-container *ngIf="componenteActual === 'InterfazComponent'">
+    <app-interfaz></app-interfaz>
+   
+    <button (click)="cargarComponenteSiguiente()">Siguiente</button>
+</ng-container>
+  
+<ng-container *ngIf="componenteActual === 'Interfaz2Component'">
+   <app-interfaz2></app-interfaz2>
+
+   <button (click)="cargarComponenteSiguiente()">Siguiente</button>
+</ng-container>
+  
+<ng-container *ngIf="componenteActual === 'Interfaz3Component'">
+    <app-interfaz3></app-interfaz3>
+
+    <button (click)="cargarComponenteSiguiente()">Siguiente</button>
+</ng-container>
+  

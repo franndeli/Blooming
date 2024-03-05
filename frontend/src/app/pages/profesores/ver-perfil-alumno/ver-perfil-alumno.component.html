@@ -1,6 +1,185 @@
 <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-data-sidebar-position="fixed" data-header-position="fixed">
+    data-sidebar-position="fixed" data-header-position="fixed">
 
+    <div class="body-wrapper" style="margin-left: 0;">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <!-- Yearly Breakup -->
+                            <div class="card overflow-hidden">
+                                <div class="card-body p-4">
+                                    <div class="row align-items-center">
+                                        <div class="col-8">
+                                            <h5 class="card-title mb-9 fw-semibold">{{alumnosData.Nombre}} {{alumnosData.Apellidos}}</h5>
+                                            <h5 class="fw-semibold mb-3"> Clase: {{alumnosData.NomClase}}</h5>
+                                        </div>
+                                        <div class="col-4 text-end">
+                                            <img src="../assets/images/avatar.jpg" alt="Foto de perfil" style="width: 90px;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <!-- Monthly Earnings -->
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row alig ">
+                                    <div class="col-8">
+                                        <div class="mb-4">
+                                            <h5 class="card-title fw-semibold"> Estado actual de cada ambito</h5>
+                                        </div>
+                                    <div style="float: left; width: 50%; text-align: center;">
+                                        <ul>
+                                            <li style="margin-top: 7px;"><div>Clase</div></li>
+                                            <li style="margin-top: 7px;"><div>Amigos</div></li>
+                                            <li style="margin-top: 7px;"><div>Familia</div></li>
+                                            <li style="margin-top: 7px;"><div>Fuera de clase</div></li>
+                                            <li style="margin-top: 7px;"><div>Emociones</div></li>
+                                        </ul>
+                                    </div>
+                                    <div style="float: left; width: 50%; text-align: center;">
+                                        <ul>
+                                            <li>
+                                                <span class="badge bg-success rounded-3">Bueno</span>
+                                            </li>
+                                            <li>
+                                                <span class="badge bg-danger rounded-3">Mal</span>
+                                            </li>
+                                            <li>
+                                                <span class="badge bg-success rounded-3">Genial</span>
+                                            </li>
+                                            <li>
+                                                <span class="badge bg-danger rounded-3">Fatal</span>
+                                            </li>
+                                            <li>
+                                                <span class="badge bg-secondary rounded-3">Normal</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-8 d-flex align-items-stretch">
+                    <div class="card w-100">
+                        <div class="card-body">
+                            <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
+                                <div class="mb-3 mb-sm-0">
+                                    <h5 class="card-title fw-semibold">Gráfica resumen</h5>
+                                </div>
+                                <div>
+                                    <select class="form-select">
+                                        <option value="1">Esta semana</option>
+                                        <option value="2">Semana pasada</option>
+                                        <option value="3">Mes pasado</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="chart">grafico jiji</div>
+                            <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row d-flex align-items-stretch">
+                <div class="col-lg-4 ">
+                    <div class="card w-100">
+                        <div class="card-body p-4">
+                            <div class="mb-4">
+                                <h5 class="card-title fw-semibold">Estado actual de cada ambito de cada ámbito</h5>
+                            </div>
+                            <div style="float: left; width: 50%; text-align: center;">
+                                <ul>
+                                    <li style="margin-top: 7px;"><div>Clase</div></li>
+                                    <li style="margin-top: 7px;"><div>Amigos</div></li>
+                                    <li style="margin-top: 7px;"><div>Familia</div></li>
+                                    <li style="margin-top: 7px;"><div>Fuera de clase</div></li>
+                                    <li style="margin-top: 7px;"><div>Emociones</div></li>
+                                </ul>
+                            </div>
+                            <div style="float: left; width: 50%; text-align: center;">
+                                <ul>
+                                    <li>
+                                        <span class="badge bg-success rounded-3">Bueno</span>
+                                    </li>
+                                    <li>
+                                        <span class="badge bg-danger rounded-3">Mal</span>
+                                    </li>
+                                    <li>
+                                        <span class="badge bg-success rounded-3">Genial</span>
+                                    </li>
+                                    <li>
+                                        <span class="badge bg-danger rounded-3">Fatal</span>
+                                    </li>
+                                    <li>
+                                        <span class="badge bg-secondary rounded-3">Normal</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8 d-flex align-items-stretch">
+                    <div class="card w-100">
+                        <div class="card-body p-4">
+                            <h5 class="card-title fw-semibold mb-4">Preguntas <span class="badge bg-danger rounded-3">alarmantes</span> recientes</h5>
+                            <div class="table-responsive">
+                                <table class="table text-nowrap mb-0 align-middle">
+                                    <tbody>
+                                        <tr>
+                                            <td class="border-bottom-0"><h6 class="fw-semibold mb-0">1</h6></td>
+                                            <td class="border-bottom-0">
+                                                <h6 class="fw-semibold mb-1">¿Cómo te sientes hoy?</h6>
+                                                <span class="fw-normal">Emociones</span>
+                                            </td>
+                                            <td class="border-bottom-0">
+                                                <p class="mb-0 fw-normal">Mal</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="border-bottom-0"><h6 class="fw-semibold mb-0">2</h6></td>
+                                            <td class="border-bottom-0">
+                                                <h6 class="fw-semibold mb-1">¿Qué haces con tus amigos?</h6>
+                                                <span class="fw-normal">Amigos</span>
+                                            </td>
+                                            <td class="border-bottom-0">
+                                                <p class="mb-0 fw-normal">No tengo amigos</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="border-bottom-0"><h6 class="fw-semibold mb-0">3</h6></td>
+                                            <td class="border-bottom-0">
+                                                <h6 class="fw-semibold mb-1">¿Qué haces con tus amigos?</h6>
+                                                <span class="fw-normal">Amigos</span>
+                                            </td>
+                                            <td class="border-bottom-0">
+                                                <p class="mb-0 fw-normal">No tengo amigos</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    
+                                </table>
+                                <button type="button" class="btn btn-outline-primary m-1">Más preguntas</button>
+                                    <button type="button" class="btn btn-outline-primary m-1">Descargar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!---
 <div class="body-wrapper" style="margin-left: 0;">
     <div class="container-fluid"> 
         <div class="container-fluid">
@@ -48,4 +227,4 @@ data-sidebar-position="fixed" data-header-position="fixed">
             <p class="copyright">&copy; 2023 Blooming. Proyecto académico de la Universidad de Alicante .</p>
         </div>
     </div>
-</div>
+</div>-->

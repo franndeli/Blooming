@@ -4,20 +4,20 @@ data-sidebar-position="fixed" data-header-position="fixed">
 <div class="body-wrapper" style="margin-left: 0;">
   <div class="container-fluid">
       <!--  Row 1 -->
-      <h1>Bienvenido a tu Gestión de Clases</h1>
+      
       <div class="container-fluid">
-          <div class="card">
-            <div class="card-body">
-              <div class="row">
-                <div class="col-md-4" *ngFor="let clase of clasesData.clases">
-                    <div class="card">
-                      <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
-                      <div class="card-body">
-                        <h5 class="card-title" style="text-align: center; font-size: 25px; margin-bottom: 30px;">{{clase.Nombre}}</h5>
-                        <div class="botones">
-                          <button class="btn btn-primary" (click)="verClase(clase.ID_Clase)"><span><i class="ti ti-click" style="font-size: 15px;"></i></span>Ver Clase</button>
-                          <button class="btn btn-danger" (click)="eliminarClase(clase.ID_Clase)"><span><i class="ti ti-trash" style="font-size: 15px;"></i></span>Eliminar</button>
-                        </div>
+        <div class="card">
+          <div class="card-body">
+            <h1>Tus Clases <span><i class="ti ti-school" style="font-size: 30px;"></i></span></h1>
+            <div class="row">
+              <div class="col-md-4" *ngFor="let clase of clasesData.clases">
+                  <div class="card">
+                    <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
+                    <div class="card-body">
+                      <h5 class="card-title" style="text-align: center; font-size: 25px; margin-bottom: 30px;">{{clase.Nombre}}</h5>
+                      <div class="botones">
+                        <button class="btn btn-primary" (click)="verClase(clase.ID_Clase)"><span><i class="ti ti-click" style="font-size: 15px;"></i></span>Ver Clase</button>
+                        <!--<button class="btn btn-danger" (click)="eliminarClase(clase.ID_Clase)"><span><i class="ti ti-trash" style="font-size: 15px;"></i></span>Eliminar</button>-->
                       </div>
                     </div>
                   </div>
@@ -25,6 +25,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
               </div>
             </div>
           </div>
+        </div>
       </div>
       <br>
       <br>

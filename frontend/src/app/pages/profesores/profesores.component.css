@@ -18,6 +18,8 @@ h1{
     margin-bottom: 25px;
 }
 .btn {
-    margin-right: 5px;
-    margin-top: 5px;
+    font-size: 18px;
+}
+.alert-secondary{
+    padding: 0;
 }

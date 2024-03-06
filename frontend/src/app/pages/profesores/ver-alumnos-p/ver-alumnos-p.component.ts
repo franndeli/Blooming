@@ -31,7 +31,6 @@ export class VerAlumnosPComponent implements OnInit{
     if(this.claseID === '' || undefined){
       this.claseID = this.claseService.getClaseID();
     }
-   
     this.obtenerAlumnos(this.busqueda);
   }
 
@@ -51,6 +50,7 @@ export class VerAlumnosPComponent implements OnInit{
         }
       }else{
         this.alumnosData = res.alumnos;
+        console.log(this.alumnosData);
         this.totalAlumnos = res.page.total;
       }
     })

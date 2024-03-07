@@ -6,7 +6,6 @@ export abstract class TEntidad {
         // Constructor vacío
     }
 
-    // Declaramos el método `dibujar` como abstracto y lo tipamos adecuadamente.
     // Esto obliga a las subclases a implementar este método.
-    abstract dibujar(matriz: mat4): void;
+    abstract dibujar(gl: WebGLRenderingContext, shaderProgram: WebGLProgram): void;
 }

@@ -1,6 +1,7 @@
-import {Recurso} from './recurso';
+// TRecursoMaterial.ts
+import { Recurso } from './recurso';
 
-class TRecusroMaterial extends Recurso {
+export default class TRecursoMaterial extends Recurso {
   private coeficientesLuz: number[] = [];
   private texturas: string[] = [];
 
@@ -8,19 +9,15 @@ class TRecusroMaterial extends Recurso {
     super(nombre);
   }
 
-  cargarFichero(nombre: string): void {
-    // Lógica para cargar el fichero de coeficientes de luz y texturas
-    console.log(`Cargando fichero para el material ${this.getNombre()}`);
-
-    // Asignar valores a coeficientesLuz y texturas
-    this.coeficientesLuz = [/* ... */];
-    this.texturas = [/* ... */];
-  }
-
-  // una implementación específica para la carga de recursos de material
-  cargarRecurso(): void {
-    this.cargarFichero("nombre_por_defecto"); // Puedes llamar a cargarFichero aquí o proporcionar otra lógica
+  async cargarRecurso(url: string): Promise<void> {
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      this.coeficientesLuz = data.coeficientesLuz;
+      this.texturas = data.texturas;
+      console.log(`Material ${this.getNombre()} cargado correctamente con coeficientes de luz: ${this.coeficientesLuz} y texturas: ${this.texturas}`);
+    } catch (error) {
+      console.error(`Error al cargar el material ${this.getNombre()}:`, error);
+    }
   }
 }
-
-export default TRecusroMaterial;

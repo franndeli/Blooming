@@ -1,4 +1,4 @@
-import {Recurso} from './recurso';
+/*import {Recurso} from './recurso';
 
 class TRecursoShader extends Recurso {
   private id: WebGLProgram | null = null;
@@ -12,12 +12,12 @@ class TRecursoShader extends Recurso {
     // Implementa la lógica para crear y compilar el programa GLSL
     console.log(`Creando programa GLSL para el shader ${this.getNombre()}`);
 
-    const programa: WebGLProgram | null = /* Lógica para crear el programa GLSL */ null;
+    const programa: WebGLProgram | null = /* Lógica para crear el programa GLSL null;
 
     return programa;
   }
 
-  cargarRecurso(): void {
+  async cargarRecurso(url: string): Promise<void> {
     // Puedes proporcionar una implementación específica para cargar el shader si es necesario
     console.log(`Cargando recurso para el shader ${this.getNombre()}`);
   }
@@ -41,4 +41,4 @@ class TRecursoShader extends Recurso {
   // Otros métodos específicos de TRecursoShader, si los necesitas
 }
 
-export default TRecursoShader;
+export default TRecursoShader;*/

@@ -1,68 +1,100 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AlumnoService } from '../../../services/alumnos.service';
-import { ClaseService } from '../../../services/clases.service';
-import { ResultadoService } from '../../../services/resultados.service';
+import { SesionService } from '../../../services/sesiones.service';
+import * as echarts from 'echarts';
+import { HttpEvent } from '@angular/common/http';
 
 @Component({
   selector: 'app-ver-perfil-alumno',
   templateUrl: './ver-perfil-alumno.component.html',
   styleUrl: './ver-perfil-alumno.component.css'
 })
-export class VerPerfilAlumnoComponent implements OnInit {
+
+export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
 
   alumnosData: any;
-  resultadosData: any;
   private claseID: any;
 
-  constructor(private alumnoService: AlumnoService, private router: Router, private activatedRoute: ActivatedRoute, private resultadoService: ResultadoService){
+  constructor(private alumnoService: AlumnoService, private router: Router, private activatedRoute: ActivatedRoute, private sesionService: SesionService){
     this.alumnosData = [];
-    this.resultadosData = [];
   }
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(params => {
       this.alumnosData = history.state.alumno;
+      this.alumnosData.Ambitos = JSON.parse(this.alumnosData.Ambitos);
       this.claseID = history.state.claseID;
-      
     });
-    console.log(this.alumnosData);
-
-    this.getResultados();
   }
 
-  getResultados(){
-    this.resultadoService.getResultadoAlumno(this.alumnosData.ID_Alumno).subscribe( (res: any) => {
-      this.resultadosData = res.respuestas;
-    })
-  }
+  ngAfterViewInit() {
+    this.sesionService.getSesionesAlumno(this.alumnosData.ID_Alumno).subscribe((res: any) => {
+      const sesiones = res.sesiones;
+      this.alumnosData.Ambitos.Clase = sesiones.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Clase);
+      this.alumnosData.Ambitos.Amigos = sesiones.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Amigos);
+      this.alumnosData.Ambitos.Familia = sesiones.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Familia);
+      this.alumnosData.Ambitos.Emociones = sesiones.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Emociones);
+      this.alumnosData.Ambitos.FueraClase = sesiones.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin)["Fuera de clase"]);
 
-  getGravedadClass(gravedad: string): string {
-    switch (gravedad) {
-      case 'Nula':
-        return 'nula-gravedad';
-      case 'Leve':
-        return 'leve-gravedad';
-      case 'Grave':
-        return 'grave-gravedad';
-      default:
-        return '';
-    }
-  }
+      var chartDom = document.getElementById('chart')!;
+      var myChart = echarts.init(chartDom);
+      var option: echarts.EChartsOption;
 
-  getClaseEstado(): string {
-    let clase = "";
-    if(this.alumnosData.Estado === 'Bueno'){
-      clase = 'badge bg-success rounded-3 fw-semibold';
-    }
-    if(this.alumnosData.Estado === 'Normal'){
-      clase = 'badge bg-warning rounded-3 fw-semibold';
-    }
-    if(this.alumnosData.Estado === 'Malo'){
-      clase = 'badge bg-danger rounded-3 fw-semibold';
-    }
+      option = {
+        title: {
+          text: 'Seguimiento'
+        },
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          data: ['Clase', 'Amigos', 'Familia', 'Emociones', 'Fuera de Clase']
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        toolbox: {
+          feature: {
+            saveAsImage: {}
+          }
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+          data: ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
+        },
+        yAxis: {
+          type: 'category'
+        },
+        series: [
+          {
+            name: 'Clase',
+            type: 'line',
+            stack: 'Total',
+            data: this.alumnosData.Ambitos.Clase
+          },
+          {
+            name: 'Amigos',
+            type: 'line',
+            stack: 'Total',
+            data: this.alumnosData.Ambitos.Amigos
+          },
+          {
+            name: 'Familia',
+            type: 'line',
+            stack: 'Total',
+            data: this.alumnosData.Ambitos.Familia
+          },
+        ]
+      };
 
-    return clase;
+      option && myChart.setOption(option);
+    });
+    
   }
 
   volver(){

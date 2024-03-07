@@ -10,6 +10,11 @@
   border: 3px solid #fff;
 }  
 
+#chart {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
 
 .gravedad-circle {
   width: 8px;

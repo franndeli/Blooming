@@ -20,11 +20,11 @@ const Sesion = sequelize.define('Sesion', {
         allowNull: true
     },
     ValorAmbitoInicio: {
-        type: DataTypes.STRING,
+        type: DataTypes.JSON,
         allowNull: false
     },
     ValorAmbitoFin: {
-        type: DataTypes.STRING,
+        type: DataTypes.JSON,
         allowNull: true
     }
 }, {

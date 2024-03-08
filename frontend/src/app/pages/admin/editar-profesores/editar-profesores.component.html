@@ -11,45 +11,46 @@ data-sidebar-position="fixed" data-header-position="fixed">
     <div class="container-fluid">
         <div class="container-fluid">
           <div class="card">
-            <div class="card-body">
-              <h5 class="card-title fw-semibold mb-4">Editar Profesor</h5>
-              <div class="card">
-                <div class="card-body">
-                  <form [formGroup]="form">
-                    <div class="mb-3">
-                      <label for="Nombre" class="form-label">Nombre</label>
-                    <input class="form-control" formControlName="Nombre" id="Nombre">
-                    </div>
-                    <div class="mb-3">
-                      <label for="Apellidos" class="form-label">Apellidos</label>
-                      <input class="form-control" formControlName="Apellidos" id="Apellidos">
-                    </div>
-                    <div class="mb-3">
-                      <label for="Email" class="form-label">Email</label>
-                      <input type="email" class="form-control" formControlName="Email" id="Email">
-                    </div>
-                    <div class="mb-3">
-                      <label for="ID_Centro" class="form-label">Centro</label>
-                      <select class="form-control" formControlName="ID_Centro" id="ID_Centro" (change)="ngOnChanges($event)">
-                        <option *ngFor="let centro of centrosData.centros" [value]="centro.ID_Centro">
-                          {{centro.Nombre}}
-                        </option>
-                      </select>
-                    </div>
-                    <div class="mb-3">
-                      <label for="ID_Clase" class="form-label">Clase</label>
-                      <select class="form-control" formControlName="ID_Clase" id="ID_Clase">
-                        <option *ngFor="let clase of clasesData.clases" [value]="clase.ID_Clase">
-                          {{clase.Nombre}}
-                        </option>
-                      </select>
-                    </div>
-                    <button class="btn btn-danger" (click)="actualizarProfesor()">Aceptar</button>
-                    <a routerLink="/admin/ver-profesores"class="btn btn-danger">Volver</a>
-                  </form>
+            <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
+              <div class="card-body">
+                <h5 class="card-title fw-semibold mb-4">Edita el Profesor *nombre* <span><i class="ti ti-users" style="font-size: 20px;"></i></span></h5>
+                <div class="card">
+                  <div class="card-body">
+                    <form [formGroup]="form">
+                      <div class="mb-3">
+                        <label for="Nombre" class="form-label"><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</label>
+                      <input class="form-control" formControlName="Nombre" id="Nombre">
+                      </div>
+                      <div class="mb-3">
+                        <label for="Apellidos" class="form-label"><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Apellidos</label>
+                        <input class="form-control" formControlName="Apellidos" id="Apellidos">
+                      </div>
+                      <div class="mb-3">
+                        <label for="Email" class="form-label"><span><i class="ti ti-mail" style="font-size: 15px;"></i></span> Email</label>
+                        <input type="email" class="form-control" formControlName="Email" id="Email">
+                      </div>
+                      <div class="mb-3">
+                        <label for="ID_Centro" class="form-label"><span><i class="ti ti-home" style="font-size: 15px;"></i></span> Centro</label>
+                        <select class="form-control" formControlName="ID_Centro" id="ID_Centro" (change)="ngOnChanges($event)">
+                          <option *ngFor="let centro of centrosData.centros" [value]="centro.ID_Centro">
+                            {{centro.Nombre}}
+                          </option>
+                        </select>
+                      </div>
+                      <div class="mb-3">
+                        <label for="ID_Clase" class="form-label"><span><i class="ti ti-school" style="font-size: 15px;"></i></span> Clase</label>
+                        <select class="form-control" formControlName="ID_Clase" id="ID_Clase">
+                          <option *ngFor="let clase of clasesData.clases" [value]="clase.ID_Clase">
+                            {{clase.Nombre}}
+                          </option>
+                        </select>
+                      </div>
+                      <button class="btn btn-primary" (click)="actualizarProfesor()"><span><i class="ti ti-check" style="font-size: 15px;"></i></span> Aceptar</button>
+                      <a routerLink="/admin/ver-profesores"class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</a>
+                    </form>
+                  </div>
                 </div>
               </div>
-              
             </div>
           </div>
         </div>

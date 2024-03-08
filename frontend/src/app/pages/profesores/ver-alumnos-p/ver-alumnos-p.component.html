@@ -6,6 +6,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
             <div class="row">
                 <div class="col-lg-6 align-items-strech">
                     <div class="card">
+                      <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
                         <div class="card-body">
                             <h5 class="card-title fw-semibold mb-4"> Clase {{alumnosData[0].Clase.Nombre}} <span><i class="ti ti-friends" style="font-size: 20px;"></i></span></h5>
                             <div class="card">
@@ -27,7 +28,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                                         </div>
                                                     </td>
                                                     <td class="border-bottom-0">
-                                                        <button class="btn btn-outline-dark" (click)="verPerfil(alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i></span>Ver Perfil</button>
+                                                        <button class="btn btn-outline-dark" (click)="verPerfil(alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</button>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -37,8 +38,9 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                     </div>
                                 
                             </div>
-                            <a href="/profesores/dashboard" class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span>Volver</a>
+                            <a href="/profesores/dashboard" class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</a>
                         </div>
+                      </div>
                     </div>
                 </div>
                 <div class="col-lg-6">

@@ -4,3 +4,10 @@
     margin-right: auto;
     margin-top: 20px;
 }
+@media only screen and (max-width: 500px) {
+    .btn-custom {
+        width: 130px;
+        margin-left: 0;
+        margin-right: 0;
+    }
+}

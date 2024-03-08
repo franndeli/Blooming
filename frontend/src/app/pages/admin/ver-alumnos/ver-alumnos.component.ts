@@ -41,6 +41,7 @@ export class VerAlumnosComponent implements OnInit{
         this.alumnosData = res.alumnos;
         this.totalAlumnos = res.page.total;
       }  
+      console.log(this.alumnosData);
     })
   }
 

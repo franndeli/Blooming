@@ -17143,3 +17143,7 @@ ul {
   padding: 20px; /* Espaciado interno del footer */
   text-align: center;
 }
+
+.btn {
+  margin-right: 5px;
+}

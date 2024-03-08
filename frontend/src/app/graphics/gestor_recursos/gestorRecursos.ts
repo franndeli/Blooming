@@ -36,4 +36,10 @@ export class GestorRecursos {
 
     return recurso;
   }
+
+  getRecurso(nombre: string, tipo: string): Recurso | undefined {
+    const clave = `${tipo}:${nombre}`;
+    return this.recursos.get(clave);
+  }
+
 }

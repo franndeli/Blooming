@@ -52,6 +52,7 @@ import { Interfaz2Component } from './alumnos/interfaz2/interfaz2.component';
 import { Interfaz3Component } from './alumnos/interfaz3/interfaz3.component';
 
 import { EnrutamientoComponent } from './alumnos/enrutamiento/enrutamiento.component';
+import { ArbolEscenaComponent } from './alumnos/arbol-escena/arbol-escena.component';
 
 const routes: Routes = [
   { path: 'admin', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
@@ -108,6 +109,7 @@ const routes: Routes = [
       { path: 'threejs', component: ThreejsComponent},
       { path: 'conversacion',component: ConversacionComponent},
       { path: 'carga', component: CargaComponent },
+      { path: 'arbol-escena', component: ArbolEscenaComponent },
       { path: 'sistema-preguntas', component: SistemaPreguntasComponent },
       { path: 'interfaz', component: InterfazComponent },
       { path: 'interfaz2', component: Interfaz2Component },

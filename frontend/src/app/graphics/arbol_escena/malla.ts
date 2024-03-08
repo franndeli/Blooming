@@ -6,13 +6,9 @@ export class TMalla extends TEntidad {
     private normales: Float32Array;
     private coordTex: Float32Array;
     private indices: Uint16Array | Uint32Array; 
-    private gl?: WebGLRenderingContext;
-    private shaderProgram?: WebGLProgram;
 
-    constructor(gl?: WebGLRenderingContext, shaderProgram?: WebGLProgram, vertices?: number[], normales?: number[], coordTexturas?: number[], indices?: number[]) {
+    constructor(vertices?: number[], normales?: number[], coordTexturas?: number[], indices?: number[]) {
         super(); // Llama al constructor de la clase base TEntidad
-        this.gl = gl;
-        this.shaderProgram = shaderProgram;
         this.vertices = new Float32Array(vertices || []);
         this.normales = new Float32Array(normales || []);
         this.coordTex = new Float32Array(coordTexturas || []);
@@ -36,49 +32,32 @@ export class TMalla extends TEntidad {
 
     dibujar(gl: WebGLRenderingContext, shaderProgram: WebGLProgram): void {
         // Asegurar que gl y shaderProgram están definidos
-        if (!this.gl || !this.shaderProgram) {
+        if (!gl || !shaderProgram) {
             console.error("WebGL context or shader program no está definido.");
             return;
         }
-    
-        // Localizar los attributes en los shaders
-        const vertexPosition = this.gl.getAttribLocation(this.shaderProgram, 'aVertexPosition');
-        const vertexNormal = this.gl.getAttribLocation(this.shaderProgram, 'aVertexNormal');
-        const textureCoord = this.gl.getAttribLocation(this.shaderProgram, 'aTextureCoord');
-    
+
+        //console.log(shaderProgram);
+        //console.log(vertexPosition);
+        
         // Crear y asociar los datos de vértices al buffer
-        const vertexBuffer = this.gl.createBuffer();
-        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
-        this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.vertices), this.gl.STATIC_DRAW);
-        this.gl.vertexAttribPointer(vertexPosition, 3, this.gl.FLOAT, false, 0, 0);
-        this.gl.enableVertexAttribArray(vertexPosition);
-    
-        // Normales
-        if (vertexNormal !== -1) { // Solo si el shader utiliza normales
-            const normalBuffer = this.gl.createBuffer();
-            this.gl.bindBuffer(this.gl.ARRAY_BUFFER, normalBuffer);
-            this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.normales), this.gl.STATIC_DRAW);
-            this.gl.vertexAttribPointer(vertexNormal, 3, this.gl.FLOAT, false, 0, 0);
-            this.gl.enableVertexAttribArray(vertexNormal);
-        }
-    
-        // Coordenadas de textura
-        if (textureCoord !== -1) { // Solo si el shader utiliza coordenadas de textura
-            const textureCoordBuffer = this.gl.createBuffer();
-            this.gl.bindBuffer(this.gl.ARRAY_BUFFER, textureCoordBuffer);
-            this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.coordTex), this.gl.STATIC_DRAW);
-            this.gl.vertexAttribPointer(textureCoord, 2, this.gl.FLOAT, false, 0, 0);
-            this.gl.enableVertexAttribArray(textureCoord);
-        }
-    
+        const vertexBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertices), gl.STATIC_DRAW);
+
+        const positionLocation = gl.getAttribLocation(shaderProgram, 'vertPosition');
+
+        gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(positionLocation);
+
         // Crear y asociar los índices de la malla al buffer de elementos
-        const indexBuffer = this.gl.createBuffer();
-        this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-        this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, new (this.indices.length > 65535 ? Uint32Array : Uint16Array)(this.indices), this.gl.STATIC_DRAW);
-    
+        const indexBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.indices), gl.STATIC_DRAW);
+
         // Dibujar la malla
-        const vertexCount = this.indices.length;
-        this.gl.drawElements(this.gl.TRIANGLES, vertexCount, this.indices.length > 65535 ? this.gl.UNSIGNED_INT : this.gl.UNSIGNED_SHORT, 0);
+        gl.useProgram(shaderProgram);
+        gl.getError();
+        gl.drawElements(gl.TRIANGLES, this.indices.length, gl.UNSIGNED_SHORT, 0);
     }
-    
 }

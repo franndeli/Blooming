@@ -14,13 +14,17 @@ import { HttpEvent } from '@angular/common/http';
 export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
 
   alumnosData: any;
+  private sesiones: any;
   private claseID: any;
 
   constructor(private alumnoService: AlumnoService, private router: Router, private activatedRoute: ActivatedRoute, private sesionService: SesionService){
     this.alumnosData = [];
+    this.sesiones = {};
   }
 
   ngOnInit() {
+    this.sesiones.Ambitos = {};
+    this.sesiones.Dias= {};
     this.activatedRoute.paramMap.subscribe(params => {
       this.alumnosData = history.state.alumno;
       this.alumnosData.Ambitos = JSON.parse(this.alumnosData.Ambitos);
@@ -30,21 +34,21 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.sesionService.getSesionesAlumno(this.alumnosData.ID_Alumno).subscribe((res: any) => {
-      const sesiones = res.sesiones;
-      this.alumnosData.Ambitos.Clase = sesiones.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Clase);
-      this.alumnosData.Ambitos.Amigos = sesiones.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Amigos);
-      this.alumnosData.Ambitos.Familia = sesiones.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Familia);
-      this.alumnosData.Ambitos.Emociones = sesiones.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Emociones);
-      this.alumnosData.Ambitos.FueraClase = sesiones.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin)["Fuera de clase"]);
+      const sesionesData = res.sesiones;
+      
+      this.sesiones.Ambitos.Clase = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Clase);
+      this.sesiones.Ambitos.Amigos = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Amigos);
+      this.sesiones.Ambitos.Familia = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Familia);
+      this.sesiones.Ambitos.Emociones = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Emociones);
+      this.sesiones.Ambitos.FueraClase = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin)["Fuera de clase"]);
+
+      this.sesiones.Dias = sesionesData.map((sesion: any) =>  sesion.FechaFin.Fecha);
 
       var chartDom = document.getElementById('chart')!;
       var myChart = echarts.init(chartDom);
       var option: echarts.EChartsOption;
 
       option = {
-        title: {
-          text: 'Seguimiento'
-        },
         tooltip: {
           trigger: 'axis'
         },
@@ -65,30 +69,44 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
         xAxis: {
           type: 'category',
           boundaryGap: false,
-          data: ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
+          data: this.sesiones.Dias
         },
         yAxis: {
-          type: 'category'
+          type: 'category',
+          boundaryGap: false,
+          data: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
         },
         series: [
           {
             name: 'Clase',
             type: 'line',
             stack: 'Total',
-            data: this.alumnosData.Ambitos.Clase
+            data: this.sesiones.Ambitos.Clase
           },
           {
             name: 'Amigos',
             type: 'line',
             stack: 'Total',
-            data: this.alumnosData.Ambitos.Amigos
+            data: this.sesiones.Ambitos.Amigos
           },
           {
             name: 'Familia',
             type: 'line',
             stack: 'Total',
-            data: this.alumnosData.Ambitos.Familia
+            data: this.sesiones.Ambitos.Familia
           },
+          {
+            name: 'Emociones',
+            type: 'line',
+            stack: 'Total',
+            data: this.sesiones.Ambitos.Emociones
+          },
+          {
+            name: 'Fuera de Clase',
+            type: 'line',
+            stack: 'Total',
+            data: this.sesiones.Ambitos.FueraClase
+          }
         ]
       };
 

@@ -1,6 +1,45 @@
-const {sequelize} = require('../database/configdb');
+// const {sequelize} = require('../database/configdb');
+const sequelize = require('../database/configdb');
 const { QueryTypes } = require('sequelize');
 const Sesion = require('../models/sesion');
+
+const getSesiones = async (req, res) => {
+    try {
+        const limite = Number(req.query.dias) || 7;
+        const queryParams = req.query;
+
+        const validParams = ['ID_Sesion', 'ID_Alumno', 'FechaInicio', 'FechaFin', 'dias'];
+
+        const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
+        if (!isValidQuery) {
+            return res.status(400).json({ statusCode: 400, message: "Parámetros de búsqueda no válidos en Sesiones" });
+        }
+        
+        const queryOptions = {};
+        for (const param in queryParams) {
+            if (validParams.includes(param) &&  param !== 'dias') {
+                if (param === 'ID_Sesion') {
+                    queryOptions[param] = queryParams[param];
+                } else {
+                    queryOptions[param] = { [sequelize.Op.like]: `${queryParams[param]}` };
+                }
+            }
+        }
+
+        let sesiones = await Sesion.findAll({ where: queryOptions, order: [['FechaFin', 'DESC']], limit: limite });
+
+        sesiones = sesiones.sort((a, b) => a.FechaFin.fecha > b.FechaFin.fecha ? 1 : -1);
+
+        res.json({
+            ok: true,
+            msg: 'getSesiones',
+            sesiones
+        });
+    } catch (error) {
+        console.error("Error al obtener las sesiones:", error);
+        res.status(500).json({ statusCode: 500, message: "Error al obtener las sesiones" });
+    }
+}
 
 // const getSesiones = async (req, res) => {
 //     try {
@@ -13,18 +52,27 @@ const Sesion = require('../models/sesion');
 //             return res.status(400).json({ statusCode: 400, message: "Parámetros de búsqueda no válidos en Sesiones" });
 //         }
         
-//         const queryOptions = {};
+//         let whereClause = '';
 //         for (const param in queryParams) {
 //             if (validParams.includes(param)) {
 //                 if (param === 'ID_Sesion') {
-//                     queryOptions[param] = queryParams[param];
+//                     whereClause += ` AND ${param} = ${queryParams[param]}`;
 //                 } else {
-//                     queryOptions[param] = { [sequelize.Op.like]: `${queryParams[param]}` };
+//                     whereClause += ` AND ${param} LIKE '%${queryParams[param]}%'`;
 //                 }
 //             }
 //         }
 
-//         const sesiones = await Sesion.findAll({ where: queryOptions });
+//         const sesiones = await sequelize.query(
+//             `SELECT ID_Sesion, ID_Alumno, 
+//             DATE(FechaInicio) as FechaInicio, 
+//             TIME(FechaInicio) as HoraInicio, 
+//             FechaFin, ValorAmbitoInicio, ValorAmbitoFin 
+//             FROM sesion WHERE 1=1 ${whereClause}`,
+//             { 
+//                 type: QueryTypes.SELECT 
+//             }
+//         );
 
 //         res.json({
 //             ok: true,
@@ -36,50 +84,6 @@ const Sesion = require('../models/sesion');
 //         res.status(500).json({ statusCode: 500, message: "Error al obtener las sesiones" });
 //     }
 // }
-
-const getSesiones = async (req, res) => {
-    try {
-        const queryParams = req.query;
-
-        const validParams = ['ID_Sesion', 'ID_Alumno', 'FechaInicio', 'FechaFin'];
-
-        const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
-        if (!isValidQuery) {
-            return res.status(400).json({ statusCode: 400, message: "Parámetros de búsqueda no válidos en Sesiones" });
-        }
-        
-        let whereClause = '';
-        for (const param in queryParams) {
-            if (validParams.includes(param)) {
-                if (param === 'ID_Sesion') {
-                    whereClause += ` AND ${param} = ${queryParams[param]}`;
-                } else {
-                    whereClause += ` AND ${param} LIKE '%${queryParams[param]}%'`;
-                }
-            }
-        }
-
-        const sesiones = await sequelize.query(
-            `SELECT ID_Sesion, ID_Alumno, 
-            DATE(FechaInicio) as FechaInicio, 
-            TIME(FechaInicio) as HoraInicio, 
-            FechaFin, ValorAmbitoInicio, ValorAmbitoFin 
-            FROM sesion WHERE 1=1 ${whereClause}`,
-            { 
-                type: QueryTypes.SELECT 
-            }
-        );
-
-        res.json({
-            ok: true,
-            msg: 'getSesiones',
-            sesiones
-        });
-    } catch (error) {
-        console.error("Error al obtener las sesiones:", error);
-        res.status(500).json({ statusCode: 500, message: "Error al obtener las sesiones" });
-    }
-}
 
 const createSesion = async (req, res) => {
     try {

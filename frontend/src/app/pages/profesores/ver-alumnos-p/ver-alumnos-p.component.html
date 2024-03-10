@@ -10,33 +10,32 @@ data-sidebar-position="fixed" data-header-position="fixed">
                         <div class="card-body">
                             <h5 class="card-title fw-semibold mb-4"> Clase {{alumnosData[0].Clase.Nombre}} <span><i class="ti ti-friends" style="font-size: 20px;"></i></span></h5>
                             <div class="card">
-                                    <div class="card-body table-responsive">
-                                        <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
-                                            <thead class="text-dark fs-4">
-                                                <tr>
-                                                    <th class="border-bottom-0"><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
-                                                    <th class="border-bottom-0"><span><i class="ti ti-pin" style="font-size: 15px;"></i></span> Estado</th>
-                                                    <th class="border-bottom-0"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody *ngFor="let alumno of alumnosData">
-                                                <tr>
-                                                    <td class="border-bottom-0">{{alumno.Nombre}} {{alumno.Apellidos}}</td>
-                                                    <td class="border-bottom-0">
-                                                        <div class="d-flex align-items-center gap-2">
-                                                            <span [ngClass]="getClaseEstado(alumno.Estado)">{{alumno.Estado}}</span>
-                                                        </div>
-                                                    </td>
-                                                    <td class="border-bottom-0">
-                                                        <button class="btn btn-outline-dark" (click)="verPerfil(alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <br>
-                                        <app-pagination (cambiarPagina)="cambiarPagina($event)" [texto]="true" [totalRegistros]="totalAlumnos" [registroActual]="posActual+1" (filasPagina)="cambiarFilasPagina($event)" [registroPag]="filPag"></app-pagination>
-                                    </div>
-                                
+                              <div class="card-body">
+                                  <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
+                                      <thead class="text-dark fs-4">
+                                          <tr>
+                                              <th class="border-bottom-0"><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
+                                              <th class="border-bottom-0"><span><i class="ti ti-pin" style="font-size: 15px;"></i></span> Estado</th>
+                                              <th class="border-bottom-0"></th>
+                                          </tr>
+                                      </thead>
+                                      <tbody *ngFor="let alumno of alumnosData">
+                                          <tr>
+                                              <td class="border-bottom-0">{{alumno.Nombre}} {{alumno.Apellidos}}</td>
+                                              <td class="border-bottom-0">
+                                                  <div class="d-flex align-items-center gap-2">
+                                                      <span [ngClass]="getClaseEstado(alumno.Estado)">{{alumno.Estado}}</span>
+                                                  </div>
+                                              </td>
+                                              <td class="border-bottom-0">
+                                                  <button class="btn btn-primary" (click)="verPerfil(alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</button>
+                                              </td>
+                                          </tr>
+                                      </tbody>
+                                  </table>
+                                  <br>
+                                  <app-pagination (cambiarPagina)="cambiarPagina($event)" [texto]="true" [totalRegistros]="totalAlumnos" [registroActual]="posActual+1" (filasPagina)="cambiarFilasPagina($event)" [registroPag]="filPag"></app-pagination>
+                              </div>
                             </div>
                             <a href="/profesores/dashboard" class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</a>
                         </div>

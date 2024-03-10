@@ -63,6 +63,7 @@ import { InterfazComponent } from './alumnos/interfaz/interfaz.component';
 import { Interfaz2Component } from './alumnos/interfaz2/interfaz2.component';
 import { Interfaz3Component } from './alumnos/interfaz3/interfaz3.component';
 import { EnrutamientoComponent } from './alumnos/enrutamiento/enrutamiento.component';
+import { ActividadRecienteNegativaComponent } from './profesores/actividad-reciente-negativa/actividad-reciente-negativa.component';
 
 @NgModule({
   declarations: [
@@ -108,7 +109,8 @@ import { EnrutamientoComponent } from './alumnos/enrutamiento/enrutamiento.compo
       InterfazComponent,
       Interfaz2Component,
       Interfaz3Component,
-      EnrutamientoComponent
+      EnrutamientoComponent,
+      ActividadRecienteNegativaComponent
   ],
   exports: [
     AdminLayoutComponent,

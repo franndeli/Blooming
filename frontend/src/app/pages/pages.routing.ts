@@ -52,6 +52,7 @@ import { Interfaz2Component } from './alumnos/interfaz2/interfaz2.component';
 import { Interfaz3Component } from './alumnos/interfaz3/interfaz3.component';
 
 import { EnrutamientoComponent } from './alumnos/enrutamiento/enrutamiento.component';
+import { ActividadRecienteNegativaComponent } from './profesores/actividad-reciente-negativa/actividad-reciente-negativa.component';
 
 const routes: Routes = [
   { path: 'admin', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
@@ -95,6 +96,7 @@ const routes: Routes = [
       { path: 'dashboard', component: ProfesoresComponent},
       { path: 'ver-perfil-alumno', component: VerPerfilAlumnoComponent},
       { path: 'actividad-reciente', component: ActividadRecienteComponent},
+      { path: 'actividad-negativa', component: ActividadRecienteNegativaComponent},
       { path: 'ver-alumnos', component: VerAlumnosPComponent},
       { path: 'perfil', component: PerfilProfesorComponent},
       { path: 'editar-profesor', component: EditarProfesorComponent},

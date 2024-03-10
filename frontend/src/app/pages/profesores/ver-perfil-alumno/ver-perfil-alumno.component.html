@@ -68,13 +68,13 @@
                         <div class="card-body">
                             <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
                                 <div class="mb-3 mb-sm-0">
-                                    <h5 class="card-title fw-semibold">Últimos 7 días</h5>
+                                    <h5 class="card-title fw-semibold">Seguimiento</h5>
                                 </div>
                                 <div>
-                                    <select class="form-select">
-                                        <option value="1">Esta semana</option>
-                                        <option value="2">Semana pasada</option>
-                                        <option value="3">Mes pasado</option>
+                                    <select class="form-select w-auto ms-0 ms-sm-2 me-8 py-1 pe-7 ps-2 border-0" (change)="cambiarDias($event)">
+                                        <option value=7>Últimos 7 días</option>
+                                        <option value=15>Últimos 15 días</option>
+                                        <option value=30>Últimos 30 días</option>
                                     </select>
                                 </div>
                             </div>

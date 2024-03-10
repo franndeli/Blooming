@@ -40,12 +40,12 @@ export class SesionService {
         return this.http.get(this.basePath, this.httpOptions);
     }
 
-    getSesionesAlumno(id: number){
+    getSesionesAlumno(id: number, dias: number){
       const token = this.getToken();
       const headers = new HttpHeaders().set('x-token', `${token}`);
-      // if(!dias){
-      //   dias = 7;
-      // }
-      return this.http.get<any[]>(this.basePath+'?ID_Alumno='+id, {headers});
+      if(!dias){
+        dias = 7;
+      }
+      return this.http.get<any[]>(this.basePath+'?ID_Alumno='+id+'&dias='+dias, {headers});
     }
 }

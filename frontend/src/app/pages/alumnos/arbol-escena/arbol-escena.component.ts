@@ -183,8 +183,6 @@ export class ArbolEscenaComponent implements AfterViewInit {
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
       gl.enable(gl.DEPTH_TEST);
 
-      gl.getError();
-
       const vertexShader = gl.createShader(gl.VERTEX_SHADER);
 	    const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
       // Códigos de shaders (vertex y fragment) aquí o cargados de alguna manera
@@ -250,11 +248,12 @@ export class ArbolEscenaComponent implements AfterViewInit {
       
       // Asigna el recurso malla a la variable
       const recursoMalla = this.gestorRecursos.getRecurso('mallaEjemplo', 'malla') as TRecursoMalla;
+      
       console.log(recursoMalla);
       if (recursoMalla) {
         // Llama al método dibujar de recursoMalla
         if(program){
-          console.log('hola7');
+          //console.log('hola7');
           //console.log(program);
           console.log(gl);
           console.log(recursoMalla.dibujar(gl, program));

@@ -33,6 +33,7 @@ export class TRecursoMalla extends Recurso {
   }
 
   getMallas(): TMalla[] {
+    console.log(this.mallas);
     return this.mallas;
   }
 

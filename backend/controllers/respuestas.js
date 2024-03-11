@@ -1,5 +1,10 @@
 const sequelize = require('../database/configdb');
 const Respuesta = require('../models/respuesta');
+const Pregunta = require('../models/pregunta');
+const Alumno = require('../models/alumno');
+const Opcion = require('../models/opcion');
+const Ambito = require('../models/ambito');
+const Sesion = require('../models/sesion');
 
 
 const getRespuestas = async (req, res) => {
@@ -24,7 +29,33 @@ const getRespuestas = async (req, res) => {
             }
         }
 
-        const respuestas = await Respuesta.findAll({ where: queryOptions });
+        const respuestas = await Respuesta.findAll({
+            where: queryOptions,
+            include: [
+                {
+                    model: Pregunta,
+                    attributes: ['TextoPregunta'],
+                    as: 'Pregunta',
+                    include: [
+                        {
+                            model: Ambito,
+                            attributes: ['Nombre'],
+                            as: 'Ambito'
+                        }
+                    ]
+                },
+                {
+                    model: Alumno,
+                    attributes: ['Nombre', 'Apellidos'],
+                    as: 'Alumno'
+                },
+                {
+                    model: Opcion,
+                    attributes: ['TextoOpcion', 'Gravedad'],
+                    as: 'Opcion'
+                }
+            ]
+        });
 
         res.json({
             ok: true,

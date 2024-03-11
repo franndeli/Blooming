@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, NgZone } from '@angular/core';
 import { PreguntaService } from '../../../services/preguntas.service';
 import { OpcionService } from '../../../services/opciones.service';
-import { ResultadoService } from '../../../services/resultados.service';
+import { RespuestaService } from '../../../services/respuestas.service';
 import { AlumnoService } from '../../../services/alumnos.service';
 import * as THREE from 'three';
 
@@ -22,7 +22,7 @@ export class ConversacionComponent implements OnInit {
   alumnoData: any;
   //index: any;
 
-  constructor(private preguntaService: PreguntaService, private opcionService: OpcionService, private resultadoService: ResultadoService, private alumnoService: AlumnoService, private zone: NgZone) {
+  constructor(private preguntaService: PreguntaService, private opcionService: OpcionService, private resultadoService: RespuestaService, private alumnoService: AlumnoService, private zone: NgZone) {
     this.dialogText = '';
     this.preguntas = [];
     this.opcionesData = [];
@@ -84,7 +84,7 @@ export class ConversacionComponent implements OnInit {
       ID_Pregunta: preguntaId
     }
 
-    this.resultadoService.postResultado(JSON.stringify(resultado)).subscribe(
+    this.resultadoService.postRespuesta(JSON.stringify(resultado)).subscribe(
       (response) => {
       }, (error) => {
       }

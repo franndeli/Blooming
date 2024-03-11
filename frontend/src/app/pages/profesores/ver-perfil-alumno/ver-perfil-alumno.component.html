@@ -81,6 +81,7 @@
                             <div id="chart"></div>
                         </div>
                     </div>
+                    <!-- pablo -->
                 </div>
             </div>
             <div class="row d-flex align-items-stretch">
@@ -117,39 +118,18 @@
                             <h5 class="card-title fw-semibold mb-4">Preguntas <span class="badge bg-danger rounded-3">alarmantes</span> recientes</h5>
                             <div class="table-responsive">
                                 <table class="table text-nowrap mb-0 align-middle">
-                                    <tbody>
+                                    <tbody  *ngFor="let respuesta of respuestasData; let i = index">
                                         <tr>
-                                            <td class="border-bottom-0"><h6 class="fw-semibold mb-0">1</h6></td>
+                                            <td class="border-bottom-0"><h6 class="fw-semibold mb-0">{{i+1}}</h6></td>
                                             <td class="border-bottom-0">
-                                                <h6 class="fw-semibold mb-1">¿Cómo te sientes hoy?</h6>
-                                                <span class="fw-normal">Emociones</span>
+                                                <h6 class="fw-semibold mb-1">{{respuesta.Pregunta.TextoPregunta}}</h6>
+                                                <span class="fw-normal">{{respuesta.Pregunta.Ambito.Nombre}}</span>
                                             </td>
                                             <td class="border-bottom-0">
-                                                <p class="mb-0 fw-normal">Mal</p>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="border-bottom-0"><h6 class="fw-semibold mb-0">2</h6></td>
-                                            <td class="border-bottom-0">
-                                                <h6 class="fw-semibold mb-1">¿Qué haces con tus amigos?</h6>
-                                                <span class="fw-normal">Amigos</span>
-                                            </td>
-                                            <td class="border-bottom-0">
-                                                <p class="mb-0 fw-normal">No tengo amigos</p>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="border-bottom-0"><h6 class="fw-semibold mb-0">3</h6></td>
-                                            <td class="border-bottom-0">
-                                                <h6 class="fw-semibold mb-1">¿Qué haces con tus amigos?</h6>
-                                                <span class="fw-normal">Amigos</span>
-                                            </td>
-                                            <td class="border-bottom-0">
-                                                <p class="mb-0 fw-normal">No tengo amigos</p>
+                                                <p class="mb-0 fw-normal">{{respuesta.Opcion.TextoOpcion}}</p>
                                             </td>
                                         </tr>
                                     </tbody>
-                                    
                                 </table>
                             </div>
                         </div>

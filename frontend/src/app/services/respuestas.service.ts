@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 
-export class ResultadoService {
+export class RespuestaService {
     private basePath=`${environment.base_url}/resultados/`;
     constructor(private http: HttpClient) {}
 
@@ -17,15 +17,15 @@ export class ResultadoService {
     }
 
     //LLAMADAS API
-    getResultados(){
+    getRespuesta(){
         return this.http.get(this.basePath);
     }
 
-    getResultadoAlumno(id: any){
+    getRespuestasAlumno(id: any){
         return this.http.get(this.basePath+'?ID_Alumno='+id);
     }
 
-    postResultado(resultadoData: any){
+    postRespuesta(resultadoData: any){
         return this.http.post(this.basePath, resultadoData, this.httpOptions);
     }
 

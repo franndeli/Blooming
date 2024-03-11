@@ -1,9 +1,8 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AlumnoService } from '../../../services/alumnos.service';
 import { SesionService } from '../../../services/sesiones.service';
+import { RespuestaService } from '../../../services/respuestas.service';
 import * as echarts from 'echarts';
-import { HttpEvent } from '@angular/common/http';
 
 @Component({
   selector: 'app-ver-perfil-alumno',
@@ -13,13 +12,15 @@ import { HttpEvent } from '@angular/common/http';
 
 export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
 
-  alumnosData: any;
+  public alumnosData: any;
+  public respuestasData: any;
   private sesiones: any;
   private claseID: any;
   private dias: number = 7;
 
-  constructor(private alumnoService: AlumnoService, private router: Router, private activatedRoute: ActivatedRoute, private sesionService: SesionService){
+  constructor(private respuestaService: RespuestaService, private router: Router, private activatedRoute: ActivatedRoute, private sesionService: SesionService){
     this.alumnosData = [];
+    this.respuestasData = [];
     this.sesiones = {};
   }
 
@@ -30,6 +31,7 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
       this.alumnosData = history.state.alumno;
       this.claseID = history.state.claseID;
     });
+    this.obtenerRespuestas();
   }
 
   ngAfterViewInit() {
@@ -53,7 +55,7 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
   }
 
   dibujarGrafica(){
-    var chartDom = document.getElementById('chart')!;
+    var chartDom = document.getElementById('chart');
     var myChart = echarts.init(chartDom);
     var option: echarts.EChartsOption;
 
@@ -81,45 +83,49 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
         data: this.sesiones.Dias
       },
       yAxis: {
-        type: 'category',
-        boundaryGap: false,
-        data: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+        type: 'value',
+        min: 0,
+        max: 100
       },
       series: [
         {
-          name: 'Clase',
-          type: 'line',
-          stack: 'Total',
-          data: this.sesiones.Ambitos.Clase
-        },
-        {
           name: 'Amigos',
           type: 'line',
-          stack: 'Total',
           data: this.sesiones.Ambitos.Amigos
         },
         {
+          name: 'Clase',
+          type: 'line',
+          data: this.sesiones.Ambitos.Clase
+        },
+        
+        {
           name: 'Familia',
           type: 'line',
-          stack: 'Total',
           data: this.sesiones.Ambitos.Familia
         },
         {
           name: 'Emociones',
           type: 'line',
-          stack: 'Total',
           data: this.sesiones.Ambitos.Emociones
         },
         {
           name: 'Fuera de Clase',
           type: 'line',
-          stack: 'Total',
           data: this.sesiones.Ambitos.FueraClase
         }
       ]
     };
 
     option && myChart.setOption(option);
+  }
+
+  obtenerRespuestas(){
+    this.respuestaService.getRespuestasAlumno(this.alumnosData.ID_Alumno).subscribe((res: any) => {
+      this.respuestasData = res.respuestas;
+      console.log(this.respuestasData);
+    });
+  
   }
 
   cambiarDias(event: any) {

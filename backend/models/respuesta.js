@@ -8,12 +8,12 @@ const Respuesta = sequelize.define('Respuesta', {
         primaryKey: true,
         autoIncrement: true
     },
-    TextoPregunta: {
-        type: DataTypes.STRING,
+    ID_Pregunta: {
+        type: DataTypes.INTEGER,
         allowNull: false
     },
-    TextoRespuesta: {
-        type: DataTypes.STRING,
+    ID_Opcion: {
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     ID_Alumno: {

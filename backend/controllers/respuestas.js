@@ -1,12 +1,17 @@
 const sequelize = require('../database/configdb');
 const Respuesta = require('../models/respuesta');
+const Pregunta = require('../models/pregunta');
+const Alumno = require('../models/alumno');
+const Opcion = require('../models/opcion');
+const Ambito = require('../models/ambito');
+const Sesion = require('../models/sesion');
 
 
 const getRespuestas = async (req, res) => {
     try {
         const queryParams = req.query;
 
-        const validParams = ['ID_Respuesta', 'TextoPregunta', 'TextoRespuesta', 'ID_Alumno', 'FechaRespuesta', 'ID_Sesion'];
+        const validParams = ['ID_Respuesta', 'ID_Pregunta', 'ID_Opcion', 'ID_Alumno', 'FechaRespuesta', 'ID_Sesion', 'Gravedad'];
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {
@@ -15,16 +20,45 @@ const getRespuestas = async (req, res) => {
         
         const queryOptions = {};
         for (const param in queryParams) {
-            if (validParams.includes(param)) {
+            if (validParams.includes(param) && !(param === 'Gravedad' && queryParams[param] === '0')) {
                 if (param === 'ID_Respuesta') {
                     queryOptions[param] = queryParams[param];
+                } else if (param === 'Gravedad') {
+                    queryOptions['$Opcion.Gravedad$'] = { [sequelize.Op.eq]: queryParams[param] };
                 } else {
                     queryOptions[param] = { [sequelize.Op.like]: `${queryParams[param]}` };
                 }
             }
         }
 
-        const respuestas = await Respuesta.findAll({ where: queryOptions });
+        const respuestas = await Respuesta.findAll({
+            where: queryOptions,
+            subQuery: false,
+            include: [
+                {
+                    model: Pregunta,
+                    attributes: ['TextoPregunta'],
+                    as: 'Pregunta',
+                    include: [
+                        {
+                            model: Ambito,
+                            attributes: ['Nombre'],
+                            as: 'Ambito'
+                        }
+                    ]
+                },
+                {
+                    model: Alumno,
+                    attributes: ['Nombre', 'Apellidos'],
+                    as: 'Alumno'
+                },
+                {
+                    model: Opcion,
+                    attributes: ['TextoOpcion', 'Gravedad'],
+                    as: 'Opcion'
+                }
+            ]
+        });
 
         res.json({
             ok: true,

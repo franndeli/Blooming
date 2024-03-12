@@ -7,7 +7,6 @@
                 <div class="col-lg-4">
                     <div class="row">
                         <div class="col-lg-12">
-                            <!-- Yearly Breakup -->
                             <div class="card overflow-hidden">
                                 <div class="card-body p-4">
                                     <div class="row align-items-center">
@@ -24,45 +23,25 @@
                         </div>
                     </div>
                     <div class="col-lg-12">
-                        <!-- Monthly Earnings -->
                         <div class="card w-100">
                             <div class="card-body p-4">
                                 <div class="mb-4">
-                                    <h5 class="card-title fw-semibold"><span><i class="ti ti-location" style="font-size: 15px;"></i></span> Estado actual de cada ambito</h5>
+                                    <h5 class="card-title fw-semibold">Estado actual</h5>
                                 </div>
-                                <div style="float: left; width: 50%; text-align: center;">
-                                    <ul>
-                                        <li style="margin-top: 7px;"><div>Clase</div></li>
-                                        <li style="margin-top: 7px;"><div>Amigos</div></li>
-                                        <li style="margin-top: 7px;"><div>Familia</div></li>
-                                        <li style="margin-top: 7px;"><div>Fuera de clase</div></li>
-                                        <li style="margin-top: 7px;"><div>Emociones</div></li>
-                                    </ul>
-                                </div>
-                                <div style="float: left; width: 50%; text-align: center;">
-                                    <ul>
-                                        <li>
-                                            <span class="badge bg-success rounded-3">Bueno - 6</span>
-                                        </li>
-                                        <li>
-                                            <span class="badge bg-danger rounded-3">Mal - 4</span>
-                                        </li>
-                                        <li>
-                                            <span class="badge bg-success rounded-3">Genial - 9</span>
-                                        </li>
-                                        <li>
-                                            <span class="badge bg-danger rounded-3">Fatal - 2</span>
-                                        </li>
-                                        <li>
-                                            <span class="badge bg-secondary rounded-3">Normal - 6</span>
-                                        </li>
-                                    </ul>
-                                </div>
+                                <table class="table text-nowrap mb-0 align-middle">
+                                    <tbody>
+                                        <tr *ngFor="let ambito of nombresAmbitos">
+                                            <td class="border-bottom-0"><h6 class="fw-semibold mb-0">{{ambito}}</h6></td>
+                                            <td class="border-bottom-0 gravedad-circle" [ngClass]="getGravedadClass(alumnosData.Ambitos[ambito])">
+                                                {{alumnosData.Ambitos[ambito]}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
-                
                 <div class="col-lg-8 d-flex align-items-stretch">
                     <div class="card w-100">
                         <div class="card-body">
@@ -71,15 +50,14 @@
                                     <h5 class="card-title fw-semibold"><span><i class="ti ti-graph" style="font-size: 20px;"></i></span> Gráfica resumen</h5>
                                 </div>
                                 <div>
-                                    <select class="form-select">
-                                        <option value="1">Esta semana</option>
-                                        <option value="2">Semana pasada</option>
-                                        <option value="3">Mes pasado</option>
+                                    <select class="form-select w-auto ms-0 ms-sm-2 me-8 py-1 pe-7 ps-2 border-0" (change)="cambiarDias($event)">
+                                        <option value=7>Últimos 7 días</option>
+                                        <option value=15>Últimos 15 días</option>
+                                        <option value=30>Últimos 30 días</option>
                                     </select>
                                 </div>
                             </div>
-                            <div id="chart">grafico jiji</div>
-                            <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
+                            <div id="chart"></div>
                         </div>
                     </div>
                 </div>
@@ -88,42 +66,31 @@
                 <div class="col-lg-8 d-flex align-items-stretch">
                     <div class="card w-100">
                         <div class="card-body p-4">
-                            <h5 class="card-title fw-semibold mb-4"><span><i class="ti ti-alert-triangle" style="font-size: 15px;"></i></span> Preguntas <span class="badge bg-danger rounded-3">alarmantes</span> recientes</h5>
+                            <div class="mb-3 mb-sm-0">
+                                <h5 class="card-title fw-semibold">Preguntas recientes</h5>
+                            </div>
+                            <div>
+                                <select class="form-select w-auto ms-0 ms-sm-2 me-8 py-1 pe-7 ps-2 border-0" (change)="cambiarGravedad($event)">
+                                    <option value=0>Todas</option>
+                                    <option value=-2>Alarmantes</option>
+                                    <option value=1>Normales</option>
+                                    <option value=2>Mejores</option>
+                                </select>
+                            </div>
                             <div class="table-responsive">
                                 <table class="table text-nowrap mb-0 align-middle">
                                     <tbody>
-                                        <tr>
-                                            <td class="border-bottom-0"><h6 class="fw-semibold mb-0">1</h6></td>
+                                        <tr *ngFor="let respuesta of respuestasData; let i = index">
+                                            <td class="border-bottom-0"><h6 class="fw-semibold mb-0">{{i+1}}</h6></td>
                                             <td class="border-bottom-0">
-                                                <h6 class="fw-semibold mb-1">¿Cómo te sientes hoy?</h6>
-                                                <span class="fw-normal">Emociones</span>
+                                                <h6 class="fw-semibold mb-1">{{respuesta.Pregunta.TextoPregunta}}</h6>
+                                                <span class="fw-normal">{{respuesta.Pregunta.Ambito.Nombre}}</span>
                                             </td>
                                             <td class="border-bottom-0">
-                                                <p class="mb-0 fw-normal">Mal</p>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="border-bottom-0"><h6 class="fw-semibold mb-0">2</h6></td>
-                                            <td class="border-bottom-0">
-                                                <h6 class="fw-semibold mb-1">¿Qué haces con tus amigos?</h6>
-                                                <span class="fw-normal">Amigos</span>
-                                            </td>
-                                            <td class="border-bottom-0">
-                                                <p class="mb-0 fw-normal">No tengo amigos</p>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="border-bottom-0"><h6 class="fw-semibold mb-0">3</h6></td>
-                                            <td class="border-bottom-0">
-                                                <h6 class="fw-semibold mb-1">¿Qué haces con tus amigos?</h6>
-                                                <span class="fw-normal">Amigos</span>
-                                            </td>
-                                            <td class="border-bottom-0">
-                                                <p class="mb-0 fw-normal">No tengo amigos</p>
+                                                <p class="mb-0 fw-normal">{{respuesta.Opcion.TextoOpcion}}</p>
                                             </td>
                                         </tr>
                                     </tbody>
-                                    
                                 </table>
                             </div>
                         </div>

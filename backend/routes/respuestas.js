@@ -16,8 +16,8 @@ router.get('/', (req, res) => {
 
 router.post('/', [
         validarJWT, validarRol(['Admin', 'Alumno']),
-        check('TextoPregunta', 'El argumento "TextoPregunta" es obligatorio').not().isEmpty(),
-        check('TextoRespuesta', 'El argumento "TextoRespuesta" es obligatorio').not().isEmpty(),
+        check('ID_Pregunta', 'El argumento "ID_Pregunta" es obligatorio').not().isEmpty(),
+        check('ID_Opcion', 'El argumento "ID_Opcion" es obligatorio').not().isEmpty(),
         check('FechaRespuesta', 'El argumento "FechaRespuesta" es obligatorio').not().isEmpty(),
         check('ID_Alumno', 'El argumento "ID_Alumno" es obligatorio').not().isEmpty(),
         check('ID_Sesion', 'El argumento "ID_Sesion" es obligatorio').not().isEmpty(),

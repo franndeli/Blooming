@@ -53,7 +53,15 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
 
       this.nombresAmbitos = Object.keys(this.sesiones.Ambitos);
 
-      this.sesiones.Dias = sesionesData.map((sesion: any) =>  sesion.FechaFin.Fecha);
+      // this.sesiones.Dias = sesionesData.map((sesion: any) =>  sesion.FechaFin.Fecha);
+      const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+      
+      this.sesiones.Dias = sesionesData.map((sesion: any) => {
+        const parts = sesion.FechaFin.Fecha.split("-");
+        const date = new Date(`${parts[1]}-${parts[0]}-${parts[2]}`);
+        const dayName = days[date.getDay()];
+        return dayName;
+      });
 
       this.dibujarGrafica();
     });

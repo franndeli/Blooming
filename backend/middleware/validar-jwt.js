@@ -12,8 +12,8 @@ const validarJWT = (req, res, next) => {
 
     try {
         const { ID, Rol } = jwt.verify(token, process.env.JWTSECRET);
-        //console.log(ID);
-        //console.log(jwt.verify(token, process.env.JWTSECRET));
+        // console.log(ID);
+        // console.log(jwt.verify(token, process.env.JWTSECRET));
         req.ID = ID;
         req.Rol = Rol;
         next();

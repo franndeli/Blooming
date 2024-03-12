@@ -26,20 +26,31 @@
   margin: 0 auto;
   overflow: hidden;
   border-bottom: 1px solid transparent;
+  font-weight: bold;
 }
 
 .nula-gravedad {
   background-color: rgba(0, 128, 0, 0.786);
+  margin: 0 auto;
+  text-align: center;
+  border-radius: 65px;
   color: white;
 }
 
 .leve-gravedad {
-  background-color: rgb(255, 174, 31);
+  /* background-color: rgb(255, 174, 31); */
+  background-color: rgba(73, 190, 255, 1);
+  margin: 0 auto;
+  text-align: center;
+  border-radius: 65px;
   color: white;
 }
   
 .grave-gravedad {
   background-color: rgba(233, 31, 31, 0.855);
+  margin: 0 auto;
+  text-align: center;
+  border-radius: 65px;
   color: white;
 }
 

@@ -17,6 +17,8 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
   private sesiones: any;
   private claseID: any;
   private dias: number = 7;
+  private gravedad: number = 0;
+  public nombresAmbitos: any = [];
 
   constructor(private respuestaService: RespuestaService, private router: Router, private activatedRoute: ActivatedRoute, private sesionService: SesionService){
     this.alumnosData = [];
@@ -29,6 +31,7 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
     this.sesiones.Dias= {};
     this.activatedRoute.paramMap.subscribe(params => {
       this.alumnosData = history.state.alumno;
+      this.alumnosData.Ambitos = JSON.parse(this.alumnosData.Ambitos);
       this.claseID = history.state.claseID;
     });
     this.obtenerRespuestas();
@@ -46,7 +49,9 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
       this.sesiones.Ambitos.Amigos = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Amigos);
       this.sesiones.Ambitos.Familia = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Familia);
       this.sesiones.Ambitos.Emociones = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Emociones);
-      this.sesiones.Ambitos.FueraClase = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin)["Fuera de clase"]);
+      this.sesiones.Ambitos["Fuera de clase"] = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin)["Fuera de clase"]);
+
+      this.nombresAmbitos = Object.keys(this.sesiones.Ambitos);
 
       this.sesiones.Dias = sesionesData.map((sesion: any) =>  sesion.FechaFin.Fecha);
 
@@ -64,7 +69,7 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
         trigger: 'axis'
       },
       legend: {
-        data: ['Clase', 'Amigos', 'Familia', 'Emociones', 'Fuera de Clase']
+        data: this.nombresAmbitos
       },
       grid: {
         left: '3%',
@@ -110,9 +115,9 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
           data: this.sesiones.Ambitos.Emociones
         },
         {
-          name: 'Fuera de Clase',
+          name: 'Fuera de clase',
           type: 'line',
-          data: this.sesiones.Ambitos.FueraClase
+          data: this.sesiones.Ambitos["Fuera de clase"]
         }
       ]
     };
@@ -121,9 +126,8 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
   }
 
   obtenerRespuestas(){
-    this.respuestaService.getRespuestasAlumno(this.alumnosData.ID_Alumno).subscribe((res: any) => {
+    this.respuestaService.getRespuestasAlumno(this.alumnosData.ID_Alumno, this.gravedad).subscribe((res: any) => {
       this.respuestasData = res.respuestas;
-      console.log(this.respuestasData);
     });
   
   }
@@ -131,7 +135,23 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
   cambiarDias(event: any) {
     this.dias = parseInt(event.target?.value);
     this.obtenerSesiones();
-    console.log(this.dias);
+  }
+
+  getGravedadClass(gravedad: number){
+    if(gravedad >= 0 && gravedad < 50){
+      return 'grave-gravedad';
+    } else if(gravedad >= 50 && gravedad <= 65){
+      return 'leve-gravedad';
+    }else if(gravedad > 65 && gravedad <= 100){
+      return 'nula-gravedad';
+    } else {
+      return '';
+    }
+  }
+
+  cambiarGravedad(event: any){
+    this.gravedad = parseInt(event.target?.value);
+    this.obtenerRespuestas();
   }
 
   volver(){

@@ -11,7 +11,7 @@ const getRespuestas = async (req, res) => {
     try {
         const queryParams = req.query;
 
-        const validParams = ['ID_Respuesta', 'TextoPregunta', 'TextoRespuesta', 'ID_Alumno', 'FechaRespuesta', 'ID_Sesion'];
+        const validParams = ['ID_Respuesta', 'ID_Pregunta', 'ID_Opcion', 'ID_Alumno', 'FechaRespuesta', 'ID_Sesion', 'Gravedad'];
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {
@@ -20,9 +20,11 @@ const getRespuestas = async (req, res) => {
         
         const queryOptions = {};
         for (const param in queryParams) {
-            if (validParams.includes(param)) {
+            if (validParams.includes(param) && !(param === 'Gravedad' && queryParams[param] === '0')) {
                 if (param === 'ID_Respuesta') {
                     queryOptions[param] = queryParams[param];
+                } else if (param === 'Gravedad') {
+                    queryOptions['$Opcion.Gravedad$'] = { [sequelize.Op.eq]: queryParams[param] };
                 } else {
                     queryOptions[param] = { [sequelize.Op.like]: `${queryParams[param]}` };
                 }
@@ -31,6 +33,7 @@ const getRespuestas = async (req, res) => {
 
         const respuestas = await Respuesta.findAll({
             where: queryOptions,
+            subQuery: false,
             include: [
                 {
                     model: Pregunta,

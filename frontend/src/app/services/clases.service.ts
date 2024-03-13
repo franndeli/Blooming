@@ -41,6 +41,11 @@ export class ClaseService {
   
     //LLAMADAS API
 
+    getClase(id: any){
+      this.getHeader();
+      return this.http.get(this.basePath+'?ID_Clase='+id, this.httpOptions);
+    }
+
     getClases(desde?: number, filas?: number, textoBusqueda?: string){
       this.getHeader();
       if(!desde){

@@ -4,14 +4,15 @@ const Pregunta = require('../models/pregunta');
 const Alumno = require('../models/alumno');
 const Opcion = require('../models/opcion');
 const Ambito = require('../models/ambito');
-const Sesion = require('../models/sesion');
+const Clase = require('../models/clase');
+
 
 
 const getRespuestas = async (req, res) => {
     try {
         const queryParams = req.query;
 
-        const validParams = ['ID_Respuesta', 'ID_Pregunta', 'ID_Opcion', 'ID_Alumno', 'FechaRespuesta', 'ID_Sesion', 'Gravedad'];
+        const validParams = ['ID_Respuesta', 'ID_Pregunta', 'ID_Opcion', 'ID_Alumno', 'FechaRespuesta', 'ID_Sesion', 'Gravedad', 'ID_Clase'];
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {
@@ -25,6 +26,8 @@ const getRespuestas = async (req, res) => {
                     queryOptions[param] = queryParams[param];
                 } else if (param === 'Gravedad') {
                     queryOptions['$Opcion.Gravedad$'] = { [sequelize.Op.eq]: queryParams[param] };
+                } else if (param === 'ID_Clase') {
+                    queryOptions['$Alumno.ID_Clase$'] = { [sequelize.Op.eq]: queryParams[param] };
                 } else {
                     queryOptions[param] = { [sequelize.Op.like]: `${queryParams[param]}` };
                 }
@@ -50,14 +53,23 @@ const getRespuestas = async (req, res) => {
                 {
                     model: Alumno,
                     attributes: ['Nombre', 'Apellidos'],
-                    as: 'Alumno'
+                    as: 'Alumno',
+                    include: [
+                        {
+                            model: Clase,
+                            attributes: ['Nombre'],
+                            as: 'Clase'
+                        }
+                    ]
                 },
                 {
                     model: Opcion,
                     attributes: ['TextoOpcion', 'Gravedad'],
                     as: 'Opcion'
                 }
-            ]
+            ],
+            order: [['FechaRespuesta', 'DESC']],
+            limit: 5
         });
 
         res.json({

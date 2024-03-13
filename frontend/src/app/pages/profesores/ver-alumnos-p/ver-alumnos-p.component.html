@@ -8,7 +8,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
           <div class="card">
             <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
               <div class="card-body">
-                <h5 class="card-title fw-semibold mb-4"> Clase {{alumnosData[0].Clase.Nombre}} <span><i class="ti ti-friends" style="font-size: 20px;"></i></span></h5>
+                <h5 class="card-title fw-semibold mb-4"> Clase {{claseData.Nombre}} <span><i class="ti ti-friends" style="font-size: 20px;"></i></span></h5>
                 <div class="card">
                   <div class="card-body">
                     <div class="table-responsive">
@@ -29,7 +29,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                   </div>
                               </td>
                               <td class="border-bottom-0">
-                                  <button class="btn btn-primary" (click)="verPerfil(alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</button>
+                                  <button class="btn btn-primary" (click)="verPerfil(alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i></span></button>
                               </td>
                           </tr>
                         </tbody>
@@ -86,13 +86,13 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                             <th class="border-bottom-0"></th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody *ngFor="let respuesta of respuestasData">
                                         <tr>
-                                            <td class="border-bottom-0">Pepe</td>
-                                            <td class="border-bottom-0">1ºA</td>
-                                            <td class="border-bottom-0">¿Cómo te has sentido hoy?</td>
-                                            <td class="border-bottom-0"> Alegre </td>
-                                            <td class="border-bottom-0"> Bueno </td>
+                                            <td class="border-bottom-0">{{respuesta.Alumno.Nombre}}</td>
+                                            <td class="border-bottom-0">{{respuesta.Alumno.Clase.Nombre}}</td>
+                                            <td class="border-bottom-0">{{respuesta.Pregunta.TextoPregunta}}</td>
+                                            <td class="border-bottom-0">{{respuesta.Opcion.TextoOpcion}}</td>
+                                            <td class="border-bottom-0">{{respuesta.Opcion.Gravedad}}</td>
                                             <td class="border-bottom-0">
                                             <a href="/profesores/ver-perfil-alumno" class="btn btn-primary"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</a>
                                         </td>

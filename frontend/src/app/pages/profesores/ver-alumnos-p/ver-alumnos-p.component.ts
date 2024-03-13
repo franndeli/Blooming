@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AlumnoService } from '../../../services/alumnos.service';
 import { ClaseService } from '../../../services/clases.service';
+import { RespuestaService } from '../../../services/respuestas.service'; 
 
 @Component({
   selector: 'app-ver-alumnos-p',
@@ -12,15 +13,17 @@ export class VerAlumnosPComponent implements OnInit{
 
   alumnosData: any;
   claseData: any;
+  respuestasData: any;
   private claseID: any;
   public totalAlumnos = 0;
   public posActual = 0;
   public filPag = 5;
   private busqueda = '';
 
-  constructor(private alumnoService: AlumnoService, private router: Router, private activatedRoute: ActivatedRoute, private claseService: ClaseService){
+  constructor(private alumnoService: AlumnoService, private router: Router, private activatedRoute: ActivatedRoute, private claseService: ClaseService, private respuestaService: RespuestaService){
     this.alumnosData = [];
     this.claseData = [];
+    this.respuestasData = [];
   }
 
   ngOnInit() {
@@ -31,7 +34,16 @@ export class VerAlumnosPComponent implements OnInit{
     if(this.claseID === '' || undefined){
       this.claseID = this.claseService.getClaseID();
     }
+    this.obtenerClase();
     this.obtenerAlumnos(this.busqueda);
+    this.obtenerUltimasRespuestas();
+  }
+
+  obtenerClase(){
+    this.claseService.getClase(this.claseID).subscribe((res: any) => {
+      this.claseData = res.clases[0];
+    })
+  
   }
 
   obtenerAlumnos(buscar : string){
@@ -50,9 +62,14 @@ export class VerAlumnosPComponent implements OnInit{
         }
       }else{
         this.alumnosData = res.alumnos;
-        console.log(this.alumnosData);
         this.totalAlumnos = res.page.total;
       }
+    })
+  }
+
+  obtenerUltimasRespuestas(){
+    this.respuestaService.getRespuestasClase(this.claseID).subscribe((res: any) => {
+      this.respuestasData = res.respuestas;
     })
   }
 

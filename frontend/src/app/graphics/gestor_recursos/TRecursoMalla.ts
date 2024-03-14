@@ -1,5 +1,6 @@
 import { Recurso } from './recurso';
 import { TMalla } from '../arbol_escena/malla';
+
 export class TRecursoMalla extends Recurso {
   private mallas: TMalla[] = [];
 
@@ -40,6 +41,12 @@ export class TRecursoMalla extends Recurso {
   // En TRecursoMalla
   dibujar(gl: WebGLRenderingContext, shaderProgram: WebGLProgram): void {
     console.log(`Dibujando la malla ${this.getNombre()}`);
+
+    gl.clearDepth(1.0); // Establece la profundidad a usar para la limpieza
+    gl.enable(gl.DEPTH_TEST); // Habilita la prueba de profundidad
+    gl.depthFunc(gl.LEQUAL); // Los objetos cercanos opacan a los objetos lejanos
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Limpia los buffers de color y profundidad
+
     this.mallas.forEach((malla) => {
       malla.dibujar(gl, shaderProgram);
     });

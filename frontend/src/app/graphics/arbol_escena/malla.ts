@@ -36,9 +36,6 @@ export class TMalla extends TEntidad {
             console.error("WebGL context or shader program no está definido.");
             return;
         }
-
-        //console.log(shaderProgram);
-        //console.log(vertexPosition);
         
         // Crear y asociar los datos de vértices al buffer
         const vertexBuffer = gl.createBuffer();
@@ -57,7 +54,11 @@ export class TMalla extends TEntidad {
 
         // Dibujar la malla
         gl.useProgram(shaderProgram);
-        gl.getError();
+        
+        if(gl.getError() !== gl.NO_ERROR){
+            console.error("WebGL error: " + gl.getError());
+        }
+        
         gl.drawElements(gl.TRIANGLES, this.indices.length, gl.UNSIGNED_SHORT, 0);
     }
 }

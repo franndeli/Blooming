@@ -15,21 +15,6 @@ export class TMalla extends TEntidad {
         this.indices = new Uint16Array(indices || []);
     }
 
-    actualizarVertices(nuevosVertices: number[]) {
-        this.vertices = new Float32Array(nuevosVertices);
-    }
-
-    actualizarNormales(nuevasNormales: number[]) {
-        this.vertices = new Float32Array(nuevasNormales);
-    }
-
-    actualizarCoordTex(nuevasCoordTex: number[]) {
-        this.vertices = new Float32Array(nuevasCoordTex);
-    }
-    actualizarIndices(nuevosIndices: number[]) {
-        this.vertices = new Float32Array(nuevosIndices);
-    }
-
     dibujar(gl: WebGLRenderingContext, shaderProgram: WebGLProgram): void {
         // Asegurar que gl y shaderProgram están definidos
         if (!gl || !shaderProgram) {
@@ -60,5 +45,36 @@ export class TMalla extends TEntidad {
         }
         
         gl.drawElements(gl.TRIANGLES, this.indices.length, gl.UNSIGNED_SHORT, 0);
+    }
+
+    actualizarVertices(nuevosVertices: number[]) {
+        this.vertices = new Float32Array(nuevosVertices);
+    }
+
+    actualizarNormales(nuevasNormales: number[]) {
+        this.vertices = new Float32Array(nuevasNormales);
+    }
+
+    actualizarCoordTex(nuevasCoordTex: number[]) {
+        this.vertices = new Float32Array(nuevasCoordTex);
+    }
+    actualizarIndices(nuevosIndices: number[]) {
+        this.vertices = new Float32Array(nuevosIndices);
+    }
+
+    getVertices(): number[] {
+        return Array.from(this.vertices);
+    }
+
+    getNormales(): number[] {
+        return Array.from(this.normales);
+    }
+
+    getCoordTexturas(): number[] {
+        return Array.from(this.coordTex);
+    }
+
+    getIndices(): number[] {
+        return Array.from(this.indices);
     }
 }

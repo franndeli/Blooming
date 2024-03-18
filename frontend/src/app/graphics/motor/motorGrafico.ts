@@ -1,80 +1,23 @@
 import { mat4, vec3 } from 'gl-matrix';
 import { ElementRef } from '@angular/core';
-import { GestorRecursos, TRecursoMalla, TNodo, TCamara, TLuz, TMalla } from '../../graphics';
 import vertexShaderText from '../../graphics/shaders/vertexShader';
 import fragmentShaderText from '../../graphics/shaders/fragmentShader';
+import { GestorRecursos, TRecursoMalla, TNodo, TCamara, TLuz, TMalla } from '../../graphics';
 
 export class MotorGrafico {
-  gl: WebGLRenderingContext | null = null;
-  program: WebGLProgram | null = null;
-  recursoMalla: TRecursoMalla | null = null;
+  
   private raiz = new TNodo();
+  private camaraActiva: number = 0;
+  private viewportActivo: number = 0;
+  private registroLuces: TNodo[] = [];
+  private lucesActivas: boolean[] = [];
+  private registroCamaras: TNodo[] = [];
+  private registroViewPorts: TNodo[] = [];
   private gestorRecursos = new GestorRecursos();
-
-  crearNodo(padre:TNodo, trasl: vec3, rot: vec3, esc: vec3): TNodo {
-    if(padre == null){
-      padre = this.raiz;
-    }
-    const nodo = new TNodo(null, padre);
-    nodo.traslacion = trasl;
-    nodo.rotacion = rot;
-    nodo.escalado = esc;
-    //actualiza la matriz de transformación -> actualizarMatriz = true;
-    return nodo;
-  }
-
-  crearCamara(padre: TNodo, trasl: vec3, rot: vec3, esc: vec3, cercano: number, lejano: number): TNodo {
-    if(padre == null){
-      padre = this.raiz;
-    }
-    const camara = new TNodo(null, padre);
-    camara.entidad = new TCamara();
-    camara.traslacion = trasl;
-    camara.rotacion = rot;
-    camara.escalado = esc;
-    //actualiza la matriz de transformación -> actualizarMatriz = true;
-    return camara;
-  }
-
-  crearLuz(padre: TNodo, trasl: vec3, rot: vec3, esc: vec3, intensidad: vec3 /*, tipoLuz: EnumType*/): TNodo {
-    if(padre == null){
-      padre = this.raiz;
-    }
-    const luz = new TNodo(null, padre);
-    luz.entidad = new TLuz(intensidad);
-    luz.traslacion = trasl;
-    luz.rotacion = rot;
-    luz.escalado = esc;
-    //actualiza la matriz de transformación -> actualizarMatriz = true;
-    return luz;
-  }
-
-  crearModelo(padre: TNodo, trasl: vec3, rot: vec3, esc: vec3, fichero: string): TNodo {
-    if(padre == null){
-      padre = this.raiz;
-    }
-    const modelo = new TNodo(null, padre);
-    const recurso = this.gestorRecursos.getRecurso(fichero, 'malla') as TRecursoMalla;
-    
-    let vertices: number[] = [];
-    let normales: number[] = [];
-    let coordTexturas: number[] = [];
-    let indices: number[] = [];
-
-    recurso.getMallas().forEach(malla => {
-        vertices = vertices.concat(malla.getVertices());
-        normales = normales.concat(malla.getNormales());
-        coordTexturas = coordTexturas.concat(malla.getCoordTexturas());
-        indices = indices.concat(malla.getIndices());
-    });
-
-    modelo.entidad = new TMalla(vertices, normales, coordTexturas, indices);
-    modelo.traslacion = trasl;
-    modelo.rotacion = rot;
-    modelo.escalado = esc;
-    //actualiza la matriz de transformación -> actualizarMatriz = true;
-    return modelo;
-  }
+  
+  program: WebGLProgram | null = null;
+  gl: WebGLRenderingContext | null = null;
+  recursoMalla: TRecursoMalla | null = null;
 
   async iniciarEscena(canvasRef: ElementRef<HTMLCanvasElement>): Promise<void> {
     if (canvasRef && canvasRef.nativeElement) {
@@ -164,16 +107,164 @@ export class MotorGrafico {
             
       console.log(this.recursoMalla);
       this.render();
-      // if (recursoMalla) {
-      //   // Llama al método dibujar de recursoMalla
-      //   if(program){
-      //     console.log(program);
-      //     console.log(gl);
-      //     recursoMalla.dibujar(gl, program);
-      //   }
-      // }
     } else {
       console.error('El elemento canvas no está disponible.');
+    }
+  }
+
+  crearNodo(padre:TNodo, trasl: vec3, rot: vec3, esc: vec3): TNodo {
+    if(padre == null){
+      padre = this.raiz;
+    }
+    const nodo = new TNodo(null, padre);
+    nodo.traslacion = trasl;
+    nodo.rotacion = rot;
+    nodo.escalado = esc;
+    //actualiza la matriz de transformación -> actualizarMatriz = true;
+    nodo.setMatrizTransf(mat4.create());
+
+    return nodo;
+  }
+
+  crearCamara(padre: TNodo, trasl: vec3, rot: vec3, esc: vec3, cercano: number, lejano: number): TNodo {
+    if(padre == null){
+      padre = this.raiz;
+    }
+    const camara = new TNodo(null, padre);
+    camara.entidad = new TCamara();
+    camara.traslacion = trasl;
+    camara.rotacion = rot;
+    camara.escalado = esc;
+    //actualiza la matriz de transformación -> actualizarMatriz = true;
+    return camara;
+  }
+
+  crearLuz(padre: TNodo, trasl: vec3, rot: vec3, esc: vec3, intensidad: vec3 /*, tipoLuz: EnumType*/): TNodo {
+    if(padre == null){
+      padre = this.raiz;
+    }
+    const luz = new TNodo(null, padre);
+    luz.entidad = new TLuz(intensidad);
+    luz.traslacion = trasl;
+    luz.rotacion = rot;
+    luz.escalado = esc;
+    //actualiza la matriz de transformación -> actualizarMatriz = true;
+    return luz;
+  }
+
+  crearModelo(padre: TNodo, trasl: vec3, rot: vec3, esc: vec3, fichero: string): TNodo {
+    if(padre == null){
+      padre = this.raiz;
+    }
+    const modelo = new TNodo(null, padre);
+    const recurso = this.gestorRecursos.getRecurso(fichero, 'malla') as TRecursoMalla;
+    
+    let vertices: number[] = [];
+    let normales: number[] = [];
+    let coordTexturas: number[] = [];
+    let indices: number[] = [];
+
+    recurso.getMallas().forEach(malla => {
+        vertices = vertices.concat(malla.getVertices());
+        normales = normales.concat(malla.getNormales());
+        coordTexturas = coordTexturas.concat(malla.getCoordTexturas());
+        indices = indices.concat(malla.getIndices());
+    });
+
+    modelo.entidad = new TMalla(vertices, normales, coordTexturas, indices);
+    modelo.traslacion = trasl;
+    modelo.rotacion = rot;
+    modelo.escalado = esc;
+    //actualiza la matriz de transformación -> actualizarMatriz = true;
+    return modelo;
+  }
+
+  // Recorrer el arbol de nodos y dibujar cada uno de ellos
+  dibujarEscena() {
+    let matrizId = mat4.create();
+
+    for (let luz of this.registroLuces) {
+      let matrizLuz = luz.getMatrizTransf();
+      this.pasarLuzGL(matrizLuz);
+    }
+
+    let camaraActiva = this.getCamaraActiva();
+    let matrizCamara = camaraActiva.getMatrizTransf();
+    let matrizVista = mat4.invert(mat4.create(), matrizCamara);
+    this.pasarVistaGL(matrizVista);
+
+    let viewportActivo = this.getViewportActivo();
+    this.pasarViewportGL(viewportActivo);
+
+    this.raiz.recorrer(matrizId);
+  }
+
+  registrarCamara(nodoCam: TNodo) {
+    this.registroCamaras.push(nodoCam);
+  }
+
+  getCamaraActiva() {
+    return this.registroCamaras[this.camaraActiva];
+  }
+
+  // Guardar el indice del array de la camara que hemos activado, solo 1 cam activa a la vez
+  setCamaraActiva(numCam: number) {
+    this.camaraActiva = numCam;
+  }
+
+  registrarLuz(nodoLuz: TNodo) {
+    this.registroLuces.push(nodoLuz);
+  }
+
+  // getLucesActivas() {
+
+  // }
+
+  // Guardar en un array las luces activas o que han sido desactivadas, se puede tener varias luces activas a la vez
+  setLuzActiva(numLuz: number, activa: boolean) {
+    this.lucesActivas[numLuz] = activa;
+  }
+
+  // registrarViewPort(x: number, y: number, ancho: number, alto: number) {
+  //   const viewPort = new TNodo();
+  //   viewPort.x = x;
+  //   viewPort.y = y;
+  //   viewPort.ancho = ancho;
+  //   viewPort.alto = alto;
+  //   this.registroViewPorts.push(viewPort);
+  // }
+
+  getViewportActivo() {
+    return this.registroViewPorts[this.viewportActivo];
+  }
+
+  // setViewPortActivo(numViewPort: number) {
+  //   this.viewportActivo = numViewPort;
+  // }
+
+  pasarLuzGL(matrizLuz: mat4) {
+    if(this.program && this.gl){
+      let u_LuzMatrix = this.gl.getUniformLocation(this.program, 'u_LuzMatrix');
+
+      if (u_LuzMatrix !== null) {
+        this.gl.uniformMatrix4fv(u_LuzMatrix, false, new Float32Array(matrizLuz));
+      }
+    }
+  }
+
+  pasarVistaGL(matrizVista: mat4) {
+    if(this.program && this.gl){
+      let u_ViewMatrix = this.gl.getUniformLocation(this.program, 'u_ViewMatrix');
+
+  if (u_ViewMatrix !== null) {
+    this.gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(matrizVista));
+  }
+    }
+  }
+
+  pasarViewportGL(viewport: TNodo) {
+    if(this.program && this.gl){
+    //  this.gl.viewport(viewport.x, viewport.y, viewport.ancho, viewport.alto);
     }
   }
 
@@ -185,6 +276,7 @@ export class MotorGrafico {
         console.log(this.program);
         console.log(this.gl);
         this.recursoMalla.dibujar(this.gl, this.program);
+        // requestAnimationFrame(() => this.render());
       }
     }
   }

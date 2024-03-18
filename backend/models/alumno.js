@@ -50,6 +50,10 @@ const Alumno = sequelize.define('Alumno', {
         type: DataTypes.JSON,
         allowNull: false
     },
+    AparicionAmbitos: {
+        type: DataTypes.JSON,
+        allowNull: false
+    },
     Rol: {
         type: DataTypes.STRING,
         allowNull: true

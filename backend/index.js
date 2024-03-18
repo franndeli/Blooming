@@ -1,8 +1,10 @@
 const express = require('express');
+const cors = require('cors');
+
 require('./models/associations');
 require('./database/configdb');
-const cors = require('cors');
 require('dotenv').config();
+require('./helpers/reset');
 
 const app = express();
 

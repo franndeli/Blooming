@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PreguntaService } from '../../../services/preguntas.service';
+import { AlumnoService } from '../../../services/alumnos.service';
 
 @Component({
   selector: 'app-sistema-preguntas',
@@ -10,26 +11,29 @@ import { PreguntaService } from '../../../services/preguntas.service';
 export class SistemaPreguntasComponent implements OnInit {
   preguntas: any[] = [];
   opcion: any[] = [];
+  ambitos: any = null;
+  frecuencia: any = null;
   indiceActual: number = 0;
   preguntaActual: any = null;
-  mostrarReiniciar: boolean = false; // Añade esta línea para controlar la visualización del botón de reiniciar
+  mostrarReiniciar: boolean = false;
 
   objectKeys = Object.keys;
 
 
-  constructor(private preguntaService: PreguntaService) {}
+  constructor(private preguntaService: PreguntaService, private alumnoService: AlumnoService) {}
 
   ngOnInit() {
-    this.preguntaService.seleccionarPreguntas().subscribe(preguntas => {
-      this.preguntas = preguntas;
-      console.log(preguntas);
-      if (this.preguntas && this.preguntas.length > 0) {
-        this.preguntaActual = this.preguntas[this.indiceActual];
-        this.preguntaActual.respuestas.opciones.forEach((opcion: any) => {
-          console.log(opcion.TextoOpcion);
-        });
-      }
-    });
+    this.alumnoService.getAlumnoID(localStorage.getItem('id')).subscribe((ambitos: any) => {
+      this.ambitos = JSON.parse(ambitos.alumnos[0].Ambitos);
+      this.frecuencia = JSON.parse(ambitos.alumnos[0].AparicionAmbitos);
+      this.preguntaService.seleccionarPreguntas(this.ambitos, this.frecuencia).subscribe(preguntas => {
+        this.preguntas = preguntas;
+        console.log(preguntas);
+        if (this.preguntas && this.preguntas.length > 0) {
+          this.preguntaActual = this.preguntas[this.indiceActual];
+        }
+      });
+    })
   }
 
   gravedadesPorAmbito: { [ambito: string]: number } = {};
@@ -46,6 +50,7 @@ export class SistemaPreguntasComponent implements OnInit {
     }
 
     if (this.indiceActual < this.preguntas.length - 1) {
+      console.log(this.preguntas.length);
       this.indiceActual++;
       this.preguntaActual = this.preguntas[this.indiceActual];
     } else {

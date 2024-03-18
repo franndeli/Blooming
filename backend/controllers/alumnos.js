@@ -172,5 +172,16 @@ const deleteAlumno = async (req, res) => {
     }
 };
 
+const resetAparicionAmbitos = async () => {
+    try {
+        const nuevoValorAparicionAmbitos = { "Clase": 0, "Amigos": 0, "Familia": 0, "Emociones": 0, "Fuera de clase": 0 };
+        await Alumno.update({ AparicionAmbitos: nuevoValorAparicionAmbitos }, { where: {} }); // Actualiza todos los registros
 
-module.exports = { getAlumnos, createAlumno, updateAlumno, deleteAlumno };
+        console.log("AparicionAmbitos restablecido exitosamente para todos los alumnos.");
+    } catch (error) {
+        console.error("Error al restablecer AparicionAmbitos:", error);
+    }
+};
+
+
+module.exports = { getAlumnos, createAlumno, updateAlumno, deleteAlumno, resetAparicionAmbitos };

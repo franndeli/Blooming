@@ -8,6 +8,7 @@ export class TNodo {
     public rotacion: vec3;
     public escalado: vec3;
     public matrizTransf: mat4;
+    public actualizarMatriz: boolean = false;
 
     constructor(entidad: any = null, padre: TNodo | null = null) {
         this.entidad = entidad;
@@ -55,7 +56,10 @@ export class TNodo {
         mat4.rotateZ(matrizLocal, matrizLocal, this.rotacion[2]);
         mat4.scale(matrizLocal, matrizLocal, this.escalado);
 
-        mat4.copy(this.matrizTransf, matrizLocal);
+        // mat4.copy(this.matrizTransf, matrizLocal);
+        if(this.actualizarMatriz) {
+            this.setMatrizTransf(matrizLocal);
+        }
 
         this.hijos.forEach(hijo => hijo.recorrer(matrizLocal));
     }

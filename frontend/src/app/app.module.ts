@@ -43,8 +43,7 @@ import { MotorGrafico } from './graphics/motor/motorGrafico';
     ComponentsModule
   ],
   providers: [
-    provideClientHydration(),
-    MotorGrafico
+    provideClientHydration()
   ],
   bootstrap: [AppComponent]
 })

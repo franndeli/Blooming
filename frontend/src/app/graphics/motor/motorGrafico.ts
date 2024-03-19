@@ -1,25 +1,25 @@
 import { mat4, vec3 } from 'gl-matrix';
-import { ElementRef } from '@angular/core';
+import { ElementRef, Injectable } from '@angular/core';
 import vertexShaderText from '../../graphics/shaders/vertexShader';
 import fragmentShaderText from '../../graphics/shaders/fragmentShader';
 import { GestorRecursos, TRecursoMalla, TNodo, TCamara, TLuz, TMalla } from '../../graphics';
+
 
 export class MotorGrafico {
   
   private raiz = new TNodo();
   private camaraActiva: number = 0;
-  private viewportActivo: number = 0;
   private registroLuces: TNodo[] = [];
   private lucesActivas: boolean[] = [];
   private registroCamaras: TNodo[] = [];
-  private registroViewPorts: TNodo[] = [];
   private gestorRecursos = new GestorRecursos();
   
   program: WebGLProgram | null = null;
   gl: WebGLRenderingContext | null = null;
   recursoMalla: TRecursoMalla | null = null;
 
-  async iniciarEscena(canvasRef: ElementRef<HTMLCanvasElement>): Promise<void> {
+  constructor(canvasRef: ElementRef<HTMLCanvasElement>) {
+
     if (canvasRef && canvasRef.nativeElement) {
       const canvas = canvasRef.nativeElement;
       this.gl = canvas.getContext('webgl');
@@ -97,22 +97,18 @@ export class MotorGrafico {
           console.error('Se produjo un error de WebGL: ', error);
         }
       }
-            
-      // Carga los recursos necesarios para la malla
-      const cargaMalla = this.gestorRecursos.cargarRecurso('mallaEjemplo', 'malla', '../../../../assets/json/malla.json');
-      await Promise.all([cargaMalla]);
 
-      // Asigna el recurso malla a la variable
-      this.recursoMalla = this.gestorRecursos.getRecurso('mallaEjemplo', 'malla') as TRecursoMalla;
-            
-      console.log(this.recursoMalla);
-      this.render();
+      // this.gestorRecursos.getRecurso(nombre, 'malla').then((recurso) => {
+      //   this.recursoMalla = recurso as TRecursoMalla;
+      //   console.log(this.recursoMalla);
+      //   this.render();
+      // });
     } else {
       console.error('El elemento canvas no está disponible.');
     }
   }
 
-  crearNodo(padre:TNodo, trasl: vec3, rot: vec3, esc: vec3): TNodo {
+  crearNodo(padre:TNodo | null, trasl: vec3, rot: vec3, esc: vec3): TNodo {
     if(padre == null){
       padre = this.raiz;
     }
@@ -120,13 +116,14 @@ export class MotorGrafico {
     nodo.traslacion = trasl;
     nodo.rotacion = rot;
     nodo.escalado = esc;
-    //actualiza la matriz de transformación -> actualizarMatriz = true;
-    nodo.setMatrizTransf(mat4.create());
+    nodo.actualizarMatriz = true;
+
+    console.log('nodo creado: ', nodo)
 
     return nodo;
   }
 
-  crearCamara(padre: TNodo, trasl: vec3, rot: vec3, esc: vec3, cercano: number, lejano: number): TNodo {
+  crearCamara(padre: TNodo | null, trasl: vec3, rot: vec3, esc: vec3, cercano: number, lejano: number): TNodo {
     if(padre == null){
       padre = this.raiz;
     }
@@ -135,11 +132,12 @@ export class MotorGrafico {
     camara.traslacion = trasl;
     camara.rotacion = rot;
     camara.escalado = esc;
-    //actualiza la matriz de transformación -> actualizarMatriz = true;
+    camara.actualizarMatriz = true;
+
     return camara;
   }
 
-  crearLuz(padre: TNodo, trasl: vec3, rot: vec3, esc: vec3, intensidad: vec3 /*, tipoLuz: EnumType*/): TNodo {
+  crearLuz(padre: TNodo | null, trasl: vec3, rot: vec3, esc: vec3, intensidad: vec3 /*, tipoLuz: EnumType*/): TNodo {
     if(padre == null){
       padre = this.raiz;
     }
@@ -148,16 +146,18 @@ export class MotorGrafico {
     luz.traslacion = trasl;
     luz.rotacion = rot;
     luz.escalado = esc;
-    //actualiza la matriz de transformación -> actualizarMatriz = true;
+    luz.actualizarMatriz = true;
+
     return luz;
   }
 
-  crearModelo(padre: TNodo, trasl: vec3, rot: vec3, esc: vec3, fichero: string): TNodo {
+  async crearModelo(padre: TNodo | null, fichero: string, trasl: vec3, rot: vec3, esc: vec3): Promise<TNodo> {
     if(padre == null){
       padre = this.raiz;
     }
     const modelo = new TNodo(null, padre);
-    const recurso = this.gestorRecursos.getRecurso(fichero, 'malla') as TRecursoMalla;
+    const recurso =  await this.gestorRecursos.getRecurso(fichero, 'malla') as TRecursoMalla;
+    this.recursoMalla = recurso;
     
     let vertices: number[] = [];
     let normales: number[] = [];
@@ -175,7 +175,10 @@ export class MotorGrafico {
     modelo.traslacion = trasl;
     modelo.rotacion = rot;
     modelo.escalado = esc;
-    //actualiza la matriz de transformación -> actualizarMatriz = true;
+    modelo.actualizarMatriz = true;
+
+    console.log('modelo creado: ', modelo)
+
     return modelo;
   }
 
@@ -188,15 +191,13 @@ export class MotorGrafico {
       this.pasarLuzGL(matrizLuz);
     }
 
-    let camaraActiva = this.getCamaraActiva();
-    let matrizCamara = camaraActiva.getMatrizTransf();
-    let matrizVista = mat4.invert(mat4.create(), matrizCamara);
-    this.pasarVistaGL(matrizVista);
-
-    let viewportActivo = this.getViewportActivo();
-    this.pasarViewportGL(viewportActivo);
+    // let camaraActiva = this.getCamaraActiva();
+    // let matrizCamara = camaraActiva.getMatrizTransf();
+    // let matrizVista = mat4.invert(mat4.create(), matrizCamara);
+    // this.pasarVistaGL(matrizVista);
 
     this.raiz.recorrer(matrizId);
+    this.render();
   }
 
   registrarCamara(nodoCam: TNodo) {
@@ -225,23 +226,6 @@ export class MotorGrafico {
     this.lucesActivas[numLuz] = activa;
   }
 
-  // registrarViewPort(x: number, y: number, ancho: number, alto: number) {
-  //   const viewPort = new TNodo();
-  //   viewPort.x = x;
-  //   viewPort.y = y;
-  //   viewPort.ancho = ancho;
-  //   viewPort.alto = alto;
-  //   this.registroViewPorts.push(viewPort);
-  // }
-
-  getViewportActivo() {
-    return this.registroViewPorts[this.viewportActivo];
-  }
-
-  // setViewPortActivo(numViewPort: number) {
-  //   this.viewportActivo = numViewPort;
-  // }
-
   pasarLuzGL(matrizLuz: mat4) {
     if(this.program && this.gl){
       let u_LuzMatrix = this.gl.getUniformLocation(this.program, 'u_LuzMatrix');
@@ -259,12 +243,6 @@ export class MotorGrafico {
   if (u_ViewMatrix !== null) {
     this.gl.uniformMatrix4fv(u_ViewMatrix, false, new Float32Array(matrizVista));
   }
-    }
-  }
-
-  pasarViewportGL(viewport: TNodo) {
-    if(this.program && this.gl){
-    //  this.gl.viewport(viewport.x, viewport.y, viewport.ancho, viewport.alto);
     }
   }
 

@@ -36,7 +36,7 @@ export class PreguntaService {
     // Considerar la nota
     if (nota <= 50) {
       peso += 2; // Mayor urgencia para mejorar
-    } else if (nota <= 70) {
+    } else if (nota < 60) {
       peso += 1; // Alguna urgencia para mejorar
     }
   
@@ -51,37 +51,47 @@ export class PreguntaService {
     return Math.min(peso, 2);
   };
 
-  seleccionarPreguntas(ambitos: any, frecuencia: any): Observable<any> {
+  seleccionarPreguntas(ambitos: any, aparicionambitos: any, sesiones: any): Observable<any> {
     const totalPreguntas = 7;
     let preguntasPorSeleccionar: PreguntasPorSeleccionar = {};
-    let preguntasAsignadas = 0;
 
     console.log(ambitos);
+    
+    // Calcular frecuencias
+    let frecuencia: { [key: string]: number } = {};
+    Object.keys(aparicionambitos).forEach(ambito => {
+      frecuencia[ambito] = aparicionambitos[ambito] / (sesiones * 2);
+    });
+
     console.log(frecuencia);
   
-    // Calcular el peso y asignar preguntas para cada ámbito
+    // Array para almacenar ámbitos con su peso compuesto
+    let ambitosConPeso: { ambito: string, peso: number, nota: number }[] = [];
+  
+    // Calcular el peso compuesto para cada ámbito
     Object.entries(ambitos as { [key: string]: number }).forEach(([ambito, nota]) => {
       const peso = this.calcularPeso(nota, frecuencia[ambito]);
-      const preguntasAAgregar = Math.min(peso, totalPreguntas - preguntasAsignadas);
-      preguntasPorSeleccionar[ambito] = preguntasAAgregar;
-      preguntasAsignadas += preguntasAAgregar;
+      ambitosConPeso.push({ ambito, peso, nota });
     });
   
-    // Si se asignaron demasiadas preguntas debido al redondeo, ajustar
-    while (preguntasAsignadas > totalPreguntas) {
-      Object.keys(preguntasPorSeleccionar).forEach(ambito => {
-        if (preguntasPorSeleccionar[ambito] > 0 && preguntasAsignadas > totalPreguntas) {
-          preguntasPorSeleccionar[ambito]--;
-          preguntasAsignadas--;
-        }
-      });
-    }
+    // Ordenar los ámbitos por peso (priorizando los de mayor peso) y luego por nota si tienen el mismo peso
+    ambitosConPeso.sort((a, b) => b.peso - a.peso || a.nota - b.nota);
   
+    // Asignar preguntas basándose en el orden de prioridad
+    let preguntasAsignadas = 0;
+    for (const { ambito, peso } of ambitosConPeso) {
+      if (preguntasAsignadas < totalPreguntas) {
+        const preguntasAAgregar = Math.min(peso, totalPreguntas - preguntasAsignadas);
+        preguntasPorSeleccionar[ambito] = preguntasAAgregar;
+        preguntasAsignadas += preguntasAAgregar;
+      }
+      if (preguntasAsignadas >= totalPreguntas) break; // Detener si se alcanza el máximo de preguntas
+    }
+
     console.log(preguntasPorSeleccionar);
   
     return this.obtenerPreguntasSeleccionadas(preguntasPorSeleccionar);
   }
-  
 
   // Método ajustado para realizar llamadas individuales por ámbito
   obtenerPreguntasSeleccionadas(preguntasPorSeleccionar: { [ambito: string]: number }): Observable<any> {

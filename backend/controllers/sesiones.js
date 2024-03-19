@@ -144,4 +144,39 @@ const deleteSesion = async (req, res) => {
     }
 };
 
-module.exports = { getSesiones, createSesion, updateSesion, deleteSesion };
+const getSesionesCount = async (req, res) => {
+    try {
+        // Asumiendo que ID_Alumno se pasa como parámetro de query
+        const idAlumno = req.query.ID_Alumno;
+        if (!idAlumno) {
+            return res.status(400).json({ message: "Se requiere el ID_Alumno" });
+        }
+
+        // Calcula la fecha de 3 semanas atrás desde la fecha actual
+        const tresSemanasAtras = new Date();
+        tresSemanasAtras.setDate(tresSemanasAtras.getDate() - 21);
+
+        // Usa Sequelize para contar las sesiones
+        const numeroSesiones = await Sesion.count({
+            where: {
+                ID_Alumno: idAlumno,
+                // Asegúrate de ajustar 'FechaInicio' al nombre correcto de tu columna de fecha
+                FechaInicio: {
+                    [sequelize.Op.gte]: tresSemanasAtras, // gte significa 'mayor o igual que'
+                },
+            },
+        });
+
+        res.json({
+            ok: true,
+            msg: 'getSesionesCount',
+            count: numeroSesiones
+        });
+    } catch (error) {
+        console.error("Error al obtener el conteo de sesiones:", error);
+        res.status(500).json({ statusCode: 500, message: "Error al obtener el conteo de sesiones" });
+    }
+};
+
+
+module.exports = { getSesiones, createSesion, updateSesion, deleteSesion, getSesionesCount };

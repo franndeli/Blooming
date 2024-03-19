@@ -1,4 +1,4 @@
-const { getSesiones, createSesion, updateSesion, deleteSesion } = require('../controllers/sesiones');
+const { getSesiones, createSesion, updateSesion, deleteSesion, getSesionesCount } = require('../controllers/sesiones');
 const { validarCampos } = require('../middleware/validaciones');
 const { validarRol } = require('../middleware/validar-rol');
 const { validarJWT } = require('../middleware/validar-jwt');
@@ -14,6 +14,14 @@ router.get('/', [
         res.status(error.statusCode || 500).json({ error: error.message });
     });
 });
+
+router.get('/:ID_Alumno', [
+    validarJWT, validarRol(['Alumno', 'Admin'])
+], (req, res) => {
+    getSesionesCount(req, res).catch(error => {
+        res.status(error.statusCode || 500).json({ error: error.message });
+    })
+})
 
 router.post('/', [
     validarJWT, validarRol(['Admin', 'Alumno']),

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PreguntaService } from '../../../services/preguntas.service';
 import { AlumnoService } from '../../../services/alumnos.service';
+import { SesionService } from '../../../services/sesiones.service';
 
 @Component({
   selector: 'app-sistema-preguntas',
@@ -12,7 +13,8 @@ export class SistemaPreguntasComponent implements OnInit {
   preguntas: any[] = [];
   opcion: any[] = [];
   ambitos: any = null;
-  frecuencia: any = null;
+  aparicionambitos: any = null;
+  nsesiones: any = null;
   indiceActual: number = 0;
   preguntaActual: any = null;
   mostrarReiniciar: boolean = false;
@@ -20,19 +22,22 @@ export class SistemaPreguntasComponent implements OnInit {
   objectKeys = Object.keys;
 
 
-  constructor(private preguntaService: PreguntaService, private alumnoService: AlumnoService) {}
+  constructor(private preguntaService: PreguntaService, private alumnoService: AlumnoService, private sesionService: SesionService) {}
 
   ngOnInit() {
     this.alumnoService.getAlumnoID(localStorage.getItem('id')).subscribe((ambitos: any) => {
       this.ambitos = JSON.parse(ambitos.alumnos[0].Ambitos);
-      this.frecuencia = JSON.parse(ambitos.alumnos[0].AparicionAmbitos);
-      this.preguntaService.seleccionarPreguntas(this.ambitos, this.frecuencia).subscribe(preguntas => {
-        this.preguntas = preguntas;
-        console.log(preguntas);
-        if (this.preguntas && this.preguntas.length > 0) {
-          this.preguntaActual = this.preguntas[this.indiceActual];
-        }
-      });
+      this.aparicionambitos = JSON.parse(ambitos.alumnos[0].AparicionAmbitos);
+      this.sesionService.getSesionCount(localStorage.getItem('id')).subscribe((sesiones: any) => {
+        this.nsesiones = sesiones.count;
+        this.preguntaService.seleccionarPreguntas(this.ambitos, this.aparicionambitos, this.nsesiones).subscribe(preguntas => {
+          this.preguntas = preguntas;
+          console.log(preguntas);
+          if (this.preguntas && this.preguntas.length > 0) {
+            this.preguntaActual = this.preguntas[this.indiceActual];
+          }
+        });
+      })
     })
   }
 

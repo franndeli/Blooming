@@ -48,4 +48,9 @@ export class SesionService {
       }
       return this.http.get<any[]>(this.basePath+'?ID_Alumno='+id+'&dias='+dias, {headers});
     }
+
+    getSesionCount(id: any){
+      this.getHeader();
+      return this.http.get(this.basePath+ 'count?ID_Alumno='+id, this.httpOptions);
+    }
 }

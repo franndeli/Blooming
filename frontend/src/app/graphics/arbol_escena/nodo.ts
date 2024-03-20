@@ -49,19 +49,47 @@ export class TNodo {
     }
 
     recorrer(matrizPadre: mat4): void {
+        console.log('entramosss')
         let matrizLocal = mat4.clone(matrizPadre);
-        mat4.translate(matrizLocal, matrizLocal, this.traslacion);
-        mat4.rotateX(matrizLocal, matrizLocal, this.rotacion[0]);
-        mat4.rotateY(matrizLocal, matrizLocal, this.rotacion[1]);
-        mat4.rotateZ(matrizLocal, matrizLocal, this.rotacion[2]);
-        mat4.scale(matrizLocal, matrizLocal, this.escalado);
-
-        // mat4.copy(this.matrizTransf, matrizLocal);
+        console.log(this.actualizarMatriz)
         if(this.actualizarMatriz) {
+            console.log('actualizamos matriz')
+            let matrizTrans = mat4.create();
+            let matrizRot = mat4.create();
+            let matrizEsc = mat4.create();
+
+            mat4.translate(matrizTrans, matrizTrans, this.traslacion);
+            mat4.rotateX(matrizRot, matrizRot, this.rotacion[0]);
+            mat4.rotateY(matrizRot, matrizRot, this.rotacion[1]);
+            mat4.rotateZ(matrizRot, matrizRot, this.rotacion[2]);
+            mat4.scale(matrizEsc, matrizEsc, this.escalado);
+
+            mat4.multiply(matrizLocal, matrizLocal, matrizTrans);
+            mat4.multiply(matrizLocal, matrizLocal, matrizRot);
+            mat4.multiply(matrizLocal, matrizLocal, matrizEsc);
+
             this.setMatrizTransf(matrizLocal);
         }
 
+        // if(this.entidad && typeof this.entidad.dibujar === 'function') {
+        //     this.entidad.dibujar(this.matrizTransf);
+        //     console.log('Dibujando entidad');
+        // }
+
         this.hijos.forEach(hijo => hijo.recorrer(matrizLocal));
+        // let matrizLocal = mat4.clone(matrizPadre);
+        // mat4.translate(matrizLocal, matrizLocal, this.traslacion);
+        // mat4.rotateX(matrizLocal, matrizLocal, this.rotacion[0]);
+        // mat4.rotateY(matrizLocal, matrizLocal, this.rotacion[1]);
+        // mat4.rotateZ(matrizLocal, matrizLocal, this.rotacion[2]);
+        // mat4.scale(matrizLocal, matrizLocal, this.escalado);
+
+        // // mat4.copy(this.matrizTransf, matrizLocal);
+        // if(this.actualizarMatriz) {
+        //     this.setMatrizTransf(matrizLocal);
+        // }
+
+        // this.hijos.forEach(hijo => hijo.recorrer(matrizLocal));
     }
 
     setTraslacion(traslacion: vec3): void {

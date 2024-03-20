@@ -128,7 +128,7 @@ export class MotorGrafico {
       padre = this.raiz;
     }
     const camara = new TNodo(null, padre);
-    camara.entidad = new TCamara();
+    camara.entidad = new TCamara(cercano, lejano);
     camara.traslacion = trasl;
     camara.rotacion = rot;
     camara.escalado = esc;
@@ -143,9 +143,12 @@ export class MotorGrafico {
     }
     const luz = new TNodo(null, padre);
     luz.entidad = new TLuz(intensidad);
-    luz.traslacion = trasl;
-    luz.rotacion = rot;
-    luz.escalado = esc;
+    luz.setTraslacion(trasl);
+    luz.setRotacion(rot);
+    luz.setEscalado(esc);
+    // luz.traslacion = trasl;
+    // luz.rotacion = rot;
+    // luz.escalado = esc;
     luz.actualizarMatriz = true;
 
     return luz;
@@ -172,9 +175,12 @@ export class MotorGrafico {
     });
 
     modelo.entidad = new TMalla(vertices, normales, coordTexturas, indices);
-    modelo.traslacion = trasl;
-    modelo.rotacion = rot;
-    modelo.escalado = esc;
+    modelo.setTraslacion(trasl);
+    modelo.setRotacion(rot);
+    modelo.setEscalado(esc);
+    // modelo.traslacion = trasl;
+    // modelo.rotacion = rot;
+    // modelo.escalado = esc;
     modelo.actualizarMatriz = true;
 
     console.log('modelo creado: ', modelo)

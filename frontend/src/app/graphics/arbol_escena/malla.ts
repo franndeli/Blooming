@@ -5,7 +5,7 @@ export class TMalla extends TEntidad {
     private vertices: Float32Array;
     private normales: Float32Array;
     private coordTex: Float32Array;
-    private indices: Uint16Array | Uint32Array; 
+    private indices: Uint16Array | Uint32Array;
 
     constructor(vertices?: number[], normales?: number[], coordTexturas?: number[], indices?: number[]) {
         super(); // Llama al constructor de la clase base TEntidad

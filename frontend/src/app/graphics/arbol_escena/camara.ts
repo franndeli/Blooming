@@ -6,12 +6,12 @@ export class TCamara extends TEntidad {
     private cercano: number;
     private lejano: number;
 
-    constructor() {
+    constructor(cercano: number, lejano: number) {
         super(); // Llama al constructor de la clase base TEntidad
         // Por defecto: cámara perspectiva
         this.esPerspectiva = true;
-        this.cercano = 0.1; 
-        this.lejano = 1000.0;
+        this.cercano = cercano; 
+        this.lejano = lejano;
     }
 
     setPerspectiva(cercano: number, lejano: number): void {

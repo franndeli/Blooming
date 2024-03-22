@@ -1,4 +1,4 @@
-import {Recurso} from './recurso';
+/*import {Recurso} from './recurso';
 
 class TRecursoTextura extends Recurso {
   private id: WebGLTexture | null = null;
@@ -14,7 +14,7 @@ class TRecursoTextura extends Recurso {
     // Implementa la lógica para generar la textura con glGenTextures
     console.log(`Creando textura para ${this.getNombre()}`);
 
-    const textura: WebGLTexture | null = /* Lógica para generar la textura */ null;
+    const textura: WebGLTexture | null = /* Lógica para generar la textura null;
 
     return textura;
   }
@@ -27,11 +27,11 @@ class TRecursoTextura extends Recurso {
     this.height = 512;
   }
 
-  cargarRecurso(): void {
+  async cargarRecurso(url: string): Promise<void> {
     // Implementa la lógica específica para cargar el recurso de la textura
     console.log(`Cargando recurso para la textura ${this.getNombre()}`);
   }
   // Otros métodos específicos de TRecursoTextura, si los necesitas
 }
 
-export default TRecursoTextura;
+export default TRecursoTextura;*/

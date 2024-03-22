@@ -1,10 +1,8 @@
 import { Recurso } from './recurso';
+import { TMalla } from '../arbol_escena/malla';
 
-export default class TRecursoMalla extends Recurso {
-  private vertices: Float32Array | null = null;
-  private normales: Float32Array | null = null;
-  private coordTexturas: Float32Array | null = null;
-  private indices: Int32Array | null = null;
+export class TRecursoMalla extends Recurso {
+  private mallas: TMalla[] = [];
 
   constructor(nombre: string) {
     super(nombre);
@@ -14,19 +12,37 @@ export default class TRecursoMalla extends Recurso {
     try {
       const response = await fetch(url);
       const data = await response.json();
-      this.vertices = new Float32Array(data.vertices);
-      this.normales = new Float32Array(data.normales);
-      this.coordTexturas = new Float32Array(data.coordTexturas);
-      this.indices = new Int32Array(data.indices);
-      console.log(`Malla ${this.getNombre()} cargada correctamente.`);
+
+      data.mallas.forEach((mallaData: any) => {
+        // Crear una nueva instancia de TMalla para cada conjunto de datos
+        const nuevaMalla = new TMalla(
+          mallaData.vertices,
+          mallaData.normales,
+          mallaData.coordTexturas,
+          mallaData.indices
+        );
+
+        // Guardar la nueva malla en el array
+        this.mallas.push(nuevaMalla);
+      });
+
+      console.log(`Recurso malla ${this.getNombre()} cargado correctamente. Número de mallas: ${this.mallas.length}`);
+    
     } catch (error) {
-      console.error(`Error al cargar la malla ${this.getNombre()}:`, error);
+      console.error(`Error al cargar el recurso de malla ${this.getNombre()}:`, error);
     }
   }
 
-  draw(): void {
-    // Implementa la lógica para dibujar la malla
+  getMallas(): TMalla[] {
+    console.log(this.mallas);
+    return this.mallas;
+  }
+
+  // En TRecursoMalla
+  dibujar(gl: WebGLRenderingContext, shaderProgram: WebGLProgram): void {
     console.log(`Dibujando la malla ${this.getNombre()}`);
-    // Utiliza this.vertices, this.normales, this.coordTexturas, this.indices
+    this.mallas.forEach((malla) => {
+      malla.dibujar(gl, shaderProgram);
+    });
   }
 }

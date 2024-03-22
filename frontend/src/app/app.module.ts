@@ -15,6 +15,8 @@ import { CommonModule } from '@angular/common';
 import { CommonsModule } from './commons/commons.module';
 import { ComponentsModule } from './components/components.module';
 
+import { MotorGrafico } from './graphics/motor/motorGrafico';
+
 @NgModule({
   declarations: [
     AppComponent,

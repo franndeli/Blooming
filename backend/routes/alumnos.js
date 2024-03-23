@@ -37,7 +37,7 @@ router.post('/', [
     });
 
 router.put('/:ID_Alumno', [
-        validarJWT, validarRol(['Centro', 'Admin']),
+        validarJWT, validarRol(['Centro', 'Admin', 'Alumno']),
         check('Nombre').optional().not().isEmpty().withMessage('Error en el argumento "Nombre"'),
         check('Apellidos').optional().not().isEmpty().withMessage('Error en el argumento "Apellidos"'),
         check('Usuario').optional().not().isEmpty().withMessage('Error en el argumento "Usuario"'),

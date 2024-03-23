@@ -89,6 +89,9 @@ export class PreguntaService {
     }
 
     console.log(preguntasPorSeleccionar);
+
+    // Convertir el objeto JavaScript a una cadena JSON y almacenarlo
+    localStorage.setItem('preguntasPorSeleccionar', JSON.stringify(preguntasPorSeleccionar));
   
     return this.obtenerPreguntasSeleccionadas(preguntasPorSeleccionar);
   }

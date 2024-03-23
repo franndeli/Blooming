@@ -97,10 +97,10 @@ export class SistemaPreguntasComponent implements OnInit {
   
       // Continúa con la actualización en el backend
       this.actualizarAmbitosEnBackend(gravedadesActualizadas);
+      this.actualizarAparicionAmbitos();
     });
   }
-  
-  
+
   
   actualizarAmbitosEnBackend(ambitosActualizados: Resultados) {
     const alumnoId = localStorage.getItem('id');
@@ -115,6 +115,48 @@ export class SistemaPreguntasComponent implements OnInit {
     });
   }
   
+  actualizarAparicionAmbitos() {
+    this.alumnoService.getAlumnoID(localStorage.getItem('id')).subscribe((resultado: any) => {
+      if (resultado.alumnos && resultado.alumnos.length > 0) {
+        let aparicionAmbitos = JSON.parse(resultado.alumnos[0].AparicionAmbitos || '{}');
+        const alumnoId = localStorage.getItem('id');
+        const rawPreguntasPorSeleccionar = localStorage.getItem('preguntasPorSeleccionar');
+  
+        if (alumnoId && rawPreguntasPorSeleccionar) {
+          const preguntasPorSeleccionar = JSON.parse(rawPreguntasPorSeleccionar);
+          
+          // Sumar los valores
+          Object.keys(preguntasPorSeleccionar).forEach(key => {
+            aparicionAmbitos[key] = (aparicionAmbitos[key] || 0) + preguntasPorSeleccionar[key];
+          });
+  
+          // Ordenar y limitar los valores
+          const datosOrdenadosYLimitados = {
+            "Clase": aparicionAmbitos["Clase"] || 0,
+            "Amigos": aparicionAmbitos["Amigos"] || 0,
+            "Familia": aparicionAmbitos["Familia"] || 0,
+            "Emociones": aparicionAmbitos["Emociones"] || 0,
+            "Fuera de clase": aparicionAmbitos["Fuera de clase"] || 0
+          };
+  
+          const datosActualizados = {
+            ID_Alumno: alumnoId,
+            AparicionAmbitos: datosOrdenadosYLimitados // Convertir a cadena JSON
+          };
+  
+          this.alumnoService.putAlumno(datosActualizados).subscribe({
+            next: (response) => console.log('AparicionAmbitos actualizados con éxito:', response),
+            error: (error) => console.error('Error al actualizar ámbitos:', error)
+          });
+          localStorage.removeItem('preguntasPorSeleccionar');
+        } else {
+          console.error('Error: ID del alumno o preguntasPorSeleccionar no están disponibles en localStorage.');
+        }
+      } else {
+        console.error('Error: No se encontraron datos del alumno.');
+      }
+    });
+  }
   
   
   esUltimaPregunta(): boolean {

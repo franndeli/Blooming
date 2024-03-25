@@ -94,34 +94,58 @@ const getAlumnos = async (req, res) => {
     }
 
 
-const createAlumno = async (req, res) => {
-    try {
-        const usuario = "";
-
-        const existAlumno = await Alumno.findOne({ where: { Usuario: usuario } });
-        if (existAlumno) {
-            return res.status(400).json({ ok: false, message: "El usuario del alumno ya existe" });
+    const createAlumno = async (req, res) => {
+        try {
+            const usuario = "";
+    
+            const existAlumno = await Alumno.findOne({ where: { Usuario: usuario } });
+            if (existAlumno) {
+                return res.status(400).json({ ok: false, message: "El usuario del alumno ya existe" });
+            }
+        
+            const hashedPassword = hashPassword(req.body.Contraseña);
+            
+            const ambitosDefault = {
+                "Clase": 50,
+                "Amigos": 50,
+                "Familia": 50,
+                "Emociones": 50,
+                "Fuera de clase": 50
+            };
+            
+            const aparicionAmbitosDefault = {
+                "Clase": 0,
+                "Amigos": 0,
+                "Familia": 0,
+                "Emociones": 0,
+                "Fuera de clase": 0
+            };
+    
+            const newAlumno = {
+                ...req.body,
+                Contraseña: hashedPassword,
+                Usuario: usuario,
+                Ambitos: ambitosDefault, 
+                AparicionAmbitos: aparicionAmbitosDefault 
+            };
+        
+            const createdAlumno = await Alumno.create(newAlumno);
+        
+            const idAlumno = createdAlumno.ID_Alumno;
+            const nomUsuario = generarUsuario(req.body.Nombre, req.body.Apellidos, idAlumno);
+        
+            await Alumno.update({ Usuario: nomUsuario }, { where: { ID_Alumno: idAlumno } });
+        
+            return res.json({
+                ok: true,
+                msg: 'createAlumno'
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ ok: false, message: "Error al crear el alumno" });
         }
+    };
     
-        const hashedPassword = hashPassword(req.body.Contraseña);
-        const newAlumno = { ...req.body, Contraseña: hashedPassword, Usuario: usuario };
-    
-        const createdAlumno = await Alumno.create(newAlumno);
-    
-        const idAlumno = createdAlumno.ID_Alumno;
-        const nomUsuario = generarUsuario(req.body.Nombre, req.body.Apellidos, idAlumno);
-    
-        await Alumno.update({ Usuario: nomUsuario }, { where: { ID_Alumno: idAlumno } });
-    
-        return res.json({
-            ok: true,
-            msg: 'createAlumno'
-        });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ ok: false, message: "Error al crear el alumno" });
-    }
-};
 
 
 const updateAlumno = async (req, res) => {

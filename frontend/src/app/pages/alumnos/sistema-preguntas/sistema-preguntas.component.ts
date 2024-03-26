@@ -36,9 +36,11 @@ export class SistemaPreguntasComponent implements OnInit {
           if (this.preguntas && this.preguntas.length > 0) {
             this.preguntaActual = this.preguntas[this.indiceActual];
           }
+          this.sesionService.crearSesion();
         });
-      })
-    })
+      });
+    });
+    
   }
 
   gravedadesPorAmbito: { [ambito: string]: number } = {};
@@ -67,104 +69,133 @@ export class SistemaPreguntasComponent implements OnInit {
   }
 
   multiplicarYActualizarAmbitos() {
-    this.alumnoService.getAlumnoID(localStorage.getItem('id')).subscribe((resultado: any) => {
-      const ambitosDesdeDB: { [key: string]: number } = JSON.parse(resultado.alumnos[0].Ambitos);
+    return new Promise((resolve, reject) => {
+      this.alumnoService.getAlumnoID(localStorage.getItem('id')).subscribe({
+        next: (resultado: any) => {
+          const ambitosDesdeDB: { [key: string]: number } = JSON.parse(resultado.alumnos[0].Ambitos);
+          
+          const gravedadesActualizadas: Resultados = {
+            "Clase": 0,
+            "Amigos": 0,
+            "Familia": 0,
+            "Emociones": 0,
+            "Fuera de clase": 0
+          };
       
-      // Inicializa gravedadesActualizadas asegurando que TypeScript entiende que es un objeto con claves string y valores number
-      const gravedadesActualizadas: Resultados = {
-        "Clase": 0,
-        "Amigos": 0,
-        "Familia": 0,
-        "Emociones": 0,
-        "Fuera de clase": 0
-      };
-  
-      // Primero, actualiza los valores de gravedadesActualizadas con los cálculos
-      Object.entries(this.gravedadesPorAmbito).forEach(([ambito, valor]) => {
-        if (ambito in gravedadesActualizadas) {
-          const calculo = valor * 5 * 1.5 + (ambitosDesdeDB[ambito] ?? 0);
-          gravedadesActualizadas[ambito] = calculo < 0 ? 0 : calculo > 100 ? 100 : calculo;
-        }
+          Object.entries(this.gravedadesPorAmbito).forEach(([ambito, valor]) => {
+            if (ambito in gravedadesActualizadas) {
+              const calculo = valor * 5 * 1.5 + (ambitosDesdeDB[ambito] ?? 0);
+              gravedadesActualizadas[ambito] = calculo < 0 ? 0 : calculo > 100 ? 100 : calculo;
+            }
+          });
+      
+          Object.keys(gravedadesActualizadas).forEach(ambito => {
+            if (!(ambito in this.gravedadesPorAmbito) && (ambito in ambitosDesdeDB)) {
+              gravedadesActualizadas[ambito] = ambitosDesdeDB[ambito];
+            }
+          });
+      
+          // Actualiza los ámbitos en el backend
+          this.actualizarAmbitosEnBackend(gravedadesActualizadas).then(() => {
+            // Una vez que se actualizan los ámbitos, actualizar aparicionAmbitos
+            this.actualizarAparicionAmbitos().then(() => {
+              resolve(true);
+            }).catch((error) => reject(error));
+          }).catch((error) => reject(error));
+        },
+        error: (error) => reject(error)
       });
-  
-      // Luego, para cualquier ámbito en gravedadesActualizadas que no haya sido modificado,
-      // asegura que tome el valor de ambitosDesdeDB o se mantenga como está si ya tiene un valor calculado
-      Object.keys(gravedadesActualizadas).forEach(ambito => {
-        if (!(ambito in this.gravedadesPorAmbito) && (ambito in ambitosDesdeDB)) {
-          gravedadesActualizadas[ambito] = ambitosDesdeDB[ambito];
-        }
-      });
-  
-      // Continúa con la actualización en el backend
-      this.actualizarAmbitosEnBackend(gravedadesActualizadas);
-      this.actualizarAparicionAmbitos();
     });
   }
+  
 
   
-  actualizarAmbitosEnBackend(ambitosActualizados: Resultados) {
-    const alumnoId = localStorage.getItem('id');
-    const datosActualizados = {
-      ID_Alumno: alumnoId, 
-      Ambitos: ambitosActualizados // Envía como objeto JavaScript directamente
-    };
+  actualizarAmbitosEnBackend(ambitosActualizados: any) {
+    return new Promise((resolve, reject) => {
+      const alumnoId = localStorage.getItem('id');
+      const datosActualizados = {
+        ID_Alumno: alumnoId,
+        Ambitos: ambitosActualizados // Envía como objeto JavaScript directamente
+      };
   
-    this.alumnoService.putAlumno(datosActualizados).subscribe({
-      next: (response) => console.log('Ambitos actualizados con éxito:', response),
-      error: (error) => console.error('Error al actualizar ámbitos:', error)
+      this.alumnoService.putAlumno(datosActualizados).subscribe({
+        next: (response) => {
+          console.log('Ambitos actualizados con éxito:', response);
+          resolve(response); // Resuelve la promesa cuando la actualización es exitosa
+        },
+        error: (error) => {
+          console.error('Error al actualizar ámbitos:', error);
+          reject(error); // Rechaza la promesa en caso de error
+        }
+      });
     });
   }
+  
   
   actualizarAparicionAmbitos() {
-    this.alumnoService.getAlumnoID(localStorage.getItem('id')).subscribe((resultado: any) => {
-      if (resultado.alumnos && resultado.alumnos.length > 0) {
-        let aparicionAmbitos = JSON.parse(resultado.alumnos[0].AparicionAmbitos || '{}');
-        const alumnoId = localStorage.getItem('id');
-        const rawPreguntasPorSeleccionar = localStorage.getItem('preguntasPorSeleccionar');
+    return new Promise((resolve, reject) => {
+      this.alumnoService.getAlumnoID(localStorage.getItem('id')).subscribe((resultado: any) => {
+        if (resultado.alumnos && resultado.alumnos.length > 0) {
+          let aparicionAmbitos = JSON.parse(resultado.alumnos[0].AparicionAmbitos || '{}');
+          const alumnoId = localStorage.getItem('id');
+          const rawPreguntasPorSeleccionar = localStorage.getItem('preguntasPorSeleccionar');
   
-        if (alumnoId && rawPreguntasPorSeleccionar) {
-          const preguntasPorSeleccionar = JSON.parse(rawPreguntasPorSeleccionar);
-          
-          // Sumar los valores
-          Object.keys(preguntasPorSeleccionar).forEach(key => {
-            aparicionAmbitos[key] = (aparicionAmbitos[key] || 0) + preguntasPorSeleccionar[key];
-          });
+          if (alumnoId && rawPreguntasPorSeleccionar) {
+            const preguntasPorSeleccionar = JSON.parse(rawPreguntasPorSeleccionar);
+            
+            // Sumar los valores
+            Object.keys(preguntasPorSeleccionar).forEach(key => {
+              aparicionAmbitos[key] = (aparicionAmbitos[key] || 0) + preguntasPorSeleccionar[key];
+            });
+    
+            // Ordenar y limitar los valores
+            const datosOrdenadosYLimitados = {
+              "Clase": aparicionAmbitos["Clase"] || 0,
+              "Amigos": aparicionAmbitos["Amigos"] || 0,
+              "Familia": aparicionAmbitos["Familia"] || 0,
+              "Emociones": aparicionAmbitos["Emociones"] || 0,
+              "Fuera de clase": aparicionAmbitos["Fuera de clase"] || 0
+            };
+    
+            const datosActualizados = {
+              ID_Alumno: alumnoId,
+              AparicionAmbitos: datosOrdenadosYLimitados
+            };
   
-          // Ordenar y limitar los valores
-          const datosOrdenadosYLimitados = {
-            "Clase": aparicionAmbitos["Clase"] || 0,
-            "Amigos": aparicionAmbitos["Amigos"] || 0,
-            "Familia": aparicionAmbitos["Familia"] || 0,
-            "Emociones": aparicionAmbitos["Emociones"] || 0,
-            "Fuera de clase": aparicionAmbitos["Fuera de clase"] || 0
-          };
-  
-          const datosActualizados = {
-            ID_Alumno: alumnoId,
-            AparicionAmbitos: datosOrdenadosYLimitados // Convertir a cadena JSON
-          };
-  
-          this.alumnoService.putAlumno(datosActualizados).subscribe({
-            next: (response) => console.log('AparicionAmbitos actualizados con éxito:', response),
-            error: (error) => console.error('Error al actualizar ámbitos:', error)
-          });
-          localStorage.removeItem('preguntasPorSeleccionar');
+            this.alumnoService.putAlumno(datosActualizados).subscribe({
+              next: (response) => {
+                console.log('AparicionAmbitos actualizados con éxito:', response);
+                resolve(response); // Resuelve la promesa cuando la actualización es exitosa
+              },
+              error: (error) => {
+                console.error('Error al actualizar ámbitos:', error);
+                reject(error); // Rechaza la promesa en caso de error
+              }
+            });
+            localStorage.removeItem('preguntasPorSeleccionar');
+          } else {
+            reject('Error: ID del alumno o preguntasPorSeleccionar no están disponibles en localStorage.');
+          }
         } else {
-          console.error('Error: ID del alumno o preguntasPorSeleccionar no están disponibles en localStorage.');
+          reject('Error: No se encontraron datos del alumno.');
         }
-      } else {
-        console.error('Error: No se encontraron datos del alumno.');
-      }
+      });
     });
   }
+  
   
   
   esUltimaPregunta(): boolean {
     return this.mostrarReiniciar;
   }
 
-  reiniciar() {
-    this.multiplicarYActualizarAmbitos();
-    //window.location.reload();
+  async reiniciar() {
+    try {
+      await this.multiplicarYActualizarAmbitos();
+      await this.sesionService.finalizarSesion();
+      // window.location.reload(); // Descomenta esto si aún necesitas recargar la página
+    } catch (error) {
+      console.error('Error en el proceso de reinicio:', error);
+    }
   }
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { AlumnoService } from './alumnos.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { environment } from '../../environments/environment';
 export class SesionService {
   private basePath=`${environment.base_url}/sesiones/`;
   private httpOptions: any;
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private alumnoservice: AlumnoService) {}
   
   // Opciones Http
   private getHeader(){
@@ -52,5 +53,53 @@ export class SesionService {
     getSesionCount(id: any){
       this.getHeader();
       return this.http.get(this.basePath+ 'count?ID_Alumno='+id, this.httpOptions);
+    }
+
+    crearSesion() {
+      console.log('hola')
+      this.getHeader();
+      const alumnoId = localStorage.getItem('id'); // Asume que el ID del alumno ya está guardado en localStorage
+      if (!alumnoId) {
+        console.error('ID de alumno no encontrado en localStorage');
+        return;
+      }
+      this.alumnoservice.getAlumnoID(localStorage.getItem('id')).subscribe((respuesta: any) => {
+
+        const inicioSesion = {
+          ID_Alumno: alumnoId,
+          FechaInicio: new Date().toISOString(), // Guarda la fecha actual como el inicio de la sesión
+          ValorAmbitoInicio: JSON.parse(respuesta.alumnos[0].Ambitos)
+        };
+    
+        // Aquí asumimos que tienes un endpoint para crear la sesión, ajusta la URL según sea necesario
+        this.http.post(this.basePath, inicioSesion, this.httpOptions).subscribe({
+          next: (response: any) => {
+            console.log('Sesión creada con éxito:', response);
+            localStorage.setItem('sesionId', response.ID_Sesion); // Asumiendo que el ID de la sesión viene en la respuesta
+          },
+          error: (error) => console.error('Error al iniciar sesión:', error)
+        });
+      })
+    }
+  
+    finalizarSesion() {
+      this.getHeader();
+      const sesionId = localStorage.getItem('sesionId');
+      if (!sesionId) {
+        console.error('ID de sesión no encontrado en localStorage');
+        return;
+      }
+      this.alumnoservice.getAlumnoID(localStorage.getItem('id')).subscribe((response: any) =>{
+        const finSesion = {
+          FechaFin: new Date().toISOString(),
+          ValorAmbitoFin: JSON.parse(response.alumnos[0].Ambitos)
+        };
+        this.http.put(this.basePath + sesionId, finSesion, this.httpOptions).subscribe({
+          next: () => console.log('Sesión finalizada con éxito.'),
+          error: (error) => console.error('Error al finalizar sesión:', error)
+        });
+        localStorage.removeItem('sesionId');
+      }) 
+      
     }
 }

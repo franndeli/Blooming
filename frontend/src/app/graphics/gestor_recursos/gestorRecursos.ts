@@ -3,6 +3,7 @@ import { TRecursoMalla } from './TRecursoMalla';
 //import TRecursoTextura from './TRecursoTextura';
 //import TRecursoShader from './TRecursoShader';
 import TRecusroMaterial from './TRecursoMaterial';
+import { HttpClient } from '@angular/common/http';
 
 export class GestorRecursos {
   private recursos: Map<string, Recurso> = new Map();
@@ -11,6 +12,7 @@ export class GestorRecursos {
   async getRecurso(nombre: string, tipo: string): Promise<Recurso | undefined> {
     const clave = `${tipo}:${nombre}`;
     let recurso = this.recursos.get(clave);
+    const url = this.basePath + nombre;
 
     if (!recurso) {
       switch (tipo) {
@@ -30,11 +32,9 @@ export class GestorRecursos {
           throw new Error(`Tipo de recurso '${tipo}' no reconocido.`);
       }
 
-      const url = this.basePath + nombre;
       await recurso.cargarRecurso(url);
       this.recursos.set(clave, recurso);
     }
     return this.recursos.get(clave);
   }
-
 }

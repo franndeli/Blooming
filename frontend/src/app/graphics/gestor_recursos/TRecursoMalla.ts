@@ -1,8 +1,10 @@
 import { Recurso } from './recurso';
 import { TMalla } from '../arbol_escena/malla';
+import { HttpClient } from '@angular/common/http';
 
 export class TRecursoMalla extends Recurso {
   private mallas: TMalla[] = [];
+  // private http: HttpClient;
 
   constructor(nombre: string) {
     super(nombre);
@@ -11,18 +13,19 @@ export class TRecursoMalla extends Recurso {
   async cargarRecurso(url: string): Promise<void> {
     try {
       const response = await fetch(url);
+      console.log(response)
       const data = await response.json();
+      console.log(data)
 
       data.mallas.forEach((mallaData: any) => {
-        // Crear una nueva instancia de TMalla para cada conjunto de datos
+        console.log('mallaData: ', mallaData)
         const nuevaMalla = new TMalla(
-          mallaData.vertices,
-          mallaData.normales,
-          mallaData.coordTexturas,
+          [].concat(...mallaData.vertices),
+          [].concat(...mallaData.normales),
+          [].concat(...mallaData.coordTexturas),
           mallaData.indices
         );
-
-        // Guardar la nueva malla en el array
+        console.log('nuevaMalla:', nuevaMalla);
         this.mallas.push(nuevaMalla);
       });
 

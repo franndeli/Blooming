@@ -97,12 +97,6 @@ export class MotorGrafico {
           console.error('Se produjo un error de WebGL: ', error);
         }
       }
-
-      // this.gestorRecursos.getRecurso(nombre, 'malla').then((recurso) => {
-      //   this.recursoMalla = recurso as TRecursoMalla;
-      //   console.log(this.recursoMalla);
-      //   this.render();
-      // });
     } else {
       console.error('El elemento canvas no está disponible.');
     }
@@ -113,9 +107,9 @@ export class MotorGrafico {
       padre = this.raiz;
     }
     const nodo = new TNodo(null, padre);
-    nodo.traslacion = trasl;
-    nodo.rotacion = rot;
-    nodo.escalado = esc;
+    nodo.setTraslacion(trasl);
+    nodo.setRotacion(rot);
+    nodo.setEscalado(esc);
     nodo.actualizarMatriz = true;
 
     console.log('nodo creado: ', nodo)
@@ -128,11 +122,15 @@ export class MotorGrafico {
       padre = this.raiz;
     }
     const camara = new TNodo(null, padre);
-    camara.entidad = new TCamara(cercano, lejano);
-    camara.traslacion = trasl;
-    camara.rotacion = rot;
-    camara.escalado = esc;
+    camara.setEntidad(new TCamara(cercano, lejano));
+    camara.setTraslacion(trasl);
+    camara.setRotacion(rot);
+    camara.setEscalado(esc);
     camara.actualizarMatriz = true;
+
+    this.registrarCamara(camara);
+
+    console.log('camara creada: ', camara)
 
     return camara;
   }
@@ -142,13 +140,10 @@ export class MotorGrafico {
       padre = this.raiz;
     }
     const luz = new TNodo(null, padre);
-    luz.entidad = new TLuz(intensidad);
+    luz.setEntidad(new TLuz(intensidad));
     luz.setTraslacion(trasl);
     luz.setRotacion(rot);
     luz.setEscalado(esc);
-    // luz.traslacion = trasl;
-    // luz.rotacion = rot;
-    // luz.escalado = esc;
     luz.actualizarMatriz = true;
 
     return luz;
@@ -160,6 +155,7 @@ export class MotorGrafico {
     }
     const modelo = new TNodo(null, padre);
     const recurso =  await this.gestorRecursos.getRecurso(fichero, 'malla') as TRecursoMalla;
+    console.log('recurso: ', recurso)
     this.recursoMalla = recurso;
     
     let vertices: number[] = [];
@@ -174,13 +170,10 @@ export class MotorGrafico {
         indices = indices.concat(malla.getIndices());
     });
 
-    modelo.entidad = new TMalla(vertices, normales, coordTexturas, indices);
+    modelo.setEntidad(new TMalla(vertices, normales, coordTexturas, indices));
     modelo.setTraslacion(trasl);
     modelo.setRotacion(rot);
     modelo.setEscalado(esc);
-    // modelo.traslacion = trasl;
-    // modelo.rotacion = rot;
-    // modelo.escalado = esc;
     modelo.actualizarMatriz = true;
 
     console.log('modelo creado: ', modelo)
@@ -197,10 +190,11 @@ export class MotorGrafico {
       this.pasarLuzGL(matrizLuz);
     }
 
-    // let camaraActiva = this.getCamaraActiva();
-    // let matrizCamara = camaraActiva.getMatrizTransf();
-    // let matrizVista = mat4.invert(mat4.create(), matrizCamara);
-    // this.pasarVistaGL(matrizVista);
+    let camaraActiva = this.getCamaraActiva();
+    console.log('camara activa: ', camaraActiva)
+    let matrizCamara = camaraActiva.getMatrizTransf();
+    let matrizVista = mat4.invert(mat4.create(), matrizCamara);
+    this.pasarVistaGL(matrizVista);
 
     this.raiz.recorrer(matrizId);
     this.render();
@@ -208,6 +202,7 @@ export class MotorGrafico {
 
   registrarCamara(nodoCam: TNodo) {
     this.registroCamaras.push(nodoCam);
+    console.log('camara registrada: ', this.registroCamaras)
   }
 
   getCamaraActiva() {
@@ -216,6 +211,7 @@ export class MotorGrafico {
 
   // Guardar el indice del array de la camara que hemos activado, solo 1 cam activa a la vez
   setCamaraActiva(numCam: number) {
+    console.log('activamos camara: ', numCam)
     this.camaraActiva = numCam;
   }
 

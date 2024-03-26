@@ -1,13 +1,13 @@
 import { mat4, vec3 } from 'gl-matrix';
 
 export class TNodo {
-    public entidad: any; // Considera definir un tipo más específico si es posible
+    private entidad: any;
     public hijos: TNodo[];
-    public padre: TNodo | null;
-    public traslacion: vec3;
-    public rotacion: vec3;
-    public escalado: vec3;
-    public matrizTransf: mat4;
+    private rotacion: vec3;
+    private escalado: vec3;
+    private traslacion: vec3;
+    private matrizTransf: mat4;
+    private padre: TNodo | null;
     public actualizarMatriz: boolean = false;
 
     constructor(entidad: any = null, padre: TNodo | null = null) {
@@ -40,7 +40,7 @@ export class TNodo {
         this.entidad = entidad;
     }
 
-    getEntidad(): any { // Considera definir un tipo más específico
+    getEntidad(): any {
         return this.entidad;
     }
 
@@ -49,11 +49,10 @@ export class TNodo {
     }
 
     recorrer(matrizPadre: mat4): void {
-        console.log('entramosss')
+        console.log('Recorriendo nodo');
         let matrizLocal = mat4.clone(matrizPadre);
-        console.log(this.actualizarMatriz)
         if(this.actualizarMatriz) {
-            console.log('actualizamos matriz')
+            console.log('Actualizando matriz');
             let matrizTrans = mat4.create();
             let matrizRot = mat4.create();
             let matrizEsc = mat4.create();

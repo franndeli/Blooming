@@ -8,7 +8,7 @@
             </p>
             <ul>
                 <li *ngFor="let opcion of preguntaActual.respuestas.opciones">
-                    <button (click)="siguientePregunta(opcion.Gravedad)">{{ opcion.TextoOpcion + opcion.Gravedad }}</button>
+                    <button (click)="siguientePregunta(opcion.Gravedad, opcion.ID_Opcion)">{{ opcion.TextoOpcion + opcion.Gravedad }}</button>
                 </li>                
             </ul>
         </div>

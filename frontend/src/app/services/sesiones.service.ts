@@ -56,7 +56,6 @@ export class SesionService {
     }
 
     crearSesion() {
-      console.log('hola')
       this.getHeader();
       const alumnoId = localStorage.getItem('id'); // Asume que el ID del alumno ya está guardado en localStorage
       if (!alumnoId) {

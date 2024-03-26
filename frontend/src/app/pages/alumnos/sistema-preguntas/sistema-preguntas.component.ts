@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PreguntaService } from '../../../services/preguntas.service';
 import { AlumnoService } from '../../../services/alumnos.service';
 import { SesionService } from '../../../services/sesiones.service';
+import { RespuestaService } from '../../../services/respuestas.service';
 
 type Resultados = { [ambito: string]: number };
 @Component({
@@ -22,7 +23,7 @@ export class SistemaPreguntasComponent implements OnInit {
 
   objectKeys = Object.keys;
 
-  constructor(private preguntaService: PreguntaService, private alumnoService: AlumnoService, private sesionService: SesionService) {}
+  constructor(private preguntaService: PreguntaService, private alumnoService: AlumnoService, private sesionService: SesionService, private respuestaService: RespuestaService) {}
 
   ngOnInit() {
     this.alumnoService.getAlumnoID(localStorage.getItem('id')).subscribe((ambitos: any) => {
@@ -40,12 +41,27 @@ export class SistemaPreguntasComponent implements OnInit {
         });
       });
     });
-    
   }
 
   gravedadesPorAmbito: { [ambito: string]: number } = {};
 
-  siguientePregunta(gravedad: number) {
+  siguientePregunta(gravedad: number, id: any) {
+    const respuesta = {
+      ID_Pregunta: this.preguntaActual.ID_Pregunta,
+      ID_Opcion: id,
+      ID_Alumno: localStorage.getItem('id'),
+      FechaRespuesta: new Date().toISOString(),
+      ID_Sesion: localStorage.getItem('sesionId')
+    }
+    this.respuestaService.postRespuesta(respuesta).subscribe({
+      next: (response) => {
+        console.log('Respuesta creada con éxito:', response);
+      },
+      error: (error) => {
+        console.error('Error al crear respuesta:', error);
+      }
+    });
+
     const ambitoActual = this.preguntaActual.NombreAmbito;
 
     if (!this.gravedadesPorAmbito[ambitoActual] && ambitoActual !== "Inicio") {
@@ -57,7 +73,6 @@ export class SistemaPreguntasComponent implements OnInit {
     }
 
     if (this.indiceActual < this.preguntas.length - 1) {
-      console.log(this.preguntas.length);
       this.indiceActual++;
       this.preguntaActual = this.preguntas[this.indiceActual];
     } else {
@@ -107,9 +122,7 @@ export class SistemaPreguntasComponent implements OnInit {
       });
     });
   }
-  
 
-  
   actualizarAmbitosEnBackend(ambitosActualizados: any) {
     return new Promise((resolve, reject) => {
       const alumnoId = localStorage.getItem('id');
@@ -183,8 +196,6 @@ export class SistemaPreguntasComponent implements OnInit {
     });
   }
   
-  
-  
   esUltimaPregunta(): boolean {
     return this.mostrarReiniciar;
   }
@@ -193,7 +204,7 @@ export class SistemaPreguntasComponent implements OnInit {
     try {
       await this.multiplicarYActualizarAmbitos();
       await this.sesionService.finalizarSesion();
-      // window.location.reload(); // Descomenta esto si aún necesitas recargar la página
+      // window.location.reload();
     } catch (error) {
       console.error('Error en el proceso de reinicio:', error);
     }

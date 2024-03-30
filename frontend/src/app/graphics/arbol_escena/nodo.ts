@@ -8,7 +8,10 @@ export class TNodo {
     private traslacion: vec3;
     private matrizTransf: mat4;
     private padre: TNodo | null;
-    public actualizarMatriz: boolean = false;
+    private actualizarMatriz: boolean;
+
+    private static nextId = 1;
+    public id: number;
 
     constructor(entidad: any = null, padre: TNodo | null = null) {
         this.entidad = entidad;
@@ -16,8 +19,11 @@ export class TNodo {
         this.padre = padre;
         this.traslacion = vec3.create();
         this.rotacion = vec3.create();
-        this.escalado = vec3.fromValues(1, 1, 1); // Por defecto a 1,1,1
+        this.escalado = vec3.fromValues(1, 1, 1);
         this.matrizTransf = mat4.create();
+        this.actualizarMatriz = false;
+
+        this.id = TNodo.nextId++;
     }
 
     addHijo(hijo: TNodo): number {
@@ -49,7 +55,7 @@ export class TNodo {
     }
 
     recorrer(matrizPadre: mat4): void {
-        console.log('Recorriendo nodo');
+        console.log('Recorriendo nodo con id: ', this.id);
         let matrizLocal = mat4.clone(matrizPadre);
         if(this.actualizarMatriz) {
             console.log('Actualizando matriz');
@@ -70,25 +76,7 @@ export class TNodo {
             this.setMatrizTransf(matrizLocal);
         }
 
-        // if(this.entidad && typeof this.entidad.dibujar === 'function') {
-        //     this.entidad.dibujar(this.matrizTransf);
-        //     console.log('Dibujando entidad');
-        // }
-
         this.hijos.forEach(hijo => hijo.recorrer(matrizLocal));
-        // let matrizLocal = mat4.clone(matrizPadre);
-        // mat4.translate(matrizLocal, matrizLocal, this.traslacion);
-        // mat4.rotateX(matrizLocal, matrizLocal, this.rotacion[0]);
-        // mat4.rotateY(matrizLocal, matrizLocal, this.rotacion[1]);
-        // mat4.rotateZ(matrizLocal, matrizLocal, this.rotacion[2]);
-        // mat4.scale(matrizLocal, matrizLocal, this.escalado);
-
-        // // mat4.copy(this.matrizTransf, matrizLocal);
-        // if(this.actualizarMatriz) {
-        //     this.setMatrizTransf(matrizLocal);
-        // }
-
-        // this.hijos.forEach(hijo => hijo.recorrer(matrizLocal));
     }
 
     setTraslacion(traslacion: vec3): void {
@@ -133,5 +121,9 @@ export class TNodo {
 
     getMatrizTransf(): mat4 {
         return this.matrizTransf;
+    }
+
+    setActualizarMatriz(actualizar: boolean): void {
+        this.actualizarMatriz = actualizar;
     }
 }

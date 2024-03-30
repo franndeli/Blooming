@@ -1,10 +1,8 @@
 import { Recurso } from './recurso';
 import { TMalla } from '../arbol_escena/malla';
-import { HttpClient } from '@angular/common/http';
 
 export class TRecursoMalla extends Recurso {
   private mallas: TMalla[] = [];
-  // private http: HttpClient;
 
   constructor(nombre: string) {
     super(nombre);

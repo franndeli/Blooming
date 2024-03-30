@@ -110,7 +110,9 @@ export class MotorGrafico {
     nodo.setTraslacion(trasl);
     nodo.setRotacion(rot);
     nodo.setEscalado(esc);
-    nodo.actualizarMatriz = true;
+    nodo.setActualizarMatriz(true);
+
+    padre.addHijo(nodo);
 
     console.log('nodo creado: ', nodo)
 
@@ -126,7 +128,9 @@ export class MotorGrafico {
     camara.setTraslacion(trasl);
     camara.setRotacion(rot);
     camara.setEscalado(esc);
-    camara.actualizarMatriz = true;
+    camara.setActualizarMatriz(true);
+
+    padre.addHijo(camara);
 
     this.registrarCamara(camara);
 
@@ -144,7 +148,11 @@ export class MotorGrafico {
     luz.setTraslacion(trasl);
     luz.setRotacion(rot);
     luz.setEscalado(esc);
-    luz.actualizarMatriz = true;
+    luz.setActualizarMatriz(true);
+
+    padre.addHijo(luz);
+
+    console.log('luz creada: ', luz)
 
     return luz;
   }
@@ -171,10 +179,13 @@ export class MotorGrafico {
     });
 
     modelo.setEntidad(new TMalla(vertices, normales, coordTexturas, indices));
+    console.log('modelo entidad: ', modelo.getEntidad())
     modelo.setTraslacion(trasl);
     modelo.setRotacion(rot);
     modelo.setEscalado(esc);
-    modelo.actualizarMatriz = true;
+    modelo.setActualizarMatriz(true);
+
+    padre.addHijo(modelo);
 
     console.log('modelo creado: ', modelo)
 
@@ -253,8 +264,6 @@ export class MotorGrafico {
       this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
       
       if(this.recursoMalla){
-        console.log(this.program);
-        console.log(this.gl);
         this.recursoMalla.dibujar(this.gl, this.program);
         // requestAnimationFrame(() => this.render());
       }

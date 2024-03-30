@@ -1,6 +1,7 @@
-import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { MotorGrafico } from '../../../graphics/motor/motorGrafico';
 import { TNodo, TMalla, TCamara } from '../../../graphics';
+import { OrbitControls } from '../../../graphics/motor/orbitControls';
 
 @Component({
   selector: 'app-arbol-escena',
@@ -10,29 +11,58 @@ import { TNodo, TMalla, TCamara } from '../../../graphics';
 
 export class ArbolEscenaComponent implements AfterViewInit {
   @ViewChild('canvasWebGL') canvasRef!: ElementRef<HTMLCanvasElement>;
-  motorGrafico!: MotorGrafico;
-  private padre: TNodo;
-  private malla1 : TNodo;
-  private camara: TNodo;
-  private camara2: TNodo;
+  // motorGrafico!: MotorGrafico;
+  // private escena: TNodo;
+  // private avatar : TNodo;
+  // private camara: TNodo;
+  // private camara2: TNodo;
+  // private luz: TNodo;
+  private controls : OrbitControls | undefined;
 
   constructor() {
-    this.padre = new TNodo();
-    this.malla1 = new TNodo();
-    this.camara = new TNodo();
-    this.camara2 = new TNodo();
+    // this.escena = new TNodo();
+    // this.avatar = new TNodo();
+    // this.camara = new TNodo();
+    // this.camara2 = new TNodo();
+    // this.luz = new TNodo();
+  }
+
+  @HostListener('window:resize', ['$event']) onResize(event: Event) {
+    this.resizeCanvas();
   }
 
   async ngAfterViewInit() {
-    this.motorGrafico = new MotorGrafico(this.canvasRef);
-    
-    this.camara = this.motorGrafico.crearCamara(null, [0,0,0], [0,0,0], [1,10,1], 0.1, 1000.0);
-    this.camara2 = this.motorGrafico.crearCamara(null, [19,20,15], [27,90,0], [2,2,2], 2, 100.0);
+    const motorGrafico = new MotorGrafico(this.canvasRef);
+ 
+    const escena = motorGrafico.crearNodo(null, [10,0,10], [0,3.14,0], [1,1,1]);
+    console.log('Creado padre con id: ', escena.id);
 
-    this.motorGrafico.setCamaraActiva(0);
+    const grupo = motorGrafico.crearNodo(escena, [0,0,0], [0,0,0], [1,1,1]);
+    console.log('Creado grupo con id: ', grupo.id);
 
-    this.padre = this.motorGrafico.crearNodo(null, [0,0,0], [0,0,0], [1,1,1]);
-    this.malla1 = await this.motorGrafico.crearModelo(this.padre, 'malla2.json', [0,0,0], [90,90,0], [1,1,1]);
-    this.motorGrafico.dibujarEscena();
+    const avatar = await motorGrafico.crearModelo(grupo, 'cubo.json', [0,50,0], [70,45,0], [1,1,1]);
+    console.log('Creado avatar con id: ', avatar.id);
+    const camara = motorGrafico.crearCamara(grupo, [0,10,0], [0,3.14/2,0], [1,1,1], 0.1, 100.0);    
+    motorGrafico.setCamaraActiva(0);
+
+    motorGrafico.dibujarEscena();
+
+    // this.controls = new OrbitControls(camara, this.canvasRef.nativeElement);
+
+    // const animate = () => {
+    //   requestAnimationFrame(animate);
+    //   if (this.controls) {
+    //     this.controls.update();
+    //   }
+    //   motorGrafico.dibujarEscena();
+    // };
+
+    // animate();
+  }
+
+  private resizeCanvas() {
+    const canvas = this.canvasRef.nativeElement;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
   }
 }

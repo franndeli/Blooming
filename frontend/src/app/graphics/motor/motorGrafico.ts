@@ -1,5 +1,5 @@
 import { mat4, vec3 } from 'gl-matrix';
-import { ElementRef, Injectable } from '@angular/core';
+import { ElementRef } from '@angular/core';
 import vertexShaderText from '../../graphics/shaders/vertexShader';
 import fragmentShaderText from '../../graphics/shaders/fragmentShader';
 import { GestorRecursos, TRecursoMalla, TNodo, TCamara, TLuz, TMalla } from '../../graphics';
@@ -22,24 +22,20 @@ export class MotorGrafico {
 
     if (canvasRef && canvasRef.nativeElement) {
       const canvas = canvasRef.nativeElement;
-      this.gl = canvas.getContext('webgl');
+      // this.gl = canvas.getContext('webgl');
+      this.gl = canvas.getContext('webgl2', { antialias: true, depth: true, stencil: true });
       
       if (!this.gl) {
         console.error('No se puede inicializar WebGL. Tu navegador o máquina puede no soportarlo.');
         return;
       }
 
-      if(this.gl){
-        this.gl.clearColor(0.0, 2.0, 4.0, 1.0);
-        this.gl.clearDepth(1.0);
-        this.gl.enable(this.gl.DEPTH_TEST);
-        this.gl.depthFunc(this.gl.LEQUAL);
-      }
-     
-      const error = this.gl.getError();
-      if (error != this.gl.NO_ERROR) {
-        console.error('Se produjo un error de WebGL: ', error);
-      }
+      this.gl.clearColor(0.0, 2.0, 4.0, 1.0);
+      this.gl.clearDepth(1.0);
+      this.gl.enable(this.gl.DEPTH_TEST);
+      this.gl.depthFunc(this.gl.LEQUAL);
+           
+      this.checkWebGLError( );
       
       const vertexShader = this.gl.createShader(this.gl.VERTEX_SHADER);
       const fragmentShader = this.gl.createShader(this.gl.FRAGMENT_SHADER);
@@ -92,10 +88,7 @@ export class MotorGrafico {
 
         this.gl.useProgram(this.program);
 
-        const error = this.gl.getError();
-        if (error != this.gl.NO_ERROR) {
-          console.error('Se produjo un error de WebGL: ', error);
-        }
+        this.checkWebGLError( );
       }
     } else {
       console.error('El elemento canvas no está disponible.');
@@ -207,6 +200,9 @@ export class MotorGrafico {
     let matrizVista = mat4.invert(mat4.create(), matrizCamara);
     this.pasarVistaGL(matrizVista);
 
+    console.log('raiz: ', this.raiz)
+    console.log('matriz vista: ', matrizVista)
+
     this.raiz.recorrer(matrizId);
     this.render();
   }
@@ -269,4 +265,17 @@ export class MotorGrafico {
       }
     }
   }
+
+  checkWebGLError() {
+    if (!this.gl) {
+      console.error('WebGL no está inicializado');
+      return;
+    }
+
+    let error = this.gl.getError();
+    if (error != this.gl.NO_ERROR) {
+      console.error('Se produjo un error de WebGL: ', error);
+    }
+  }
+
 }

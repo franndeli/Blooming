@@ -76,6 +76,19 @@ export class TNodo {
             this.setMatrizTransf(matrizLocal);
         }
 
+        // let matrizLocal = mat4.clone(matrizPadre);
+        // mat4.translate(matrizLocal, matrizLocal, this.traslacion);
+        // mat4.rotateX(matrizLocal, matrizLocal, this.rotacion[0]);
+        // mat4.rotateY(matrizLocal, matrizLocal, this.rotacion[1]);
+        // mat4.rotateZ(matrizLocal, matrizLocal, this.rotacion[2]);
+        // mat4.scale(matrizLocal, matrizLocal, this.escalado);
+
+        // // mat4.copy(this.matrizTransf, matrizLocal);
+        // if(this.actualizarMatriz) {
+        //     console.log('Actualizando matriz')
+        //     this.setMatrizTransf(matrizLocal);
+        // }
+
         this.hijos.forEach(hijo => hijo.recorrer(matrizLocal));
     }
 

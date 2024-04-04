@@ -1,5 +1,6 @@
 import { Recurso } from './recurso';
 import { TMalla } from '../arbol_escena/malla';
+import { mat4, vec3 } from 'gl-matrix';
 
 export class TRecursoMalla extends Recurso {
   private mallas: TMalla[] = [];
@@ -21,6 +22,7 @@ export class TRecursoMalla extends Recurso {
           [].concat(...mallaData.vertices),
           [].concat(...mallaData.normales),
           [].concat(...mallaData.coordTexturas),
+          [].concat(...mallaData.colores),
           mallaData.indices
         );
         console.log('nuevaMalla:', nuevaMalla);

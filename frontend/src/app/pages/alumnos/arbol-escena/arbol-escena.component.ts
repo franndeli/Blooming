@@ -29,9 +29,9 @@ export class ArbolEscenaComponent implements AfterViewInit {
     const grupo = this.motorGrafico.crearNodo(escena, [0,0,0], [0,0,0], [1,1,1]);
     console.log('Creado grupo con id: ', grupo.id);
 
-    const avatar = await this.motorGrafico.crearModelo(grupo, 'cubo.json', [0,50,0], [70,45,0], [3,3,3]);
+    const avatar = await this.motorGrafico.crearModelo(grupo, 'cubo.json', [0,50,0], [90 * Math.PI / 180,45 * Math.PI / 180,0], [3,3,3]);
     console.log('Creado avatar con id: ', avatar.id);
-    const camara = this.motorGrafico.crearCamara(grupo, [0,10,0], [0,-Math.PI/2,0], [1,1,1], 0.1, 100.0);    
+    const camara = this.motorGrafico.crearCamara(grupo, [0,10,0], [90 * Math.PI / 180,-Math.PI/2,0], [1,1,1], 0.1, 100.0);    
     this.motorGrafico.setCamaraActiva(0);
 
     this.motorGrafico.dibujarEscena();

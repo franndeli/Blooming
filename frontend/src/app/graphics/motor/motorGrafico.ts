@@ -33,9 +33,24 @@ export class MotorGrafico {
       this.gl.clearColor(0.0, 2.0, 4.0, 1.0);
       this.gl.clearDepth(1.0);
       this.gl.enable(this.gl.DEPTH_TEST);
+
+      // Accept fragment if it closer to the camera than the former one
+      this.gl.depthFunc(this.gl.LESS);
+
+      // Cull triangles which normal is not towards the camera
+      this.gl.enable(this.gl.CULL_FACE);
+
+      //Backface culling
+      this.gl.cullFace(this.gl.BACK);
+      this.gl.frontFace(this.gl.CCW);
+
+      // Enable blending
+      this.gl.enable(this.gl.BLEND);
+      this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+
       this.gl.depthFunc(this.gl.LEQUAL);
            
-      this.checkWebGLError( );
+      this.checkWebGLError();
       
       const vertexShader = this.gl.createShader(this.gl.VERTEX_SHADER);
       const fragmentShader = this.gl.createShader(this.gl.FRAGMENT_SHADER);
@@ -86,9 +101,11 @@ export class MotorGrafico {
           return;
         }
 
+        // Delete de los shaders
+
         this.gl.useProgram(this.program);
 
-        this.checkWebGLError( );
+        this.checkWebGLError();
       }
     } else {
       console.error('El elemento canvas no está disponible.');
@@ -200,7 +217,6 @@ export class MotorGrafico {
     let matrizVista = mat4.invert(mat4.create(), matrizCamara);
     this.pasarVistaGL(matrizVista);
 
-    console.log('raiz: ', this.raiz)
     console.log('matriz vista: ', matrizVista)
 
     this.raiz.recorrer(matrizId);
@@ -225,10 +241,6 @@ export class MotorGrafico {
   registrarLuz(nodoLuz: TNodo) {
     this.registroLuces.push(nodoLuz);
   }
-
-  // getLucesActivas() {
-
-  // }
 
   // Guardar en un array las luces activas o que han sido desactivadas, se puede tener varias luces activas a la vez
   setLuzActiva(numLuz: number, activa: boolean) {

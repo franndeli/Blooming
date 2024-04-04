@@ -57,6 +57,8 @@ export class TNodo {
     recorrer(matrizPadre: mat4): void {
         console.log('Recorriendo nodo con id: ', this.id);
         let matrizLocal = mat4.clone(matrizPadre);
+        console.log('Matriz padre/local: ', matrizPadre);
+        console.log('Matriz sin actualizar: ', this.matrizTransf);
         if(this.actualizarMatriz) {
             console.log('Actualizando matriz');
             let matrizTrans = mat4.create();
@@ -72,22 +74,10 @@ export class TNodo {
             mat4.multiply(matrizLocal, matrizLocal, matrizTrans);
             mat4.multiply(matrizLocal, matrizLocal, matrizRot);
             mat4.multiply(matrizLocal, matrizLocal, matrizEsc);
-
+            
             this.setMatrizTransf(matrizLocal);
+            console.log('Matriz actualizada: ', this.matrizTransf);
         }
-
-        // let matrizLocal = mat4.clone(matrizPadre);
-        // mat4.translate(matrizLocal, matrizLocal, this.traslacion);
-        // mat4.rotateX(matrizLocal, matrizLocal, this.rotacion[0]);
-        // mat4.rotateY(matrizLocal, matrizLocal, this.rotacion[1]);
-        // mat4.rotateZ(matrizLocal, matrizLocal, this.rotacion[2]);
-        // mat4.scale(matrizLocal, matrizLocal, this.escalado);
-
-        // // mat4.copy(this.matrizTransf, matrizLocal);
-        // if(this.actualizarMatriz) {
-        //     console.log('Actualizando matriz')
-        //     this.setMatrizTransf(matrizLocal);
-        // }
 
         this.hijos.forEach(hijo => hijo.recorrer(matrizLocal));
     }
@@ -128,12 +118,12 @@ export class TNodo {
         return this.escalado;
     }
 
-    setMatrizTransf(matriz: mat4): void {
-        mat4.copy(this.matrizTransf, matriz);
-    }
-
     getMatrizTransf(): mat4 {
         return this.matrizTransf;
+    }
+
+    setMatrizTransf(matriz: mat4): void {
+        mat4.copy(this.matrizTransf, matriz);
     }
 
     setActualizarMatriz(actualizar: boolean): void {

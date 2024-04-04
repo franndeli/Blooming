@@ -5,13 +5,15 @@ export class TMalla extends TEntidad {
     private vertices: Float32Array;
     private normales: Float32Array;
     private coordTex: Float32Array;
+    private colores: Float32Array;
     private indices: Uint16Array | Uint32Array;
 
-    constructor(vertices?: number[], normales?: number[], coordTexturas?: number[], indices?: number[]) {
+    constructor(vertices?: number[], normales?: number[], coordTexturas?: number[], colores?: number[], indices?: number[]) {
         super(); // Llama al constructor de la clase base TEntidad
         this.vertices = new Float32Array(vertices || []);
         this.normales = new Float32Array(normales || []);
         this.coordTex = new Float32Array(coordTexturas || []);
+        this.colores = new Float32Array(colores || []);
         this.indices = new Uint16Array(indices || []);
     }
 
@@ -31,6 +33,16 @@ export class TMalla extends TEntidad {
 
         gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(positionLocation);
+
+        // Crear y asociar los datos de color al buffer
+        const colorBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.colores), gl.STATIC_DRAW);
+
+        const colorLocation = gl.getAttribLocation(shaderProgram, 'vertColor');
+
+        gl.vertexAttribPointer(colorLocation, 4, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(colorLocation);
 
         // Crear y asociar los índices de la malla al buffer de elementos
         const indexBuffer = gl.createBuffer();

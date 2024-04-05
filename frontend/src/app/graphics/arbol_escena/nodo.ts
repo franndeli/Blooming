@@ -79,10 +79,10 @@ export class TNodo {
             this.setMatrizTransf(matrizLocal);
             console.log('Matriz actualizada: ', this.matrizTransf);
 
-            // if(this.entidad != null) {
-            //     console.log('Dibujando entidad: ',this.entidad.constructor.name);
-            //     this.entidad.dibujar(gl, shaderProgram, this.matrizTransf);
-            // }
+            if(this.entidad != null) {
+                console.log('Dibujando entidad: ',this.entidad.constructor.name);
+                this.entidad.dibujar(this.matrizTransf);
+            }
         }
 
         this.hijos.forEach(hijo => hijo.recorrer(matrizLocal, gl, shaderProgram));

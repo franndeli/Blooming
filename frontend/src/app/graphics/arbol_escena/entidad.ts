@@ -7,5 +7,5 @@ export abstract class TEntidad {
     }
 
     // Esto obliga a las subclases a implementar este método.
-    abstract dibujar(gl: WebGLRenderingContext, shaderProgram: WebGLProgram, matrizTransformacion: mat4): void;
+    abstract dibujar(matrizTransformacion: mat4): void;
 }

@@ -1,15 +1,15 @@
 // TRecursoMaterial.ts
-import { Recurso } from './recurso';
+import { TRecurso } from './recurso';
 
-export default class TRecursoMaterial extends Recurso {
+export default class TRecursoMaterial extends TRecurso {
   private coeficientesLuz: number[] = [];
   private texturas: string[] = [];
 
   constructor(nombre: string) {
-    super(nombre);
+    super();
   }
 
-  async cargarRecurso(url: string): Promise<void> {
+  override async cargarRecurso(url: string): Promise<void> {
     try {
       const response = await fetch(url);
       const data = await response.json();

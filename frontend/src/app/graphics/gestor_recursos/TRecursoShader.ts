@@ -1,24 +1,29 @@
 import { mat4 } from 'gl-matrix';
-import {Recurso} from './recurso';
+import { TRecurso } from './recurso';
 import { firstValueFrom } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
-export class TRecursoShader extends Recurso {
+export class TRecursoShader extends TRecurso {
   private vertexShaderCode: string = '';
   private fragmentShaderCode: string = '';
   private id: WebGLProgram | null = null;
 
   private basePath: string = '../../../../assets/shaders/';
 
-  constructor(nombre: string, gl: WebGLRenderingContext) {
-    super(nombre);
-    this.crearShader(gl);
+  private constructor(nombre: string) {
+    super();
   }
 
-  private async crearShader(gl: WebGLRenderingContext){
+  static async create(nombre: string): Promise<TRecursoShader> {
+    const recurso = new TRecursoShader(nombre);
+    await recurso.crearShader();
+    return recurso;
+  }
+
+  private async crearShader(){
     let vertexShaderId, fragmentShaderId;
-    vertexShaderId = gl.createShader(gl.VERTEX_SHADER);
-    fragmentShaderId = gl.createShader(gl.FRAGMENT_SHADER);
+    vertexShaderId = this.gl.createShader(this.gl.VERTEX_SHADER);
+    fragmentShaderId = this.gl.createShader(this.gl.FRAGMENT_SHADER);
 
     [this.vertexShaderCode, this.fragmentShaderCode] = await Promise.all([
       this.leerShader('vertexShader.glsl'),
@@ -26,35 +31,35 @@ export class TRecursoShader extends Recurso {
     ])
     
     if(vertexShaderId && fragmentShaderId){
-      gl.shaderSource(vertexShaderId, this.vertexShaderCode);
-      gl.shaderSource(fragmentShaderId, this.fragmentShaderCode);
+      this.gl.shaderSource(vertexShaderId, this.vertexShaderCode);
+      this.gl.shaderSource(fragmentShaderId, this.fragmentShaderCode);
 
-      gl.compileShader(vertexShaderId);
-      gl.compileShader(fragmentShaderId);
+      this.gl.compileShader(vertexShaderId);
+      this.gl.compileShader(fragmentShaderId);
 
-      this.id = gl.createProgram();
+      this.id = this.gl.createProgram();
+      console.log(`Creando: ${this.id}`);
       if (this.id) {
-        gl.attachShader(this.id, vertexShaderId);
-        gl.attachShader(this.id, fragmentShaderId);
-        gl.linkProgram(this.id);
+        console.log('holaaaaaaaaaaa')
+        this.gl.attachShader(this.id, vertexShaderId);
+        this.gl.attachShader(this.id, fragmentShaderId);
+        this.gl.linkProgram(this.id);
 
-        if (!gl.getProgramParameter(this.id, gl.LINK_STATUS)) {
-          console.error(`Error al crear el programa GLSL para el shader ${this.getNombre()}`);
+        if (!this.gl.getProgramParameter(this.id, this.gl.LINK_STATUS)) {
+          console.error(`Error al crear el programa GLSL para el shader ${this.gl.getProgramInfoLog(this.id)}`);
         } else {
-          console.log(`Programa GLSL para el shader ${this.getNombre()} creado correctamente`);
+          console.log(`Programa GLSL para el shader ${this.gl.getProgramInfoLog(this.id)} creado correctamente`);
         }
 
-        gl.deleteShader(vertexShaderId);
-        gl.deleteShader(fragmentShaderId);
+        this.gl.deleteShader(vertexShaderId);
+        this.gl.deleteShader(fragmentShaderId);
 
-        gl.useProgram(this.id);
+        this.gl.useProgram(this.id);
       }
     }
     
     console.log(`Creando programa GLSL para el shader ${this.getNombre()}`);
   }
-
-  async cargarRecurso(nombre: string): Promise<void> {}
 
   async leerShader(nombreArchivo: string): Promise<string> {
     try{
@@ -68,6 +73,13 @@ export class TRecursoShader extends Recurso {
       console.error(`Error al cargar el recurso de shader ${nombreArchivo}:`, error);
       return '';
     }
+  }
+
+  getProgramId(): WebGLProgram{
+    if (this.id === null) {
+      throw new Error('Program ID is null');
+    }
+    return this.id;
   }
 
   // Métodos para asignar valores a uniforms

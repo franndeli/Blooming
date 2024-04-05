@@ -25,7 +25,7 @@ export class TCamara extends TEntidad {
         this.lejano = lejano;
     }
 
-    dibujar(gl: WebGLRenderingContext, shaderProgram: WebGLProgram): void {
+    dibujar(matrizTransf: mat4): void {
         console.log(`Configurando cámara ${this.esPerspectiva ? 'perspectiva' : 'paralela'} con planos ${this.cercano} - ${this.lejano}`);
         // Implementación específica del dibujo o configuración de la cámara
     }

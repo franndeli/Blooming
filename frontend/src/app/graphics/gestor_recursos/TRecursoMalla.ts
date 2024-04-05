@@ -4,13 +4,15 @@ import { mat4, vec3 } from 'gl-matrix';
 
 export class TRecursoMalla extends Recurso {
   private mallas: TMalla[] = [];
+  private basePath: string = '../../../../assets/json/';
 
   constructor(nombre: string) {
     super(nombre);
   }
 
-  async cargarRecurso(url: string): Promise<void> {
+  async cargarRecurso(nombre: string): Promise<void> {
     try {
+      const url = this.basePath + nombre;
       const response = await fetch(url);
       console.log(response)
       const data = await response.json();
@@ -42,10 +44,10 @@ export class TRecursoMalla extends Recurso {
   }
 
   // En TRecursoMalla
-  dibujar(gl: WebGLRenderingContext, shaderProgram: WebGLProgram): void {
+  dibujar(gl: WebGLRenderingContext, shaderProgram: WebGLProgram, matrizTransf: mat4): void {
     console.log(`Dibujando la malla ${this.getNombre()}`);
     this.mallas.forEach((malla) => {
-      malla.dibujar(gl, shaderProgram);
+      malla.dibujar(gl, shaderProgram, matrizTransf);
     });
   }
 }

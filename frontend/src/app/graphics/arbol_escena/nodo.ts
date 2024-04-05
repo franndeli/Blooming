@@ -54,21 +54,22 @@ export class TNodo {
         return this.padre;
     }
 
-    recorrer(matrizPadre: mat4): void {
+    recorrer(matrizPadre: mat4, gl: WebGLRenderingContext, shaderProgram: WebGLProgram): void {
         console.log('Recorriendo nodo con id: ', this.id);
         let matrizLocal = mat4.clone(matrizPadre);
         console.log('Matriz padre/local: ', matrizPadre);
         console.log('Matriz sin actualizar: ', this.matrizTransf);
         if(this.actualizarMatriz) {
+            this.actualizarMatriz = false;
             console.log('Actualizando matriz');
             let matrizTrans = mat4.create();
             let matrizRot = mat4.create();
             let matrizEsc = mat4.create();
 
             mat4.translate(matrizTrans, matrizTrans, this.traslacion);
-            mat4.rotateX(matrizRot, matrizRot, this.rotacion[0]);
-            mat4.rotateY(matrizRot, matrizRot, this.rotacion[1]);
-            mat4.rotateZ(matrizRot, matrizRot, this.rotacion[2]);
+            mat4.rotateX(matrizRot, matrizRot, this.radianes(this.rotacion[0]));
+            mat4.rotateY(matrizRot, matrizRot, this.radianes(this.rotacion[1]));
+            mat4.rotateZ(matrizRot, matrizRot, this.radianes(this.rotacion[2]));
             mat4.scale(matrizEsc, matrizEsc, this.escalado);
 
             mat4.multiply(matrizLocal, matrizLocal, matrizTrans);
@@ -77,9 +78,14 @@ export class TNodo {
             
             this.setMatrizTransf(matrizLocal);
             console.log('Matriz actualizada: ', this.matrizTransf);
+
+            // if(this.entidad != null) {
+            //     console.log('Dibujando entidad: ',this.entidad.constructor.name);
+            //     this.entidad.dibujar(gl, shaderProgram, this.matrizTransf);
+            // }
         }
 
-        this.hijos.forEach(hijo => hijo.recorrer(matrizLocal));
+        this.hijos.forEach(hijo => hijo.recorrer(matrizLocal, gl, shaderProgram));
     }
 
     setTraslacion(traslacion: vec3): void {
@@ -128,5 +134,9 @@ export class TNodo {
 
     setActualizarMatriz(actualizar: boolean): void {
         this.actualizarMatriz = actualizar;
+    }
+
+    private radianes(grados: number): number {
+        return grados * Math.PI / 180;
     }
 }

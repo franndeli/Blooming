@@ -1,18 +1,17 @@
 import { Recurso } from './recurso';
 import { TRecursoMalla } from './TRecursoMalla';
 //import TRecursoTextura from './TRecursoTextura';
-//import TRecursoShader from './TRecursoShader';
+import { TRecursoShader } from './TRecursoShader';
 import TRecusroMaterial from './TRecursoMaterial';
 import { HttpClient } from '@angular/common/http';
 
 export class GestorRecursos {
   private recursos: Map<string, Recurso> = new Map();
-  private basePath: string = '../../../../assets/json/';
+  
 
-  async getRecurso(nombre: string, tipo: string): Promise<Recurso | undefined> {
+  async getRecurso(nombre: string, tipo: string, gl: WebGLRenderingContext): Promise<Recurso | undefined> {
     const clave = `${tipo}:${nombre}`;
     let recurso = this.recursos.get(clave);
-    const url = this.basePath + nombre;
 
     if (!recurso) {
       switch (tipo) {
@@ -21,10 +20,10 @@ export class GestorRecursos {
           break;
         /*case 'textura':
           recurso = new TRecursoTextura(nombre);
-          break;
-        case 'shader':
-          recurso = new TRecursoShader(nombre);
           break;*/
+        case 'shader':
+          recurso = new TRecursoShader(nombre, gl);
+          break;
         case 'material':
           recurso = new TRecusroMaterial(nombre);
           break;
@@ -32,7 +31,9 @@ export class GestorRecursos {
           throw new Error(`Tipo de recurso '${tipo}' no reconocido.`);
       }
 
-      await recurso.cargarRecurso(url);
+      if(!(recurso instanceof TRecursoShader)){
+        await recurso.cargarRecurso(nombre);
+      }
       this.recursos.set(clave, recurso);
     }
     return this.recursos.get(clave);

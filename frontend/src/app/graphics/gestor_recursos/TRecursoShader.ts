@@ -1,44 +1,91 @@
-/*import {Recurso} from './recurso';
+import { mat4 } from 'gl-matrix';
+import {Recurso} from './recurso';
+import { firstValueFrom } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
-class TRecursoShader extends Recurso {
+export class TRecursoShader extends Recurso {
+  private vertexShaderCode: string = '';
+  private fragmentShaderCode: string = '';
   private id: WebGLProgram | null = null;
 
-  constructor(nombre: string) {
+  private basePath: string = '../../../../assets/shaders/';
+
+  constructor(nombre: string, gl: WebGLRenderingContext) {
     super(nombre);
-    this.id = this.crearPrograma(); // Puedes crear el programa GLSL al instanciar el objeto
+    this.crearShader(gl);
   }
 
-  private crearPrograma(): WebGLProgram | null {
-    // Implementa la lógica para crear y compilar el programa GLSL
+  private async crearShader(gl: WebGLRenderingContext){
+    let vertexShaderId, fragmentShaderId;
+    vertexShaderId = gl.createShader(gl.VERTEX_SHADER);
+    fragmentShaderId = gl.createShader(gl.FRAGMENT_SHADER);
+
+    [this.vertexShaderCode, this.fragmentShaderCode] = await Promise.all([
+      this.leerShader('vertexShader.glsl'),
+      this.leerShader('fragmentShader.glsl')
+    ])
+    
+    if(vertexShaderId && fragmentShaderId){
+      gl.shaderSource(vertexShaderId, this.vertexShaderCode);
+      gl.shaderSource(fragmentShaderId, this.fragmentShaderCode);
+
+      gl.compileShader(vertexShaderId);
+      gl.compileShader(fragmentShaderId);
+
+      this.id = gl.createProgram();
+      if (this.id) {
+        gl.attachShader(this.id, vertexShaderId);
+        gl.attachShader(this.id, fragmentShaderId);
+        gl.linkProgram(this.id);
+
+        if (!gl.getProgramParameter(this.id, gl.LINK_STATUS)) {
+          console.error(`Error al crear el programa GLSL para el shader ${this.getNombre()}`);
+        } else {
+          console.log(`Programa GLSL para el shader ${this.getNombre()} creado correctamente`);
+        }
+
+        gl.deleteShader(vertexShaderId);
+        gl.deleteShader(fragmentShaderId);
+
+        gl.useProgram(this.id);
+      }
+    }
+    
     console.log(`Creando programa GLSL para el shader ${this.getNombre()}`);
-
-    const programa: WebGLProgram | null = /* Lógica para crear el programa GLSL null;
-
-    return programa;
   }
 
-  async cargarRecurso(url: string): Promise<void> {
-    // Puedes proporcionar una implementación específica para cargar el shader si es necesario
-    console.log(`Cargando recurso para el shader ${this.getNombre()}`);
+  async cargarRecurso(nombre: string): Promise<void> {}
+
+  async leerShader(nombreArchivo: string): Promise<string> {
+    try{
+      const url = this.basePath + nombreArchivo;
+      const response = await fetch(url);
+      const data = await response.text();
+      console.log(`Shader ${nombreArchivo} cargado correctamente.`)
+      console.log(data)
+      return data;
+    } catch (error) {
+      console.error(`Error al cargar el recurso de shader ${nombreArchivo}:`, error);
+      return '';
+    }
   }
 
   // Métodos para asignar valores a uniforms
-  setInt(uniformNombre: string, valor: number): void {
-    // Implementa la lógica para asignar un entero a un uniform
+  setInt(gl: WebGLRenderingContext, uniformNombre: string, valor: number): void {
+    if(!this.id) return;
+    const uniformLocation = gl.getUniformLocation(this.id, uniformNombre);
     console.log(`Asignando entero a uniform en shader ${this.getNombre()}`);
   }
 
-  setFloat(uniformNombre: string, valor: number): void {
-    // Implementa la lógica para asignar un número de punto flotante a un uniform
+  setFloat(gl: WebGLRenderingContext, uniformNombre: string, valor: number): void {
+    if(!this.id) return;
+    const uniformLocation = gl.getUniformLocation(this.id, uniformNombre);
     console.log(`Asignando número de punto flotante a uniform en shader ${this.getNombre()}`);
   }
 
-  setMat4(uniformNombre: string, matriz: number[]): void {
-    // Implementa la lógica para asignar una matriz 4x4 a un uniform
+  setMat4(gl: WebGLRenderingContext, uniformNombre: string, matriz: number[]): void {
+    if(!this.id) return;
+    const uniformLocation = gl.getUniformLocation(this.id, uniformNombre);
     console.log(`Asignando matriz 4x4 a uniform en shader ${this.getNombre()}`);
   }
-
-  // Otros métodos específicos de TRecursoShader, si los necesitas
 }
-
-export default TRecursoShader;*/

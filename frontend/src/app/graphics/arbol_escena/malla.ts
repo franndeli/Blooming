@@ -17,8 +17,8 @@ export class TMalla extends TEntidad {
         this.indices = new Uint16Array(indices || []);
     }
 
-    dibujar(gl: WebGLRenderingContext, shaderProgram: WebGLProgram): void {
-        // Asegurar que gl y shaderProgram están definidos
+    dibujar(gl: WebGLRenderingContext, shaderProgram: WebGLProgram, matrizTransf: mat4): void {
+        console.log('estoy aqui')
         if (!gl || !shaderProgram) {
             console.error("WebGL context or shader program no está definido.");
             return;

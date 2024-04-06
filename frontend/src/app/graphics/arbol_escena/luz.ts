@@ -17,7 +17,7 @@ export class TLuz extends TEntidad {
         return this.intensidad;
     }
 
-    dibujar(matrizTransf: mat4): void {
+    override dibujar(matrizTransf: mat4): void {
         console.log('Aplicando luz con intensidad', this.intensidad);
         // Aquí podrías incluir la lógica para aplicar la luz usando la 'matriz'
         // pero esto dependerá de la implementación específica de tu motor gráfico.

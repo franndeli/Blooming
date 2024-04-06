@@ -31,76 +31,18 @@ export class MotorGrafico {
       this.canvas = canvasRef;
     }
 
-    //this.crearShaders();
-
     this.escena = this.crearNodo(null, vec3.create(), vec3.create(), [1, 1, 1]);
 
-    this.avatar = await this.crearModelo(this.escena, 'cubo.json', [0, 0, 0], [0, 45, 0], [1, 1, 1]);
+    this.avatar = await this.crearModelo(this.escena, 'cubo.json', [0, 10, 0], [0, 45, 0], [1, 1, 1]);
 
     //crear camara
-    this.camara = this.crearCamara(this.escena, [0, 0, 0], [0, 0, 0], [1, 1, 1], 0.1, 100.0);
+    this.camara = this.crearCamara(this.escena, [0, 0, 0], [0, 0, 0], [1, 1, 1]);
+    var numCam = this.registrarCamara(this.camara);
+    this.setCamaraActiva(numCam);
 
     //crear luces
 
     this.dibujarEscena();
-  }
-
-  crearShaders() {
-    const vertexShader = this.gl.createShader(this.gl.VERTEX_SHADER);
-    const fragmentShader = this.gl.createShader(this.gl.FRAGMENT_SHADER);
-    // Códigos de shaders (vertex y fragment) aquí o cargados de alguna manera
-      
-    if(vertexShader){
-      this.gl.shaderSource(vertexShader, vertexShaderText);
-    }
-      
-    if(fragmentShader){
-      this.gl.shaderSource(fragmentShader, fragmentShaderText);
-    }
-      
-    if(vertexShader){
-      this.gl.compileShader(vertexShader);
-      if (!this.gl.getShaderParameter(vertexShader, this.gl.COMPILE_STATUS)) {
-        console.error('ERROR compiling vertex shader!', this.gl.getShaderInfoLog(vertexShader));
-        return;
-      }
-    }
-      
-    if(fragmentShader){
-      this.gl.compileShader(fragmentShader);
-      if (!this.gl.getShaderParameter(fragmentShader, this.gl.COMPILE_STATUS)) {
-        console.error('ERROR compiling fragment shader!', this.gl.getShaderInfoLog(fragmentShader));
-        return;
-      }
-    }
-      
-    this.program = this.gl.createProgram();
-    if(this.program && vertexShader){
-      this.gl.attachShader(this.program, vertexShader);
-    }
-      
-    if(this.program && fragmentShader){
-      this.gl.attachShader(this.program, fragmentShader);
-    }
-      
-    if(this.program){
-      this.gl.linkProgram(this.program);
-      if (!this.gl.getProgramParameter(this.program, this.gl.LINK_STATUS)) {
-        console.error('ERROR linking program!', this.gl.getProgramInfoLog(this.program));
-        return;
-      }
-      this.gl.validateProgram(this.program);
-      if (!this.gl.getProgramParameter(this.program, this.gl.VALIDATE_STATUS)) {
-        console.error('ERROR validating program!', this.gl.getProgramInfoLog(this.program));
-        return;
-      }
-
-      // Delete de los shaders
-
-      this.gl.useProgram(this.program);
-
-      this.checkWebGLError();
-    }
   }
 
   crearNodo(padre:TNodo | null, trasl: vec3, rot: vec3, esc: vec3): TNodo {
@@ -119,8 +61,8 @@ export class MotorGrafico {
     return nodo;
   }
 
-  crearCamara(padre: TNodo | null, trasl: vec3, rot: vec3, esc: vec3, cercano: number, lejano: number): TNodo {
-    const eCamara = new TCamara(cercano, lejano);
+  crearCamara(padre: TNodo | null, trasl: vec3, rot: vec3, esc: vec3): TNodo {
+    const eCamara = new TCamara();
     const camara = new TNodo(null, padre);
 
     camara.setEntidad(eCamara);
@@ -132,8 +74,6 @@ export class MotorGrafico {
     if(padre != null){
       padre.addHijo(camara);
     }
-
-    this.registrarCamara(camara);
 
     console.log('camara creada: ', camara)
 
@@ -186,30 +126,15 @@ export class MotorGrafico {
     this.gl = await this.initWebGL(this.canvas!);
     this.checkWebGLError();
 
-    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+    //this.registroCamaras[this.camaraActiva].recorrer(mat4.create());
 
-    this.gl.enable(this.gl.CULL_FACE);
-    this.gl.cullFace(this.gl.BACK);
-
-    for (let luz of this.registroLuces) {
-      let matrizLuz = luz.getMatrizTransf();
-      this.pasarLuzGL(matrizLuz);
-    }
-
-    let camaraActiva = this.getCamaraActiva();
-    console.log('camara activa: ', camaraActiva)
-    let matrizCamara = camaraActiva.getMatrizTransf();
-    let matrizVista = mat4.invert(mat4.create(), matrizCamara);
-    this.pasarVistaGL(matrizVista);
-
-    console.log('matriz vista: ', matrizVista)
-
-    this.render();
+    this.escena.recorrer(mat4.create());
   }
 
   registrarCamara(nodoCam: TNodo) {
     this.registroCamaras.push(nodoCam);
     console.log('camara registrada: ', this.registroCamaras)
+    return this.registroCamaras.length - 1;
   }
 
   getCamaraActiva() {
@@ -264,15 +189,11 @@ export class MotorGrafico {
     gl.enable(gl.DEPTH_TEST);
     gl.clearColor(0.0, 2.0, 4.0, 1.0);
     gl.clearDepth(1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.enable(gl.CULL_FACE);
+    gl.cullFace(gl.BACK);
 
     return gl;
-  }
-
-  render() {
-    if(this.gl && this.program){
-      //this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);      
-      this.escena.recorrer(mat4.create(), this.gl, this.program);
-    }
   }
 
   checkWebGLError() {

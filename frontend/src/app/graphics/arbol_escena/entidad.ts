@@ -1,11 +1,19 @@
-// Importamos `mat4` de `gl-matrix` para poder tipar el parámetro de `dibujar`.
 import { mat4 } from 'gl-matrix';
 
-export abstract class TEntidad {
+export class TEntidad {
+    private nombre: string;
+
     constructor() {
-        // Constructor vacío
+        this.nombre = '';
     }
 
-    // Esto obliga a las subclases a implementar este método.
-    abstract dibujar(matrizTransformacion: mat4): void;
+    dibujar(matrizTransf: mat4): void{};
+
+    setNombre(nombre: string): void {
+        this.nombre = nombre;
+    }
+
+    getNombre(): string {
+        return this.nombre;
+    }
 }

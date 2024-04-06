@@ -1,17 +1,27 @@
 import { mat4 } from 'gl-matrix';
 import { TRecurso } from './recurso';
-import { firstValueFrom } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { TCamara } from '../arbol_escena/camara';
 
 export class TRecursoShader extends TRecurso {
+  private camara: TCamara;
+  private viewMatrix: mat4;
+  private projMatrix: mat4;
+  private modelMatrix: mat4;
   private vertexShaderCode: string = '';
-  private fragmentShaderCode: string = '';
   private id: WebGLProgram | null = null;
+  private fragmentShaderCode: string = '';
+  
 
   private basePath: string = '../../../../assets/shaders/';
 
   private constructor(nombre: string) {
     super();
+    console.log(`Creando recurso de shader ${nombre}...`);
+    this.camara = new TCamara();
+    this.camara.setProjMatrix(40, this.gl.canvas.width / this.gl.canvas.height, 1, 100);
+    this.projMatrix = this.camara.getProjMatrix();
+    this.modelMatrix = mat4.create();
+    this.viewMatrix = mat4.create();
   }
 
   static async create(nombre: string): Promise<TRecursoShader> {
@@ -40,7 +50,6 @@ export class TRecursoShader extends TRecurso {
       this.id = this.gl.createProgram();
       console.log(`Creando: ${this.id}`);
       if (this.id) {
-        console.log('holaaaaaaaaaaa')
         this.gl.attachShader(this.id, vertexShaderId);
         this.gl.attachShader(this.id, fragmentShaderId);
         this.gl.linkProgram(this.id);
@@ -67,7 +76,6 @@ export class TRecursoShader extends TRecurso {
       const response = await fetch(url);
       const data = await response.text();
       console.log(`Shader ${nombreArchivo} cargado correctamente.`)
-      console.log(data)
       return data;
     } catch (error) {
       console.error(`Error al cargar el recurso de shader ${nombreArchivo}:`, error);
@@ -80,6 +88,30 @@ export class TRecursoShader extends TRecurso {
       throw new Error('Program ID is null');
     }
     return this.id;
+  }
+
+  setProjMatrix(matriz: mat4){
+    this.projMatrix = matriz;
+  }
+
+  setViewMatrix(matriz: mat4){
+    this.viewMatrix = matriz;
+  }
+
+  setModelMatrix(matriz: mat4){
+    this.modelMatrix = matriz;
+  }
+
+  getProjMatrix(){
+    return this.projMatrix;
+  }
+
+  getModelMatrix(){
+    return this.modelMatrix;
+  }
+
+  getViewMatrix(){
+    return this.viewMatrix;
   }
 
   // Métodos para asignar valores a uniforms

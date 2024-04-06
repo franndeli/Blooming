@@ -3,96 +3,16 @@ import { TEntidad } from './entidad';
 import { TRecursoMalla } from '../gestor_recursos/TRecursoMalla';
 
 export class TMalla extends TEntidad {
-    // private vertices: Float32Array;
-    // private normales: Float32Array;
-    // private coordTex: Float32Array;
-    // private colores: Float32Array;
-    // private indices: Uint16Array | Uint32Array;
     public TRecursoMalla: TRecursoMalla | null;
     private cargada: boolean;
 
     constructor() {
-        super(); // Llama al constructor de la clase base TEntidad
-        // this.vertices = new Float32Array(vertices || []);
-        // this.normales = new Float32Array(normales || []);
-        // this.coordTex = new Float32Array(coordTexturas || []);
-        // this.colores = new Float32Array(colores || []);
-        // this.indices = new Uint16Array(indices || []);
+        super();
         this.TRecursoMalla = null;
         this.cargada = false;
     }
 
     override dibujar(matrizTransf: mat4): void {
-        // console.log('estoy aqui')
-        // if (!gl || !shaderProgram) {
-        //     console.error("WebGL context or shader program no está definido.");
-        //     return;
-        // }
-        
-        // // Crear y asociar los datos de vértices al buffer
-        // const vertexBuffer = gl.createBuffer();
-        // gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-        // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertices), gl.STATIC_DRAW);
-
-        // const positionLocation = gl.getAttribLocation(shaderProgram, 'vertPosition');
-
-        // gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
-        // gl.enableVertexAttribArray(positionLocation);
-
-        // // Crear y asociar los datos de color al buffer
-        // const colorBuffer = gl.createBuffer();
-        // gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-        // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.colores), gl.STATIC_DRAW);
-
-        // const colorLocation = gl.getAttribLocation(shaderProgram, 'vertColor');
-
-        // gl.vertexAttribPointer(colorLocation, 4, gl.FLOAT, false, 0, 0);
-        // gl.enableVertexAttribArray(colorLocation);
-
-        // // Crear y asociar los índices de la malla al buffer de elementos
-        // const indexBuffer = gl.createBuffer();
-        // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-        // gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.indices), gl.STATIC_DRAW);
-
-        // // Dibujar la malla
-        // gl.useProgram(shaderProgram);
-        
-        // if(gl.getError() !== gl.NO_ERROR){
-        //     console.error("WebGL error: " + gl.getError());
-        // }
-        
-        // gl.drawElements(gl.TRIANGLES, this.indices.length, gl.UNSIGNED_SHORT, 0);
         this.TRecursoMalla?.dibujar(matrizTransf);
     }
-
-    // actualizarVertices(nuevosVertices: number[]) {
-    //     this.vertices = new Float32Array(nuevosVertices);
-    // }
-
-    // actualizarNormales(nuevasNormales: number[]) {
-    //     this.vertices = new Float32Array(nuevasNormales);
-    // }
-
-    // actualizarCoordTex(nuevasCoordTex: number[]) {
-    //     this.vertices = new Float32Array(nuevasCoordTex);
-    // }
-    // actualizarIndices(nuevosIndices: number[]) {
-    //     this.vertices = new Float32Array(nuevosIndices);
-    // }
-
-    // getVertices(): number[] {
-    //     return Array.from(this.vertices);
-    // }
-
-    // getNormales(): number[] {
-    //     return Array.from(this.normales);
-    // }
-
-    // getCoordTexturas(): number[] {
-    //     return Array.from(this.coordTex);
-    // }
-
-    // getIndices(): number[] {
-    //     return Array.from(this.indices);
-    // }
 }

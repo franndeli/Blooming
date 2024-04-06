@@ -26,10 +26,9 @@ export class TNodo {
         this.id = TNodo.nextId++;
     }
 
-    addHijo(hijo: TNodo): number {
+    addHijo(hijo: TNodo) {
         hijo.padre = this;
         this.hijos.push(hijo);
-        return this.hijos.length;
     }
 
     removeHijo(hijo: TNodo): boolean {
@@ -54,13 +53,13 @@ export class TNodo {
         return this.padre;
     }
 
-    recorrer(matrizPadre: mat4, gl: WebGLRenderingContext, shaderProgram: WebGLProgram): void {
+    recorrer(matrizPadre: mat4): void {
         console.log('Recorriendo nodo con id: ', this.id);
         let matrizLocal = mat4.clone(matrizPadre);
         console.log('Matriz padre/local: ', matrizPadre);
         console.log('Matriz sin actualizar: ', this.matrizTransf);
         if(this.actualizarMatriz) {
-            this.actualizarMatriz = false;
+            //this.actualizarMatriz = false;
             console.log('Actualizando matriz');
             let matrizTrans = mat4.create();
             let matrizRot = mat4.create();
@@ -85,7 +84,7 @@ export class TNodo {
             }
         }
 
-        this.hijos.forEach(hijo => hijo.recorrer(matrizLocal, gl, shaderProgram));
+        this.hijos.forEach(hijo => hijo.recorrer(matrizLocal));
     }
 
     setTraslacion(traslacion: vec3): void {
@@ -133,6 +132,8 @@ export class TNodo {
     }
 
     setActualizarMatriz(actualizar: boolean): void {
+        console.log('Actualizar matriz? ', actualizar);
+        console.log(this)
         this.actualizarMatriz = actualizar;
     }
 

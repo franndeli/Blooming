@@ -9,7 +9,7 @@ export class TCamara extends TEntidad {
     private viewMatrix: mat4;
     private esPerspectiva: boolean;
     public actualizarCamara: boolean = true;
-    public gl: WebGLRenderingContext;
+    public gl: WebGL2RenderingContext;
 
     constructor() {
         super();

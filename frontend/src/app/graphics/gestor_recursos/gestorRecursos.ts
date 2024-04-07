@@ -12,7 +12,7 @@ export class GestorRecursos {
     this.recursos = [];
   }
 
-  async getRecurso(nombre: string, tipo: string, gl: WebGLRenderingContext): Promise<any> {
+  async getRecurso(nombre: string, tipo: string, gl: WebGL2RenderingContext): Promise<any> {
     let recurso = null;
 
     for(let i=0;i<this.recursos.length;i++){

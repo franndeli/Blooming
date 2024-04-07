@@ -1,6 +1,6 @@
 export class TRecurso {
   private nombre: string;
-  public gl: WebGLRenderingContext
+  public gl: WebGL2RenderingContext
 
   constructor() {
     this.nombre = '';

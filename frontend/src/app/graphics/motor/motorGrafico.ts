@@ -18,7 +18,7 @@ export class MotorGrafico {
   
   private program: WebGLProgram | null = null;
   private canvas: ElementRef<HTMLCanvasElement> | null = null;
-  private gl!: WebGLRenderingContext;
+  private gl!: WebGL2RenderingContext;
 
   constructor(){
     this.modelos = [];
@@ -31,7 +31,7 @@ export class MotorGrafico {
 
     this.escena = this.crearNodo(null, vec3.create(), vec3.create(), [1, 1, 1]);
 
-    this.avatar = await this.crearModelo(this.escena, 'cubo2.json', [0, 10, 0], [0, 45, 0], [1, 1, 1]);
+    this.avatar = await this.crearModelo(this.escena, 'cubo2.json', [0, 0, 0], [0, 0, 0], [1, 1, 1]);
 
     //crear camara
     this.camara = this.crearCamara(this.escena, [0, 0, 0], [0, 0, 0], [1, 1, 1]);

@@ -14,6 +14,11 @@ export class TRecursoMalla extends TRecurso {
   public override gl: WebGLRenderingContext;
   private basePath: string = '../../../../assets/json/';
 
+  private bufVertex: any = null;
+  private bufNormal: any = null;
+  private bufIndex: any = null;
+  private bufTextCood: any = null;
+
   constructor(nombre: string, shader: TRecursoShader) {
     super();
     this.vertices = [];
@@ -40,21 +45,13 @@ export class TRecursoMalla extends TRecurso {
       console.log(response);
       const data = await response.json();
       console.log(data);
-  
-      this.vertices = data.mallas[0].vertices;
-      this.normales = data.mallas[0].normales;
-      this.coordTex = data.mallas[0].coordTexturas;
-      this.colores = data.mallas[0].colores;
-      this.indices = data.mallas[0].indices;
 
-      // this.vertices = data.meshes.vertices;
-      // this.normales = data.meshes.normals;
-      // this.coordTex = data.meshes.texturecoords;
-      // console.log(data.meshes.faces)
-      // for(var i = 0; i < data.meshes.faces.length; i++){
-      //   for(var j = 0; j < data.meshes.faces[i].length; j++)
-      //     this.indices.push(data.meshes.faces[i][j]);
-      // }
+      const mesh = data.meshes.find((m: any) => m.name === "Cube");
+
+      this.vertices = mesh.vertices;
+      this.normales = mesh.normals;
+      this.indices = [].concat(...mesh.faces);
+      this.coordTex = mesh.texturecoords[0];
 
       //llamada a configurarBuffers
       this.configurarBuffers();
@@ -83,9 +80,9 @@ export class TRecursoMalla extends TRecurso {
     //Vertices
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.vertices), this.gl.STATIC_DRAW);
-    const positionLocation = this.gl.getAttribLocation(this.TRecusoShader.getProgramId(), 'vertPosition');
-    this.gl.vertexAttribPointer(positionLocation, 3, this.gl.FLOAT, false, 0, 0);
-    this.gl.enableVertexAttribArray(positionLocation);
+    // const positionLocation = this.gl.getAttribLocation(this.TRecusoShader.getProgramId(), 'vertPosition');
+    // this.gl.vertexAttribPointer(positionLocation, 3, this.gl.FLOAT, false, 0, 0);
+    // this.gl.enableVertexAttribArray(positionLocation);
 
     //Normales
     // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, normalBuffer);
@@ -106,35 +103,59 @@ export class TRecursoMalla extends TRecurso {
     // this.gl.enableVertexAttribArray(textCoordLocation);
 
     //Colores
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, colorBuffer);
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(coloresAplanados), this.gl.STATIC_DRAW);
-    const colorLocation = this.gl.getAttribLocation(this.TRecusoShader.getProgramId(), 'vertColor');
-    this.gl.vertexAttribPointer(colorLocation, 4, this.gl.FLOAT, false, 0, 0);
-    this.gl.enableVertexAttribArray(colorLocation);
+    // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, colorBuffer);
+    // this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(coloresAplanados), this.gl.STATIC_DRAW);
+    // const colorLocation = this.gl.getAttribLocation(this.TRecusoShader.getProgramId(), 'vertColor');
+    // this.gl.vertexAttribPointer(colorLocation, 4, this.gl.FLOAT, false, 0, 0);
+    // this.gl.enableVertexAttribArray(colorLocation);
+
+    this.bufVertex = vertexBuffer;
+    this.bufNormal = normalBuffer;
+    this.bufIndex = indexBuffer;
+    this.bufTextCood = textCoodBuffer;
   }
 
   // En TRecursoMalla
   dibujar(matrizTransf: mat4): void {
     console.log(`Dibujando la malla ${this.getNombre()}`);
-    
-    var locationPmatrix = this.gl.getUniformLocation(this.TRecusoShader.getProgramId(), 'Pmatrix');
-    var locationVmatrix = this.gl.getUniformLocation(this.TRecusoShader.getProgramId(), 'Vmatrix');
-    var locationMmatrix = this.gl.getUniformLocation(this.TRecusoShader.getProgramId(), 'Mmatrix');
 
-    if(locationPmatrix){
-      this.gl.uniformMatrix4fv(locationPmatrix, false, this.TRecusoShader.getProjMatrix());
-    }
-    if(locationVmatrix){
-      this.gl.uniformMatrix4fv(locationVmatrix, false, this.TRecusoShader.getViewMatrix());
-    }
-    if(locationMmatrix){
-      this.gl.uniformMatrix4fv(locationMmatrix, false, matrizTransf);
-    }
-
-    this.gl.bindAttribLocation(this.TRecusoShader.getProgramId(), 0, 'vertPosition');
-    this.gl.bindAttribLocation(this.TRecusoShader.getProgramId(), 1, 'vertNormal');
-    
     this.gl.useProgram(this.TRecusoShader.getProgramId());
+    console.log(this.TRecusoShader.getProgramId())
+
+    //Vertices
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.bufVertex);
+    const positionLocation = this.gl.getAttribLocation(this.TRecusoShader.getProgramId(), 'vertPosition');
+    this.gl.vertexAttribPointer(positionLocation, 3, this.gl.FLOAT, false, 0, 0);
+    this.gl.enableVertexAttribArray(positionLocation);
+
+    //Normales
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.bufNormal);
+    const normalLocation = this.gl.getAttribLocation(this.TRecusoShader.getProgramId(), 'vertNormal');
+    this.gl.vertexAttribPointer(normalLocation, 3, this.gl.FLOAT, false, 0, 0);
+    this.gl.enableVertexAttribArray(normalLocation);
+
+    //Indices
+    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.bufIndex);
+
+    this.gl.useProgram(this.TRecusoShader.getProgramId());
+    this.gl.uniformMatrix4fv(this.gl.getUniformLocation(this.TRecusoShader.getProgramId(), 'u_ModelViewMatrix'), false, this.TRecusoShader.getProjMatrix());
+    
+    // var locationPmatrix = this.gl.getUniformLocation(this.TRecusoShader.getProgramId(), 'u_ProjectionMatrix');
+    // var locationVmatrix = this.gl.getUniformLocation(this.TRecusoShader.getProgramId(), 'u_ModelViewMatrix');
+    // var locationMmatrix = this.gl.getUniformLocation(this.TRecusoShader.getProgramId(), 'u_NormalMatrix');
+
+    // if(locationPmatrix){
+    //   this.gl.uniformMatrix4fv(locationPmatrix, false, this.TRecusoShader.getProjMatrix());
+    // }
+    // if(locationVmatrix){
+    //   this.gl.uniformMatrix4fv(locationVmatrix, false, this.TRecusoShader.getViewMatrix());
+    // }
+    // if(locationMmatrix){
+    //   this.gl.uniformMatrix4fv(locationMmatrix, false, matrizTransf);
+    // }
+
+    // this.gl.bindAttribLocation(this.TRecusoShader.getProgramId(), 0, 'vertPosition');
+    // this.gl.bindAttribLocation(this.TRecusoShader.getProgramId(), 0, 'vertNormal');
 
     this.gl.drawElements(this.gl.TRIANGLES, this.indices.length, this.gl.UNSIGNED_SHORT, 0);
   }

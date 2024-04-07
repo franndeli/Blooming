@@ -8,6 +8,7 @@ export class TCamara extends TEntidad {
     private projMatrix: mat4;
     private viewMatrix: mat4;
     private esPerspectiva: boolean;
+    public actualizarCamara: boolean = true;
     public gl: WebGLRenderingContext;
 
     constructor() {
@@ -29,6 +30,7 @@ export class TCamara extends TEntidad {
         this.lejano = lejano;
         this.cercano = cercano;
         this.esPerspectiva = true;
+        this.actualizarCamara = true;
         mat4.perspective(this.projMatrix, this.radianes(60), aspecto, this.cercano, this.lejano);
     }
 
@@ -36,6 +38,7 @@ export class TCamara extends TEntidad {
         this.lejano = lejano;
         this.cercano = cercano;
         this.esPerspectiva = false;
+        this.actualizarCamara = true;
         mat4.perspective(this.projMatrix, this.radianes(120), aspecto, this.cercano, this.lejano);
     }
 
@@ -63,6 +66,25 @@ export class TCamara extends TEntidad {
 
     override dibujar(matrizTransf: mat4): void {
         console.log(`Configurando cámara ${this.esPerspectiva ? 'perspectiva' : 'paralela'} con planos ${this.cercano} - ${this.lejano}`);
+        
+        this.gl.useProgram(this.gl.getParameter(this.gl.CURRENT_PROGRAM));
+        console.log(this.gl.getParameter(this.gl.CURRENT_PROGRAM))
+
+        if(this.actualizarCamara){
+            if(this.esPerspectiva){
+                let viewMatrix = mat4.create();
+                mat4.invert(viewMatrix, matrizTransf);
+                mat4.mul(this.projMatrix, this.projMatrix, viewMatrix);
+            }else{
+                mat4.mul(this.projMatrix, this.projMatrix, matrizTransf);
+            }
+            this.actualizarCamara = false;
+        }
+
+        this.gl.uniformMatrix4fv(this.gl.getUniformLocation(this.gl.getParameter(this.gl.CURRENT_PROGRAM), 'u_ProjectionMatrix'), false, this.projMatrix);
+        this.gl.uniformMatrix4fv(this.gl.getUniformLocation(this.gl.getParameter(this.gl.CURRENT_PROGRAM), 'u_ModelViewMatrix'), false, matrizTransf);
+    
+        this.gl.useProgram(this.gl.getParameter(this.gl.CURRENT_PROGRAM));
     }
 
     private radianes(grados: number): number {

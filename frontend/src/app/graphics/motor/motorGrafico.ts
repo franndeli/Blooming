@@ -1,8 +1,6 @@
 import { mat4, vec3 } from 'gl-matrix';
 import { ElementRef } from '@angular/core';
-import vertexShaderText from '../../graphics/shaders/vertexShader';
-import fragmentShaderText from '../../graphics/shaders/fragmentShader';
-import { GestorRecursos, TRecursoMalla, TNodo, TCamara, TLuz, TMalla } from '../../graphics';
+import { GestorRecursos, TRecursoMalla, TNodo, TCamara, TLuz } from '../../graphics';
 
 
 export class MotorGrafico {
@@ -33,7 +31,7 @@ export class MotorGrafico {
 
     this.escena = this.crearNodo(null, vec3.create(), vec3.create(), [1, 1, 1]);
 
-    this.avatar = await this.crearModelo(this.escena, 'cubo.json', [0, 10, 0], [0, 45, 0], [1, 1, 1]);
+    this.avatar = await this.crearModelo(this.escena, 'cubo2.json', [0, 10, 0], [0, 45, 0], [1, 1, 1]);
 
     //crear camara
     this.camara = this.crearCamara(this.escena, [0, 0, 0], [0, 0, 0], [1, 1, 1]);

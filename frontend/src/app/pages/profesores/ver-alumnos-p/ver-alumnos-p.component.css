@@ -15,3 +15,8 @@
 .bg-success {
   background-color: green !important;
 }
+#chart1 {
+  
+  width: 540px; /* Ancho deseado */
+  height: 400px;
+}

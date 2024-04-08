@@ -9,6 +9,7 @@ export class MotorGrafico {
   private camara!: TNodo;
   private avatar!: TNodo;
   public modelos: TNodo[];
+  private camActiva!: TNodo;
   
   private camaraActiva: number = 0;
   private registroLuces: TNodo[] = [];
@@ -31,16 +32,27 @@ export class MotorGrafico {
 
     this.escena = this.crearNodo(null, vec3.create(), vec3.create(), [1, 1, 1]);
 
-    this.avatar = await this.crearModelo(this.escena, 'cubo2.json', [0, 0, 0], [0, 0, 0], [1, 1, 1]);
-
     //crear camara
-    this.camara = this.crearCamara(this.escena, [0, 0, 0], [0, 0, 0], [1, 1, 1]);
+    this.camara = this.crearCamara(this.escena, [0, 0, 5], [0, 0, 0], [1, 1, 1]);
     var numCam = this.registrarCamara(this.camara);
     this.setCamaraActiva(numCam);
+    this.camActiva = this.getCamaraActiva();
+
+    //crear avatar
+    this.avatar = await this.crearModelo(this.escena, 'cubo2.json', [0, 0, 0], [0, 0, 0], [1, 1, 1]);
 
     //crear luces
 
+    
     this.dibujarEscena();
+
+    // let render = () => {
+    //   this.dibujarEscena();
+
+    //   requestAnimationFrame(render);
+    // }
+
+    // render();
   }
 
   crearNodo(padre:TNodo | null, trasl: vec3, rot: vec3, esc: vec3): TNodo {
@@ -124,10 +136,27 @@ export class MotorGrafico {
     this.gl = await this.initWebGL(this.canvas!);
     this.checkWebGLError();
 
-    //this.registroCamaras[this.camaraActiva].recorrer(mat4.create());
+    // this.camActiva.recorrer(mat4.create());
+
+    // let viewMatrix = this.camActiva.getEntidad().getViewMatrix();
+    // let projectionMatrix = this.camActiva.getEntidad().getProjMatrix();
+
+    // if (this.program) {
+    //   let modelViewMatrixLocation = this.gl.getUniformLocation(this.program, 'u_ModelViewMatrix');
+    //   let projectionMatrixLocation = this.gl.getUniformLocation(this.program, 'u_ProjectionMatrix');
+
+    //   if (modelViewMatrixLocation && projectionMatrixLocation) {
+    //     this.gl.uniformMatrix4fv(modelViewMatrixLocation, false, viewMatrix);
+    //     this.gl.uniformMatrix4fv(projectionMatrixLocation, false, projectionMatrix);
+    //   }
+    // } else {
+    //     console.error('The shader program is not initialized.');
+    // }
 
     this.escena.recorrer(mat4.create());
   }
+
+
 
   registrarCamara(nodoCam: TNodo) {
     this.registroCamaras.push(nodoCam);

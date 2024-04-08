@@ -50,7 +50,7 @@ export class TNodo {
             // mat4.multiply(matrizLocal, matrizLocal, matrizEsc);
             
             // this.setMatrizTransf(matrizLocal);
-            // console.log('Matriz actualizada: ', this.matrizTransf);
+            console.log('Matriz actualizada: ', this.matrizTransf);
 
             if(this.entidad != null) {
                 console.log('Dibujando entidad: ',this.entidad.constructor.name);

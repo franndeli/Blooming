@@ -121,7 +121,7 @@ export class TRecursoMalla extends TRecurso {
   dibujar(matrizTransf: mat4): void {
     console.log(`Dibujando la malla ${this.getNombre()}`);
 
-    // this.gl.useProgram(this.TRecusoShader.getProgramId());
+    this.gl.useProgram(this.TRecusoShader.getProgramId());
     // console.log(this.TRecusoShader.getProgramId())
 
     //Vertices
@@ -139,21 +139,18 @@ export class TRecursoMalla extends TRecurso {
     //Indices
     // this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.bufIndex);
 
-    // this.gl.useProgram(this.TRecusoShader.getProgramId());
-    // this.gl.uniformMatrix4fv(this.gl.getUniformLocation(this.TRecusoShader.getProgramId(), 'u_ModelViewMatrix'), false, this.TRecusoShader.getProjMatrix());
-
+    this.gl.useProgram(this.TRecusoShader.getProgramId());
     
-    
-    var locationPmatrix = this.gl.getUniformLocation(this.TRecusoShader.getProgramId(), 'u_ProjectionMatrix');
-    var locationVmatrix = this.gl.getUniformLocation(this.TRecusoShader.getProgramId(), 'u_ModelViewMatrix');
-    // var locationMmatrix = this.gl.getUniformLocation(this.TRecusoShader.getProgramId(), 'u_NormalMatrix');
+    // var locationPmatrix = this.gl.getUniformLocation(this.TRecusoShader.getProgramId(), 'u_ProjectionMatrix');
+    // var locationVmatrix = this.gl.getUniformLocation(this.TRecusoShader.getProgramId(), 'u_ModelViewMatrix');
+    // // var locationMmatrix = this.gl.getUniformLocation(this.TRecusoShader.getProgramId(), 'u_NormalMatrix');
 
-    if(locationPmatrix){
-      this.gl.uniformMatrix4fv(locationPmatrix, false, this.TRecusoShader.getProjMatrix());
-    }
-    if(locationVmatrix){
-      this.gl.uniformMatrix4fv(locationVmatrix, false, this.TRecusoShader.getViewMatrix());
-    }
+    // if(locationPmatrix){
+    //   this.gl.uniformMatrix4fv(locationPmatrix, false, this.TRecusoShader.getProjMatrix());
+    // }
+    // if(locationVmatrix){
+    //   this.gl.uniformMatrix4fv(locationVmatrix, false, this.TRecusoShader.getViewMatrix());
+    // }
     // if(locationMmatrix){
     //   this.gl.uniformMatrix4fv(locationMmatrix, false, matrizTransf);
     // }

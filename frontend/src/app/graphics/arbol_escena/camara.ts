@@ -68,21 +68,22 @@ export class TCamara extends TEntidad {
         console.log(`Configurando cámara ${this.esPerspectiva ? 'perspectiva' : 'paralela'} con planos ${this.cercano} - ${this.lejano}`);
         
         this.gl.useProgram(this.gl.getParameter(this.gl.CURRENT_PROGRAM));
-        console.log(this.gl.getParameter(this.gl.CURRENT_PROGRAM))
 
         if(this.actualizarCamara){
             if(this.esPerspectiva){
                 let viewMatrix = mat4.create();
                 mat4.invert(viewMatrix, matrizTransf);
-                mat4.mul(this.projMatrix, this.projMatrix, viewMatrix);
+                mat4.multiply(this.projMatrix, this.projMatrix, viewMatrix);
             }else{
-                mat4.mul(this.projMatrix, this.projMatrix, matrizTransf);
+                mat4.multiply(this.projMatrix, this.projMatrix, matrizTransf);
             }
             this.actualizarCamara = false;
         }
 
-        this.gl.uniformMatrix4fv(this.gl.getUniformLocation(this.gl.getParameter(this.gl.CURRENT_PROGRAM), 'u_ProjectionMatrix'), false, this.projMatrix);
-        this.gl.uniformMatrix4fv(this.gl.getUniformLocation(this.gl.getParameter(this.gl.CURRENT_PROGRAM), 'u_ModelViewMatrix'), false, matrizTransf);
+        let modelViewMatrixLocation = this.gl.getUniformLocation(this.gl.getParameter(this.gl.CURRENT_PROGRAM), 'u_ModelViewMatrix');
+        let projectionMatrixLocation = this.gl.getUniformLocation(this.gl.getParameter(this.gl.CURRENT_PROGRAM), 'u_ProjectionMatrix');
+        this.gl.uniformMatrix4fv(modelViewMatrixLocation, false, this.getViewMatrix());
+        this.gl.uniformMatrix4fv(projectionMatrixLocation, false, this.getProjMatrix());
     
         this.gl.useProgram(this.gl.getParameter(this.gl.CURRENT_PROGRAM));
     }

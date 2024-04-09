@@ -29,7 +29,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                   </div>
                               </td>
                               <td class="border-bottom-0">
-                                  <button class="btn btn-primary" (click)="verPerfil(alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i></span></button>
+                                  <button class="btn btn-primary" (click)="verPerfil(alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button>
                               </td>
                           </tr>
                         </tbody>
@@ -47,22 +47,25 @@ data-sidebar-position="fixed" data-header-position="fixed">
         <div class="col-lg-6">
           <div class="row">
             <div class="col-lg-12">
-              <div class="card overflow-hidden">
+              <div class="card overflow-hidden position-relative">
                 <div class="card-body">
                   <h5 class="card-title mb-9 fw-semibold"><span><i class="ti ti-graph" style="font-size: 20px;"></i></span> Gráfica General/Ámbitos</h5> 
                 </div>
-                <div>
-                  <select class="form-select w-auto ms-0 ms-sm-2 me-8 py-1 pe-7 ps-2 border-0">
-                      <option>General</option>
-                      <option>Clase</option>
-                      <option>Amigos</option>
-                      <option>Familia</option>
-                      <option>Emociones</option>
-                      <option>Fuera de clase</option>
+                <div class="position-absolute top-0 end-0 mt-3 me-2">
+                  <select class="form-select py-1 ps-2 border-1 border-success bg-light rounded-pill" 
+                          (change)="onChangeOption($event)" 
+                          style="outline: none; margin-top: 10px;">
+                    <option>General</option>
+                    <option>Clase</option>
+                    <option>Amigos</option>
+                    <option>Familia</option>
+                    <option>Emociones</option>
+                    <option>Fuera de clase</option>
                   </select>
-              </div>
+                </div>
                 <div id="chart1"></div>
               </div>
+              
             </div>
             
           </div>

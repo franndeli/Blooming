@@ -1,0 +1,11 @@
+#chart2 {
+    width: 540px; /* Ancho deseado */
+    height: 400px;
+}
+.body-wrapper > .container-fluid{
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 24px;
+    -webkit-transition: 0.2s ease-in;
+    transition: 0.2s ease-in;
+  }

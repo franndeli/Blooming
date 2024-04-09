@@ -8,7 +8,15 @@ data-sidebar-position="fixed" data-header-position="fixed">
         <div class="card">
           <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
             <div class="card-body">
-              <h5 class="card-title fw-semibold mb-4">Informe Emocional Negativo <span><i class="ti ti-alert-triangle" style="font-size: 20px;"></i></span></h5>
+              <h5 class="card-title fw-semibold mb-4">Informe Emocional - Últimas 5 respuestas <span><i class="ti ti-alert-triangle" style="font-size: 20px;"></i></span></h5>
+              <div class="position-absolute top-0 end-0 mt-3 me-2">
+                <select class="form-select py-1 ps-2 border-1 border-success bg-light rounded-pill" 
+                        style="outline: none; margin-top: 10px;"> 
+                  <option>General</option>
+                  <option>Positivo</option>
+                  <option>Negativo</option>
+                </select>
+              </div>
               <div class="card">
                 <div class="card-body">
                   <div class="table-responsive">
@@ -23,53 +31,18 @@ data-sidebar-position="fixed" data-header-position="fixed">
                           </tr>
                       </thead>
                       <tbody>
-                          <tr>
-                              <td class="border-bottom-0">Pepe</td>
-                              <td class="border-bottom-0">1ºA</td>
-                              <td class="border-bottom-0">¿Cómo te has sentido hoy?</td>
-                              <td class="border-bottom-0"> Triste </td>
+                          <tr *ngFor="let respuesta of respuestasData;">
+                              <td class="border-bottom-0">{{ respuesta.Alumno.Nombre }}</td>
+                              <td class="border-bottom-0">{{ respuesta.Alumno.Clase.Nombre }}</td>
+                              <td class="border-bottom-0">{{ respuesta.Pregunta.TextoPregunta }}</td>
+                              <td class="border-bottom-0"> {{ respuesta.Opcion.TextoOpcion }} </td>
                               <td class="border-bottom-0">
                               <a href="/profesores/ver-perfil-alumno" class="btn btn-primary"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</a>
                               </td>
                           </tr>
-                          <tr>
-                            <td class="border-bottom-0">Pepe</td>
-                            <td class="border-bottom-0">1ºA</td>
-                            <td class="border-bottom-0">¿Cómo te has sentido hoy?</td>
-                            <td class="border-bottom-0"> Triste </td>
-                            <td class="border-bottom-0">
-                            <a href="/profesores/ver-perfil-alumno" class="btn btn-primary"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</a>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="border-bottom-0">Pepe</td>
-                            <td class="border-bottom-0">1ºA</td>
-                            <td class="border-bottom-0">¿Cómo te has sentido hoy?</td>
-                            <td class="border-bottom-0"> Triste </td>
-                            <td class="border-bottom-0">
-                            <a href="/profesores/ver-perfil-alumno" class="btn btn-primary"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</a>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="border-bottom-0">Pepe</td>
-                            <td class="border-bottom-0">1ºA</td>
-                            <td class="border-bottom-0">¿Cómo te has sentido hoy?</td>
-                            <td class="border-bottom-0"> Triste </td>
-                            <td class="border-bottom-0">
-                            <a href="/profesores/ver-perfil-alumno" class="btn btn-primary"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</a>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="border-bottom-0">Pepe</td>
-                            <td class="border-bottom-0">1ºA</td>
-                            <td class="border-bottom-0">¿Cómo te has sentido hoy?</td>
-                            <td class="border-bottom-0"> Triste </td>
-                            <td class="border-bottom-0">
-                            <a href="/profesores/ver-perfil-alumno" class="btn btn-primary"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</a>
-                            </td>
-                          </tr>
                         </tbody>
                       </table>
+                      
                     </div>
                 </div>
               </div>
@@ -117,12 +90,82 @@ data-sidebar-position="fixed" data-header-position="fixed">
         </div> 
       </div>
     </div>
-  </div>
-      <br>
-      <br>
-  
-      <div class="py-6 px-6 text-center">
-        <p class="copyright">&copy; 2023 Blooming. Proyecto académico de la Universidad de Alicante .</p>
-      </div>
 
+  <div class="container-fluid" style="padding-top: 0px;"> 
+    <div class="row">
+      <div class="col-lg-9 align-items-strech">
+        <div class="card">
+          <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
+            <div class="card-body">
+              <div class="card overflow-hidden position-relative">
+                <div class="card-body">
+                  <h5 class="card-title mb-9 fw-semibold"><span><i class="ti ti-graph" style="font-size: 20px;"></i></span> Gráfica por Ámbitos</h5> 
+                </div>
+                <div class="position-absolute top-0 end-0 mt-3 me-2">
+                  <select class="form-select py-1 ps-2 border-1 border-success bg-light rounded-pill" style="outline: none; margin-top: 10px;">
+                    <option>Clase</option>
+                  </select>
+                  <select class="form-select py-1 ps-2 border-1 border-success bg-light rounded-pill" style="outline: none; margin-top: 10px;">
+                    <option>General</option>
+                    <option>Clase</option>
+                    <option>Amigos</option>
+                    <option>Familia</option>
+                    <option>Emociones</option>
+                    <option>Fuera de clase</option>
+                  </select>
+                </div>
+                <div id="chart2"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        <div class="col-lg-3">
+          <div class="row">
+            <div class="col-lg-12">
+              <!-- Yearly Breakup -->
+              <div class="card overflow-hidden">
+                <div class="card-body">
+                  <h5 class="card-title mb-9 fw-semibold">Listado de clases menos alarmantes <span><i class="ti ti-alert-triangle" style="font-size: 15px;"></i></span></h5>
+                  <div style="text-align: center;">
+                    <p class="fw-semibold mb-3"><span class="badge bg-danger rounded-3 fw-semibold">1ºA </span> Media : 2</p>
+                    
+                    <p class="fw-semibold mb-3"><span class="badge bg-danger rounded-3 fw-semibold">3ºA </span> Media : 3</p>
+                    
+                    <p class="fw-semibold mb-3"><span class="badge bg-danger rounded-3 fw-semibold">1ºB </span> Media : 5</p>
+                    
+                    <p class="fw-semibold mb-3"><span class="badge bg-secondary rounded-3 fw-semibold">2ºA </span> Media : 7</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <!-- Yearly Breakup -->
+              <div class="card overflow-hidden">
+                <div class="card-body">
+                  <h5 class="card-title mb-9 fw-semibold">Ambito menos alarmante de cada curso <span><i class="ti ti-home" style="font-size: 15px;"></i></span></h5>
+                  <div style="text-align: center;">
+                    <p class="fw-semibold mb-3">1º : Emociones</p>
+                    <p class="fw-semibold mb-3">2º : Amigos</p>
+                    <p class="fw-semibold mb-3">3º : Emociones</p>
+                    <p class="fw-semibold mb-3">4º : Emociones</p>
+                    <p class="fw-semibold mb-3">5º : Clase</p>
+                    <p class="fw-semibold mb-3">6º : Familia</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> 
+      </div>
+    </div>
+  </div>
+ 
+  
+  <br>
+  <br>
+
+  <div class="py-6 px-6 text-center">
+    <p class="copyright">&copy; 2023 Blooming. Proyecto académico de la Universidad de Alicante .</p>
+  </div>
 </div>

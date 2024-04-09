@@ -136,7 +136,6 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
     this.respuestaService.getRespuestasAlumno(this.alumnosData.ID_Alumno, this.gravedad).subscribe((res: any) => {
       this.respuestasData = res.respuestas;
     });
-  
   }
 
   cambiarDias(event: any) {

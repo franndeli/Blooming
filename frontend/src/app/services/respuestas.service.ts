@@ -51,6 +51,12 @@ export class RespuestaService {
     
     }
 
+    getRespuestasCentro(id: any){
+      this.getHeader();
+      return this.http.get(this.basePath+'?ID_Centro='+id, this.httpOptions);
+    
+    }
+
     postRespuesta(resultadoData: any){
         this.getHeader();
         return this.http.post(this.basePath, resultadoData, this.httpOptions);

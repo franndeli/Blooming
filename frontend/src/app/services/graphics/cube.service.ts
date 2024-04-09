@@ -5,7 +5,7 @@ import * as THREE from 'three';
   providedIn: 'root'
 })
 export class CubeService {
-  cube!: THREE.Mesh;
+  private cube!: THREE.Mesh;
   selectedFaceIndex: number | null = null;
   isDragging: boolean = false;
   previousMousePosition = {
@@ -20,10 +20,10 @@ export class CubeService {
   constructor() {
   }
 
-  initMouseEvents(rendererElement: HTMLElement, cube: THREE.Mesh) {
-    rendererElement.addEventListener('mousedown', (event) => this.onMouseDown(event, cube), false);
-    window.addEventListener('mousemove', (event) => this.onMouseMove(event, cube), false);
-    window.addEventListener('mouseup', (event) => this.onMouseUp(event, cube), false);
+  initMouseEvents(rendererElement: HTMLElement) {
+    rendererElement.addEventListener('mousedown', this.onMouseDown.bind(this), false);
+    window.addEventListener('mousemove', this.onMouseMove.bind(this), false);
+    window.addEventListener('mouseup', this.onMouseUp.bind(this), false);
   }
 
   removeMouseEvents(rendererElement: HTMLElement) {
@@ -72,7 +72,6 @@ export class CubeService {
       }
     });
   
-    console.log(materials);
     return materials;
   }
 
@@ -95,7 +94,7 @@ export class CubeService {
     return this.cube;
   }
 
-  onMouseDown(event: MouseEvent, cube: THREE.Mesh): void {
+  private onMouseDown(event: MouseEvent): void {
     if (event.button === 0) {
       this.isDragging = true;
       this.previousMousePosition.x = event.clientX;
@@ -106,13 +105,13 @@ export class CubeService {
   }
 
   
-  onMouseMove(event: MouseEvent, cube: THREE.Mesh): void {
+  private onMouseMove(event: MouseEvent): void {
     if (this.isDragging) {
       const deltaX = event.clientX - this.previousMousePosition.x;
       const deltaY = event.clientY - this.previousMousePosition.y;
   
-      // Ajusta la velocidad de rotación aquí si es necesario
-      const rotationSpeed = 0.005;
+      // Ajusta la velocidad de rotación
+      const rotationSpeed = 0.007;
   
       this.cube.rotation.y += deltaX * rotationSpeed;
       this.cube.rotation.x += deltaY * rotationSpeed;
@@ -126,7 +125,7 @@ export class CubeService {
     }
   }
 
-  onMouseUp(event: MouseEvent, cube: THREE.Mesh): void {
+  private onMouseUp(event: MouseEvent): void {
     if (event.button === 0) {
       this.isDragging = false;
       // Iniciar la disminución de la velocidad de rotación (inercia)

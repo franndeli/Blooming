@@ -64,7 +64,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     /*this.renderer.domElement.addEventListener('mousedown', this.onMouseDown.bind(this), false);
     window.addEventListener('mousemove', this.onMouseMove.bind(this), false);
     window.addEventListener('mouseup', this.onMouseUp.bind(this), false);*/
-    this.cubeService.initMouseEvents(this.rendererContainer.nativeElement, this.cube);
+    this.cubeService.initMouseEvents(this.rendererContainer.nativeElement);
   }
 
   ngOnDestroy() {
@@ -90,13 +90,6 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5); // ajusta la intensidad según necesites
     directionalLight.position.set(0, 1, 1); // ajusta la posición según necesites
     this.scene.add(directionalLight);
-
-    /*const cubeSize = 30; // Aumentar el tamaño del cubo
-    const geometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize); // Usar cubeSize para el cubo
-    const material = new THREE.MeshBasicMaterial({ color: 0x000000 });
-    this.cube = new THREE.Mesh(geometry, material);
-    this.cube.position.z = -50; // Mover el cubo hacia atrás para que no sea obstruido por el texto
-    this.scene.add(this.cube);*/
   }
 
   animate() {
@@ -115,10 +108,6 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
         height: 1,
         curveSegments: 12,
         bevelEnabled: false,
-        /*bevelThickness: 3,
-        bevelSize: 2,
-        bevelOffset: 0,
-        bevelSegments: 2*/
       });
   
       textGeometry.computeBoundingBox();
@@ -136,60 +125,6 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       this.scene.add(textMesh);
     });
   }
-
-  /*configureCube() {
-    const cubeSize = 30;
-    const geometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
-  
-    // Obtener los materiales creados con las imágenes de las opciones
-    const materials = this.createCubeMaterials();
-    
-    // Si creas un nuevo cubo cada vez, simplemente usa los materiales aquí
-    if (this.cube) {
-      // Si el cubo ya existe, actualiza sus materiales
-      this.cube.material = materials;
-    } else {
-      // Si el cubo no existe, créalo y añádelo a la escena
-      this.cube = new THREE.Mesh(geometry, materials);
-      this.scene.add(this.cube);
-    }
-  }
-
-  createCubeMaterials() {
-    const textureLoader = new THREE.TextureLoader();
-  
-    // Primero, mezclar un arreglo de índices de caras para asegurar una asignación aleatoria
-    let faceIndices = [0, 1, 2, 3, 4, 5];
-    faceIndices = this.shuffleArray(faceIndices);
-  
-    // Luego, crear materiales para las imágenes disponibles
-    let imageMaterials = this.preguntaActual.respuestas.opciones.map((option: any) => {
-      try {
-        const texture = textureLoader.load(option.Imagen);
-        return new THREE.MeshBasicMaterial({ map: texture });
-      } catch (error) {
-        console.error("Error loading texture:", error);
-        return null;
-      }
-    }).filter((material: any) => material !== null);
-  
-    // Mezclar los materiales de las imágenes de manera aleatoria
-    imageMaterials = this.shuffleArray(imageMaterials);
-  
-    // Inicializar un arreglo de 6 materiales con blanco como predeterminado
-    let materials = new Array(6).fill(null).map(() => new THREE.MeshPhongMaterial({ color: 0xf0ffff }));
-  
-    // Asignar los materiales de imagen a caras aleatorias basadas en los índices mezclados
-    imageMaterials.forEach((material: any, index: any) => {
-      if (index < faceIndices.length) {
-        materials[faceIndices[index]] = material;
-      }
-    });
-  
-    console.log(materials);
-    return materials;
-  }*/
-  
 
   cargarAnimacion(preguntaActual: any){
     const cube = this.cubeService.configureCube(preguntaActual);
@@ -219,79 +154,6 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       });
     });
   }
-
-/*
-  // Función para mezclar un array de manera aleatoria (algoritmo de Fisher-Yates)
-  shuffleArray(array: any[]) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  }
-
-
-  onMouseDown(event: MouseEvent): void {
-    if (event.button === 0) {
-      this.isDragging = true;
-      this.previousMousePosition.x = event.clientX;
-      this.previousMousePosition.y = event.clientY;
-      this.inertia.x = 0;
-      this.inertia.y = 0;
-    }
-  }
-
-  
-  onMouseMove(event: MouseEvent): void {
-    if (this.isDragging) {
-      const deltaX = event.clientX - this.previousMousePosition.x;
-      const deltaY = event.clientY - this.previousMousePosition.y;
-  
-      // Ajusta la velocidad de rotación aquí si es necesario
-      const rotationSpeed = 0.005;
-  
-      this.cube.rotation.y += deltaX * rotationSpeed;
-      this.cube.rotation.x += deltaY * rotationSpeed;
-  
-      // Actualizar la inercia basada en el movimiento del ratón
-      this.inertia.x = deltaX * rotationSpeed;
-      this.inertia.y = deltaY * rotationSpeed;
-  
-      this.previousMousePosition.x = event.clientX;
-      this.previousMousePosition.y = event.clientY;
-    }
-  }
-
-  onMouseUp(event: MouseEvent): void {
-    if (event.button === 0) {
-      this.isDragging = false;
-      // Iniciar la disminución de la velocidad de rotación (inercia)
-      //this.applyInertia();
-    }
-  }
-
- /* applyInertia() {
-    const friction = 0.95; // Valor más cercano a 1 para una desaceleración más suave
-  
-    const inertiaLoop = () => {
-      if (!this.isDragging && (Math.abs(this.inertia.x) > 0.001 || Math.abs(this.inertia.y) > 0.001)) {
-        this.cube.rotation.y += this.inertia.x;
-        this.cube.rotation.x += this.inertia.y;
-  
-        // Aplicar fricción para disminuir la inercia gradualmente
-        this.inertia.x *= friction;
-        this.inertia.y *= friction;
-  
-        requestAnimationFrame(inertiaLoop);
-      } else {
-        // Resetear la inercia cuando el movimiento es insignificante para evitar efectos residuales
-        this.inertia.x = 0;
-        this.inertia.y = 0;
-      }
-    };
-  
-    inertiaLoop();
-}*/
 
 
 

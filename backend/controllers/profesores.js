@@ -11,9 +11,10 @@ const getProfesores = async (req, res) => {
     try {
         const tam = Number(req.query.numFilas) || 0;
         const desde = Number(req.query.desde) || 0;
+        const pwd = req.query.pwd || false;
         const queryParams = req.query;
 
-        const validParams = ['ID_Profesor', 'Nombre', 'Apellidos', 'Email', 'Contraseña', 'ID_Clase', 'ID_Centro', 'desde', 'numFilas'];
+        const validParams = ['ID_Profesor', 'Nombre', 'Apellidos', 'Email', 'Contraseña', 'ID_Clase', 'ID_Centro', 'desde', 'numFilas', 'pwd'];
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {
@@ -22,7 +23,7 @@ const getProfesores = async (req, res) => {
         
         const queryOptions = {};
         for (const param in queryParams) {
-            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde') {
+            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde' && param !== 'pwd') {
                 if (param === 'ID_Profesor') {
                     queryOptions[param] = queryParams[param];
                 } else {
@@ -36,7 +37,7 @@ const getProfesores = async (req, res) => {
         const profesores = await Profesor.findAll({
             where: queryOptions,
             ...paginationOptions,
-            attributes: { exclude: ['Contraseña'] },
+            attributes: { exclude: pwd ? [] : ['Contraseña'] },
             include: [
                 {
                     model: Clase,

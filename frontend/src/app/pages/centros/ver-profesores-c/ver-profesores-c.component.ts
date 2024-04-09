@@ -40,8 +40,8 @@ export class VerProfesoresCComponent implements OnInit {
         }
       }else {
         this.profesoresData = res.profesores;
+        console.log(this.profesoresData)
         this.totalProfesores = res.page.total;
-        console.log(this.totalProfesores);
       }
     })
   }
@@ -65,6 +65,12 @@ export class VerProfesoresCComponent implements OnInit {
           icon: "success"
         });
       }
+    });
+  }
+
+  verDatos(id: number){
+    this.profesorService.getProfesorID(id, true).subscribe((res: any) => {
+      console.log(res.profesores);
     });
   }
 

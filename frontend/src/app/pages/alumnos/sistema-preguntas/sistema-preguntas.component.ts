@@ -22,18 +22,10 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   scene!: THREE.Scene;
   camera!: THREE.PerspectiveCamera;
   renderer!: THREE.WebGLRenderer;
-  
-  selectedFaceIndex: number | null = null;
-  isDragging: boolean = false;
-  previousMousePosition = {
-    x: 0,
-    y: 0
-  };
-  inertia = {
-    x: 0,
-    y: 0
-  };
 
+  buttonMesh!: THREE.Mesh;
+  buttonMaterial!: THREE.MeshBasicMaterial;
+  buttonGeometry!: THREE.PlaneGeometry;
 
   preguntas: any[] = [];
   opcion: any[] = [];
@@ -57,6 +49,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   ngOnInit() {
     this.cargarPreguntas();
     this.initializeScene();
+    this.cubeService.setButtonPressedCallback(this.handleButtonPress.bind(this));
   }
 
   ngAfterViewInit() {
@@ -75,6 +68,11 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     this.cubeService.removeMouseEvents(this.rendererContainer.nativeElement);
   }
 
+  private handleButtonPress(): void {
+    console.log("El botón ha sido presionado");
+    // Aquí puedes añadir más lógica que quieres que se ejecute cuando el botón se presione
+  }
+
   initializeScene() {
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -82,6 +80,8 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     this.renderer.setClearColor(0xbfd1e5);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.camera.position.set(0, 0, 100);
+    this.cubeService.setCamera(this.camera);
+    this.cubeService.setScene(this.scene);
 
     // Agregar iluminación ambiental suave
     const ambientLight = new THREE.AmbientLight(0x404040, 1); // luz ambiental suave
@@ -90,10 +90,69 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5); // ajusta la intensidad según necesites
     directionalLight.position.set(0, 1, 1); // ajusta la posición según necesites
     this.scene.add(directionalLight);
+
+    this.initButton();
   }
+
+  //BOTÓN --------------------------------------------------------------------------------
+  initButton() {
+    // Crear la geometría y el material para el botón
+    this.buttonGeometry = new THREE.BoxGeometry(10, 5, 2); // Profundidad agregada para el efecto 3D
+    this.buttonMaterial = new THREE.MeshBasicMaterial({ color: 0x00FF00 });
+    this.buttonMesh = new THREE.Mesh(this.buttonGeometry, this.buttonMaterial);
+  
+    // Crear el texto para el botón
+    const loader = new FontLoader();
+    loader.load('../../../../assets/fonts/helvetiker_regular.typeface.json', (font) => {
+      const textGeometry = new TextGeometry('Pulsa', {
+        font: font,
+        size: 1,
+        height: 0.2,
+        curveSegments: 12,
+        bevelEnabled: true,
+        bevelThickness: 0.02,
+        bevelSize: 0.05,
+        bevelOffset: 0,
+        bevelSegments: 5
+      });
+      const textMaterial = new THREE.MeshPhongMaterial({ color: 0x000000 });
+      const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+  
+      // Ajustar la posición del texto en el botón
+      textGeometry.computeBoundingBox();
+      if(textGeometry.boundingBox !== null){
+        const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x;
+        textMesh.position.set(-textWidth / 2, -1, 1.1); // Ajustar la posición z para que el texto aparezca encima del botón
+      }
+  
+      // Añadir el texto al botón
+      this.buttonMesh.add(textMesh);
+      this.cubeService.setButtonMesh(this.buttonMesh);
+    });
+  
+    // Posición del botón fuera de la vista
+    this.buttonMesh.position.set(-100, -100, -100);
+    this.buttonMesh.name = 'button'; // Establecer un nombre para el botón para detectarlo fácilmente
+  
+    // Añadir el botón a la escena
+    this.scene.add(this.buttonMesh);
+  }
+  
+
+  updateButtonVisibility() {
+    if (this.cubeService.getisSelected()) {
+      // Configura la posición del botón en la escena para que sea visible
+      this.buttonMesh.position.set(0, -60, 0); // Coloca el botón donde lo necesites en la escena
+    } else {
+      // Oculta el botón moviéndolo fuera de la cámara
+      this.buttonMesh.position.set(-1000, -1000, -1000);
+    }
+  }
+  //BOTÓN --------------------------------------------------------------------------------
 
   animate() {
     requestAnimationFrame(this.animate);
+    this.updateButtonVisibility();
     this.renderer.render(this.scene, this.camera);
   }
 

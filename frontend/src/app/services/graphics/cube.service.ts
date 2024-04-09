@@ -6,6 +6,14 @@ import * as THREE from 'three';
 })
 export class CubeService {
   private cube!: THREE.Mesh;
+  camera!: THREE.PerspectiveCamera;
+  scene!: THREE.Scene;
+  private highlightMesh!: THREE.Mesh;
+  buttonMesh!: any;
+
+  private buttonPressedCallback: (() => void) | null = null;
+
+  isSelected: boolean = false;
   selectedFaceIndex: number | null = null;
   isDragging: boolean = false;
   previousMousePosition = {
@@ -18,6 +26,28 @@ export class CubeService {
   };
 
   constructor() {
+    this.initHighlightMesh();
+  }
+
+  public setButtonPressedCallback(callback: () => void): void {
+    this.buttonPressedCallback = callback;
+  }
+
+  private onButtonPressed(): void {
+    if (this.buttonPressedCallback) {
+      this.buttonPressedCallback();
+    }
+  }
+
+  public setButtonMesh(mesh: THREE.Mesh): void {
+    this.buttonMesh = mesh;
+  }  
+
+  private initHighlightMesh(): void {
+    // Inicialización del mesh de resaltado
+    const geometry = new THREE.PlaneGeometry(1, 1);
+    const material = new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide, transparent: true, opacity: 0.5 });
+    this.highlightMesh = new THREE.Mesh(geometry, material);
   }
 
   initMouseEvents(rendererElement: HTMLElement) {
@@ -30,6 +60,18 @@ export class CubeService {
     rendererElement.removeEventListener('mousedown', this.onMouseDown.bind(this), false);
     window.removeEventListener('mousemove', this.onMouseMove.bind(this), false);
     window.removeEventListener('mouseup', this.onMouseUp.bind(this), false);
+  }
+
+  public setCamera(camera: THREE.PerspectiveCamera): void {
+    this.camera = camera;
+  }
+
+  public getCamera(){
+    return this.camera;
+  }
+
+  public setScene (scene: THREE.Scene): void {
+    this.scene = scene;
   }
 
   // Función para mezclar un array de manera aleatoria (algoritmo de Fisher-Yates)
@@ -95,31 +137,86 @@ export class CubeService {
   }
 
   private onMouseDown(event: MouseEvent): void {
-    if (event.button === 0) {
+    /* if (event.button === 0) {
+      this.isDragging = true;
+      this.previousMousePosition.x = event.clientX;
+      this.previousMousePosition.y = event.clientY;
+      this.inertia.x = 0;
+      this.inertia.y = 0;
+    } */
+    if (this.isDragging) return;
+
+    // Convertir la posición del mouse a coordenadas normalizadas (-1 a 1)
+    const mouse = new THREE.Vector2(
+      (event.clientX / window.innerWidth) * 2 - 1,
+      -(event.clientY / window.innerHeight) * 2 + 1
+    );
+
+    // Usar Raycaster para encontrar intersecciones
+    const raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(mouse, this.camera);
+
+    const intersects = raycaster.intersectObject(this.cube, true);
+    if (intersects.length > 0) {
+      this.selectFace(intersects[0]);
+      this.isDragging = false;
+    } else {
       this.isDragging = true;
       this.previousMousePosition.x = event.clientX;
       this.previousMousePosition.y = event.clientY;
       this.inertia.x = 0;
       this.inertia.y = 0;
     }
+
+    const intersects2 = raycaster.intersectObjects(this.scene.children);
+    for (let i = 0; i < intersects2.length; i++) {
+      if (intersects2[i].object === this.buttonMesh) {
+        this.onButtonPressed();
+        break;
+      }
+    }
   }
 
+  private selectFace(intersect: THREE.Intersection): void {
+    if (intersect.faceIndex !== undefined) {
+      const faceMaterialIndex = Math.floor(intersect.faceIndex / 2); // Cada cara tiene 2 triángulos
+      const selectedMaterial = (this.cube.material as THREE.MeshBasicMaterial[])[faceMaterialIndex];
+      
+      if (this.selectedFaceIndex !== null && selectedMaterial.map) {
+        const prevMaterial = (this.cube.material as THREE.MeshBasicMaterial[])[this.selectedFaceIndex];
+        if (prevMaterial.map) { // Solo restablecer si había una imagen
+          prevMaterial.opacity = 1;
+          prevMaterial.transparent = false;
+          prevMaterial.needsUpdate = true;
+        }
+      }
+
+      // Verificar si la cara seleccionada tiene una imagen antes de resaltar
+      if (selectedMaterial.map) {
+        this.selectedFaceIndex = faceMaterialIndex;
   
-  private onMouseMove(event: MouseEvent): void {
+        // Cambiar la opacidad del material de la cara seleccionada para dar un efecto de resaltado
+        selectedMaterial.opacity = 0.5;
+        selectedMaterial.transparent = true;
+  
+        // Necesitamos actualizar la propiedad 'needsUpdate' para que los cambios tengan efecto
+        selectedMaterial.needsUpdate = true;
+
+        this.isSelected = true;
+      }
+    }
+  }
+
+  private onMouseMove(event: MouseEvent) {
     if (this.isDragging) {
       const deltaX = event.clientX - this.previousMousePosition.x;
       const deltaY = event.clientY - this.previousMousePosition.y;
-  
-      // Ajusta la velocidad de rotación
+
       const rotationSpeed = 0.007;
-  
+
       this.cube.rotation.y += deltaX * rotationSpeed;
       this.cube.rotation.x += deltaY * rotationSpeed;
-  
-      // Actualizar la inercia basada en el movimiento del ratón
-      this.inertia.x = deltaX * rotationSpeed;
-      this.inertia.y = deltaY * rotationSpeed;
-  
+
       this.previousMousePosition.x = event.clientX;
       this.previousMousePosition.y = event.clientY;
     }
@@ -128,8 +225,12 @@ export class CubeService {
   private onMouseUp(event: MouseEvent): void {
     if (event.button === 0) {
       this.isDragging = false;
-      // Iniciar la disminución de la velocidad de rotación (inercia)
-      //this.applyInertia();
     }
   }
+
+  public getisSelected(){
+    return this.isSelected
+  }
+
 }
+

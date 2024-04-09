@@ -19,6 +19,10 @@ const Opcion = sequelize.define('Opcion', {
         type: DataTypes.INTEGER,
         allowNull: false
     },
+    Imagen: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
 }, {
     tableName: 'opcion',
     timestamps: false

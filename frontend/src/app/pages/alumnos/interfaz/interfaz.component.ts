@@ -23,8 +23,6 @@ export class InterfazComponent {
   controls: any;
   dcontrols: any;
 
-
-
   ngOnInit(): void {
     this.initScene();
     this.addResizeHandler();

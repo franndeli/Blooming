@@ -1,17 +1,16 @@
-<div>
-    <p>sistema-preguntas works!</p>
+<div #rendererContainer>
+    <!--<p>sistema-preguntas works!</p>
     <div *ngIf="!mostrarReiniciar">
-        <div *ngIf="preguntaActual">
-            <p>
-                {{ preguntaActual.TextoPreguntaElegido ? preguntaActual.TextoPreguntaElegido : preguntaActual.TextoPregunta }}
-                {{ " " + preguntaActual.NombreAmbito }}
-            </p>
-            <ul>
-                <li *ngFor="let opcion of preguntaActual.respuestas.opciones">
-                    <button (click)="siguientePregunta(opcion.Gravedad, opcion.ID_Opcion)">{{ opcion.TextoOpcion + opcion.Gravedad }}</button>
-                </li>                
-            </ul>
-        </div>
+        <p *ngIf="preguntaActual">
+            {{ preguntaActual.TextoPreguntaElegido ? preguntaActual.TextoPreguntaElegido : preguntaActual.TextoPregunta }}
+            {{ " " + preguntaActual.NombreAmbito }}
+        </p>
+        <ul>
+            <li *ngFor="let opcion of preguntaActual.respuestas.opciones">
+                <button (click)="siguientePregunta(opcion.Gravedad, opcion.ID_Opcion)">{{ opcion.TextoOpcion + opcion.Gravedad }}</button>
+                <img [src]="opcion.Imagen">
+            </li>               
+        </ul>
     </div>
     <div *ngIf="mostrarReiniciar">
         <p>Resultados por ámbito:</p>
@@ -21,5 +20,5 @@
             </li>
         </ul>
         <button (click)="reiniciar()">Reiniciar</button>
-    </div>
+    </div>-->
 </div>

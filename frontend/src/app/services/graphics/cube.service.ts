@@ -5,13 +5,16 @@ import * as THREE from 'three';
   providedIn: 'root'
 })
 export class CubeService {
-  private cube!: THREE.Mesh;
+  cube!: THREE.Mesh;
   camera!: THREE.PerspectiveCamera;
   scene!: THREE.Scene;
   private highlightMesh!: THREE.Mesh;
   buttonMesh!: any;
 
   private buttonPressedCallback: (() => void) | null = null;
+
+  private optionsMap: Map<number, any> = new Map();
+  private selectedOption: any = null;
 
   isSelected: boolean = false;
   selectedFaceIndex: number | null = null;
@@ -111,6 +114,7 @@ export class CubeService {
     imageMaterials.forEach((material: any, index: any) => {
       if (index < faceIndices.length) {
         materials[faceIndices[index]] = material;
+        this.optionsMap.set(faceIndices[index], preguntaActual.respuestas.opciones[index]);
       }
     });
   
@@ -133,8 +137,22 @@ export class CubeService {
       this.cube = new THREE.Mesh(geometry, materials);
     }
 
+    // Establece la rotación inicial del cubo para que una cara esté orientada hacia la cámara
+    this.resetCubeRotation();
+
     return this.cube;
   }
+
+  resetCubeRotation(): void {
+    // Establece la rotación del cubo a 0 en todos los ejes
+    this.cube.rotation.set(0, 0, 0);
+  
+    // Aquí puedes añadir cualquier rotación específica que desees.
+    // Por ejemplo, para que una cara específica mire hacia la cámara, puedes experimentar con valores como:
+    // this.cube.rotation.x = Math.PI / 4; // Rotar 45 grados en el eje X
+    // this.cube.rotation.y = Math.PI / 4; // Rotar 45 grados en el eje Y
+  }
+
 
   private onMouseDown(event: MouseEvent): void {
     /* if (event.button === 0) {
@@ -203,6 +221,8 @@ export class CubeService {
         selectedMaterial.needsUpdate = true;
 
         this.isSelected = true;
+        this.selectedOption = this.optionsMap.get(this.selectedFaceIndex);
+        console.log('Opción seleccionada:', this.selectedOption);
       }
     }
   }
@@ -230,6 +250,18 @@ export class CubeService {
 
   public getisSelected(){
     return this.isSelected
+  }
+
+  public setisSelected(yeah: boolean) {
+    this.isSelected = yeah;
+  }
+
+  public getSelectedOption() {
+    return this.selectedOption;
+  }
+
+  public setnullSelectedOption() {
+    this.selectedOption = null;
   }
 
 }

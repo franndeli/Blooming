@@ -24,7 +24,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   renderer!: THREE.WebGLRenderer;
 
   buttonMesh!: THREE.Mesh;
-  buttonMaterial!: THREE.MeshBasicMaterial;
+  buttonMaterial!: THREE.Material;
   buttonGeometry!: THREE.PlaneGeometry;
 
   preguntas: any[] = [];
@@ -70,7 +70,9 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
 
   private handleButtonPress(): void {
     console.log("El botón ha sido presionado");
-    // Aquí puedes añadir más lógica que quieres que se ejecute cuando el botón se presione
+    const selectedOption = this.cubeService.getSelectedOption();
+    console.log(selectedOption);
+    this.siguientePregunta(selectedOption.Gravedad, selectedOption.ID_Opcion);
   }
 
   initializeScene() {
@@ -98,7 +100,12 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   initButton() {
     // Crear la geometría y el material para el botón
     this.buttonGeometry = new THREE.BoxGeometry(10, 5, 2); // Profundidad agregada para el efecto 3D
-    this.buttonMaterial = new THREE.MeshBasicMaterial({ color: 0x00FF00 });
+    this.buttonMaterial = new THREE.MeshStandardMaterial({ 
+      color: 0x156289, 
+      emissive: 0x072534, 
+      side: THREE.DoubleSide, 
+      flatShading: true 
+    });
     this.buttonMesh = new THREE.Mesh(this.buttonGeometry, this.buttonMaterial);
   
     // Crear el texto para el botón
@@ -129,9 +136,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       this.buttonMesh.add(textMesh);
       this.cubeService.setButtonMesh(this.buttonMesh);
     });
-  
-    // Posición del botón fuera de la vista
-    this.buttonMesh.position.set(-100, -100, -100);
+    
     this.buttonMesh.name = 'button'; // Establecer un nombre para el botón para detectarlo fácilmente
   
     // Añadir el botón a la escena
@@ -175,6 +180,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
 
       const textMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
       const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+      textMesh.name = 'textMesh';
 
       // Ajustes para centrar el texto en la pantalla
       textMesh.position.x = -0.5 * textWidth;
@@ -212,6 +218,28 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
         });
       });
     });
+  }
+
+  clearScene() {
+    // Remover el cubo, el texto y el botón de la escena
+    if (this.cubeService.cube) {
+      this.scene.remove(this.cubeService.cube);
+      this.cubeService.cube.geometry.dispose();
+      (this.cubeService.cube.material as THREE.Material[]).forEach(mat => mat.dispose());
+    }
+  
+    // Encuentra y elimina el texto 3D anterior si existe
+    const textMesh = this.scene.getObjectByName('textMesh');
+    console.log(textMesh);
+    if (textMesh) {
+      this.scene.remove(textMesh);
+      (textMesh as THREE.Mesh).geometry.dispose();
+      ((textMesh as THREE.Mesh).material as THREE.Material).dispose();
+    }
+  
+    // Oculta el botón
+    this.cubeService.setisSelected(false);
+    this.cubeService.setnullSelectedOption();
   }
 
 
@@ -258,14 +286,24 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       this.gravedadesPorAmbito[ambitoActual] += gravedad;
     }
 
+    this.clearScene();
+
+    this.loadNewQuestion();
+  }
+
+  private loadNewQuestion() {
+    // Incrementa el índice actual para pasar a la siguiente pregunta
     if (this.indiceActual < this.preguntas.length - 1) {
       this.indiceActual++;
       this.preguntaActual = this.preguntas[this.indiceActual];
+  
+      // Carga el nuevo cubo y texto 3D
+      this.cargarAnimacion(this.preguntaActual);
+      this.add3DText();
     } else {
+      // Manejar el final del cuestionario si es necesario
       this.mostrarReiniciar = true;
       this.preguntaActual = null;
-
-      console.log('Gravedades por ámbito al final:', this.gravedadesPorAmbito);
     }
   }
 

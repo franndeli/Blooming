@@ -12,6 +12,24 @@ data-sidebar-position="fixed" data-header-position="fixed">
     <div class="container-fluid">
         <div class="container-fluid">
             <div class="card">
+            <!-- MODAL -->
+                <div class="modal fade" tabindex="-1" #modalDialog aria-hidden="true" aria-modal="true" style="display: none;">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header d-flex align-items-center">
+                                <h5 class="modal-title">Datos login Profesor</h5>
+                            </div>
+                            <div class="modal-body">
+                                <p><b>Email:</b> {{this.login}}</p>
+                                <p><b>Contraseña:</b> {{this.password}}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn bg-danger-subtle text-danger" data-bs-dismiss="modal" (click)="cerrar()"> Cerrar </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="card-body">
                     <h5 class="card-title fw-semibold mb-4">Profesores</h5>
                     <div class="card">

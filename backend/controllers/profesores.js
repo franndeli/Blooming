@@ -1,10 +1,12 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Clase = require('../models/clase');
+const nodemailer = require('nodemailer');
 const Centro = require('../models/centro');
 const Profesor = require('../models/profesor');
 const sequelize = require('../database/configdb');
 const hashPassword = require('../middleware/hashHelper');
+
 
 
 const getProfesores = async (req, res) => {
@@ -74,11 +76,13 @@ const getProfesores = async (req, res) => {
 const createProfesor = async (req, res) => {
     try {
         const { Email, ID_Centro } = req.body;
-
         const existProfesor = await Profesor.findOne({ where: { Email, ID_Centro } });
         if (existProfesor) {
             return res.status(400).json({ ok: false, msg: 'Ya existe esta profesor en el centro' });
         }
+
+        const datos = req.body;
+        sendMail(datos);
 
         const hashedPassword = hashPassword(req.body.Contraseña);
         req.body.Contraseña = hashedPassword;
@@ -97,6 +101,38 @@ const createProfesor = async (req, res) => {
         res.status(500).json({ ok: false, msg: 'Error al crear el profesor' });
     }
 };
+
+    const sendMail = (datos) => {
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'blooming.abp@gmail.com',
+                pass: 'fkpn mfrg bcal qrpb'
+            }
+        });
+    
+        const mailOptions = {
+            from: 'blooming.abp@gmail.com',
+            to: datos.Email,
+            subject: 'Bienvenido a la plataforma',
+            text: 
+            `Buenas ${datos.Nombre} ${datos.Apellidos},
+            Le informamos que se ha creado su cuenta en la plataforma de Blooming.
+            Sus datos de acceso son:
+            Email: ${datos.Email}
+            Contraseña: ${datos.Contraseña}`
+        };
+    
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error al enviar el email:', error);
+            } else {
+                console.log('Email enviado: ' + info.response);
+            }
+        });
+    
+    }
 
 
 const updateProfesor = async (req, res) => {

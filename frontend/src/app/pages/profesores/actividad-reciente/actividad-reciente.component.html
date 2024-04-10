@@ -17,6 +17,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                                 <tr>
                                                     <th class="border-bottom-0"><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
                                                     <th class="border-bottom-0"><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Clase</th>
+                                                    <th class="border-bottom-0"><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Ámbito</th>
                                                     <th class="border-bottom-0"><span><i class="ti ti-question-mark" style="font-size: 15px;"></i></span> Pregunta</th>
                                                     <th class="border-bottom-0"><span><i class="ti ti-check" style="font-size: 15px;"></i></span> Respuesta</th>
                                                     <th class="border-bottom-0"><span><i class="ti ti-alert-circle" style="font-size: 15px;"></i></span> Grado</th>
@@ -24,18 +25,26 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td class="border-bottom-0">Pepe</td>
-                                                    <td class="border-bottom-0">1ºA</td>
-                                                    <td class="border-bottom-0">¿Cómo te has sentido hoy?</td>
-                                                    <td class="border-bottom-0"> Alegre </td>
-                                                    <td class="border-bottom-0"> Bueno </td>
+                                                <tr *ngFor="let reciente of recientesData">
+                                                    <td class="border-bottom-0">{{reciente.Alumno.Nombre}} {{reciente.Alumno.Apellidos}}</td>
+                                                    <td class="border-bottom-0">{{reciente.Alumno.Clase.Nombre}}</td>
+                                                    <td class="border-bottom-0">{{reciente.Pregunta.Ambito.Nombre}}</td>
+                                                    <td class="border-bottom-0">{{reciente.Pregunta.TextoPregunta}}</td>
+                                                    <td class="border-bottom-0">{{reciente.Opcion.TextoOpcion}}</td>
+                                                    <td class="border-bottom-0" [ngSwitch]="reciente.Opcion.Gravedad">
+                                                        <span *ngSwitchCase="-2">Alarmante</span>
+                                                        <span *ngSwitchCase="0">Normal</span>
+                                                        <span *ngSwitchCase="1">Buena</span>
+                                                        <span *ngSwitchCase="2">Muy Buena</span>
+                                                    </td>
                                                     <td class="border-bottom-0">
-                                                    <a href="/profesores/ver-perfil-alumno" class="btn btn-primary"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</a>
-                                                </td>
+                                                        <a href="/profesores/ver-perfil-alumno" class="btn btn-primary"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</a>
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
+                                        <br>
+                                        <app-pagination (cambiarPagina)="cambiarPagina($event)" [texto]="true" [totalRegistros]="totalActividades" [registroActual]="posActual+1" (filasPagina)="cambiarFilasPagina($event)" [registroPag]="filPag"></app-pagination>
                                     </div>
                                 </div>
                             </div>

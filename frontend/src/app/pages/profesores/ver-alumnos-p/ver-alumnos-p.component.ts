@@ -47,7 +47,9 @@ export class VerAlumnosPComponent implements OnInit{
       this.claseID = this.claseService.getClaseID();
     }
     this.obtenerClase();
+    this.obtenerAlumnos(this.busqueda);
     this.obtenerTodosAlumnos();
+    this.obtenerUltimasRespuestas();
   }
 
   onChangeOption(event: any) {
@@ -105,8 +107,10 @@ export class VerAlumnosPComponent implements OnInit{
   
   
   obtenerClase(){
+    console.log('claseID', this.claseID)
     this.claseService.getClase(this.claseID).subscribe((res: any) => {
       this.claseData = res.clases[0];
+      
     })
   }
 
@@ -143,7 +147,7 @@ export class VerAlumnosPComponent implements OnInit{
     }, error => {
       console.error('Error al obtener los alumnos:', error);
     });
-    this.obtenerAlumnos(this.busqueda);
+    
   }
 
   obtenerUltimasRespuestas(){

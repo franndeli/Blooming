@@ -11,7 +11,6 @@ import * as echarts from 'echarts';
 })
 
 export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
-
   public alumnosData: any;
   public respuestasData: any;
   private sesiones: any;

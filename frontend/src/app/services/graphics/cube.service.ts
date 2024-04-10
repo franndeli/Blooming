@@ -134,24 +134,11 @@ export class CubeService {
   }
 
   resetCubeRotation(): void {
-    // Establece la rotación del cubo a 0 en todos los ejes
     this.cube.rotation.set(0, 0, 0);
-  
-    // Aquí puedes añadir cualquier rotación específica que desees.
-    // Por ejemplo, para que una cara específica mire hacia la cámara, puedes experimentar con valores como:
-    // this.cube.rotation.x = Math.PI / 4; // Rotar 45 grados en el eje X
-    // this.cube.rotation.y = Math.PI / 4; // Rotar 45 grados en el eje Y
   }
 
 
   private onMouseDown(event: MouseEvent): void {
-    /* if (event.button === 0) {
-      this.isDragging = true;
-      this.previousMousePosition.x = event.clientX;
-      this.previousMousePosition.y = event.clientY;
-      this.inertia.x = 0;
-      this.inertia.y = 0;
-    } */
     if (this.isDragging) return;
 
     // Convertir la posición del mouse a coordenadas normalizadas (-1 a 1)

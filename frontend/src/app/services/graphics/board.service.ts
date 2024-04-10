@@ -5,11 +5,19 @@ import * as THREE from 'three';
   providedIn: 'root'
 })
 export class BoardService {
+
+  private buttonPressedCallback: (() => void) | null = null;
+  buttonMesh!: any;
+
   boardGroup: THREE.Group;
   camera!: THREE.PerspectiveCamera;
   scene!: THREE.Scene;
   textureLoader = new THREE.TextureLoader();
   quadrantMeshes: THREE.Mesh[] = [];
+  quadrantHasImage: Map<THREE.Mesh, boolean> = new Map();
+  quadrantOptionMap: Map<THREE.Mesh, any> = new Map();
+
+  selectedOption: any | null = null;
 
   boardSize = 130;
   numQuadrants = 8; // 8 cuadrantes
@@ -31,11 +39,33 @@ export class BoardService {
   constructor() {
     this.boardGroup = new THREE.Group();
     this.boardGroup.rotation.x = Math.PI / -4.2; // Rotar todo el grupo del tablero 45 grados en X
-    document.addEventListener('mousedown', this.onMouseDown.bind(this), false);
-    document.addEventListener('mousemove', this.onMouseMove.bind(this), false);
-    document.addEventListener('mouseup', this.onMouseUp.bind(this), false);
   }
 
+  initMouseEvents(rendererElement: HTMLElement) {
+    rendererElement.addEventListener('mousedown', this.onMouseDown.bind(this), false);
+    window.addEventListener('mousemove', this.onMouseMove.bind(this), false);
+    window.addEventListener('mouseup', this.onMouseUp.bind(this), false);
+  }
+
+  removeMouseEvents(rendererElement: HTMLElement) {
+    rendererElement.removeEventListener('mousedown', this.onMouseDown.bind(this), false);
+    window.removeEventListener('mousemove', this.onMouseMove.bind(this), false);
+    window.removeEventListener('mouseup', this.onMouseUp.bind(this), false);
+  }
+
+  public setButtonPressedCallback(callback: () => void): void {
+    this.buttonPressedCallback = callback;
+  }
+
+  private onButtonPressed(): void {
+    if (this.buttonPressedCallback) {
+      this.buttonPressedCallback();
+    }
+  }
+
+  public setButtonMesh(mesh: THREE.Mesh): void {
+    this.buttonMesh = mesh;
+  }  
 
   public setCamera(camera: THREE.PerspectiveCamera): void {
     this.camera = camera;
@@ -79,6 +109,7 @@ export class BoardService {
 
     // Barajar los cuadrantes para asignar las imágenes de manera aleatoria
     let shuffledQuadrants = this.shuffleArray([...this.quadrantMeshes]);
+    this.quadrantMeshes.forEach(quadrant => this.quadrantOptionMap.set(quadrant, null)); // Inicializar todos los cuadrantes sin opción
 
     shuffledQuadrants.forEach((quadrant, index) => {
       if (index < images.length) {
@@ -90,6 +121,8 @@ export class BoardService {
         imgMesh.position.copy(quadrant.position);
         imgMesh.position.z = 0.1; // Para asegurarnos de que la imagen quede por encima del cuadrante
         this.boardGroup.add(imgMesh);
+
+        this.quadrantOptionMap.set(quadrant, preguntaActual.respuestas.opciones[index]);
       }
     });
   }
@@ -154,6 +187,14 @@ export class BoardService {
         this.offset = intersects[0].point.sub(this.selectedObject.position);
       }
     }
+
+    const intersects2 = this.raycaster.intersectObjects(this.scene.children);
+    for (let i = 0; i < intersects2.length; i++) {
+      if (intersects2[i].object === this.buttonMesh) {
+        this.onButtonPressed();
+        break;
+      }
+    }
   }
   
   onMouseMove(event: MouseEvent) {
@@ -192,17 +233,61 @@ export class BoardService {
     }
   }
   
-  checkCubePosition(cubePos: any) {
-    // Itera a través de los cuadrantes para determinar cuál contiene la posición del cubo
+  checkCubePosition(cubePos: THREE.Vector3) {
+    this.selectedOption = null; // Reiniciar el índice de la opción seleccionada
+
     for (let i = 0; i < this.quadrantMeshes.length; i++) {
       const quadrant = this.quadrantMeshes[i];
       const bounds = new THREE.Box3().setFromObject(quadrant);
-  
+
       if (bounds.containsPoint(cubePos)) {
-        console.log(`El cubo está sobre el cuadrante: ${i}`);
-        break; // Si encuentras el cuadrante, no necesitas revisar los demás
+          // Comprobar si este cuadrante tiene asociada una opción
+          this.selectedOption = this.quadrantOptionMap.get(quadrant);
+          if (this.selectedOption) {
+              //console.log(option);
+              break; // No necesitas seguir buscando una vez que encuentres la opción
+          }
       }
     }
   }
+
+  clearScene() {
+    // Primero, vamos a eliminar todos los cuadrantes del tablero.
+    this.quadrantMeshes.forEach((quadrantMesh) => {
+      if (quadrantMesh) {
+        this.scene.remove(quadrantMesh);
+        quadrantMesh.geometry.dispose();
+        if (Array.isArray(quadrantMesh.material)) {
+          quadrantMesh.material.forEach((mat) => mat.dispose());
+        } else {
+          (quadrantMesh.material as THREE.Material).dispose();
+        }
+      }
+    });
+    this.quadrantMeshes = []; // Limpiar el arreglo de cuadrantes
   
+    // A continuación, si hay un cubo móvil, lo eliminaremos de la misma manera.
+    if (this.movableCube) {
+      this.scene.remove(this.movableCube);
+      this.movableCube.geometry.dispose();
+      if (Array.isArray(this.movableCube.material)) {
+        this.movableCube.material.forEach((mat) => mat.dispose());
+      } else {
+        (this.movableCube.material as THREE.Material).dispose();
+      }
+      this.movableCube = undefined; // Limpiar la referencia al cubo móvil
+    }
+  
+    // También eliminamos cualquier imagen o material restante asociado a los cuadrantes.
+    this.quadrantOptionMap.forEach((option, quadrant) => {
+      // Asumiendo que cada 'option' podría tener una propiedad 'mesh' que es una imagen en el tablero.
+      if (option && option.mesh) {
+        this.scene.remove(option.mesh);
+        option.mesh.geometry.dispose();
+        (option.mesh.material as THREE.Material).dispose();
+      }
+    });
+    this.quadrantOptionMap.clear(); // Limpiar el mapa de opciones
+    this.selectedOption = undefined;
+  }
 }

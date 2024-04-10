@@ -111,7 +111,6 @@ export class PreguntaService {
 
     Object.entries(preguntasPorSeleccionar).forEach(([ambito, cantidad]) => {
         const id = ambitoToID[ambito];
-        console.log(cantidad);
         if (cantidad > 0) {
             requests.push(this.http.get<any[]>(`${this.basePath}/porAmbito?ID_Ambito=${id}&cantidad=${cantidad}`));
         }

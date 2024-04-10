@@ -8,6 +8,7 @@ import * as THREE from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import { CubeService } from '../../../services/graphics/cube.service';
+import { BoardService } from '../../../services/graphics/board.service';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 type Resultados = { [ambito: string]: number };
@@ -43,29 +44,23 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     private alumnoService: AlumnoService, 
     private sesionService: SesionService, 
     private respuestaService: RespuestaService,
-    private cubeService: CubeService
+    private cubeService: CubeService,
+    private boardService: BoardService
   ) {}
 
   ngOnInit() {
     this.cargarPreguntas();
     this.initializeScene();
-    this.cubeService.setButtonPressedCallback(this.handleButtonPress.bind(this));
+    //this.cubeService.setButtonPressedCallback(this.handleButtonPress.bind(this));
   }
 
   ngAfterViewInit() {
     this.rendererContainer.nativeElement.appendChild(this.renderer.domElement);
-    /*this.renderer.domElement.addEventListener('mousedown', this.onMouseDown.bind(this), false);
-    window.addEventListener('mousemove', this.onMouseMove.bind(this), false);
-    window.addEventListener('mouseup', this.onMouseUp.bind(this), false);*/
-    this.cubeService.initMouseEvents(this.rendererContainer.nativeElement);
+    //this.cubeService.initMouseEvents(this.rendererContainer.nativeElement);
   }
 
   ngOnDestroy() {
-    /*this.renderer.domElement.removeEventListener('mousedown', this.onMouseDown.bind(this), false);
-    window.removeEventListener('mousemove', this.onMouseMove.bind(this), false);
-    window.removeEventListener('mouseup', this.onMouseUp.bind(this), false);
-    this.renderer.domElement.remove();*/
-    this.cubeService.removeMouseEvents(this.rendererContainer.nativeElement);
+    //this.cubeService.removeMouseEvents(this.rendererContainer.nativeElement);
   }
 
   private handleButtonPress(): void {
@@ -82,8 +77,12 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     this.renderer.setClearColor(0xbfd1e5);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.camera.position.set(0, 0, 100);
-    this.cubeService.setCamera(this.camera);
-    this.cubeService.setScene(this.scene);
+
+    //this.cubeService.setCamera(this.camera);
+    //this.cubeService.setScene(this.scene);
+
+    this.boardService.setCamera(this.camera);
+    this.boardService.setScene(this.scene);
 
     // Agregar iluminación ambiental suave
     const ambientLight = new THREE.AmbientLight(0x404040, 1); // luz ambiental suave
@@ -134,7 +133,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   
       // Añadir el texto al botón
       this.buttonMesh.add(textMesh);
-      this.cubeService.setButtonMesh(this.buttonMesh);
+      //this.cubeService.setButtonMesh(this.buttonMesh);
     });
     
     this.buttonMesh.name = 'button'; // Establecer un nombre para el botón para detectarlo fácilmente
@@ -146,8 +145,8 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
 
   updateButtonVisibility() {
     if (this.cubeService.getisSelected()) {
-      // Configura la posición del botón en la escena para que sea visible
-      this.buttonMesh.position.set(0, -60, 0); // Coloca el botón donde lo necesites en la escena
+      // Posición del botón en la escena para que sea visible
+      this.buttonMesh.position.set(0, -60, 0);
     } else {
       // Oculta el botón moviéndolo fuera de la cámara
       this.buttonMesh.position.set(-1000, -1000, -1000);
@@ -184,7 +183,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
 
       // Ajustes para centrar el texto en la pantalla
       textMesh.position.x = -0.5 * textWidth;
-      textMesh.position.y = 2 * textHeight;
+      textMesh.position.y = 3 * textHeight;
       textMesh.position.z = 0;
 
       this.scene.add(textMesh);
@@ -192,10 +191,16 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   }
 
   cargarAnimacion(preguntaActual: any){
-    const cube = this.cubeService.configureCube(preguntaActual);
+    const board = this.boardService.initBoard(preguntaActual);
+    if(!this.scene.getObjectById(board.id)){
+      this.scene.add(board);
+    }
+
+    /*const cube = this.cubeService.configureCube(preguntaActual);
     if (!this.scene.getObjectById(cube.id)) {
       this.scene.add(cube);
-    }
+    }*/
+    
     this.animate = this.animate.bind(this);
     this.animate();
   }

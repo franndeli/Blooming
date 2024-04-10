@@ -8,7 +8,6 @@ export class CubeService {
   cube!: THREE.Mesh;
   camera!: THREE.PerspectiveCamera;
   scene!: THREE.Scene;
-  private highlightMesh!: THREE.Mesh;
   buttonMesh!: any;
 
   private buttonPressedCallback: (() => void) | null = null;
@@ -28,9 +27,7 @@ export class CubeService {
     y: 0
   };
 
-  constructor() {
-    this.initHighlightMesh();
-  }
+  constructor() {}
 
   public setButtonPressedCallback(callback: () => void): void {
     this.buttonPressedCallback = callback;
@@ -45,13 +42,6 @@ export class CubeService {
   public setButtonMesh(mesh: THREE.Mesh): void {
     this.buttonMesh = mesh;
   }  
-
-  private initHighlightMesh(): void {
-    // Inicialización del mesh de resaltado
-    const geometry = new THREE.PlaneGeometry(1, 1);
-    const material = new THREE.MeshBasicMaterial({ color: 0xffff00, side: THREE.DoubleSide, transparent: true, opacity: 0.5 });
-    this.highlightMesh = new THREE.Mesh(geometry, material);
-  }
 
   initMouseEvents(rendererElement: HTMLElement) {
     rendererElement.addEventListener('mousedown', this.onMouseDown.bind(this), false);

@@ -11,10 +11,31 @@ export class BoardService {
   textureLoader = new THREE.TextureLoader();
   quadrantMeshes: THREE.Mesh[] = [];
 
+  boardSize = 130;
+  numQuadrants = 8; // 8 cuadrantes
+  quadrantSize = this.boardSize / Math.sqrt(this.numQuadrants); 
+
+  //Movimiento
+  raycaster = new THREE.Raycaster();
+  mouse = new THREE.Vector2();
+  selectedObject?: THREE.Mesh;
+  isDragging = false;
+  movableCube?: THREE.Mesh;
+
+  movableCubeWidth = 15;
+  movableCubeHeight = 15;
+  movableCubeDepth = 5;
+
+  offset!: THREE.Vector3;
+
   constructor() {
     this.boardGroup = new THREE.Group();
     this.boardGroup.rotation.x = Math.PI / -4.2; // Rotar todo el grupo del tablero 45 grados en X
+    document.addEventListener('mousedown', this.onMouseDown.bind(this), false);
+    document.addEventListener('mousemove', this.onMouseMove.bind(this), false);
+    document.addEventListener('mouseup', this.onMouseUp.bind(this), false);
   }
+
 
   public setCamera(camera: THREE.PerspectiveCamera): void {
     this.camera = camera;
@@ -43,6 +64,9 @@ export class BoardService {
 
     this.placeImagesOnBoard(preguntaActual);
     this.adjustBoardPosition();
+
+    this.createMovableCube(quadrantSize);
+
     return this.boardGroup;
   }
 
@@ -100,6 +124,85 @@ export class BoardService {
     const center = box.getCenter(new THREE.Vector3());
     this.boardGroup.position.x += (this.boardGroup.position.x - center.x);
     this.boardGroup.position.y += (this.boardGroup.position.y - center.y + 10);
+  }
+
+  //MOVIMIENTO ---------------------------------------------
+  createMovableCube(quadrantSize: number) {
+    // Crear un rectángulo con las dimensiones especificadas
+    const geometry = new THREE.BoxGeometry(this.movableCubeWidth, this.movableCubeHeight, this.movableCubeDepth);
+    const material = new THREE.MeshBasicMaterial({ color: 0xFF5733 });
+    this.movableCube = new THREE.Mesh(geometry, material);
+  
+    // Posicion inicial en el eje y para que esté en la parte superior del cuadrante
+    this.movableCube.position.y = this.quadrantSize / 2 + this.movableCubeHeight / 2;
+    this.scene.add(this.movableCube);
+  }
+  
+
+  onMouseDown(event: MouseEvent) {
+    // Calcula la posición del ratón en coordenadas normalizadas (-1 a +1)
+    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      
+    this.raycaster.setFromCamera(this.mouse, this.camera);
+  
+    if (this.movableCube) {
+      const intersects = this.raycaster.intersectObject(this.movableCube);
+      if (intersects.length > 0) {
+        this.selectedObject = intersects[0].object as THREE.Mesh;
+        this.isDragging = true;
+        this.offset = intersects[0].point.sub(this.selectedObject.position);
+      }
+    }
+  }
+  
+  onMouseMove(event: MouseEvent) {
+    if (this.isDragging && this.selectedObject) {
+      // Actualiza la posición del ratón
+      this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  
+      // Actualiza el raycaster
+      this.raycaster.setFromCamera(this.mouse, this.camera);
+  
+      // Crea un plano paralelo al tablero y calcula la intersección
+      const planeNormal = new THREE.Vector3(0, 0, 1).applyQuaternion(this.boardGroup.quaternion);
+      const boardPlane = new THREE.Plane().setFromNormalAndCoplanarPoint(planeNormal, this.boardGroup.position);
+      const intersection = new THREE.Vector3();
+      this.raycaster.ray.intersectPlane(boardPlane, intersection);
+  
+      // Mueve el objeto seleccionado a la intersección, ajustado por el offset inicial
+      this.selectedObject.position.copy(intersection.sub(this.offset));
+  
+      // Restringe el movimiento del objeto a los límites del tablero
+      this.selectedObject.position.clamp(
+        new THREE.Vector3(-this.boardSize, this.selectedObject.position.y, -this.boardSize),
+        new THREE.Vector3(this.boardSize, this.selectedObject.position.y, this.boardSize)
+      );
+
+      this.checkCubePosition(this.selectedObject.position);
+    }
+  }
+  
+  onMouseUp(event: MouseEvent) {
+    // Deja de arrastrar el objeto
+    if (this.isDragging) {
+      this.isDragging = false;
+      this.selectedObject = undefined;
+    }
+  }
+  
+  checkCubePosition(cubePos: any) {
+    // Itera a través de los cuadrantes para determinar cuál contiene la posición del cubo
+    for (let i = 0; i < this.quadrantMeshes.length; i++) {
+      const quadrant = this.quadrantMeshes[i];
+      const bounds = new THREE.Box3().setFromObject(quadrant);
+  
+      if (bounds.containsPoint(cubePos)) {
+        console.log(`El cubo está sobre el cuadrante: ${i}`);
+        break; // Si encuentras el cuadrante, no necesitas revisar los demás
+      }
+    }
   }
   
 }

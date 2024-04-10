@@ -157,6 +157,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   animate() {
     requestAnimationFrame(this.animate);
     this.updateButtonVisibility();
+
     this.renderer.render(this.scene, this.camera);
   }
 

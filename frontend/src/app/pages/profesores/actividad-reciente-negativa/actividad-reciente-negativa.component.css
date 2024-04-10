@@ -1,11 +1,15 @@
 #chart2 {
-    width: 540px; /* Ancho deseado */
-    height: 400px;
+    width: 800px; /* Ancho deseado */
+    height: 500px;
+    margin: 0 auto;
 }
 .body-wrapper > .container-fluid{
-    max-width: 1500px;
+    max-width: 1600px;
     margin: 0 auto;
     padding: 24px;
     -webkit-transition: 0.2s ease-in;
     transition: 0.2s ease-in;
-  }
+}
+.card-body > .h5{
+    margin-bottom: 0px;
+}

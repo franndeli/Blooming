@@ -83,13 +83,17 @@ export class VerAlumnosPComponent implements OnInit{
     if(this.totalAlumnos2 !== 0){
       let i: number;
       for(i = 0; i < this.totalAlumnos2 ; i++ ){
-        console.log(this.alumnosTodosData[i]);
+        //console.log(this.alumnosTodosData[i]);
         if(this.alumnosTodosData[i].ID_Clase === this.claseID){
           if(this.alumnosTodosData[i] && this.alumnosTodosData[i].Estado){
             if(this.alumnosTodosData[i].Estado === 'Bueno'){
               this.contBueno++; 
             } else if (this.alumnosTodosData[i].Estado === 'Malo') {
               this.contMalo++;
+            } else if (this.alumnosTodosData[i].Estado === 'Muy Malo') {
+              this.contMuyMalo++;
+            } else if (this.alumnosTodosData[i].Estado === 'Muy Bueno') {
+              this.contMuyBueno++;
             } else {
               this.contNormal++;
             }
@@ -97,7 +101,9 @@ export class VerAlumnosPComponent implements OnInit{
         }
       }
       console.log('bueno' , this.contBueno);
+      console.log('muy bueno' , this.contMuyBueno);
       console.log('normal', this.contNormal);
+      console.log('muy malo', this.contMuyMalo);
       console.log('malo', this.contMalo);
     }
     this.dibujarGrafica();
@@ -136,9 +142,9 @@ export class VerAlumnosPComponent implements OnInit{
   obtenerTodosAlumnos(){
     this.alumnoService.getAlumnos().subscribe((res: any) => {
       this.alumnosTodosData = res.alumnos;
-      console.log(this.alumnosTodosData);
+      //console.log(this.alumnosTodosData);
       this.totalAlumnos2 = this.alumnosTodosData.length;
-      console.log('longitud', this.totalAlumnos2);
+      //console.log('longitud', this.totalAlumnos2);
       this.contarEstados();
     }, error => {
       console.error('Error al obtener los alumnos:', error);
@@ -271,11 +277,6 @@ export class VerAlumnosPComponent implements OnInit{
           }
         }
       }
-      console.log('bueno' , this.contBueno);
-      console.log('muy bueno' , this.contMuyBueno);
-      console.log('normal', this.contNormal);
-      console.log('muy malo', this.contMuyMalo);
-      console.log('malo', this.contMalo);
     }
     this.dibujarGrafica();
   }

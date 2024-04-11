@@ -39,7 +39,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
 
   objectKeys = Object.keys;
 
-  EL_NUMERO: number = 1;
+  EL_NUMERO: number = 0;
 
   constructor(
     private preguntaService: PreguntaService, 
@@ -54,12 +54,12 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     this.obtenerNumeroAleatorio();
     this.cargarPreguntas();
     this.initializeScene();
-    if(this.EL_NUMERO === 1) {
+    /*if(this.EL_NUMERO === 1) {
       this.cubeService.setButtonPressedCallback(this.handleButtonPress.bind(this));
-    }
-    if(this.EL_NUMERO === 2) {
+    //}
+    //if(this.EL_NUMERO === 2) {
       this.boardService.setButtonPressedCallback(this.handleButtonPress.bind(this));
-    }
+    }*/
   }
 
   ngAfterViewInit() {
@@ -68,8 +68,6 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   }
 
   ngOnDestroy() {
-    this.cubeService.removeMouseEvents(this.rendererContainer.nativeElement);
-    this.boardService.removeMouseEvents(this.rendererContainer.nativeElement);
   }
 
   private handleButtonPress(): void {
@@ -78,12 +76,13 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     let selectedOption = undefined;
 
     if(this.EL_NUMERO === 1) {
-      selectedOption = this.cubeService.getSelectedOption();
+      console.log("Opción pulsada:", this.cubeService.selectedOption);
+      selectedOption = this.cubeService.selectedOption;
     }
     
     if(this.EL_NUMERO === 2) {
       if (this.boardService.selectedOption !== null) {
-        console.log("Opción seleccionada:", this.boardService.selectedOption);
+        console.log("Opción pulsada:", this.boardService.selectedOption);
         selectedOption = this.boardService.selectedOption
       }
     }
@@ -100,16 +99,6 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     this.renderer.setClearColor(0xbfd1e5);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.camera.position.set(0, 0, 100);
-
-    if(this.EL_NUMERO === 1) {
-      this.cubeService.setCamera(this.camera);
-      this.cubeService.setScene(this.scene);
-    }
-
-    if(this.EL_NUMERO === 2) {
-      this.boardService.setCamera(this.camera);
-      this.boardService.setScene(this.scene);
-    }
 
     // Agregar iluminación ambiental suave
     const ambientLight = new THREE.AmbientLight(0x404040, 1); // luz ambiental suave
@@ -160,13 +149,6 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   
       // Añadir el texto al botón
       this.buttonMesh.add(textMesh);
-      
-      if(this.EL_NUMERO === 1){
-        this.cubeService.setButtonMesh(this.buttonMesh);
-      }
-      if(this.EL_NUMERO ===2){
-        this.boardService.setButtonMesh(this.buttonMesh);
-      }
     });
     
     this.buttonMesh.name = 'button'; // Establecer un nombre para el botón para detectarlo fácilmente
@@ -237,7 +219,12 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   }
 
   cargarAnimacion(preguntaActual: any){
+    console.log(this.scene);
     if(this.EL_NUMERO === 1) {
+      this.cubeService.setButtonPressedCallback(this.handleButtonPress.bind(this));
+      this.cubeService.setCamera(this.camera);
+      this.cubeService.setScene(this.scene);
+      this.cubeService.setButtonMesh(this.buttonMesh);
       this.cubeService.initMouseEvents(this.rendererContainer.nativeElement);
       const cube = this.cubeService.configureCube(preguntaActual);
       if (!this.scene.getObjectById(cube.id)) {
@@ -246,6 +233,10 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     }
 
     if(this.EL_NUMERO === 2) {
+      this.boardService.setButtonPressedCallback(this.handleButtonPress.bind(this));
+      this.boardService.setCamera(this.camera);
+      this.boardService.setScene(this.scene);
+      this.boardService.setButtonMesh(this.buttonMesh);
       this.boardService.initMouseEvents(this.rendererContainer.nativeElement);
       const board = this.boardService.initBoard(preguntaActual);
       if(!this.scene.getObjectById(board.id)){
@@ -278,40 +269,21 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   }
 
   clearScene() {
-    if(this.EL_NUMERO === 1) {
-      // Remover el cubo, el texto y el botón de la escena
-      if (this.cubeService.cube) {
-        this.cubeService.removeMouseEvents(this.rendererContainer.nativeElement);
-        this.scene.remove(this.cubeService.cube);
-        this.cubeService.cube.geometry.dispose();
-        (this.cubeService.cube.material as THREE.Material[]).forEach(mat => mat.dispose());
-      }
-    
-      // Encuentra y elimina el texto 3D anterior si existe
-      const textMesh = this.scene.getObjectByName('textMesh');
-      console.log(textMesh);
-      if (textMesh) {
-        this.scene.remove(textMesh);
-        (textMesh as THREE.Mesh).geometry.dispose();
-        ((textMesh as THREE.Mesh).material as THREE.Material).dispose();
-      }
-    
-      // Oculta el botón
-      this.cubeService.setisSelected(false);
-      this.cubeService.setnullSelectedOption();
+    if(this.EL_NUMERO === 1){
+      this.cubeService.removeMouseEvents(this.rendererContainer.nativeElement);
+      this.cubeService.clearScene();
+    }
+    if(this.EL_NUMERO === 2){
+      this.boardService.removeMouseEvents(this.rendererContainer.nativeElement);
+      this.boardService.clearScene();
     }
 
-    if(this.EL_NUMERO === 2) {
-      this.boardService.clearScene();
-
-      // Encuentra y elimina el texto 3D anterior si existe
-      const textMesh = this.scene.getObjectByName('textMesh');
-      console.log(textMesh);
-      if (textMesh) {
-        this.scene.remove(textMesh);
-        (textMesh as THREE.Mesh).geometry.dispose();
-        ((textMesh as THREE.Mesh).material as THREE.Material).dispose();
-      }
+    // Ejemplo de eliminación manual de un objeto agregado directamente a la escena
+    const textMesh = this.scene.getObjectByName('textMesh');
+    if (textMesh) {
+      this.scene.remove(textMesh);
+      (textMesh as THREE.Mesh).geometry.dispose();
+      ((textMesh as THREE.Mesh).material as THREE.Material).dispose();
     }
   }
 
@@ -370,6 +342,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       this.preguntaActual = this.preguntas[this.indiceActual];
   
       this.obtenerNumeroAleatorio();
+      console.log(this.EL_NUMERO);
       this.cargarAnimacion(this.preguntaActual);
       this.add3DText();
     } else {
@@ -508,5 +481,6 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
 
   obtenerNumeroAleatorio() {
     this.EL_NUMERO = Math.floor(Math.random() * 2) + 1;
+    //this.EL_NUMERO = 2;
   }
 }

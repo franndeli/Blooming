@@ -5,7 +5,7 @@ import * as THREE from 'three';
   providedIn: 'root'
 })
 export class CubeService {
-  cube!: THREE.Mesh;
+  cube!: THREE.Mesh | undefined;
   camera!: THREE.PerspectiveCamera;
   scene!: THREE.Scene;
   buttonMesh!: any;
@@ -13,7 +13,7 @@ export class CubeService {
   private buttonPressedCallback: (() => void) | null = null;
 
   private optionsMap: Map<number, any> = new Map();
-  private selectedOption: any = null;
+  selectedOption: any = null;
 
   isSelected: boolean = false;
   selectedFaceIndex: number | null = null;
@@ -78,6 +78,7 @@ export class CubeService {
 
   createCubeMaterials(preguntaActual: any) {
     const textureLoader = new THREE.TextureLoader();
+    this.optionsMap = new Map();
   
     // Primero, mezclar un arreglo de índices de caras para asegurar una asignación aleatoria
     let faceIndices = [0, 1, 2, 3, 4, 5];
@@ -134,12 +135,12 @@ export class CubeService {
   }
 
   resetCubeRotation(): void {
-    this.cube.rotation.set(0, 0, 0);
+    this.cube!.rotation.set(0, 0, 0);
   }
 
 
   private onMouseDown(event: MouseEvent): void {
-    if (this.isDragging) return;
+    if (this.isDragging || !this.cube || !this.camera) return;
 
     // Convertir la posición del mouse a coordenadas normalizadas (-1 a 1)
     const mouse = new THREE.Vector2(
@@ -151,7 +152,7 @@ export class CubeService {
     const raycaster = new THREE.Raycaster();
     raycaster.setFromCamera(mouse, this.camera);
 
-    const intersects = raycaster.intersectObject(this.cube, true);
+    const intersects = raycaster.intersectObject(this.cube!, true);
     if (intersects.length > 0) {
       this.selectFace(intersects[0]);
       this.isDragging = false;
@@ -175,10 +176,10 @@ export class CubeService {
   private selectFace(intersect: THREE.Intersection): void {
     if (intersect.faceIndex !== undefined) {
       const faceMaterialIndex = Math.floor(intersect.faceIndex / 2); // Cada cara tiene 2 triángulos
-      const selectedMaterial = (this.cube.material as THREE.MeshBasicMaterial[])[faceMaterialIndex];
+      const selectedMaterial = (this.cube!.material as THREE.MeshBasicMaterial[])[faceMaterialIndex];
       
       if (this.selectedFaceIndex !== null && selectedMaterial.map) {
-        const prevMaterial = (this.cube.material as THREE.MeshBasicMaterial[])[this.selectedFaceIndex];
+        const prevMaterial = (this.cube!.material as THREE.MeshBasicMaterial[])[this.selectedFaceIndex];
         if (prevMaterial.map) { // Solo restablecer si había una imagen
           prevMaterial.opacity = 1;
           prevMaterial.transparent = false;
@@ -211,8 +212,8 @@ export class CubeService {
 
       const rotationSpeed = 0.007;
 
-      this.cube.rotation.y += deltaX * rotationSpeed;
-      this.cube.rotation.x += deltaY * rotationSpeed;
+      this.cube!.rotation.y += deltaX * rotationSpeed;
+      this.cube!.rotation.x += deltaY * rotationSpeed;
 
       this.previousMousePosition.x = event.clientX;
       this.previousMousePosition.y = event.clientY;
@@ -241,5 +242,35 @@ export class CubeService {
     this.selectedOption = null;
   }
 
+  clearScene(){
+    if (this.cube) {
+      // Limpiar geometría
+      this.cube.geometry.dispose();
+  
+      // Limpiar materiales y texturas
+      if (Array.isArray(this.cube.material)) {
+        (this.cube.material as THREE.Material[]).forEach(material => {
+          material.dispose(); // Limpiar material
+        });
+      } else {
+        this.cube.material.dispose(); // Limpiar material si no es un array
+      }
+  
+      // Remover el cubo de la escena
+      this.scene.remove(this.cube);
+  
+      // Eliminar la referencia al cubo
+      this.cube = undefined;
+    }
+  
+    // Limpiar el mapa de opciones
+    this.optionsMap.clear();
+  
+    // Restablecer otras propiedades relevantes
+    this.selectedOption = null;
+    this.isSelected = false;
+    this.selectedFaceIndex = null;
+    this.isDragging = false;
+  }
 }
 

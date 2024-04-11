@@ -8,6 +8,7 @@ export class BoardService {
 
   private buttonPressedCallback: (() => void) | null = null;
   buttonMesh!: any;
+  floatingHeight = -5;
 
   boardGroup: THREE.Group;
   camera!: THREE.PerspectiveCamera;
@@ -38,7 +39,7 @@ export class BoardService {
 
   constructor() {
     this.boardGroup = new THREE.Group();
-    this.boardGroup.rotation.x = Math.PI / -4.2; // Rotar todo el grupo del tablero 45 grados en X
+    this.boardGroup.rotation.x = Math.PI / -5; // Rotar todo el grupo del tablero 45 grados en X
   }
 
   initMouseEvents(rendererElement: HTMLElement) {
@@ -95,8 +96,10 @@ export class BoardService {
     this.placeImagesOnBoard(preguntaActual);
     this.adjustBoardPosition();
 
-    this.createMovableCube(quadrantSize);
+    this.createMovableCube();
 
+    console.log("Donde aparece el cubo", this.movableCube?.position);
+    
     return this.boardGroup;
   }
 
@@ -106,6 +109,7 @@ export class BoardService {
     const quadrantSize = boardSize / Math.sqrt(numQuadrants); // Calcular el tamaño de cada cuadrante
 
     const images = preguntaActual.respuestas.opciones;
+    this.quadrantOptionMap = new Map();
 
     // Barajar los cuadrantes para asignar las imágenes de manera aleatoria
     let shuffledQuadrants = this.shuffleArray([...this.quadrantMeshes]);
@@ -152,24 +156,52 @@ export class BoardService {
   }
 
   adjustBoardPosition(): void {
+    this.boardGroup.position.y = 0;
+    this.boardGroup.position.x = 0;
     // Asegúrate de llamar a este método después de configurar la cámara y la escena
     const box = new THREE.Box3().setFromObject(this.boardGroup);
     const center = box.getCenter(new THREE.Vector3());
+    this.boardGroup.position.y
     this.boardGroup.position.x += (this.boardGroup.position.x - center.x);
     this.boardGroup.position.y += (this.boardGroup.position.y - center.y + 10);
   }
 
   //MOVIMIENTO ---------------------------------------------
-  createMovableCube(quadrantSize: number) {
-    // Crear un rectángulo con las dimensiones especificadas
+  createMovableCube() {
+    // Asegúrate de que la escena está definida y de que hay cuadrantes sin imágenes
+    if (!this.scene || this.quadrantMeshes.length === 0) return;
+  
+    // Identifica cuadrantes vacíos (sin opción asignada o con opción null)
+    let emptyQuadrants = this.quadrantMeshes.filter(q => !this.quadrantOptionMap.get(q));
+  
+    if (emptyQuadrants.length === 0) {
+        console.warn("No hay cuadrantes vacíos disponibles.");
+        return; // Termina si no hay cuadrantes vacíos
+    }
+  
+    // Selecciona un cuadrante vacío al azar
+    let randomIndex = Math.floor(Math.random() * emptyQuadrants.length);
+    let chosenQuadrant = emptyQuadrants[randomIndex];
+    console.log("Donde debe aparecer el cubo", chosenQuadrant.position);
+    console.log(emptyQuadrants)
+
+    // Crea el cubo móvil
     const geometry = new THREE.BoxGeometry(this.movableCubeWidth, this.movableCubeHeight, this.movableCubeDepth);
     const material = new THREE.MeshBasicMaterial({ color: 0xFF5733 });
     this.movableCube = new THREE.Mesh(geometry, material);
   
-    // Posicion inicial en el eje y para que esté en la parte superior del cuadrante
-    this.movableCube.position.y = this.quadrantSize / 2 + this.movableCubeHeight / 2;
+    // Ajusta la posición del cubo para centrarlo en el cuadrante elegido
+    this.movableCube.position.set(
+      chosenQuadrant.position.x,
+      chosenQuadrant.position.y + 20,
+      chosenQuadrant.position.z // Asegura que el cubo esté ligeramente por encima del tablero
+    );
+
+    // Añade el cubo a la escena
     this.scene.add(this.movableCube);
   }
+
+  
   
 
   onMouseDown(event: MouseEvent) {
@@ -184,7 +216,9 @@ export class BoardService {
       if (intersects.length > 0) {
         this.selectedObject = intersects[0].object as THREE.Mesh;
         this.isDragging = true;
-        this.offset = intersects[0].point.sub(this.selectedObject.position);
+        // Aquí ajustamos el offset para que su componente y sea siempre el mismo, ignorando la posición de clic en y
+        // Manteniendo la altura inicial del cubo constante respecto al "suelo" del tablero
+        this.offset = new THREE.Vector3(0, this.floatingHeight, 0); // Asumiendo que `floatingHeight` es la distancia deseada desde el "suelo"
       }
     }
 
@@ -203,27 +237,39 @@ export class BoardService {
       this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
   
-      // Actualiza el raycaster
+      // Actualiza el raycaster con la nueva posición del ratón
       this.raycaster.setFromCamera(this.mouse, this.camera);
   
-      // Crea un plano paralelo al tablero y calcula la intersección
+      // Crea un plano que simula la superficie del tablero considerando su rotación
       const planeNormal = new THREE.Vector3(0, 0, 1).applyQuaternion(this.boardGroup.quaternion);
       const boardPlane = new THREE.Plane().setFromNormalAndCoplanarPoint(planeNormal, this.boardGroup.position);
       const intersection = new THREE.Vector3();
       this.raycaster.ray.intersectPlane(boardPlane, intersection);
   
-      // Mueve el objeto seleccionado a la intersección, ajustado por el offset inicial
-      this.selectedObject.position.copy(intersection.sub(this.offset));
+      // Calcula la posición ajustada teniendo en cuenta el desplazamiento y la rotación del tablero
+      const adjustedPosition = intersection.sub(this.offset);
+      const boardRotationInverse = new THREE.Quaternion().copy(this.boardGroup.quaternion).invert();
+      adjustedPosition.applyQuaternion(boardRotationInverse);
   
-      // Restringe el movimiento del objeto a los límites del tablero
-      this.selectedObject.position.clamp(
-        new THREE.Vector3(-this.boardSize, this.selectedObject.position.y, -this.boardSize),
-        new THREE.Vector3(this.boardSize, this.selectedObject.position.y, this.boardSize)
-      );
+      // Asegura que el cubo se mantenga dentro de los límites del tablero
+      const halfBoardSize = this.boardSize / 2;
+      //adjustedPosition.x = Math.max(-halfBoardSize, Math.min(halfBoardSize, adjustedPosition.x));
+      //adjustedPosition.y = Math.max(-halfBoardSize, Math.min(halfBoardSize, adjustedPosition.y));
 
-      this.checkCubePosition(this.selectedObject.position);
+      adjustedPosition.x = Math.max(-halfBoardSize - 19, Math.min(halfBoardSize + 19, adjustedPosition.x));
+      adjustedPosition.y = Math.max(-halfBoardSize + 28, Math.min(halfBoardSize - 19, adjustedPosition.y));
+  
+      // Aplica la rotación del tablero para mantener la consistencia del movimiento con la inclinación
+      adjustedPosition.applyQuaternion(this.boardGroup.quaternion);
+  
+      // Actualiza la posición del objeto seleccionado
+      this.selectedObject.position.copy(adjustedPosition);
+      if (this.selectedObject) {
+        this.checkCubePosition(this.selectedObject.position);
+      }
     }
   }
+
   
   onMouseUp(event: MouseEvent) {
     // Deja de arrastrar el objeto
@@ -234,60 +280,84 @@ export class BoardService {
   }
   
   checkCubePosition(cubePos: THREE.Vector3) {
+    console.log(this.movableCube?.position);
+    // Reinicia la selección de opción y el color de todos los cuadrantes
+    this.quadrantMeshes.forEach(quadrant => {
+      const material = quadrant.material as THREE.MeshBasicMaterial;
+      material.color.set(0xffffff); // Color original del cuadrante
+    });
+    
     this.selectedOption = null; // Reiniciar el índice de la opción seleccionada
-
+  
     for (let i = 0; i < this.quadrantMeshes.length; i++) {
       const quadrant = this.quadrantMeshes[i];
       const bounds = new THREE.Box3().setFromObject(quadrant);
-
+  
       if (bounds.containsPoint(cubePos)) {
-          // Comprobar si este cuadrante tiene asociada una opción
-          this.selectedOption = this.quadrantOptionMap.get(quadrant);
-          if (this.selectedOption) {
-              //console.log(option);
-              break; // No necesitas seguir buscando una vez que encuentres la opción
-          }
+        // Comprueba si este cuadrante tiene asociada una opción (imagen)
+        if (this.quadrantOptionMap.get(quadrant)) {
+          // Cambia el color del cuadrante porque tiene una imagen y el cubo está sobre él
+          const material = quadrant.material as THREE.MeshBasicMaterial;
+          material.color.set(0xff0000); // Ejemplo: Cambia el color a rojo
+        }
+        
+        this.selectedOption = this.quadrantOptionMap.get(quadrant);
+        break; // Asegura que el cubo solo interactúe con el primer cuadrante que encuentre
       }
     }
   }
 
   clearScene() {
-    // Primero, vamos a eliminar todos los cuadrantes del tablero.
-    this.quadrantMeshes.forEach((quadrantMesh) => {
+    // Eliminar cuadrantes del tablero y limpiar sus recursos
+    this.quadrantMeshes.forEach(quadrantMesh => {
       if (quadrantMesh) {
-        this.scene.remove(quadrantMesh);
         quadrantMesh.geometry.dispose();
         if (Array.isArray(quadrantMesh.material)) {
-          quadrantMesh.material.forEach((mat) => mat.dispose());
+          quadrantMesh.material.forEach(mat => mat.dispose());
         } else {
           (quadrantMesh.material as THREE.Material).dispose();
         }
+        this.scene.remove(quadrantMesh); // Asegúrate de remover también el mesh de la escena
       }
     });
     this.quadrantMeshes = []; // Limpiar el arreglo de cuadrantes
   
-    // A continuación, si hay un cubo móvil, lo eliminaremos de la misma manera.
+    // Limpiar el cubo móvil, si existe
     if (this.movableCube) {
-      this.scene.remove(this.movableCube);
+      this.scene.remove(this.movableCube); // Remover el cubo de la escena
       this.movableCube.geometry.dispose();
-      if (Array.isArray(this.movableCube.material)) {
-        this.movableCube.material.forEach((mat) => mat.dispose());
-      } else {
-        (this.movableCube.material as THREE.Material).dispose();
-      }
-      this.movableCube = undefined; // Limpiar la referencia al cubo móvil
+      (this.movableCube.material as THREE.Material).dispose();
+      this.movableCube = undefined;
     }
   
-    // También eliminamos cualquier imagen o material restante asociado a los cuadrantes.
+    // Limpiar cualquier otra imagen o material asociado a los cuadrantes
     this.quadrantOptionMap.forEach((option, quadrant) => {
-      // Asumiendo que cada 'option' podría tener una propiedad 'mesh' que es una imagen en el tablero.
       if (option && option.mesh) {
-        this.scene.remove(option.mesh);
+        this.scene.remove(option.mesh); // Asegúrate de remover el mesh de la escena
         option.mesh.geometry.dispose();
         (option.mesh.material as THREE.Material).dispose();
       }
     });
     this.quadrantOptionMap.clear(); // Limpiar el mapa de opciones
-    this.selectedOption = undefined;
+  
+    // Eliminar todos los objetos del grupo del tablero y limpiar el grupo en sí
+    while (this.boardGroup.children.length > 0) {
+      let child = this.boardGroup.children[0];
+      if ((child as THREE.Mesh).geometry) {
+        (child as THREE.Mesh).geometry.dispose();
+      }
+      if ((child as THREE.Mesh).material) {
+        const material = (child as THREE.Mesh).material;
+        if (Array.isArray(material)) {
+          material.forEach(mat => mat.dispose());
+        } else {
+          (material as THREE.Material).dispose();
+        }
+      }
+      this.boardGroup.remove(child);
+    }
+
+    this.scene.remove(this.boardGroup); // No olvides remover el grupo de la escena
   }
+  
 }

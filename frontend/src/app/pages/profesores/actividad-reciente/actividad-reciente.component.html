@@ -38,7 +38,8 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                                         <span *ngSwitchCase="2">Muy Buena</span>
                                                     </td>
                                                     <td class="border-bottom-0">
-                                                        <a href="/profesores/ver-perfil-alumno" class="btn btn-primary"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</a>
+                                                        <button class="btn btn-primary" (click)="verPerfil(reciente.ID_Alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button>
+                                                        <!-- <a href="/profesores/ver-perfil-alumno" class="btn btn-primary"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</a> -->
                                                     </td>
                                                 </tr>
                                             </tbody>

@@ -20,8 +20,8 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                 <th class="border-bottom-0"></th>
                             </tr>
                         </thead>
-                        <tbody *ngFor="let alumno of alumnosData">
-                          <tr>
+                        <tbody>
+                          <tr *ngFor="let alumno of alumnosData">
                               <td class="border-bottom-0">{{alumno.Nombre}} {{alumno.Apellidos}}</td>
                               <td class="border-bottom-0">
                                   <div class="d-flex align-items-center gap-2">
@@ -29,7 +29,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                   </div>
                               </td>
                               <td class="border-bottom-0">
-                                  <button class="btn btn-primary" (click)="verPerfil(alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button>
+                                  <button class="btn btn-primary" (click)="verPerfil(alumno.ID_Alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button>
                               </td>
                           </tr>
                         </tbody>
@@ -91,21 +91,23 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                         </tr>
                                     </thead>
                                     <tbody *ngFor="let respuesta of respuestasData">
-                                        <tr>
-                                            <td class="border-bottom-0">{{respuesta.Alumno.Nombre}} {{respuesta.Alumno.Apellidos}}</td>
-                                            <td class="border-bottom-0">{{respuesta.Pregunta.Ambito.Nombre}}</td>
-                                            <td class="border-bottom-0">{{respuesta.Pregunta.TextoPregunta}}</td>
-                                            <td class="border-bottom-0">{{respuesta.Opcion.TextoOpcion}}</td>
-                                            <td class="border-bottom-0" [ngSwitch]="respuesta.Opcion.Gravedad">
-                                              <span *ngSwitchCase="-2">Alarmante</span>
-                                              <span *ngSwitchCase="0">Normal</span>
-                                              <span *ngSwitchCase="1">Buena</span>
-                                              <span *ngSwitchCase="2">Muy Buena</span>
-                                            </td>
-                                            <td class="border-bottom-0">
-                                            <a href="/profesores/ver-perfil-alumno" class="btn btn-primary"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</a>
+                                      <tr>
+                                        <td class="border-bottom-0">{{respuesta.Alumno.Nombre}} {{respuesta.Alumno.Apellidos}}</td>
+                                        <td class="border-bottom-0">{{respuesta.Pregunta.Ambito.Nombre}}</td>
+                                        <td class="border-bottom-0">{{respuesta.Pregunta.TextoPregunta}}</td>
+                                        <td class="border-bottom-0">{{respuesta.Opcion.TextoOpcion}}</td>
+                                        <td class="border-bottom-0" [ngSwitch]="respuesta.Opcion.Gravedad">
+                                          <span *ngSwitchCase="-2">Alarmante</span>
+                                          <span *ngSwitchCase="0">Normal</span>
+                                          <span *ngSwitchCase="1">Buena</span>
+                                          <span *ngSwitchCase="2">Muy Buena</span>
                                         </td>
-                                        </tr>
+                                        <td class="border-bottom-0">
+                                          <button class="btn btn-primary" (click)="verPerfil(respuesta.ID_Alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button>
+                                              <!-- <a href="/profesores/ver-perfil-alumno" class="btn btn-primary"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</a> -->
+                                              <!-- <button class="btn btn-primary" (click)="verPerfil(respuesta)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button> -->
+                                        </td>
+                                      </tr>
                                     </tbody>
                                 </table>
                             </div>

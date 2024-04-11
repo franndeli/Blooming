@@ -78,23 +78,34 @@ const getRespuestas = async (req, res) => {
             order: [['FechaRespuesta', 'DESC']]
         });
 
-        let countOptions = { where: queryOptions };
+        let countOptions = { where: queryOptions, include: [] };
 
         if (queryParams['ID_Centro'] !== undefined) {
-            countOptions.include = [{
+            countOptions.include.push({
                 model: Alumno,
                 attributes: [],
                 where: { ID_Centro: queryParams['ID_Centro'] }
-            }];
-        } else if (queryParams['ID_Clase'] !== undefined) {
-            countOptions.include = [{
+            });
+        }
+        if (queryParams['ID_Clase'] !== undefined) {
+            countOptions.include.push({
                 model: Alumno,
                 attributes: [],
                 where: { ID_Clase: queryParams['ID_Clase'] }
-            }];
+            });
+        }
+        if (queryParams['Gravedad'] !== undefined) {
+            countOptions.include.push({
+                model: Opcion,
+                where: { Gravedad: queryParams['Gravedad'] }
+            });
         }
 
         const total = await Respuesta.count(countOptions);
+        // let total;
+        // if (tam > 0) {
+        //     total = await Respuesta.count(countOptions);
+        // }
 
         res.json({
             ok: true,

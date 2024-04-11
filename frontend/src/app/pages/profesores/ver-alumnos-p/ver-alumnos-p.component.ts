@@ -85,7 +85,6 @@ export class VerAlumnosPComponent implements OnInit{
     if(this.totalAlumnos2 !== 0){
       let i: number;
       for(i = 0; i < this.totalAlumnos2 ; i++ ){
-        console.log(this.alumnosTodosData[i]);
         if(this.alumnosTodosData[i].ID_Clase === this.claseID){
           if(this.alumnosTodosData[i] && this.alumnosTodosData[i].Estado){
             if(this.alumnosTodosData[i].Estado === 'Bueno'){
@@ -98,19 +97,14 @@ export class VerAlumnosPComponent implements OnInit{
           }
         }
       }
-      console.log('bueno' , this.contBueno);
-      console.log('normal', this.contNormal);
-      console.log('malo', this.contMalo);
     }
     this.dibujarGrafica();
   }
   
   
   obtenerClase(){
-    console.log('claseID', this.claseID)
     this.claseService.getClase(this.claseID).subscribe((res: any) => {
       this.claseData = res.clases[0];
-      
     })
   }
 
@@ -131,18 +125,14 @@ export class VerAlumnosPComponent implements OnInit{
       }else{
         this.alumnosData = res.alumnos;
         this.totalAlumnos = res.page.total;
-        
       }
     })
-    
   }
 
   obtenerTodosAlumnos(){
     this.alumnoService.getAlumnos().subscribe((res: any) => {
       this.alumnosTodosData = res.alumnos;
-      console.log(this.alumnosTodosData);
       this.totalAlumnos2 = this.alumnosTodosData.length;
-      console.log('longitud', this.totalAlumnos2);
       this.contarEstados();
     }, error => {
       console.error('Error al obtener los alumnos:', error);
@@ -179,8 +169,8 @@ export class VerAlumnosPComponent implements OnInit{
     return clase;
   }
 
-  verPerfil(alumno: any){
-    this.router.navigate(['profesores/ver-perfil-alumno'], {state: {alumno, claseID: this.claseID}});
+  verPerfil(alumnoID: any){
+    this.router.navigate(['profesores/ver-perfil-alumno'], {state: {alumnoID, claseID: this.claseID}});
   }
 
   cambiarPagina( pagina: any){
@@ -211,7 +201,7 @@ export class VerAlumnosPComponent implements OnInit{
       },
       series: [
         {
-          name: 'Access From',
+          name: 'Número Alumnos',
           type: 'pie',
           radius: ['40%', '70%'],
           avoidLabelOverlap: false,
@@ -227,7 +217,7 @@ export class VerAlumnosPComponent implements OnInit{
           emphasis: {
             label: {
               show: true,
-              fontSize: 40,
+              fontSize: 35,
               fontWeight: 'bold'
             }
           },
@@ -259,7 +249,6 @@ export class VerAlumnosPComponent implements OnInit{
             const ambitoJSON = this.alumnosTodosData[i].Ambitos;
             const ambitoObj = JSON.parse(ambitoJSON);
             const valorClase = ambitoObj['Clase'];
-            console.log(valorClase);
             if (valorClase >= 0 && valorClase <= 20) {
               this.contMuyMalo++;
             } else if (valorClase > 20 && valorClase <= 40) {
@@ -271,15 +260,9 @@ export class VerAlumnosPComponent implements OnInit{
             } else if (valorClase > 80 && valorClase <= 90) {
               this.contMuyBueno++;
             }
-            console.log(this.alumnosTodosData[i].Ambitos);
           }
         }
       }
-      console.log('bueno' , this.contBueno);
-      console.log('muy bueno' , this.contMuyBueno);
-      console.log('normal', this.contNormal);
-      console.log('muy malo', this.contMuyMalo);
-      console.log('malo', this.contMalo);
     }
     this.dibujarGrafica();
   }
@@ -294,7 +277,6 @@ export class VerAlumnosPComponent implements OnInit{
             const ambitoJSON = this.alumnosTodosData[i].Ambitos;
             const ambitoObj = JSON.parse(ambitoJSON);
             const valorAmigos = ambitoObj['Amigos'];
-            console.log(valorAmigos);
             if (valorAmigos >= 0 && valorAmigos <= 20) {
               this.contMuyMalo++;
             } else if (valorAmigos > 20 && valorAmigos <= 40) {
@@ -309,11 +291,6 @@ export class VerAlumnosPComponent implements OnInit{
           }
         }
       }
-      console.log('bueno' , this.contBueno);
-      console.log('muy bueno' , this.contMuyBueno);
-      console.log('normal', this.contNormal);
-      console.log('muy malo', this.contMuyMalo);
-      console.log('malo', this.contMalo);
     }
     this.dibujarGrafica();
   }
@@ -329,7 +306,6 @@ export class VerAlumnosPComponent implements OnInit{
             const ambitoJSON = this.alumnosTodosData[i].Ambitos;
             const ambitoObj = JSON.parse(ambitoJSON);
             const valorFamilia = ambitoObj['Familia'];
-            console.log(valorFamilia);
             if (valorFamilia >= 0 && valorFamilia <= 20) {
               this.contMuyMalo++;
             } else if (valorFamilia > 20 && valorFamilia <= 40) {
@@ -344,11 +320,6 @@ export class VerAlumnosPComponent implements OnInit{
           }
         }
       }
-      console.log('bueno' , this.contBueno);
-      console.log('muy bueno' , this.contMuyBueno);
-      console.log('normal', this.contNormal);
-      console.log('muy malo', this.contMuyMalo);
-      console.log('malo', this.contMalo);
     }
     this.dibujarGrafica();
   }
@@ -364,7 +335,6 @@ export class VerAlumnosPComponent implements OnInit{
             const ambitoJSON = this.alumnosTodosData[i].Ambitos;
             const ambitoObj = JSON.parse(ambitoJSON);
             const valorEmociones = ambitoObj['Emociones'];
-            console.log(valorEmociones);
             if (valorEmociones >= 0 && valorEmociones <= 20) {
               this.contMuyMalo++;
             } else if (valorEmociones > 20 && valorEmociones <= 40) {
@@ -379,11 +349,6 @@ export class VerAlumnosPComponent implements OnInit{
           }
         }
       }
-      console.log('bueno' , this.contBueno);
-      console.log('muy bueno' , this.contMuyBueno);
-      console.log('normal', this.contNormal);
-      console.log('muy malo', this.contMuyMalo);
-      console.log('malo', this.contMalo);
     }
     this.dibujarGrafica();
   }
@@ -399,7 +364,6 @@ export class VerAlumnosPComponent implements OnInit{
             const ambitoJSON = this.alumnosTodosData[i].Ambitos;
             const ambitoObj = JSON.parse(ambitoJSON);
             const valorFueraClase = ambitoObj['Fuera de clase'];
-            console.log(valorFueraClase);
             if (valorFueraClase >= 0 && valorFueraClase <= 20) {
               this.contMuyMalo++;
             } else if (valorFueraClase > 20 && valorFueraClase <= 40) {
@@ -414,11 +378,6 @@ export class VerAlumnosPComponent implements OnInit{
           }
         }
       }
-      console.log('bueno' , this.contBueno);
-      console.log('muy bueno' , this.contMuyBueno);
-      console.log('normal', this.contNormal);
-      console.log('muy malo', this.contMuyMalo);
-      console.log('malo', this.contMalo);
     }
     this.dibujarGrafica();
   }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { RespuestaService } from '../../../services/respuestas.service';
 import { ProfesorService } from '../../../services/profesores.service';
 
@@ -15,7 +16,7 @@ export class ActividadRecienteComponent implements OnInit {
   public recientesData: any;
   public totalActividades = 0;
 
-  constructor(private respuestaService: RespuestaService, private profesorService: ProfesorService) {
+  constructor(private respuestaService: RespuestaService, private profesorService: ProfesorService, private router: Router, private activatedRoute: ActivatedRoute) {
     this.recientesData = [];
   }
 
@@ -63,4 +64,8 @@ export class ActividadRecienteComponent implements OnInit {
     this.filPag = filas;
     this.cambiarPagina(1);
   }  
+
+  verPerfil(alumnoID: any){
+    this.router.navigate(['profesores/ver-perfil-alumno'], {state: {alumnoID}});
+  }
 }

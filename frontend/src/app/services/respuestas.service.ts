@@ -47,13 +47,22 @@ export class RespuestaService {
 
     getRespuestasClase(id: any){
       this.getHeader();
-      return this.http.get(this.basePath+'?ID_Clase='+id, this.httpOptions);
+      return this.http.get(this.basePath+'?ID_Clase='+id+'&numFilas=10&desde=0', this.httpOptions);
     
     }
 
-    getRespuestasCentro(id: any){
+    getRespuestasCentro(id: any, desde?: number, filas?: number, textoBusqueda?: string){
       this.getHeader();
-      return this.http.get(this.basePath+'?ID_Centro='+id, this.httpOptions);
+      if(!desde){
+        desde = 0;
+      }
+      if(!filas){
+        filas = 0;
+      }
+      if(!textoBusqueda){
+        textoBusqueda = '';
+      }
+      return this.http.get(this.basePath+'?ID_Centro='+id+'&numFilas='+filas+'&desde='+desde, this.httpOptions);
     
     }
 

@@ -17,7 +17,7 @@ export class PaginationComponent implements OnInit, OnChanges {
 
   public pagActual = 0;
   public ultimaPag = 0;
-  public prepost = 1;
+  public prepost = 2;
   public listaPags: any;
   public registroHasta = 0;
   public filas: number = 5;

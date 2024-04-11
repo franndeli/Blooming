@@ -5,3 +5,8 @@
     padding: 20px 20px;
     color: var(--bs-card-color);
 }
+
+.botones{
+    display: flex;
+    justify-content: space-evenly;
+}

@@ -40,15 +40,26 @@ export class RespuestaService {
         return this.http.get(this.basePath, this.httpOptions);
     }
 
-    getRespuestasAlumno(id: any, gravedad: number){
+    getRespuestasAlumno(id: any, gravedad: number, desde?: number, filas?: number){
         this.getHeader();
-        return this.http.get(this.basePath+'?ID_Alumno='+id+'&Gravedad='+gravedad, this.httpOptions);
+        if(!desde){
+          desde = 0;
+        }
+        if(!filas){
+          filas = 0;
+        }
+        return this.http.get(this.basePath+'?ID_Alumno='+id+'&Gravedad='+gravedad+'&numFilas='+filas+'&desde='+desde, this.httpOptions);
     }
 
-    getRespuestasClase(id: any){
+    getRespuestasClase(id: any, desde?: number, filas?: number){
       this.getHeader();
-      return this.http.get(this.basePath+'?ID_Clase='+id+'&numFilas=10&desde=0', this.httpOptions);
-    
+      if(!desde){
+        desde = 0;
+      }
+      if(!filas){
+        filas = 0;
+      }
+      return this.http.get(this.basePath+'?ID_Clase='+id+'&numFilas='+filas+'&desde='+desde, this.httpOptions);
     }
 
     getRespuestasCentro(id: any, desde?: number, filas?: number, textoBusqueda?: string){

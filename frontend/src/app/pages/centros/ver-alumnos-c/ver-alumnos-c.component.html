@@ -19,22 +19,22 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                 <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
                                     <thead class="text-dark fs-4">
                                         <tr>
-                                            <th class="border-bottom-0"><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
-                                            <th class="border-bottom-0"><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Apellidos</th>
-                                            <th class="border-bottom-0"><span><i class="ti ti-user" style="font-size: 15px;"></i></span> Usuario</th>
-                                            <th class="border-bottom-0"><span><i class="ti ti-school" style="font-size: 15px;"></i></span> Clase</th>
-                                            <th class="border-bottom-0"></th>
+                                            <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
+                                            <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Apellidos</th>
+                                            <th><span><i class="ti ti-user" style="font-size: 15px;"></i></span> Usuario</th>
+                                            <th><span><i class="ti ti-school" style="font-size: 15px;"></i></span> Clase</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
-                                    <tbody *ngFor="let alumno of alumnosData">
-                                        <tr>
-                                            <td class="border-bottom-0">{{alumno.Nombre}}</td>
-                                            <td class="border-bottom-0">{{alumno.Apellidos}}</td>
-                                            <td class="border-bottom-0">{{alumno.Usuario}}</td>
-                                            <td class="border-bottom-0">{{alumno.Clase.Nombre}}</td>
-                                            <td class="border-bottom-0">
-                                            <button class="btn btn-primary ti ti-pencil fs-5" (click)="editarAlumno(alumno)"></button>
-                                            <button class="btn btn-danger ti ti-trash fs-5" (click)="eliminarAlumno(alumno.ID_Alumno)"></button>
+                                    <tbody>
+                                        <tr *ngFor="let alumno of alumnosData">
+                                            <td>{{alumno.Nombre}}</td>
+                                            <td>{{alumno.Apellidos}}</td>
+                                            <td>{{alumno.Usuario}}</td>
+                                            <td>{{alumno.Clase.Nombre}}</td>
+                                            <td class="botones">
+                                                <button class="btn btn-primary ti ti-pencil fs-5" (click)="editarAlumno(alumno)"></button>
+                                                <button class="btn btn-danger ti ti-trash fs-5" (click)="eliminarAlumno(alumno.ID_Alumno)"></button>
                                             </td>
                                         </tr>
                                     </tbody>

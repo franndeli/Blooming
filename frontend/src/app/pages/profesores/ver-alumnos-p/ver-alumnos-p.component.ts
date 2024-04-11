@@ -145,7 +145,7 @@ export class VerAlumnosPComponent implements OnInit{
   }
 
   obtenerUltimasRespuestas(){
-    this.respuestaService.getRespuestasClase(this.claseID).subscribe((res: any) => {
+    this.respuestaService.getRespuestasClase(this.claseID, 0, 5).subscribe((res: any) => {
       this.respuestasData = res.respuestas;
     })
   }

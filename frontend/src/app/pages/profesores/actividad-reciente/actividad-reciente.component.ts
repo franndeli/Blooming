@@ -66,6 +66,7 @@ export class ActividadRecienteComponent implements OnInit {
   }  
 
   verPerfil(alumnoID: any){
-    this.router.navigate(['profesores/ver-perfil-alumno'], {state: {alumnoID}});
+    const volverPag = 0;
+    this.router.navigate(['profesores/ver-perfil-alumno'], {state: {alumnoID, volverPag}});
   }
 }

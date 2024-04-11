@@ -19,16 +19,16 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                 <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
                                     <thead class="text-dark fs-4">
                                         <tr>
-                                            <th class="border-bottom-0"><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
-                                            <th class="border-bottom-0"><span><i class="ti ti-123" style="font-size: 15px;"></i></span> NºAlumnos</th>
-                                            <th class="border-bottom-0"></th>
+                                            <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
+                                            <th><span><i class="ti ti-123" style="font-size: 15px;"></i></span> NºAlumnos</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
-                                    <tbody *ngFor="let clase of clasesData">
-                                        <tr>
-                                            <td class="border-bottom-0">{{clase.Nombre}}</td>
-                                            <td class="border-bottom-0">{{clase.NumAlumnos}}</td>
-                                            <td class="border-bottom-0 botones">
+                                    <tbody>
+                                        <tr *ngFor="let clase of clasesData">
+                                            <td>{{clase.Nombre}}</td>
+                                            <td>{{clase.NumAlumnos}}</td>
+                                            <td class="botones">
                                                 <button class="btn btn-primary ti ti-pencil fs-5" (click)="editarClase(clase)"></button>
                                                 <button class="btn btn-danger ti ti-trash fs-5" (click)="eliminarClase(clase.ID_Clase)"></button>
                                             </td>

@@ -15,31 +15,30 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                         <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
                                             <thead class="text-dark fs-4">
                                                 <tr>
-                                                    <th class="border-bottom-0"><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
-                                                    <th class="border-bottom-0"><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Clase</th>
-                                                    <th class="border-bottom-0"><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Ámbito</th>
-                                                    <th class="border-bottom-0"><span><i class="ti ti-question-mark" style="font-size: 15px;"></i></span> Pregunta</th>
-                                                    <th class="border-bottom-0"><span><i class="ti ti-check" style="font-size: 15px;"></i></span> Respuesta</th>
-                                                    <th class="border-bottom-0"><span><i class="ti ti-alert-circle" style="font-size: 15px;"></i></span> Grado</th>
-                                                    <th class="border-bottom-0"></th>
+                                                    <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
+                                                    <th><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Clase</th>
+                                                    <th><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Ámbito</th>
+                                                    <th><span><i class="ti ti-question-mark" style="font-size: 15px;"></i></span> Pregunta</th>
+                                                    <th><span><i class="ti ti-check" style="font-size: 15px;"></i></span> Respuesta</th>
+                                                    <th><span><i class="ti ti-alert-circle" style="font-size: 15px;"></i></span> Grado</th>
+                                                    <th></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr *ngFor="let reciente of recientesData">
-                                                    <td class="border-bottom-0">{{reciente.Alumno.Nombre}} {{reciente.Alumno.Apellidos}}</td>
-                                                    <td class="border-bottom-0">{{reciente.Alumno.Clase.Nombre}}</td>
-                                                    <td class="border-bottom-0">{{reciente.Pregunta.Ambito.Nombre}}</td>
-                                                    <td class="border-bottom-0">{{reciente.Pregunta.TextoPregunta}}</td>
-                                                    <td class="border-bottom-0">{{reciente.Opcion.TextoOpcion}}</td>
-                                                    <td class="border-bottom-0" [ngSwitch]="reciente.Opcion.Gravedad">
+                                                    <td>{{reciente.Alumno.Nombre}} {{reciente.Alumno.Apellidos}}</td>
+                                                    <td>{{reciente.Alumno.Clase.Nombre}}</td>
+                                                    <td>{{reciente.Pregunta.Ambito.Nombre}}</td>
+                                                    <td>{{reciente.Pregunta.TextoPregunta}}</td>
+                                                    <td>{{reciente.Opcion.TextoOpcion}}</td>
+                                                    <td [ngSwitch]="reciente.Opcion.Gravedad">
                                                         <span *ngSwitchCase="-2">Alarmante</span>
                                                         <span *ngSwitchCase="0">Normal</span>
                                                         <span *ngSwitchCase="1">Buena</span>
                                                         <span *ngSwitchCase="2">Muy Buena</span>
                                                     </td>
-                                                    <td class="border-bottom-0">
+                                                    <td>
                                                         <button class="btn btn-primary" (click)="verPerfil(reciente.ID_Alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button>
-                                                        <!-- <a href="/profesores/ver-perfil-alumno" class="btn btn-primary"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</a> -->
                                                     </td>
                                                 </tr>
                                             </tbody>

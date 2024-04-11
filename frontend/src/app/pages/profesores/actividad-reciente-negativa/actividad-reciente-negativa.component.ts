@@ -105,7 +105,7 @@ export class ActividadRecienteNegativaComponent {
   }
 
   obtenerRespuestas(){
-    this.respuestaService.getRespuestasCentro(this.centro).subscribe((res: any) => {
+    this.respuestaService.getRespuestasCentro(this.centro, 0, 5).subscribe((res: any) => {
       this.respuestasData = res.respuestas;
     });
   }
@@ -155,7 +155,7 @@ export class ActividadRecienteNegativaComponent {
           emphasis: {
             label: {
               show: true,
-              fontSize: 40,
+              fontSize: 35,
               fontWeight: 'bold'
             }
           },
@@ -226,6 +226,7 @@ export class ActividadRecienteNegativaComponent {
     this.sinRiesgo.sort((a, b) => b.cont - a.cont);
     this.conRiesgo.sort((a, b) => b.cont - a.cont);
     this.dibujarGrafica();
+    console.log(this.clasesExisten[0].nombre)
     this.onChangeClase(this.clasesExisten[0].nombre);
   }
 
@@ -258,26 +259,8 @@ export class ActividadRecienteNegativaComponent {
     this.clasesService.setClaseID(this.clasID);
   }
 
-  /*verPerfil(alumno: any) {
-    let alu: any = {}; // Inicializa como objeto vacío
-    let claseID: number | null = null; // Inicializa claseID como null por defecto
-  
-    for (let i = 0; i < this.alumnosData.length; i++) {
-      if (this.alumnosData[i].ID_Alumno === alumno) {
-        alu = this.alumnosData[i];
-        claseID = this.alumnosData[i].ID_Clase;
-        break; // Salir del bucle una vez encontrado el alumno
-      }
-    }
-  
-    if (alu && claseID !== null) {
-      console.log(alu);
-      console.log(claseID);
-      this.router.navigate(['profesores/ver-perfil-alumno'], { state: { alu, claseID } });
-    } else {
-      console.error('Alumno no encontrado o falta información');
-      // Puedes manejar el caso en el que el alumno no se encuentra
-    }
-  }*/
-  
+  verPerfil(alumnoID: any){
+    const volverPag = 1;
+    this.router.navigate(['profesores/ver-perfil-alumno'], {state: {alumnoID, volverPag} });
+  }  
 }

@@ -21,6 +21,7 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
   private dias: number = 7;
   private gravedad: number = 0;
   public nombresAmbitos: any = [];
+  private volverPag: number = 0;
 
   constructor(private respuestaService: RespuestaService, private router: Router, private activatedRoute: ActivatedRoute, private sesionService: SesionService, private alumnoService: AlumnoService){
     this.alumnosData = [];
@@ -30,10 +31,10 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.sesiones.Ambitos = {};
-    this.sesiones.Dias= {};
+    this.sesiones.Dias = {};
     this.activatedRoute.paramMap.subscribe(params => {
       this.alumnoID = history.state.alumnoID;
-      //this.alumnosData.Ambitos = JSON.parse(this.alumnosData.Ambitos);
+      this.volverPag = history.state.volverPag;
       this.claseID = history.state.claseID;
     });
     this.obtenerAlumno();
@@ -48,16 +49,13 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
     this.alumnoService.getAlumnoID(this.alumnoID).subscribe((res: any) => {
       this.alumnosData = res.alumnos[0];
       this.alumnosData.Ambitos = JSON.parse(this.alumnosData.Ambitos);
-      console.log(this.alumnosData.Clase.Nombre);
       this.nombreClase = this.alumnosData.Clase.Nombre;
-      console.log(this.alumnosData);
     });
   }
 
   obtenerSesiones(){
     this.sesionService.getSesionesAlumno(this.alumnoID, this.dias).subscribe((res: any) => {
       const sesionesData = res.sesiones;
-      console.log(sesionesData);
       this.sesiones.Ambitos.Clase = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Clase);
       this.sesiones.Ambitos.Amigos = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Amigos);
       this.sesiones.Ambitos.Familia = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Familia);
@@ -146,9 +144,8 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
   }
 
   obtenerRespuestas(){
-    this.respuestaService.getRespuestasAlumno(this.alumnoID, this.gravedad).subscribe((res: any) => {
+    this.respuestaService.getRespuestasAlumno(this.alumnoID, this.gravedad, 0, 5).subscribe((res: any) => {
       this.respuestasData = res.respuestas;
-      console.log(this.respuestasData)
     });
   }
 
@@ -178,7 +175,13 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
     if(this.claseID){
       this.router.navigate(['profesores/ver-alumnos'], {state: {claseID: this.claseID}});
     } else {
-      this.router.navigate(['profesores/actividad-reciente']);
+      if(this.volverPag === 0){
+        this.router.navigate(['profesores/actividad-reciente']);
+      }
+      if(this.volverPag === 1){
+        this.router.navigate(['profesores/actividad-negativa']);
+      }
+      
     }
     
   }

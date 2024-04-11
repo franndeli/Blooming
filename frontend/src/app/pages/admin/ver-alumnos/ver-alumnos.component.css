@@ -1,6 +1,4 @@
-/* @media (max-width: 1450px) {
-    ::ng-deep .table-responsive-sm {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-} */
+.botones{
+  display: flex;
+  justify-content: space-evenly;
+}

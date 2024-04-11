@@ -15,20 +15,20 @@ data-sidebar-position="fixed" data-header-position="fixed">
                       <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
                         <thead class="text-dark fs-4">
                             <tr>
-                                <th class="border-bottom-0"><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
-                                <th class="border-bottom-0"><span><i class="ti ti-pin" style="font-size: 15px;"></i></span> Estado</th>
-                                <th class="border-bottom-0"></th>
+                                <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
+                                <th><span><i class="ti ti-pin" style="font-size: 15px;"></i></span> Estado</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                           <tr *ngFor="let alumno of alumnosData">
-                              <td class="border-bottom-0">{{alumno.Nombre}} {{alumno.Apellidos}}</td>
-                              <td class="border-bottom-0">
+                              <td>{{alumno.Nombre}} {{alumno.Apellidos}}</td>
+                              <td>
                                   <div class="d-flex align-items-center gap-2">
                                       <span [ngClass]="getClaseEstado(alumno.Estado)">{{alumno.Estado}}</span>
                                   </div>
                               </td>
-                              <td class="border-bottom-0">
+                              <td>
                                   <button class="btn btn-primary" (click)="verPerfil(alumno.ID_Alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button>
                               </td>
                           </tr>
@@ -82,30 +82,28 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                 <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
                                     <thead class="text-dark fs-4">
                                         <tr>
-                                            <th class="border-bottom-0"><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
-                                            <th class="border-bottom-0"><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Ámbito</th>
-                                            <th class="border-bottom-0"><span><i class="ti ti-question-mark" style="font-size: 15px;"></i></span> Pregunta</th>
-                                            <th class="border-bottom-0"><span><i class="ti ti-check" style="font-size: 15px;"></i></span> Respuesta</th>
-                                            <th class="border-bottom-0"><span><i class="ti ti-alert-circle" style="font-size: 15px;"></i></span> Grado</th>
-                                            <th class="border-bottom-0"></th>
+                                            <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
+                                            <th><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Ámbito</th>
+                                            <th><span><i class="ti ti-question-mark" style="font-size: 15px;"></i></span> Pregunta</th>
+                                            <th><span><i class="ti ti-check" style="font-size: 15px;"></i></span> Respuesta</th>
+                                            <th><span><i class="ti ti-alert-circle" style="font-size: 15px;"></i></span> Grado</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
-                                    <tbody *ngFor="let respuesta of respuestasData">
-                                      <tr>
-                                        <td class="border-bottom-0">{{respuesta.Alumno.Nombre}} {{respuesta.Alumno.Apellidos}}</td>
-                                        <td class="border-bottom-0">{{respuesta.Pregunta.Ambito.Nombre}}</td>
-                                        <td class="border-bottom-0">{{respuesta.Pregunta.TextoPregunta}}</td>
-                                        <td class="border-bottom-0">{{respuesta.Opcion.TextoOpcion}}</td>
-                                        <td class="border-bottom-0" [ngSwitch]="respuesta.Opcion.Gravedad">
+                                    <tbody>
+                                      <tr *ngFor="let respuesta of respuestasData">
+                                        <td>{{respuesta.Alumno.Nombre}} {{respuesta.Alumno.Apellidos}}</td>
+                                        <td>{{respuesta.Pregunta.Ambito.Nombre}}</td>
+                                        <td>{{respuesta.Pregunta.TextoPregunta}}</td>
+                                        <td>{{respuesta.Opcion.TextoOpcion}}</td>
+                                        <td [ngSwitch]="respuesta.Opcion.Gravedad">
                                           <span *ngSwitchCase="-2">Alarmante</span>
                                           <span *ngSwitchCase="0">Normal</span>
                                           <span *ngSwitchCase="1">Buena</span>
                                           <span *ngSwitchCase="2">Muy Buena</span>
                                         </td>
-                                        <td class="border-bottom-0">
+                                        <td>
                                           <button class="btn btn-primary" (click)="verPerfil(respuesta.ID_Alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button>
-                                              <!-- <a href="/profesores/ver-perfil-alumno" class="btn btn-primary"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</a> -->
-                                              <!-- <button class="btn btn-primary" (click)="verPerfil(respuesta)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button> -->
                                         </td>
                                       </tr>
                                     </tbody>

@@ -97,21 +97,21 @@ data-sidebar-position="fixed" data-header-position="fixed">
                     <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
                       <thead class="text-dark fs-4">
                           <tr>
-                              <th class="border-bottom-0"><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
-                              <th class="border-bottom-0"><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Clase</th>
-                              <th class="border-bottom-0"><span><i class="ti ti-question-mark" style="font-size: 15px;"></i></span> Pregunta</th>
-                              <th class="border-bottom-0"><span><i class="ti ti-alert-triangle" style="font-size: 15px;"></i></span> Respuesta</th>
-                              <th class="border-bottom-0"></th>
+                              <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
+                              <th><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Clase</th>
+                              <th><span><i class="ti ti-question-mark" style="font-size: 15px;"></i></span> Pregunta</th>
+                              <th><span><i class="ti ti-alert-triangle" style="font-size: 15px;"></i></span> Respuesta</th>
+                              <th></th>
                           </tr>
                       </thead>
                       <tbody>
                           <tr *ngFor="let respuesta of respuestasData;">
-                              <td class="border-bottom-0">{{ respuesta.Alumno.Nombre }}</td>
-                              <td class="border-bottom-0">{{ respuesta.Alumno.Clase.Nombre }}</td>
-                              <td class="border-bottom-0">{{ respuesta.Pregunta.TextoPregunta }}</td>
-                              <td class="border-bottom-0"> {{ respuesta.Opcion.TextoOpcion }} </td>
-                              <td class="border-bottom-0">
-                              <a href="/profesores/ver-perfil-alumno" class="btn btn-primary"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</a>
+                              <td>{{ respuesta.Alumno.Nombre }}</td>
+                              <td>{{ respuesta.Alumno.Clase.Nombre }}</td>
+                              <td>{{ respuesta.Pregunta.TextoPregunta }}</td>
+                              <td> {{ respuesta.Opcion.TextoOpcion }} </td>
+                              <td>
+                                <button class="btn btn-primary" (click)="verPerfil(respuesta.ID_Alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button>
                               </td>
                           </tr>
                         </tbody>

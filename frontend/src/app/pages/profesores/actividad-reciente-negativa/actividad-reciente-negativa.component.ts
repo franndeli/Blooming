@@ -9,8 +9,22 @@ import { ProfesorService } from '../../../services/profesores.service';
 import * as echarts from 'echarts';
 
 interface ClaseInfo {
+  claseid?: number;
   nombre: string;
   cont: number;
+  maxalumnos?: number;
+}
+
+interface AlumnosInfo {
+  idAlumno?: number;
+  nombre: string;
+  apellidos: string;
+  clase: string;
+  estado: string;
+}
+
+interface ClasesExisten {
+  nombre: string;
 }
 
 @Component({
@@ -23,11 +37,14 @@ export class ActividadRecienteNegativaComponent {
   public respuestasData: any;
   private sesiones: any;
   public alumnosData: any;
+  public alumnosClases: any;
   public clasesData: any;
   public totalAlumnos = 0;
   public centro: any;
   profesoresData: any;
   id: any;
+  private clasID: any;
+  alu: any;
 
   public posActual = 0;
   public filPag = 5;
@@ -38,7 +55,13 @@ export class ActividadRecienteNegativaComponent {
   conRiesgo: ClaseInfo[] = [];
   sinRiesgo: ClaseInfo[] = [];
   conysinRiesgo: ClaseInfo[] = [];
+  clasesExisten: ClasesExisten[] = [];
   public alumnosClase: any;
+  public alumnosAmbitos: any;
+  alumnosInfo: AlumnosInfo[] = [];
+  private claseID: any;
+
+  
 
   constructor(private clasesService: ClaseService, private profesorService: ProfesorService, private centroService: CentroService, private alumnoService: AlumnoService, private respuestaService: RespuestaService, private router: Router, private activatedRoute: ActivatedRoute, private sesionService: SesionService){
     this.respuestasData = [];
@@ -46,33 +69,32 @@ export class ActividadRecienteNegativaComponent {
     this.alumnosData = [];
     this.clasesData = [];
     this.alumnosClase = [];
-    
+    this.alumnosAmbitos = [];
   }
 
   ngOnInit() {
     this.id = localStorage.getItem('id');
-    console.log(this.id);
 
     this.obtenerCentro();
+    this.obtenerTodosAlumnos();
+    
   }
 
   obtenerTodosAlumnos(){
     this.alumnoService.getAlumnos().subscribe((res: any) => {
       this.alumnosData = res.alumnos;
-      console.log(this.alumnosData);
       this.totalAlumnos = this.alumnosData.length;
-      console.log('longitud', this.totalAlumnos);
+      console.log(this.alumnosData);
     }, error => {
       console.error('Error al obtener los alumnos:', error);
     });
+    
   }
 
   obtenerCentro(){
     this.profesorService.getProfesorID(this.id).subscribe(
       (data: any) => {
-        console.log(data);
         this.centro = data.profesores[0].ID_Centro; 
-        console.log('centro:', this.centro); 
         this.obtenerRespuestas();
         this.obtenerClasesCentro();
       },
@@ -85,7 +107,6 @@ export class ActividadRecienteNegativaComponent {
   obtenerRespuestas(){
     this.respuestaService.getRespuestasCentro(this.centro).subscribe((res: any) => {
       this.respuestasData = res.respuestas;
-      console.log(this.respuestasData);
     });
   }
 
@@ -155,13 +176,11 @@ export class ActividadRecienteNegativaComponent {
   obtenerClasesCentro(){
     this.clasesService.getClasesCentro(this.centro).subscribe((data: any)=> {
       this.clasesData = data;
-      console.log(this.clasesData);
       this.totalClases = this.clasesData.clases.length;
       this.obtenerAlumnosClases();
     }, (error) => {
       console.log('Errorrororor', error);
     });
-    
   }
 
   obtenerAlumnosClases() {
@@ -181,38 +200,84 @@ export class ActividadRecienteNegativaComponent {
   
   analizarAlumnos(data: any, index: number) {
     this.alumnosClase = data;
-    console.log(this.alumnosClase);
     this.contBueno = 0;
     this.contMalo = 0;
   
     for (let j = 0; j < this.alumnosClase.alumnos.length; j++) {
       const estado = this.alumnosClase.alumnos[j].Estado;
-      if (estado === 'Bueno' || estado === 'Muy Bueno') {
-        this.contBueno++;
-      } else if (estado === 'Malo' || estado === 'Muy Malo') {
-        this.contMalo++;
+      if(this.alumnosClase.alumnos[j].ID_Centro === this.centro){
+        if (estado === 'Bueno' || estado === 'Muy Bueno') {
+          this.contBueno++;
+        } else if (estado === 'Malo' || estado === 'Muy Malo') {
+          this.contMalo++;
+        }
       }
     }
-  
     if (this.contBueno > this.contMalo) {
       this.sinRiesgo.push({nombre: this.clasesData.clases[index]?.Nombre, cont:this.contBueno});
+      this.clasesExisten.push({nombre: this.clasesData.clases[index].Nombre});
     } else if (this.contMalo > this.contBueno) {
-      this.conRiesgo.push({nombre: this.clasesData.clases[index]?.Nombre, cont:this.contMalo});
+      this.conRiesgo.push({claseid: this.clasesData.clases[index]?.ID_Clase,nombre: this.clasesData.clases[index]?.Nombre, cont:this.contMalo, maxalumnos: this.clasesData.clases[index]?.NumAlumnos});
+      this.clasesExisten.push({nombre: this.clasesData.clases[index].Nombre});
     } else if (this.contBueno === this.contMalo && (this.contBueno !== 0 && this.contMalo !== 0 ) ) {
       this.conysinRiesgo.push(this.clasesData.clases[index]?.Nombre);
-      console.log('La clase no tiene alumnos o tiene el mismo número de buenos y malos.');
+      this.clasesExisten.push({nombre: this.clasesData.clases[index].Nombre});
     }
     this.sinRiesgo.sort((a, b) => b.cont - a.cont);
     this.conRiesgo.sort((a, b) => b.cont - a.cont);
-
-  
-    console.log('Clases sin riesgo:', this.sinRiesgo);
-    console.log('Clases con riesgo:', this.conRiesgo);
-    console.log('Clases limbo:', this.conysinRiesgo);
     this.dibujarGrafica();
+    this.onChangeClase(this.clasesExisten[0].nombre);
   }
 
-  buscarPeorAmbito(){
-
+  onChangeClase(event: any) {
+    this.alumnosInfo = [];
+    let nombreSeleccionado: string | undefined = event.target?.value;
+    if(!nombreSeleccionado){
+      nombreSeleccionado = this.clasesExisten[0].nombre;
+    }
+    if (nombreSeleccionado) {
+      for(let i=0; i<this.alumnosData.length; i++){
+        if(this.alumnosData[i].Clase.Nombre === nombreSeleccionado && this.alumnosData[i].ID_Centro === this.centro){
+          if( this.alumnosData[i].Estado === 'Malo'){
+            this.alumnosInfo.push({idAlumno: this.alumnosData[i].ID_Alumno , nombre: this.alumnosData[i].Nombre, apellidos: this.alumnosData[i].Apellidos, clase: this.alumnosData[i].Clase, estado: this.alumnosData[i].Estado});
+          } else if(this.alumnosData[i].Estado === 'Muy Malo'){
+            this.alumnosInfo.push({ nombre: this.alumnosData[i].Nombre, apellidos: this.alumnosData[i].Apellidos, clase: this.alumnosData[i].Clase, estado: this.alumnosData[i].Estado});
+          }
+        }
+      }
+    }
   }
+
+  verClase(claseID: any){
+    this.clasID = claseID;
+    this.setClaseID();
+    this.router.navigate(['profesores/ver-alumnos'], {state: {claseID}});
+  }
+
+  setClaseID(){
+    this.clasesService.setClaseID(this.clasID);
+  }
+
+  /*verPerfil(alumno: any) {
+    let alu: any = {}; // Inicializa como objeto vacío
+    let claseID: number | null = null; // Inicializa claseID como null por defecto
+  
+    for (let i = 0; i < this.alumnosData.length; i++) {
+      if (this.alumnosData[i].ID_Alumno === alumno) {
+        alu = this.alumnosData[i];
+        claseID = this.alumnosData[i].ID_Clase;
+        break; // Salir del bucle una vez encontrado el alumno
+      }
+    }
+  
+    if (alu && claseID !== null) {
+      console.log(alu);
+      console.log(claseID);
+      this.router.navigate(['profesores/ver-perfil-alumno'], { state: { alu, claseID } });
+    } else {
+      console.error('Alumno no encontrado o falta información');
+      // Puedes manejar el caso en el que el alumno no se encuentra
+    }
+  }*/
+  
 }

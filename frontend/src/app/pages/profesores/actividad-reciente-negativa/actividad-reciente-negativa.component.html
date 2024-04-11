@@ -14,57 +14,67 @@ data-sidebar-position="fixed" data-header-position="fixed">
                 </div>
                 <div id="chart2"></div>
               </div>
+              <p>*Esta gráfica muestra qué clases tienen más alumnos con estados alarmantes</p>
             </div>
           </div>
         </div>
       </div>
-        <div class="col-lg-3">
-          <div class="row">
-            <div class="col-lg-12">
-              <!-- Yearly Breakup -->
-              <div class="card overflow-hidden">
-                <div class="card-body">
-                  <h5 class="card-title mb-9 fw-semibold">Listado de clases más alarmantes <span><i class="ti ti-alert-triangle" style="font-size: 15px;"></i></span></h5>
-                  <div class="table-responsive">
-                    <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em; width: 100%;">
-                      <thead class="text-dark fs-4">
-                        <tr>
-                          <th><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Clase</th>
-                          <th><span><i class="ti ti-123" style="font-size: 15px;"></i></span> NºAlumnos con <br> Malo/Muy Malo</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr *ngFor="let clase of conRiesgo.slice(0, 5)">
-                          <td style="text-align: center;"><span class="badge bg-danger rounded-3 fw-semibold">{{ clase.nombre }}</span></td>
-                          <td style="white-space: nowrap; text-align: center;">{{ clase.cont }}</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-              
-            </div>
-            <div class="col-lg-12">
-              <!-- Yearly Breakup -->
-              <div class="card overflow-hidden">
-                <div class="card-body">
-                    <h5 class="card-title mb-9 fw-semibold">Ambito más alarmante de cada curso <span><i class="ti ti-home" style="font-size: 15px;"></i></span></h5>
-                    <div style="text-align: center; column-count: 2;">
-                        <p class="fw-semibold mb-3">1º : Emociones</p>
-                        <p class="fw-semibold mb-3">2º : Amigos</p>
-                        <p class="fw-semibold mb-3">3º : Emociones</p>
-                        <p class="fw-semibold mb-3">4º : Emociones</p>
-                        <p class="fw-semibold mb-3">5º : Clase</p>
-                        <p class="fw-semibold mb-3">6º : Familia</p>
-                    </div>
+      <div class="col-lg-3">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card overflow-hidden">
+              <div class="card-body">
+                <h5 class="card-title mb-9 fw-semibold">Listado de clases más alarmantes <span><i class="ti ti-alert-triangle" style="font-size: 15px;"></i></span></h5>
+                <div class="table-responsive">
+                  <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em; width: 100%;">
+                    <thead class="text-dark fs-4">
+                      <tr>
+                        <th><span><i class="ti ti-school" style="font-size: 15px;"></i></span> Clase</th>
+                        <th><span><i class="ti ti-alert-triangle" style="font-size: 15px;"></i></span> Alumnos alarmantes/Total Alumnos</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let clase of conRiesgo.slice(0, 5)">
+                        <td style="text-align: center;"><span class="badge bg-danger rounded-3 fw-semibold" style="cursor: pointer;" (click)="verClase(clase.claseid)">{{ clase.nombre }}</span></td>
+                        <td style="white-space: nowrap; text-align: center;">{{ clase.cont }} / {{ clase.maxalumnos}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
           </div>
-        </div> 
-      </div>
+          <div class="col-lg-12">
+            <!-- Yearly Breakup -->
+            <div class="card overflow-hidden">
+              <div class="card-body">
+                <h5 class="card-title mb-9 fw-semibold">Alumnos más alarmante de las clases <span><i class="ti ti-home" style="font-size: 15px; "></i></span></h5>
+                <select class="form-select py-1 ps-2 border-1 border-success bg-light rounded-pill" (change)="onChangeClase($event)"  style="outline: none; margin-top: 10px; margin-bottom: 10px;" (change)="onChangeClase($event)" >
+                  <option *ngFor="let clase of clasesExisten">{{ clase.nombre }}</option>
+                </select>
+                <div class="table-responsive">
+                  <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em; width: 100%;">
+                    <thead class="text-dark fs-4">
+                      <tr>
+                        <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
+                        <th><span><i class="ti ti-pin" style="font-size: 15px;"></i></span> Estado</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let info of alumnosInfo">
+                        <td>{{ info.nombre }} {{ info.apellidos }}</td>
+                        <td style="white-space: nowrap; text-align: center;"><span class="badge bg-danger rounded-3 fw-semibold">{{ info.estado }}</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> 
     </div>
+  </div>
 
   <div class="container-fluid" style="padding-top: 0px;"> 
     <div class="row">

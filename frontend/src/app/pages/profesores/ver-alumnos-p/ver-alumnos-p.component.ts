@@ -182,6 +182,8 @@ export class VerAlumnosPComponent implements OnInit{
   }
 
   verPerfil(alumno: any){
+    console.log(alumno);
+    console.log(this.claseID);
     this.router.navigate(['profesores/ver-perfil-alumno'], {state: {alumno, claseID: this.claseID}});
   }
 

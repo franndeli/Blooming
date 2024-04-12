@@ -3,13 +3,14 @@ import { PreguntaService } from '../../../services/preguntas.service';
 import { AlumnoService } from '../../../services/alumnos.service';
 import { SesionService } from '../../../services/sesiones.service';
 import { RespuestaService } from '../../../services/respuestas.service';
+import { GlobalStateService } from '../../../services/graphics/helpers/globalstate.service';
 
 import * as THREE from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import { CubeService } from '../../../services/graphics/cube.service';
 import { BoardService } from '../../../services/graphics/board.service';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { FinalScreenService } from '../../../services/graphics/finalscreen.service';
 
 type Resultados = { [ambito: string]: number };
 @Component({
@@ -56,19 +57,28 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     private sesionService: SesionService, 
     private respuestaService: RespuestaService,
     private cubeService: CubeService,
-    private boardService: BoardService
+    private boardService: BoardService,
+    private finalScreenService: FinalScreenService,
+    private globalStateService: GlobalStateService
   ) {}
 
   ngOnInit() {
     this.obtenerNumeroAleatorio();
-    this.cargarPreguntas();
     this.initializeScene();
-    /*if(this.EL_NUMERO === 1) {
-      this.cubeService.setButtonPressedCallback(this.handleButtonPress.bind(this));
-    //}
-    //if(this.EL_NUMERO === 2) {
-      this.boardService.setButtonPressedCallback(this.handleButtonPress.bind(this));
-    }*/
+    if (this.globalStateService.isTimeToShow) {
+      // Procede con el flujo normal
+      this.cargarPreguntas();
+      if(this.EL_NUMERO === 1) {
+        this.cubeService.setButtonPressedCallback(this.handleButtonPress.bind(this));
+      }
+      if(this.EL_NUMERO === 2) {
+        this.boardService.setButtonPressedCallback(this.handleButtonPress.bind(this));
+      }
+    } else{
+      console.log("Inicializando finalScreenService");
+      this.cargarAnimacion(this.preguntaActual!, 1);
+    }
+    
     window.addEventListener('resize', this.onWindowResize.bind(this), false);
   }
 
@@ -93,6 +103,12 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     // Si ya has añadido texto a la escena, actualiza su escala y posición aquí
     if (this.textMesh) {
       this.createTextMesh(this.textMesh.geometry);
+    }
+    if (this.finalScreenService.textMesh && this.finalScreenService.nextQuestionTextMesh){
+      //this.finalScreenService.stopAnimation();
+      this.finalScreenService.createTextMesh(this.finalScreenService.textMesh.geometry);
+      this.finalScreenService.createTextMesh2(this.finalScreenService.nextQuestionTextMesh.geometry);
+      //this.finalScreenService.startAnimation();
     }
   }
 
@@ -240,7 +256,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       const textGeometry = new TextGeometry(this.preguntaActual.TextoPreguntaElegido ? this.preguntaActual.TextoPreguntaElegido : this.preguntaActual.TextoPregunta, {
         font: font,
         size: 10, // Este es el tamaño inicial del texto. Puede necesitar ajustarse basado en el cálculo de escala
-        height: 1,
+        height: 0.3,
         curveSegments: 12,
         bevelEnabled: false,
       });
@@ -320,20 +336,20 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   }
 
 
-  cargarAnimacion(preguntaActual: any){
-    if(this.EL_NUMERO === 1 && !this.hasShownCubeMessage) {
+  cargarAnimacion(preguntaActual: any, ole: number){
+    if(this.EL_NUMERO === 1 && !this.hasShownCubeMessage && ole === 0) {
       // Muestra el mensaje para el cubeService si aún no se ha mostrado
       this.addInstructionText("¡Mueve el botón verde con el ratón y selecciona tu respuesta en el cubo!");
       this.hasShownCubeMessage = true;
     }
 
-    if(this.EL_NUMERO === 2 && !this.hasShownBoardMessage) {
+    if(this.EL_NUMERO === 2 && !this.hasShownBoardMessage && ole === 0) {
       // Muestra el mensaje para el boardService si aún no se ha mostrado
       this.addInstructionText("¡Pon el cubo naranja sobre la respuesta que quieras!");
       this.hasShownBoardMessage = true;
     }
 
-    if(this.EL_NUMERO === 1) {
+    if(this.EL_NUMERO === 1 && ole === 0) {
       this.cubeService.setButtonPressedCallback(this.handleButtonPress.bind(this));
       this.cubeService.setCamera(this.camera);
       this.cubeService.setScene(this.scene);
@@ -345,7 +361,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       }
     }
 
-    if(this.EL_NUMERO === 2) {
+    if(this.EL_NUMERO === 2 && ole === 0) {
       this.boardService.setButtonPressedCallback(this.handleButtonPress.bind(this));
       this.boardService.setCamera(this.camera);
       this.boardService.setScene(this.scene);
@@ -355,6 +371,10 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       if(!this.scene.getObjectById(board.id)){
         this.scene.add(board);
       }
+    }
+
+    if(ole === 1){
+      this.finalScreenService.initialize(this.scene, this.camera, this.renderer);
     }
 
     this.animate = this.animate.bind(this);
@@ -372,7 +392,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
           console.log(preguntas);
           if (this.preguntas && this.preguntas.length > 0) {
             this.preguntaActual = this.preguntas[this.indiceActual];
-            this.cargarAnimacion(this.preguntaActual);
+            this.cargarAnimacion(this.preguntaActual, 0);
             this.add3DText();
           }
           this.sesionService.crearSesion();
@@ -463,7 +483,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   
       this.obtenerNumeroAleatorio();
       console.log(this.EL_NUMERO);
-      this.cargarAnimacion(this.preguntaActual);
+      this.cargarAnimacion(this.preguntaActual, 0);
       this.add3DText();
     } else {
       // Manejar el final del cuestionario si es necesario
@@ -596,14 +616,16 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       await this.multiplicarYActualizarAmbitos();
       await this.sesionService.finalizarSesion();
       // window.location.reload();
+      //this.finalScreenService.initialize(this.scene, this.camera, this.renderer);
+      //this.finalScreenService.showFinalMessage();
     } catch (error) {
       console.error('Error en el proceso de reinicio:', error);
     }
   }
 
   obtenerNumeroAleatorio() {
-    //this.EL_NUMERO = Math.floor(Math.random() * 2) + 1;
+    this.EL_NUMERO = Math.floor(Math.random() * 2) + 1;
     //this.EL_NUMERO = 2;
-    this.EL_NUMERO = 1;
+    //this.EL_NUMERO = 1;
   }
 }

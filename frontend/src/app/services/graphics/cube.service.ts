@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import * as THREE from 'three';
-import { InterfazComponent } from '../../pages/alumnos/interfaz/interfaz.component';
 
 @Injectable({
   providedIn: 'root'
@@ -149,7 +148,7 @@ export class CubeService {
 
     this.createRotationButton()
 
-    this.resetCubeRotation();
+    //this.resetCubeRotation();
     this.initialCubeAnimation();
 
     this.cube!.rotation.y = 0;

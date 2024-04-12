@@ -27,6 +27,9 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   buttonMesh!: THREE.Mesh;
   buttonMaterial!: THREE.Material;
   buttonGeometry!: THREE.PlaneGeometry;
+  lastButtonClickTime: number = 0;
+
+  textMesh!: THREE.Mesh | undefined;
 
   preguntas: any[] = [];
   opcion: any[] = [];
@@ -60,6 +63,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     //if(this.EL_NUMERO === 2) {
       this.boardService.setButtonPressedCallback(this.handleButtonPress.bind(this));
     }*/
+    window.addEventListener('resize', this.onWindowResize.bind(this), false);
   }
 
   ngAfterViewInit() {
@@ -68,9 +72,32 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   }
 
   ngOnDestroy() {
+    window.removeEventListener('resize', this.onWindowResize.bind(this), false);
+  }
+
+  onWindowResize() {
+    // Actualiza el tamaño del renderer y la cámara
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+  
+    // Si ya has añadido texto a la escena, actualiza su escala y posición aquí
+    if (this.textMesh) {
+      this.createTextMesh(this.textMesh.geometry);
+    }
   }
 
   private handleButtonPress(): void {
+    const currentTime = new Date().getTime(); // Obtener el tiempo actual
+
+    if (currentTime - this.lastButtonClickTime < 1000) {
+      // Si ha pasado menos de un segundo desde el último clic, ignorar este clic
+      console.log("Espera un segundo antes de volver a pulsar el botón.");
+      return;
+    }
+
+    this.lastButtonClickTime = currentTime;
+
     console.log("El botón ha sido presionado");
 
     let selectedOption = undefined;
@@ -190,36 +217,67 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
 
   add3DText() {
     if (!this.preguntaActual) return;
-
+  
     const loader = new FontLoader();
     loader.load('../../../../assets/fonts/helvetiker_regular.typeface.json', (font) => {
       const textGeometry = new TextGeometry(this.preguntaActual.TextoPreguntaElegido ? this.preguntaActual.TextoPreguntaElegido : this.preguntaActual.TextoPregunta, {
         font: font,
-        size: 10,
+        size: 10, // Este es el tamaño inicial del texto. Puede necesitar ajustarse basado en el cálculo de escala
         height: 1,
         curveSegments: 12,
         bevelEnabled: false,
       });
   
       textGeometry.computeBoundingBox();
-      const textWidth = textGeometry.boundingBox!.max.x - textGeometry.boundingBox!.min.x;
-      const textHeight = textGeometry.boundingBox!.max.y - textGeometry.boundingBox!.min.y;
-
-      const textMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
-      const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-      textMesh.name = 'textMesh';
-
-      // Ajustes para centrar el texto en la pantalla
-      textMesh.position.x = -0.5 * textWidth;
-      textMesh.position.y = 3 * textHeight;
-      textMesh.position.z = 0;
-
-      this.scene.add(textMesh);
+  
+      // Calcula el tamaño del texto y ajusta su escala para que se ajuste dentro del área deseada
+      this.createTextMesh(textGeometry);
     });
   }
+  
+  createTextMesh(textGeometry: any) {
+    const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x;
+    const textHeight = textGeometry.boundingBox.max.y - textGeometry.boundingBox.min.y;
+
+    // Obtener las dimensiones del canvas
+    const canvasWidth = this.renderer.domElement.clientWidth;
+    const canvasHeight = this.renderer.domElement.clientHeight;
+
+    // Definir el área máxima que el texto debe ocupar como porcentaje del tamaño del canvas
+    const maxWidth = canvasWidth * 0.15 ;
+    const maxHeight = canvasHeight * 0.01 ;
+
+    // Calcular la escala necesaria para ajustar el texto dentro del área definida
+    const scaleX = maxWidth / textWidth;
+    const scaleY = maxHeight / textHeight;
+    const scale = Math.min(scaleX, scaleY);
+
+    // Crear y añadir el objeto de texto a la escena
+    const textMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+
+    if(this.textMesh === undefined){
+        this.textMesh = new THREE.Mesh(textGeometry, textMaterial);
+        this.scene.add(this.textMesh);
+    } else {
+        // Si el textMesh ya existe, actualiza su geometría y material
+        this.textMesh.geometry.dispose(); // Disponer la geometría anterior para evitar fugas de memoria
+        this.textMesh.geometry = textGeometry;
+        this.textMesh.material = textMaterial;
+    }
+  
+    // Ajustar la escala del texto para que se ajuste correctamente
+    this.textMesh.scale.set(scale, scale, 1);
+
+    // Ajustar la posición del texto para centrarlo horizontalmente y fijar la altura vertical
+    this.textMesh.position.x = -0.5 * textWidth * scale; // Centra el texto horizontalmente
+    const fixedHeight = 50; // Altura fija para la posición 'y' del texto
+    this.textMesh.position.y = fixedHeight; // Usar una altura fija en lugar de calcularla
+    this.textMesh.position.z = 0;
+  }
+
+  
 
   cargarAnimacion(preguntaActual: any){
-    console.log(this.scene);
     if(this.EL_NUMERO === 1) {
       this.cubeService.setButtonPressedCallback(this.handleButtonPress.bind(this));
       this.cubeService.setCamera(this.camera);
@@ -279,11 +337,9 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     }
 
     // Ejemplo de eliminación manual de un objeto agregado directamente a la escena
-    const textMesh = this.scene.getObjectByName('textMesh');
-    if (textMesh) {
-      this.scene.remove(textMesh);
-      (textMesh as THREE.Mesh).geometry.dispose();
-      ((textMesh as THREE.Mesh).material as THREE.Material).dispose();
+    if (this.textMesh) {
+      this.scene.remove(this.textMesh);
+      this.textMesh = undefined;
     }
   }
 
@@ -349,6 +405,8 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       // Manejar el final del cuestionario si es necesario
       this.mostrarReiniciar = true;
       this.preguntaActual = null;
+      this.scene.remove(this.buttonMesh);
+      this.reiniciar();
     }
   }
 
@@ -480,7 +538,8 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   }
 
   obtenerNumeroAleatorio() {
-    this.EL_NUMERO = Math.floor(Math.random() * 2) + 1;
-    //this.EL_NUMERO = 2;
+    //this.EL_NUMERO = Math.floor(Math.random() * 2) + 1;
+    this.EL_NUMERO = 2;
+    //this.EL_NUMERO = 1;
   }
 }

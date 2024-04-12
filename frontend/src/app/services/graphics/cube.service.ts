@@ -80,11 +80,11 @@ export class CubeService {
     const textureLoader = new THREE.TextureLoader();
     this.optionsMap = new Map();
   
-    // Primero, mezclar un arreglo de índices de caras para asegurar una asignación aleatoria
+    // Mezclar un arreglo de índices de caras para asegurar una asignación aleatoria
     let faceIndices = [0, 1, 2, 3, 4, 5];
     faceIndices = this.shuffleArray(faceIndices);
   
-    // Luego, crear materiales para las imágenes disponibles
+    // Crear materiales para las imágenes disponibles
     let imageMaterials = preguntaActual.respuestas.opciones.map((option: any) => {
       try {
         const texture = textureLoader.load(option.Imagen);
@@ -94,23 +94,21 @@ export class CubeService {
         return null;
       }
     }).filter((material: any) => material !== null);
-  
-    // Mezclar los materiales de las imágenes de manera aleatoria
-    imageMaterials = this.shuffleArray(imageMaterials);
-  
+    
     // Inicializar un arreglo de 6 materiales con blanco como predeterminado
     let materials = new Array(6).fill(null).map(() => new THREE.MeshPhongMaterial({ color: 0xf0ffff }));
   
-    // Asignar los materiales de imagen a caras aleatorias basadas en los índices mezclados
-    imageMaterials.forEach((material: any, index: any) => {
-      if (index < faceIndices.length) {
-        materials[faceIndices[index]] = material;
-        this.optionsMap.set(faceIndices[index], preguntaActual.respuestas.opciones[index]);
+    // Asignar los materiales de imagen y las respuestas a caras basadas en los índices mezclados
+    faceIndices.forEach((faceIndex, index) => {
+      if (index < imageMaterials.length) {
+        materials[faceIndex] = imageMaterials[index];
+        this.optionsMap.set(faceIndex, preguntaActual.respuestas.opciones[index]);
       }
     });
   
     return materials;
   }
+  
 
   configureCube(preguntaActual: any): THREE.Mesh {
     const cubeSize = 30;

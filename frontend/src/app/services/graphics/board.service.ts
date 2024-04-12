@@ -31,8 +31,8 @@ export class BoardService {
   isDragging = false;
   movableCube?: THREE.Mesh;
 
-  movableCubeWidth = 15;
-  movableCubeHeight = 15;
+  movableCubeWidth = 10;
+  movableCubeHeight = 10;
   movableCubeDepth = 5;
 
   offset!: THREE.Vector3;
@@ -77,7 +77,7 @@ export class BoardService {
   }
 
   initBoard(preguntaActual: any) {
-    const boardSize = 130; // Tamaño total del tablero
+    const boardSize = 100; // Tamaño total del tablero
     const numQuadrants = 8; // 8 cuadrantes
     const quadrantSize = boardSize / Math.sqrt(numQuadrants); // Tamaño de cada cuadrante
 
@@ -97,14 +97,12 @@ export class BoardService {
     this.adjustBoardPosition();
 
     this.createMovableCube();
-
-    console.log("Donde aparece el cubo", this.movableCube?.position);
     
     return this.boardGroup;
   }
 
   placeImagesOnBoard(preguntaActual: any) {
-    const boardSize = 100; // El tamaño total del tablero, asumiendo que se mantiene igual que antes
+    const boardSize = 80; // El tamaño total del tablero, asumiendo que se mantiene igual que antes
     const numQuadrants = 8; // Número total de cuadrantes, igual que antes
     const quadrantSize = boardSize / Math.sqrt(numQuadrants); // Calcular el tamaño de cada cuadrante
 
@@ -161,15 +159,15 @@ export class BoardService {
     // Asegúrate de llamar a este método después de configurar la cámara y la escena
     const box = new THREE.Box3().setFromObject(this.boardGroup);
     const center = box.getCenter(new THREE.Vector3());
-    this.boardGroup.position.y
     this.boardGroup.position.x += (this.boardGroup.position.x - center.x);
-    this.boardGroup.position.y += (this.boardGroup.position.y - center.y + 10);
+    this.boardGroup.position.y += (this.boardGroup.position.y - center.y + 8);
+    this.boardGroup.position.z += (this.boardGroup.position.z - center.z + 10);
   }
 
   //MOVIMIENTO ---------------------------------------------
   createMovableCube() {
     // Asegúrate de que la escena está definida y de que hay cuadrantes sin imágenes
-    if (!this.scene || this.quadrantMeshes.length === 0) return;
+    /*if (!this.scene || this.quadrantMeshes.length === 0) return;
   
     // Identifica cuadrantes vacíos (sin opción asignada o con opción null)
     let emptyQuadrants = this.quadrantMeshes.filter(q => !this.quadrantOptionMap.get(q));
@@ -183,7 +181,7 @@ export class BoardService {
     let randomIndex = Math.floor(Math.random() * emptyQuadrants.length);
     let chosenQuadrant = emptyQuadrants[randomIndex];
     console.log("Donde debe aparecer el cubo", chosenQuadrant.position);
-    console.log(emptyQuadrants)
+    console.log(emptyQuadrants)*/
 
     // Crea el cubo móvil
     const geometry = new THREE.BoxGeometry(this.movableCubeWidth, this.movableCubeHeight, this.movableCubeDepth);
@@ -192,9 +190,10 @@ export class BoardService {
   
     // Ajusta la posición del cubo para centrarlo en el cuadrante elegido
     this.movableCube.position.set(
-      chosenQuadrant.position.x,
+      /*chosenQuadrant.position.x,
       chosenQuadrant.position.y + 20,
-      chosenQuadrant.position.z // Asegura que el cubo esté ligeramente por encima del tablero
+      chosenQuadrant.position.z*/ // Asegura que el cubo esté ligeramente por encima del tablero
+      0,25,0
     );
 
     // Añade el cubo a la escena
@@ -280,7 +279,6 @@ export class BoardService {
   }
   
   checkCubePosition(cubePos: THREE.Vector3) {
-    console.log(this.movableCube?.position);
     // Reinicia la selección de opción y el color de todos los cuadrantes
     this.quadrantMeshes.forEach(quadrant => {
       const material = quadrant.material as THREE.MeshBasicMaterial;

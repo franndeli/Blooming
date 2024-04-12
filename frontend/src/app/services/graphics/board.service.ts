@@ -156,11 +156,12 @@ export class BoardService {
   adjustBoardPosition(): void {
     this.boardGroup.position.y = 0;
     this.boardGroup.position.x = 0;
+    this.boardGroup.position.z = 0;
     // Asegúrate de llamar a este método después de configurar la cámara y la escena
     const box = new THREE.Box3().setFromObject(this.boardGroup);
     const center = box.getCenter(new THREE.Vector3());
     this.boardGroup.position.x += (this.boardGroup.position.x - center.x);
-    this.boardGroup.position.y += (this.boardGroup.position.y - center.y + 8);
+    this.boardGroup.position.y += (this.boardGroup.position.y - center.y + 2.5);
     this.boardGroup.position.z += (this.boardGroup.position.z - center.z + 10);
   }
 

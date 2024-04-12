@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as THREE from 'three';
+import { InterfazComponent } from '../../pages/alumnos/interfaz/interfaz.component';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,7 @@ export class CubeService {
   camera!: THREE.PerspectiveCamera;
   scene!: THREE.Scene;
   buttonMesh!: any;
+  buttonMesh2! : any;
 
   private buttonPressedCallback: (() => void) | null = null;
 
@@ -18,6 +20,7 @@ export class CubeService {
   isSelected: boolean = false;
   selectedFaceIndex: number | null = null;
   isDragging: boolean = false;
+  isDraggingButton: boolean = false;
   previousMousePosition = {
     x: 0,
     y: 0
@@ -27,7 +30,17 @@ export class CubeService {
     y: 0
   };
 
-  constructor() {}
+  initialRotationDone: boolean = false;
+
+  handleMouseDown: any;
+  handleMouseMove: any;
+  handleMouseUp: any;
+
+  constructor() {
+    this.handleMouseDown = this.onMouseDown.bind(this);
+    this.handleMouseMove = this.onMouseMove.bind(this);
+    this.handleMouseUp = this.onMouseUp.bind(this);
+  }
 
   public setButtonPressedCallback(callback: () => void): void {
     this.buttonPressedCallback = callback;
@@ -44,16 +57,24 @@ export class CubeService {
   }  
 
   initMouseEvents(rendererElement: HTMLElement) {
-    rendererElement.addEventListener('mousedown', this.onMouseDown.bind(this), false);
-    window.addEventListener('mousemove', this.onMouseMove.bind(this), false);
-    window.addEventListener('mouseup', this.onMouseUp.bind(this), false);
+    rendererElement.addEventListener('mousedown', this.handleMouseDown, false);
+    window.addEventListener('mousemove', this.handleMouseMove, false);
+    window.addEventListener('mouseup', this.handleMouseUp, false);
   }
 
   removeMouseEvents(rendererElement: HTMLElement) {
-    rendererElement.removeEventListener('mousedown', this.onMouseDown.bind(this), false);
-    window.removeEventListener('mousemove', this.onMouseMove.bind(this), false);
-    window.removeEventListener('mouseup', this.onMouseUp.bind(this), false);
+    rendererElement.removeEventListener('mousedown', this.handleMouseDown, false);
+    window.removeEventListener('mousemove', this.handleMouseMove, false);
+    window.removeEventListener('mouseup', this.handleMouseUp, false);
   }
+
+  public createRotationButton(): void {
+    const buttonGeometry = new THREE.CircleGeometry(4, 32); // Radio de 5 y 32 segmentos
+    const buttonMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 }); // Color verde
+    this.buttonMesh2 = new THREE.Mesh(buttonGeometry, buttonMaterial);
+    this.buttonMesh2.position.set(10, -30, 30); // Posicionado delante del cubo
+    this.scene.add(this.buttonMesh2);
+  }  
 
   public setCamera(camera: THREE.PerspectiveCamera): void {
     this.camera = camera;
@@ -126,27 +147,75 @@ export class CubeService {
       this.cube = new THREE.Mesh(geometry, materials);
     }
 
-    // Establece la rotación inicial del cubo para que una cara esté orientada hacia la cámara
+    this.createRotationButton()
+
     this.resetCubeRotation();
+    this.initialCubeAnimation();
+
+    this.cube!.rotation.y = 0;
+    this.cube!.rotation.x = 0;
 
     return this.cube;
   }
 
   resetCubeRotation(): void {
-    this.cube!.rotation.set(0, 0, 0);
+    //this.cube!.rotation.set(0, 0, 0);
+  }
+
+  initialCubeAnimation() {
+    this.initialRotationDone = false;
+    
+    // Objetivos de rotación aleatorios
+    const targetRotationY = 0.001 * (Math.random() - 0.5); // Aleatorio entre -π y π
+    const targetRotationX = 0.001 * (Math.random() - 0.5); // Aleatorio entre -π y π
+    
+    // Velocidad de rotación constante (ajuste según necesidad)
+    const rotationSpeed = 0.01; // Velocidad constante
+    
+    // Calcular la cantidad de frames necesarios para alcanzar el objetivo a esta velocidad
+    const framesToReachTargetY = Math.abs(targetRotationY / rotationSpeed);
+    const framesToReachTargetX = Math.abs(targetRotationX / rotationSpeed);
+    
+    // Calcula el máximo de frames necesarios para ambas direcciones
+    const maxFrames = Math.max(framesToReachTargetY, framesToReachTargetX);
+    
+    // Calcula los pasos de rotación para igualar la duración en ambas direcciones
+    const rotationStepY = targetRotationY / maxFrames;
+    const rotationStepX = targetRotationX / maxFrames;
+    
+    let frames = 0;
+    
+    const animateInitialRotation = () => {
+      if (!this.cube || this.initialRotationDone || frames >= maxFrames) {
+        if (!this.initialRotationDone) {
+          // Establece inercia basada en la última velocidad de rotación aplicada
+          this.inertia.x = rotationStepY;
+          this.inertia.y = rotationStepX;
+        }
+        this.initialRotationDone = true;
+        return;
+      }
+      
+      // Aplicar la rotación incrementalmente
+      this.cube.rotation.y += rotationStepY;
+      this.cube.rotation.x += rotationStepX;
+      
+      frames++;
+      requestAnimationFrame(animateInitialRotation);
+    };
+    
+    animateInitialRotation();
   }
 
 
   private onMouseDown(event: MouseEvent): void {
     if (this.isDragging || !this.cube || !this.camera) return;
 
-    // Convertir la posición del mouse a coordenadas normalizadas (-1 a 1)
     const mouse = new THREE.Vector2(
       (event.clientX / window.innerWidth) * 2 - 1,
       -(event.clientY / window.innerHeight) * 2 + 1
     );
 
-    // Usar Raycaster para encontrar intersecciones
     const raycaster = new THREE.Raycaster();
     raycaster.setFromCamera(mouse, this.camera);
 
@@ -158,8 +227,7 @@ export class CubeService {
       this.isDragging = true;
       this.previousMousePosition.x = event.clientX;
       this.previousMousePosition.y = event.clientY;
-      this.inertia.x = 0;
-      this.inertia.y = 0;
+      // No resetees la inercia aquí, permitiendo que la inercia se acumule de movimientos previos
     }
 
     const intersects2 = raycaster.intersectObjects(this.scene.children);
@@ -168,6 +236,11 @@ export class CubeService {
         this.onButtonPressed();
         break;
       }
+    }
+
+    if (intersects2.length > 0 && intersects2[0].object === this.buttonMesh2) {
+      this.isDraggingButton = true; // Asume que existe una nueva propiedad isDraggingButton
+      event.preventDefault(); // Prevenir comportamientos predeterminados del navegador
     }
   }
 
@@ -204,25 +277,59 @@ export class CubeService {
   }
 
   private onMouseMove(event: MouseEvent) {
-    if (this.isDragging) {
+    if (this.isDragging && this.isDraggingButton) {
       const deltaX = event.clientX - this.previousMousePosition.x;
       const deltaY = event.clientY - this.previousMousePosition.y;
 
-      const rotationSpeed = 0.007;
+      const mouse = new THREE.Vector2(
+        (event.clientX / window.innerWidth) * 2 - 1,
+        -(event.clientY / window.innerHeight) * 2 + 1
+      );
+  
+      // Ahora necesitamos convertir estas coordenadas normalizadas del espacio de clip
+      // a coordenadas del mundo. Para hacerlo, usamos un truco con el raycaster.
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(mouse, this.camera);
+  
+      // Asumimos que el botón se mueve en un plano paralelo a la cámara,
+      // por lo que tomamos un punto en este plano (z fijo) para calcular su posición en el mundo.
+      // El valor de 'z' debería ser el mismo que el inicial de buttonMesh2 para mantenerlo en el mismo plano.
+      const zPos = this.buttonMesh2.position.z;
+      const planeZ = new THREE.Plane(new THREE.Vector3(0, 0, 1), -zPos);
+      const intersectPoint = new THREE.Vector3();
+      raycaster.ray.intersectPlane(planeZ, intersectPoint);
+  
+      // Actualizar la posición de buttonMesh2 con la posición calculada
+      this.buttonMesh2.position.x = intersectPoint.x;
+      this.buttonMesh2.position.y = intersectPoint.y;
 
-      this.cube!.rotation.y += deltaX * rotationSpeed;
-      this.cube!.rotation.x += deltaY * rotationSpeed;
-
+      if (deltaX !== 0 || deltaY !== 0) {
+        // Solo actualiza la inercia si hubo un movimiento significativo
+        const rotationSpeed = 0.005;
+        this.inertia.x = deltaX * rotationSpeed;
+        this.inertia.y = deltaY * rotationSpeed;
+      }
+  
+      this.cube!.rotation.y += this.inertia.x;
+      this.cube!.rotation.x += this.inertia.y;
+  
       this.previousMousePosition.x = event.clientX;
       this.previousMousePosition.y = event.clientY;
     }
   }
+  
+  
 
   private onMouseUp(event: MouseEvent): void {
     if (event.button === 0) {
       this.isDragging = false;
     }
+    if (this.isDraggingButton) {
+      this.isDraggingButton = false;
+    }
+    
   }
+  
 
   public getisSelected(){
     return this.isSelected
@@ -244,7 +351,7 @@ export class CubeService {
     if (this.cube) {
       // Limpiar geometría
       this.cube.geometry.dispose();
-  
+      this.buttonMesh2.geometry.dispose();
       // Limpiar materiales y texturas
       if (Array.isArray(this.cube.material)) {
         (this.cube.material as THREE.Material[]).forEach(material => {
@@ -256,6 +363,7 @@ export class CubeService {
   
       // Remover el cubo de la escena
       this.scene.remove(this.cube);
+      this.scene.remove(this.buttonMesh2);
   
       // Eliminar la referencia al cubo
       this.cube = undefined;
@@ -269,6 +377,20 @@ export class CubeService {
     this.isSelected = false;
     this.selectedFaceIndex = null;
     this.isDragging = false;
+  }
+
+  public updateCubeRotation() {
+    if (!this.cube) return;
+  
+    //console.log(this.cube.rotation);
+    // Aplicar inercia a la rotación del cubo
+    this.cube.rotation.y += this.inertia.x;
+    this.cube.rotation.x += this.inertia.y;
+    
+    //console.log(this.inertia);
+    // Reducir la inercia gradualmente
+    this.inertia.x *= 0.99; // Ajusta este valor según necesites
+    this.inertia.y *= 0.99;
   }
 }
 

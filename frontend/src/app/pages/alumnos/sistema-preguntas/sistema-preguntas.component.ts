@@ -30,6 +30,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   lastButtonClickTime: number = 0;
 
   textMesh!: THREE.Mesh | undefined;
+  textMesh2!: THREE.Mesh | undefined;
 
   preguntas: any[] = [];
   opcion: any[] = [];
@@ -43,6 +44,11 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   objectKeys = Object.keys;
 
   EL_NUMERO: number = 0;
+
+  hasShownCubeMessage: boolean = false;
+  hasShownBoardMessage: boolean = false;
+
+  animationId: number | null = null;
 
   constructor(
     private preguntaService: PreguntaService, 
@@ -72,6 +78,9 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   }
 
   ngOnDestroy() {
+    if (this.animationId) {
+      cancelAnimationFrame(this.animationId); // Asegúrate de cancelar el ciclo de animación cuando el componente se destruya
+    }
     window.removeEventListener('resize', this.onWindowResize.bind(this), false);
   }
 
@@ -210,9 +219,17 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   //BOTÓN --------------------------------------------------------------------------------
 
   animate() {
-    requestAnimationFrame(this.animate);
-    this.updateButtonVisibility();
-    this.renderer.render(this.scene, this.camera);
+    if (!this.animationId) { // Solo inicia la animación si no está ya en ejecución
+      const animateLoop = () => {
+        this.updateButtonVisibility();
+        if(this.EL_NUMERO === 1){
+          this.cubeService.updateCubeRotation();
+        }
+        this.renderer.render(this.scene, this.camera);
+        this.animationId = requestAnimationFrame(animateLoop);
+      };
+      animateLoop();
+    }
   }
 
   add3DText() {
@@ -275,9 +292,47 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     this.textMesh.position.z = 0;
   }
 
-  
+  // Agrega este método a tu clase de componente
+  addInstructionText(message: string) {
+    const loader = new FontLoader();
+    loader.load('../../../../assets/fonts/helvetiker_regular.typeface.json', (font) => {
+      const textGeometry = new TextGeometry(message, {
+        font: font,
+        size: 3, // Ajusta según sea necesario
+        height: 0.1,
+        curveSegments: 12,
+        bevelEnabled: false,
+      });
+
+      textGeometry.computeBoundingBox();
+      const textMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+      this.textMesh2 = new THREE.Mesh(textGeometry, textMaterial);
+
+      if (textGeometry.boundingBox) {
+        const textWidth = textGeometry.boundingBox.max.x - textGeometry.boundingBox.min.x;
+        this.textMesh2.position.x = -0.5 * textWidth;
+        this.textMesh2.position.y = 40; // Ajusta según la posición de tu textMesh principal
+        this.textMesh2.position.z = 0;
+      }
+
+      this.scene.add(this.textMesh2);
+    });
+  }
+
 
   cargarAnimacion(preguntaActual: any){
+    if(this.EL_NUMERO === 1 && !this.hasShownCubeMessage) {
+      // Muestra el mensaje para el cubeService si aún no se ha mostrado
+      this.addInstructionText("¡Mueve el botón verde con el ratón y selecciona tu respuesta en el cubo!");
+      this.hasShownCubeMessage = true;
+    }
+
+    if(this.EL_NUMERO === 2 && !this.hasShownBoardMessage) {
+      // Muestra el mensaje para el boardService si aún no se ha mostrado
+      this.addInstructionText("¡Pon el cubo naranja sobre la respuesta que quieras!");
+      this.hasShownBoardMessage = true;
+    }
+
     if(this.EL_NUMERO === 1) {
       this.cubeService.setButtonPressedCallback(this.handleButtonPress.bind(this));
       this.cubeService.setCamera(this.camera);
@@ -327,21 +382,30 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   }
 
   clearScene() {
-    if(this.EL_NUMERO === 1){
-      this.cubeService.removeMouseEvents(this.rendererContainer.nativeElement);
-      this.cubeService.clearScene();
-    }
-    if(this.EL_NUMERO === 2){
-      this.boardService.removeMouseEvents(this.rendererContainer.nativeElement);
-      this.boardService.clearScene();
+
+    if (this.EL_NUMERO === 1) {
+        this.cubeService.removeMouseEvents(this.rendererContainer.nativeElement);
+        this.cubeService.clearScene();
+    } else if (this.EL_NUMERO === 2) {
+        this.boardService.removeMouseEvents(this.rendererContainer.nativeElement);
+        // Si decides implementar un fadeOut para el boardService, aquí iría el código similar al del cubeService
+        this.boardService.clearScene();
     }
 
-    // Ejemplo de eliminación manual de un objeto agregado directamente a la escena
+    // Asumiendo que los textMesh siempre deben eliminarse, independientemente del número
     if (this.textMesh) {
-      this.scene.remove(this.textMesh);
-      this.textMesh = undefined;
+        this.scene.remove(this.textMesh);
+        this.textMesh = undefined;
+    }
+    if (this.textMesh2) {
+        this.scene.remove(this.textMesh2);
+        this.textMesh2 = undefined;
     }
   }
+
+
+
+
 
 
 
@@ -387,7 +451,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       this.gravedadesPorAmbito[ambitoActual] += gravedad;
     }
 
-    this.clearScene();
+    this.clearScene()
     this.loadNewQuestion();
   }
 
@@ -539,7 +603,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
 
   obtenerNumeroAleatorio() {
     //this.EL_NUMERO = Math.floor(Math.random() * 2) + 1;
-    this.EL_NUMERO = 2;
-    //this.EL_NUMERO = 1;
+    //this.EL_NUMERO = 2;
+    this.EL_NUMERO = 1;
   }
 }

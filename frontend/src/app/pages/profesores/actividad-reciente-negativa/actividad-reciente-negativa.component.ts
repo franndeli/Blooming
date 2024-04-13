@@ -59,6 +59,7 @@ export class ActividadRecienteNegativaComponent {
   public alumnosClase: any;
   public alumnosAmbitos: any;
   alumnosInfo: AlumnosInfo[] = [];
+  alumnosInfo2: AlumnosInfo[] = [];
   private claseID: any;
 
   
@@ -84,7 +85,7 @@ export class ActividadRecienteNegativaComponent {
     this.alumnoService.getAlumnos().subscribe((res: any) => {
       this.alumnosData = res.alumnos;
       this.totalAlumnos = this.alumnosData.length;
-      console.log(this.alumnosData);
+      
     }, error => {
       console.error('Error al obtener los alumnos:', error);
     });
@@ -110,9 +111,22 @@ export class ActividadRecienteNegativaComponent {
     });
   }
 
+  mostrarMensaje: boolean = true; // Variable para controlar la visibilidad del mensaje
+  hayDatos: boolean = false; // Variable para indicar si hay datos o no
+  
   dibujarGrafica(){
     type EChartsOption = echarts.EChartsOption;
+    // Verificar si hay datos en algún array
+    if (this.conRiesgo.length > 0 || this.sinRiesgo.length > 0 || this.conysinRiesgo.length > 0) {
+      this.hayDatos = true;
+    } else {
+      this.hayDatos = false;
+    }
 
+    // Actualizar visibilidad del mensaje
+    this.mostrarMensaje = !this.hayDatos;
+
+    
     var chartDom = document.getElementById('chart2')!;
     var myChart = echarts.init(chartDom);
     var option: EChartsOption;
@@ -163,9 +177,9 @@ export class ActividadRecienteNegativaComponent {
             show: true
           },
           data: [
-            { value: this.conRiesgo.length, name: 'Con Riesgo', itemStyle: { color: '#F7835B' }},
-            { value: this.sinRiesgo.length, name: 'Sin Riesgo', itemStyle: { color: '#2ecc71' } },
-            { value: this.conysinRiesgo.length, name: 'Normal', itemStyle: { color: '#F2F75B' } }
+            { value: this.conRiesgo.length, name: 'Con Riesgo', itemStyle: { color: 'rgb(233, 31, 31)' }},
+            { value: this.sinRiesgo.length, name: 'Sin Riesgo', itemStyle: { color: '#61AB3D' } },
+            { value: this.conysinRiesgo.length, name: 'Normal', itemStyle: { color: '#dce232' } }
           ]
         }
       ]
@@ -214,7 +228,7 @@ export class ActividadRecienteNegativaComponent {
       }
     }
     if (this.contBueno > this.contMalo) {
-      this.sinRiesgo.push({nombre: this.clasesData.clases[index]?.Nombre, cont:this.contBueno});
+      this.sinRiesgo.push({nombre: this.clasesData.clases[index]?.Nombre, cont:this.contBueno, maxalumnos: this.clasesData.clases[index]?.NumAlumnos});
       this.clasesExisten.push({nombre: this.clasesData.clases[index].Nombre});
     } else if (this.contMalo > this.contBueno) {
       this.conRiesgo.push({claseid: this.clasesData.clases[index]?.ID_Clase,nombre: this.clasesData.clases[index]?.Nombre, cont:this.contMalo, maxalumnos: this.clasesData.clases[index]?.NumAlumnos});
@@ -226,8 +240,9 @@ export class ActividadRecienteNegativaComponent {
     this.sinRiesgo.sort((a, b) => b.cont - a.cont);
     this.conRiesgo.sort((a, b) => b.cont - a.cont);
     this.dibujarGrafica();
-    console.log(this.clasesExisten[0].nombre)
+    //console.log(this.clasesExisten[0].nombre)
     this.onChangeClase(this.clasesExisten[0].nombre);
+    this.onChangeClase2(this.clasesExisten[0].nombre);
   }
 
   onChangeClase(event: any) {
@@ -243,6 +258,26 @@ export class ActividadRecienteNegativaComponent {
             this.alumnosInfo.push({idAlumno: this.alumnosData[i].ID_Alumno , nombre: this.alumnosData[i].Nombre, apellidos: this.alumnosData[i].Apellidos, clase: this.alumnosData[i].Clase, estado: this.alumnosData[i].Estado});
           } else if(this.alumnosData[i].Estado === 'Muy Malo'){
             this.alumnosInfo.push({ nombre: this.alumnosData[i].Nombre, apellidos: this.alumnosData[i].Apellidos, clase: this.alumnosData[i].Clase, estado: this.alumnosData[i].Estado});
+          }
+        }
+      }
+    }
+  }
+
+  onChangeClase2(event: any){
+    this.alumnosInfo2 = [];
+    let nombreSeleccionado: string | undefined = event.target?.value;
+    if(!nombreSeleccionado){
+      nombreSeleccionado = this.clasesExisten[0].nombre;
+    }
+    
+    if (nombreSeleccionado) {
+      for(let i=0; i<this.alumnosData.length; i++){
+        if(this.alumnosData[i].Clase.Nombre === nombreSeleccionado && this.alumnosData[i].ID_Centro === this.centro){
+          if( this.alumnosData[i].Estado === 'Bueno'){
+            this.alumnosInfo2.push({idAlumno: this.alumnosData[i].ID_Alumno , nombre: this.alumnosData[i].Nombre, apellidos: this.alumnosData[i].Apellidos, clase: this.alumnosData[i].Clase, estado: this.alumnosData[i].Estado});
+          } else if(this.alumnosData[i].Estado === 'Muy Bueno'){
+            this.alumnosInfo2.push({ nombre: this.alumnosData[i].Nombre, apellidos: this.alumnosData[i].Apellidos, clase: this.alumnosData[i].Clase, estado: this.alumnosData[i].Estado});
           }
         }
       }

@@ -155,12 +155,16 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
   }
 
   getGravedadClass(gravedad: number){
-    if(gravedad >= 0 && gravedad < 50){
-      return 'grave-gravedad';
-    } else if(gravedad >= 50 && gravedad <= 65){
-      return 'leve-gravedad';
-    }else if(gravedad > 65 && gravedad <= 100){
-      return 'nula-gravedad';
+    if(gravedad >= 0 && gravedad < 20){
+      return 'muymalo-gravedad';
+    }else if(gravedad >= 20 && gravedad <= 40){
+      return 'malo-gravedad';
+    } else if(gravedad >= 40 && gravedad <= 60){
+      return 'normal-gravedad';
+    }else if(gravedad >= 60 && gravedad <= 80){
+      return 'bueno-gravedad';
+    }else if(gravedad > 80 && gravedad <= 100){
+      return 'muybueno-gravedad';
     } else {
       return '';
     }

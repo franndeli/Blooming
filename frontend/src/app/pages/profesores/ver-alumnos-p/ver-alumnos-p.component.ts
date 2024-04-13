@@ -156,17 +156,17 @@ export class VerAlumnosPComponent implements OnInit{
       clase = 'badge bg-success rounded-3 fw-semibold';
     }
     if(estado === 'Bueno'){
-      clase = 'badge bg-success rounded-3 fw-semibold';
+      clase = 'badge bg-verde1 rounded-3 fw-semibold';
     }
     if(estado === 'Normal'){
-      clase = 'badge bg-warning rounded-3 fw-semibold';
+      clase = 'badge bg-amarillo rounded-3 fw-semibold';
       this.contNormal++;
     }
     if(estado === 'Muy Malo'){
       clase = 'badge bg-danger rounded-3 fw-semibold';
     }
     if(estado === 'Malo'){
-      clase = 'badge bg-danger rounded-3 fw-semibold';
+      clase = 'badge bg-warning rounded-3 fw-semibold';
       this.contMalo++;
     }
 
@@ -229,11 +229,11 @@ export class VerAlumnosPComponent implements OnInit{
             show: false
           },
           data: [
-            { value: this.contMuyBueno, name: 'Muy Bueno', itemStyle: { color: '#2ecc71' } },
-            { value: this.contBueno, name: 'Bueno', itemStyle: { color: '#92EF91' } },
-            { value: this.contNormal, name: 'Normal', itemStyle: { color: '#F2F75B' } },
+            { value: this.contMuyBueno, name: 'Muy Bueno', itemStyle: { color: '#61AB3D' } },
+            { value: this.contBueno, name: 'Bueno', itemStyle: { color: '#8aca69' } },
+            { value: this.contNormal, name: 'Normal', itemStyle: { color: '#dce232' } },
             { value: this.contMalo, name: 'Malo', itemStyle: { color: '#F7C65B' } },
-            { value: this.contMuyMalo, name: 'Muy Malo', itemStyle: { color: '#F7835B' } },
+            { value: this.contMuyMalo, name: 'Muy Malo', itemStyle: { color: 'rgb(233, 31, 31)' } },
           ]
         }
       ]

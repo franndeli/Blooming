@@ -10592,6 +10592,13 @@ fieldset:disabled .btn {
     var(--bs-bg-opacity)
   ) !important;
 }
+.bg-verde {
+  --bs-bg-opacity: 1;
+  background-color: rgba(
+    var(--mi-verde),
+    var(--bs-bg-opacity)
+  ) !important;
+}
 .bg-secondary {
   --bs-bg-opacity: 1;
   background-color: rgba(

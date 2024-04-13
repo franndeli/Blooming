@@ -39,7 +39,6 @@ data-sidebar-position="fixed" data-header-position="fixed">
                     </div>
                   </div>
                 </div>
-                <a href="/profesores/dashboard" class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</a>
               </div>
             </div> 
           </div>
@@ -48,30 +47,32 @@ data-sidebar-position="fixed" data-header-position="fixed">
           <div class="row">
             <div class="col-lg-12">
               <div class="card overflow-hidden position-relative">
-                <div class="card-body">
-                  <h5 class="card-title mb-9 fw-semibold"><span><i class="ti ti-graph" style="font-size: 20px;"></i></span> Gráfica General/Ámbitos</h5> 
+                <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
+                  <div class="card-body"  >
+                    <h5 class="card-title mb-9 fw-semibold" style="margin-left: 10px; margin-top: 10px;">Gráfica General/Ámbitos <span><i class="ti ti-graph" style="font-size: 20px;"></i></span></h5> 
+                  </div>
+                  <div class="card-body" style="background-color: #fff; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);">
+                  <div class="position-absolute top-0 end-0 mt-3 me-2">
+                    <select class="form-select py-1 ps-2 border-1 border-success bg-light rounded-pill" 
+                            (change)="onChangeOption($event)" 
+                            style="outline: none; margin-top: 10px;">
+                      <option>General</option>
+                      <option>Clase</option>
+                      <option>Amigos</option>
+                      <option>Familia</option>
+                      <option>Emociones</option>
+                      <option>Fuera de clase</option>
+                    </select>
+                  </div>
+                  <div id="chart1"></div>
                 </div>
-                <div class="position-absolute top-0 end-0 mt-3 me-2">
-                  <select class="form-select py-1 ps-2 border-1 border-success bg-light rounded-pill" 
-                          (change)="onChangeOption($event)" 
-                          style="outline: none; margin-top: 10px;">
-                    <option>General</option>
-                    <option>Clase</option>
-                    <option>Amigos</option>
-                    <option>Familia</option>
-                    <option>Emociones</option>
-                    <option>Fuera de clase</option>
-                  </select>
                 </div>
-                <div id="chart1"></div>
               </div>
-              
             </div>
-            
           </div>
         </div>   
       </div>
-      <div class="container-fluid">
+      <div class="container-fluid" style="padding: 0;">
         <div class="card">
             <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
                 <div class="card-body">
@@ -111,10 +112,10 @@ data-sidebar-position="fixed" data-header-position="fixed">
                             </div>
                         </div>
                     </div>
-                    <a href="/profesores/dashboard" class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</a>
                 </div>
             </div>
         </div>
+        <a href="/profesores/dashboard" class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</a>
       </div>
     </div>
   </div>

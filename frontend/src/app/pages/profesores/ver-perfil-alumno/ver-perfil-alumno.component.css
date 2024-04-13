@@ -29,24 +29,41 @@
   font-weight: bold;
 }
 
-.nula-gravedad {
-  background-color: rgba(0, 128, 0, 0.786);
+.muybueno-gravedad {
+  background-color: var(--mi-verde);
   margin: 0 auto;
   text-align: center;
   border-radius: 65px;
   color: white;
 }
 
-.leve-gravedad {
+.bueno-gravedad {
   /* background-color: rgb(255, 174, 31); */
-  background-color: rgba(73, 190, 255, 1);
+  background-color: #8aca69;
   margin: 0 auto;
   text-align: center;
   border-radius: 65px;
   color: white;
 }
-  
-.grave-gravedad {
+
+.normal-gravedad {
+  /* background-color: rgb(255, 174, 31); */
+  background-color: #dce232;
+  margin: 0 auto;
+  text-align: center;
+  border-radius: 65px;
+  color: white;
+}
+
+.malo-gravedad {
+  background-color: #F7C65B;
+  margin: 0 auto;
+  text-align: center;
+  border-radius: 65px;
+  color: white;
+}
+
+.muymalo-gravedad {
   background-color: rgba(233, 31, 31, 0.855);
   margin: 0 auto;
   text-align: center;

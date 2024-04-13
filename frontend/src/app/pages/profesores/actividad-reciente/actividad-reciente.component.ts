@@ -34,7 +34,7 @@ export class ActividadRecienteComponent implements OnInit {
 
   obtenerActividadReciente(buscar: string) {
     this.busqueda = buscar;
-    this.respuestaService.getRespuestasCentro(this.idCentro, this.posActual, this.filPag, buscar).subscribe((res: any) => {
+    this.respuestaService.getRespuestasCentro(this.idCentro, 0, this.posActual, this.filPag).subscribe((res: any) => {
       if(res["respuestas"].length === 0){
         if(this.posActual > 0){
           this.posActual = this.posActual - this.filPag;

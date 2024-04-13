@@ -62,7 +62,7 @@ export class RespuestaService {
       return this.http.get(this.basePath+'?ID_Clase='+id+'&numFilas='+filas+'&desde='+desde, this.httpOptions);
     }
 
-    getRespuestasCentro(id: any, desde?: number, filas?: number, textoBusqueda?: string){
+    getRespuestasCentro(id: any, gravedad: number, desde?: number, filas?: number, textoBusqueda?: string){
       this.getHeader();
       if(!desde){
         desde = 0;
@@ -73,7 +73,7 @@ export class RespuestaService {
       if(!textoBusqueda){
         textoBusqueda = '';
       }
-      return this.http.get(this.basePath+'?ID_Centro='+id+'&numFilas='+filas+'&desde='+desde, this.httpOptions);
+      return this.http.get(this.basePath+'?ID_Centro='+id+'&Gravedad='+gravedad+'&numFilas='+filas+'&desde='+desde, this.httpOptions);
     
     }
 

@@ -40,12 +40,14 @@ data-sidebar-position="fixed" data-header-position="fixed">
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let clase of conRiesgo.slice(0, 5)">
+                  <tr *ngFor="let clase of conRiesgo">
                     <td style="text-align: center;"><span class="badge bg-danger rounded-3 fw-semibold" style="cursor: pointer;" (click)="verClase(clase.claseid)">{{ clase.nombre }}</span></td>
                     <td style="white-space: nowrap; text-align: center;">{{ clase.cont }} / {{ clase.maxalumnos}}</td>
                   </tr>
                 </tbody>
               </table>
+              <!-- <br>
+              <app-pagination (cambiarPagina)="cambiarPagina($event)" [texto]="false" [totalRegistros]="totalClases" [registroActual]="posActual+1" [registroPag]="filPag"></app-pagination> -->
             </div>
             <ng-template #noClasesAlarmantes>
               <p class="text-center" style="margin-top: 45px;">No hay clases alarmantes</p>
@@ -159,10 +161,10 @@ data-sidebar-position="fixed" data-header-position="fixed">
               <h5 class="card-title fw-semibold mb-4">Informe Emocional - Últimas 5 respuestas <span><i class="ti ti-alert-triangle" style="font-size: 20px;"></i></span></h5>
               <div class="position-absolute top-0 end-0 mt-3 me-2">
                 <select class="form-select py-1 ps-2 border-1 border-success bg-light rounded-pill" 
-                        style="outline: none; margin-top: 10px;"> 
-                  <option>General</option>
-                  <option>Positivo</option>
-                  <option>Negativo</option>
+                        style="outline: none; margin-top: 10px;" (change)="cambiarGravedad($event)"> 
+                  <option value=0>Todas</option>
+                  <option value=2>Positivas</option>
+                  <option value=-2>Negativas</option>
                 </select>
               </div>
               <div class="card">

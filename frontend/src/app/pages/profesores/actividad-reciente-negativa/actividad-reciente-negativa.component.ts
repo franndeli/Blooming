@@ -199,7 +199,6 @@ export class ActividadRecienteNegativaComponent {
           this.totalClases = 0;
         }
       }else{
-        console.log(res)
         this.clasesData = res.clases;
         this.totalClases = res.page.total;
       }

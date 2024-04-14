@@ -55,6 +55,12 @@ export class SesionService {
       return this.http.get(this.basePath+ 'count?ID_Alumno='+id, this.httpOptions);
     }
 
+    getSesionesAlumnoID(id: any){
+      const token = this.getToken();
+      const headers = new HttpHeaders().set('x-token', `${token}`);
+      return this.http.get<any[]>(this.basePath+'?ID_Alumno='+id, {headers});
+    }
+
     crearSesion() {
       this.getHeader();
       const alumnoId = localStorage.getItem('id'); // Asume que el ID del alumno ya está guardado en localStorage
@@ -63,10 +69,13 @@ export class SesionService {
         return;
       }
       this.alumnoservice.getAlumnoID(localStorage.getItem('id')).subscribe((respuesta: any) => {
+        let fechaInicio = new Date(); // Crea un objeto de fecha con la fecha y hora actual
+        fechaInicio.setHours(fechaInicio.getHours() + 2); // Suma dos horas a la fecha actual
 
+        let fechaInicioISO = fechaInicio.toISOString(); // Convierte la fecha modificada a formato ISO
         const inicioSesion = {
           ID_Alumno: alumnoId,
-          FechaInicio: new Date().toISOString(), // Guarda la fecha actual como el inicio de la sesión
+          FechaInicio: fechaInicioISO, // Guarda la fecha actual como el inicio de la sesión
           ValorAmbitoInicio: JSON.parse(respuesta.alumnos[0].Ambitos)
         };
     
@@ -81,24 +90,31 @@ export class SesionService {
       })
     }
   
-    finalizarSesion() {
+    finalizarSesion(gravedadesActualizadas: any) {
+      console.log("Entro en finalizarSesion");
       this.getHeader();
       const sesionId = localStorage.getItem('sesionId');
       if (!sesionId) {
         console.error('ID de sesión no encontrado en localStorage');
         return;
       }
-      this.alumnoservice.getAlumnoID(localStorage.getItem('id')).subscribe((response: any) =>{
-        const finSesion = {
-          FechaFin: new Date().toISOString(),
-          ValorAmbitoFin: JSON.parse(response.alumnos[0].Ambitos)
-        };
-        this.http.put(this.basePath + sesionId, finSesion, this.httpOptions).subscribe({
-          next: () => console.log('Sesión finalizada con éxito.'),
-          error: (error) => console.error('Error al finalizar sesión:', error)
-        });
-        localStorage.removeItem('sesionId');
-      }) 
+    
+      console.log(new Date().toISOString());
+      let fechaFin = new Date(); // Crea un objeto de fecha con la fecha y hora actual
+      fechaFin.setHours(fechaFin.getHours() + 2); // Suma dos horas a la fecha actual
+
+      let fechaFinISO = fechaFin.toISOString(); // Convierte la fecha modificada a formato ISO
+
+      const finSesion = {
+        FechaFin: fechaFinISO,
+        ValorAmbitoFin: gravedadesActualizadas
+      };
+      this.http.put(this.basePath + sesionId, finSesion, this.httpOptions).subscribe({
+        next: () => console.log('Sesión finalizada con éxito.'),
+        error: (error) => console.error('Error al finalizar sesión:', error)
+      });
+      localStorage.removeItem('sesionId');
+       
       
     }
 }

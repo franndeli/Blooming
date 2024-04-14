@@ -51,6 +51,8 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
 
   animationId: number | null = null;
 
+  private gravedadesActualizadas: any;
+
   constructor(
     private preguntaService: PreguntaService, 
     private alumnoService: AlumnoService, 
@@ -59,27 +61,48 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     private cubeService: CubeService,
     private boardService: BoardService,
     private finalScreenService: FinalScreenService,
-    private globalStateService: GlobalStateService
   ) {}
 
-  ngOnInit() {
-    this.obtenerNumeroAleatorio();
-    this.initializeScene();
-    if (this.globalStateService.isTimeToShow) {
-      // Procede con el flujo normal
-      this.cargarPreguntas();
-      if(this.EL_NUMERO === 1) {
-        this.cubeService.setButtonPressedCallback(this.handleButtonPress.bind(this));
+  async ngOnInit() {
+    try{
+      this.obtenerNumeroAleatorio();
+      this.initializeScene();
+      await this.iniciarGlobalState();
+      //console.log(localStorage.getItem('mostrarContador'));
+      console.log(localStorage.getItem('mostrarContador'));
+      if (localStorage.getItem('mostrarContador') === 'false') {
+        console.log('hola');
+        // Procede con el flujo normal
+        if(this.finalScreenService.scene){
+          this.finalScreenService.clearScene();
+        }
+        this.cargarPreguntas();
+        if(this.EL_NUMERO === 1) {
+          this.cubeService.setButtonPressedCallback(this.handleButtonPress.bind(this));
+        }
+        if(this.EL_NUMERO === 2) {
+          this.boardService.setButtonPressedCallback(this.handleButtonPress.bind(this));
+        }
+      } else{
+        console.log("Inicializando finalScreenService");
+        this.cargarAnimacion(this.preguntaActual!, 1);
       }
-      if(this.EL_NUMERO === 2) {
-        this.boardService.setButtonPressedCallback(this.handleButtonPress.bind(this));
-      }
-    } else{
-      console.log("Inicializando finalScreenService");
-      this.cargarAnimacion(this.preguntaActual!, 1);
+      
+      window.addEventListener('resize', this.onWindowResize.bind(this), false);
+    } catch(error){
+      console.error("Error al inicializar el estado:", error);
     }
-    
-    window.addEventListener('resize', this.onWindowResize.bind(this), false);
+
+  }
+
+  async iniciarGlobalState(){
+    try {
+      await this.finalScreenService.initializeState();
+      console.log("Estado inicializado correctamente.");
+      // Continuar con más lógica después de la inicialización
+    } catch (error) {
+      console.error("Error al inicializar el estado:", error);
+    }
   }
 
   ngAfterViewInit() {
@@ -387,6 +410,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       this.aparicionambitos = JSON.parse(ambitos.alumnos[0].AparicionAmbitos);
       this.sesionService.getSesionCount(localStorage.getItem('id')).subscribe((sesiones: any) => {
         this.nsesiones = sesiones.count;
+        console.log(this.nsesiones);
         this.preguntaService.seleccionarPreguntas(this.ambitos, this.aparicionambitos, this.nsesiones).subscribe(preguntas => {
           this.preguntas = preguntas;
           console.log(preguntas);
@@ -471,6 +495,8 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       this.gravedadesPorAmbito[ambitoActual] += gravedad;
     }
 
+    console.log(this.gravedadesPorAmbito);
+
     this.clearScene()
     this.loadNewQuestion();
   }
@@ -487,7 +513,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       this.add3DText();
     } else {
       // Manejar el final del cuestionario si es necesario
-      this.mostrarReiniciar = true;
+      //this.mostrarReiniciar = true;
       this.preguntaActual = null;
       this.scene.remove(this.buttonMesh);
       this.reiniciar();
@@ -495,6 +521,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   }
 
   multiplicarYActualizarAmbitos() {
+    console.log("Entro en multiplicarYActualizarAmbitos");
     return new Promise((resolve, reject) => {
       this.alumnoService.getAlumnoID(localStorage.getItem('id')).subscribe({
         next: (resultado: any) => {
@@ -522,6 +549,8 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
           });
       
           // Actualiza los ámbitos en el backend
+          console.log(gravedadesActualizadas);
+          this.gravedadesActualizadas = gravedadesActualizadas;
           this.actualizarAmbitosEnBackend(gravedadesActualizadas).then(() => {
             // Una vez que se actualizan los ámbitos, actualizar aparicionAmbitos
             this.actualizarAparicionAmbitos().then(() => {
@@ -535,13 +564,15 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   }
 
   actualizarAmbitosEnBackend(ambitosActualizados: any) {
+    console.log("Entro en actualizarAmbitosEnBackend");
     return new Promise((resolve, reject) => {
       const alumnoId = localStorage.getItem('id');
+      console.log(ambitosActualizados);
       const datosActualizados = {
         ID_Alumno: alumnoId,
         Ambitos: ambitosActualizados // Envía como objeto JavaScript directamente
       };
-  
+      
       this.alumnoService.putAlumno(datosActualizados).subscribe({
         next: (response) => {
           console.log('Ambitos actualizados con éxito:', response);
@@ -555,8 +586,8 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     });
   }
   
-  
   actualizarAparicionAmbitos() {
+    console.log("Entro en actualizarAparicionAmbitos");
     return new Promise((resolve, reject) => {
       this.alumnoService.getAlumnoID(localStorage.getItem('id')).subscribe((resultado: any) => {
         if (resultado.alumnos && resultado.alumnos.length > 0) {
@@ -606,17 +637,16 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       });
     });
   }
-  
-  esUltimaPregunta(): boolean {
-    return this.mostrarReiniciar;
-  }
 
   async reiniciar() {
     try {
       await this.multiplicarYActualizarAmbitos();
-      await this.sesionService.finalizarSesion();
+      console.log("Salgo de await this.multiplicarYActualizarAmbitos()");
+      await this.sesionService.finalizarSesion(this.gravedadesActualizadas);
       // window.location.reload();
-      //this.finalScreenService.initialize(this.scene, this.camera, this.renderer);
+      localStorage.setItem('mostrarContador', 'true');
+      this.finalScreenService.setThisMostrarContador(true);
+      this.finalScreenService.initialize(this.scene, this.camera, this.renderer);
       //this.finalScreenService.showFinalMessage();
     } catch (error) {
       console.error('Error en el proceso de reinicio:', error);

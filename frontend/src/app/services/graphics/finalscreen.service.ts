@@ -8,9 +8,9 @@ import { GlobalStateService } from './helpers/globalstate.service';
   providedIn: 'root'
 })
 export class FinalScreenService {
-    private scene!: THREE.Scene;
-    private camera!: THREE.PerspectiveCamera;
-    private renderer!: THREE.WebGLRenderer;
+    scene!: THREE.Scene;
+    camera!: THREE.PerspectiveCamera;
+    renderer!: THREE.WebGLRenderer;
 
     textMesh!: THREE.Mesh;
 
@@ -20,9 +20,6 @@ export class FinalScreenService {
     nextQuestionTextMesh!: THREE.Mesh;
 
     private countdownTextMesh!: THREE.Mesh;
-
-    public isTimeToShow: boolean = true;
-    public countdownTime: number = 3600;
   
     constructor(
         private globalStateService: GlobalStateService
@@ -178,7 +175,7 @@ export class FinalScreenService {
   }
 
   public updateCountdown(): void {
-    if (!this.globalStateService.isTimeToShow) {
+    if (this.globalStateService.mostrarContador) {
         const time = this.globalStateService.calculateTimeUntilNextPeriod()
         const countdownString = `${time.hours.toString().padStart(2, '0')}:${time.minutes.toString().padStart(2, '0')}:${time.seconds.toString().padStart(2, '0')}`;
         this.updateCountdownMesh(countdownString);
@@ -236,6 +233,44 @@ export class FinalScreenService {
     this.updateCountdown();
   }
 
+  public clearScene(): void {
+    // Llamar a la función de limpieza en GlobalStateService
+    this.globalStateService.clearCache();
+  
+    // Limpiar objetos de Three.js en la escena
+    while(this.scene.children.length > 0){ 
+      const object = this.scene.children[0];
+      if (object instanceof THREE.Mesh) {
+        object.geometry.dispose();
+        if (object.material instanceof THREE.Material) {
+          object.material.dispose();
+        } else if (Array.isArray(object.material)) {
+          object.material.forEach(material => material.dispose());
+        }
+      }
+      this.scene.remove(object);
+    }
+  
+    // También podríamos detener cualquier animación en ejecución
+    this.isAnimating = false;
+  
+    // Limpiar y detener el reloj si es necesario
+    this.clock.stop();
+    this.clock = new THREE.Clock(false);
+  }
+
+  public setThisMostrarContador(boolean: boolean): void {
+    this.globalStateService.setThisMostrarContador(boolean);
+  }
+
+  async initializeState(){
+    try{
+      await this.globalStateService.initializeState();
+    } catch(error){
+
+    }
+  }
+  
   /*private centerCameraOnText(textMesh: THREE.Mesh): void {
     const distance = 50;
     const objectBoundingBox = new THREE.Box3().setFromObject(textMesh);

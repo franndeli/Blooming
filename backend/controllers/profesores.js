@@ -82,7 +82,7 @@ const createProfesor = async (req, res) => {
         }
 
         const datos = req.body;
-        sendMail(datos);
+        await sendMail(datos);
 
         const hashedPassword = hashPassword(req.body.Contraseña);
         req.body.Contraseña = hashedPassword;
@@ -102,7 +102,10 @@ const createProfesor = async (req, res) => {
     }
 };
 
-    const sendMail = (datos) => {
+    const sendMail = async (datos) => {
+
+        const centro = await Centro.findOne({ where: { ID_Centro: datos.ID_Centro } });
+        const clase = await Clase.findOne({ where: { ID_Clase: datos.ID_Clase } });
 
         const transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -115,13 +118,16 @@ const createProfesor = async (req, res) => {
         const mailOptions = {
             from: 'blooming.abp@gmail.com',
             to: datos.Email,
-            subject: 'Bienvenido a la plataforma',
+            subject: 'Bienvenido a Blooming',
             text: 
-            `Buenas ${datos.Nombre} ${datos.Apellidos},
-            Le informamos que se ha creado su cuenta en la plataforma de Blooming.
-            Sus datos de acceso son:
-            Email: ${datos.Email}
-            Contraseña: ${datos.Contraseña}`
+`Buenas ${datos.Nombre} ${datos.Apellidos},
+Desde el ${centro.Nombre} le damos la bienvenida a la plataforma Blooming. Le informamos además que se ha creado su cuenta en la misma y se le ha asignado como tutor de la clase ${clase.Nombre}.
+Sus datos de acceso son:
+Email: ${datos.Email}
+Contraseña: ${datos.Contraseña}
+            
+Un saludo.
+${centro.Nombre}`
         };
     
         transporter.sendMail(mailOptions, (error, info) => {

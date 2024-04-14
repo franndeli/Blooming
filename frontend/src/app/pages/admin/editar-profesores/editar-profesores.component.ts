@@ -4,6 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ProfesorService } from '../../../services/profesores.service';
 import { CentroService } from '../../../services/centros.service';
 import { ClaseService } from '../../../services/clases.service';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-editar-profesores',
@@ -71,7 +72,18 @@ export class EditarProfesoresComponent implements OnInit, OnChanges {
     }else{
       this.profesorService.putProfesor(this.form.value).subscribe(
         (response:any) => {
-          this.router.navigate(['admin/ver-profesores']);
+          Swal.fire({
+            icon: "success",
+            title: "Profesor editado con éxito",
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.router.navigate(['admin/ver-profesores']);
+          });
+        },
+        (error) => {
+          console.error('Error de edición:', error);
+          Swal.fire(error.error.message);
         }
       );
     }

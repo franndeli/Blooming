@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { ClaseService } from '../../../services/clases.service';
 import { CentroService } from '../../../services/centros.service';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-editar-clases',
@@ -51,7 +52,18 @@ export class EditarClasesComponent implements OnInit {
     }else{
       this.claseService.putClase(this.form.value).subscribe(
         (response:any) => {
-          this.router.navigate(['admin/ver-clases']);
+          Swal.fire({
+            icon: "success",
+            title: "Clase editada con éxito",
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.router.navigate(['admin/ver-clases']);
+          });
+        },
+        (error) => {
+          console.error('Error de edición:', error);
+          Swal.fire(error.error.message);
         }
       );
     }

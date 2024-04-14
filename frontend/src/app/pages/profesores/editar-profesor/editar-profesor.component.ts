@@ -25,7 +25,14 @@ export class EditarProfesorComponent {
     }else{
       this.profesorService.updateProfesorPwd(this.form.value).subscribe(
         (response: any) => {
-          this.router.navigate(['profesores/perfil']);
+          Swal.fire({
+            icon: "success",
+            title: "Contraseña cambiada con éxito",
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.router.navigate(['profesores/perfil']);
+          });
         },
         (error) => {
           Swal.fire(error.error.message);

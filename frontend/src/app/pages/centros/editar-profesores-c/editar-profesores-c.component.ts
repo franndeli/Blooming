@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ProfesorService } from '../../../services/profesores.service';
 import { ClaseService } from '../../../services/clases.service';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-editar-profesores-c',
@@ -57,7 +58,18 @@ export class EditarProfesoresCComponent{
     }else{
       this.profesorService.putProfesor(this.form.value).subscribe(
         (response:any) => {
-          this.router.navigate(['centros/ver-profesores']);
+          Swal.fire({
+            icon: "success",
+            title: "Profesor editado con éxito",
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.router.navigate(['centros/ver-profesores']);
+          });
+        },
+        (error) => {
+          console.error('Error de edición:', error);
+          Swal.fire(error.error.message);
         }
       );
     }

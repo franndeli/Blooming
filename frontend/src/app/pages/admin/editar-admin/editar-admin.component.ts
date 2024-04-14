@@ -26,7 +26,14 @@ export class EditarAdminComponent {
     }else{
       this.adminService.updateAdminPwd(this.form.value).subscribe(
         (response: any) => {
-          this.router.navigate(['admin/perfil']);
+          Swal.fire({
+            icon: "success",
+            title: "Contraseña cambiada con éxito",
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.router.navigate(['admin/perfil']);
+          });
         },
         (error) => {
           console.error('Error: ', error.error);

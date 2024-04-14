@@ -34,6 +34,10 @@ const Alumno = sequelize.define('Alumno', {
             return moment.utc(this.getDataValue('FechaNacimiento')).format('DD-MM-YYYY');
         }
     },
+    EmailTutor: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     ID_Centro: {
         type: DataTypes.INTEGER,
         allowNull: false
@@ -47,6 +51,10 @@ const Alumno = sequelize.define('Alumno', {
         allowNull: true
     },
     Ambitos: {
+        type: DataTypes.JSON,
+        allowNull: false
+    },
+    AparicionAmbitos: {
         type: DataTypes.JSON,
         allowNull: false
     },

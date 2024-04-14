@@ -23,6 +23,7 @@ export class CrearAlumnosCComponent implements OnInit {
   public form = this.fb.group({
     Nombre: ['', [Validators.required]],
     Apellidos: ['', [Validators.required]],
+    EmailTutor: ['', [Validators.required, Validators.email]],
     Contraseña: ['', [Validators.required]],
     FechaNacimiento: ['', [Validators.required]],
     ID_Centro: [localStorage.getItem('id'), [Validators.required]],
@@ -47,7 +48,15 @@ export class CrearAlumnosCComponent implements OnInit {
     }else{
       this.alumnoService.postAlumno(this.form.value).subscribe(
         (response:any) => {
-          this.router.navigate(['centros/ver-alumnos']);
+          Swal.fire({
+            icon: "success",
+            title: "Alumno creado con éxito",
+            text: "Se han enviado los datos de acceso al tutor por correo electrónico",
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.router.navigate(['centros/ver-alumnos']);
+          });
         },
         (error) => {
           console.error('Error de creación:', error);

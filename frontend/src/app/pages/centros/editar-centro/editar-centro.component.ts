@@ -26,7 +26,14 @@ export class EditarCentroComponent {
     }else{
       this.centroService.updateCentroPwd(this.form.value).subscribe(
         (response: any) => {
-          this.router.navigate(['centros/perfil']);
+          Swal.fire({
+            icon: "success",
+            title: "Contraseña cambiada con éxito",
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.router.navigate(['centros/perfil']);
+          });
         },
         (error) => {
           console.error('Error: ', error.error);

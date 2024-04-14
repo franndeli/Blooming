@@ -28,6 +28,7 @@ router.post('/', [
         check('Apellidos', 'El argumento "Apellidos" es obligatorio').not().isEmpty(),
         check('Contraseña', 'El argumento "Contraseña" es obligatorio').not().isEmpty(),
         check('FechaNacimiento', 'El argumento "FechaNacimiento" es obligatorio').not().isEmpty(),
+        check('EmailTutor', 'El argumento "Email" es obligatorio').not().isEmpty(),
         check('ID_Clase', 'El argumento "ID_Clase" es obligatorio').not().isEmpty(),
         validarCampos
     ], (req, res) => {
@@ -46,6 +47,8 @@ router.put('/:ID_Alumno', [
         check('ID_Centro').optional().isInt().withMessage('Error en el argumento "ID_Centro"'),
         check('ID_Clase').optional().isInt().withMessage('Error en el argumento "ID_Clase"'),
         check('Estado').optional().not().isEmpty().withMessage('Error en el argumento "Estado"'),
+        check('Ambitos').optional().not().isEmpty().withMessage('Error en el argumento "Ambitos"'),
+        check('AparicionAmbitos').optional().not().isEmpty().withMessage('Error en el argumento "AparicionAmbitos"'),
         check('ID_Alumno').isInt().withMessage('El campo "ID_Alumno" debe ser un número entero'),
         validarCampos
     ], (req, res) => {

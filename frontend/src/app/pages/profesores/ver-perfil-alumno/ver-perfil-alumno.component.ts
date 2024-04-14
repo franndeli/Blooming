@@ -4,6 +4,7 @@ import { AlumnoService } from '../../../services/alumnos.service';
 import { SesionService } from '../../../services/sesiones.service';
 import { RespuestaService } from '../../../services/respuestas.service';
 import * as echarts from 'echarts';
+import { Console } from 'console';
 
 @Component({
   selector: 'app-ver-perfil-alumno',
@@ -50,6 +51,7 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
       this.alumnosData = res.alumnos[0];
       this.alumnosData.Ambitos = JSON.parse(this.alumnosData.Ambitos);
       this.nombreClase = this.alumnosData.Clase.Nombre;
+      console.log(this.alumnosData);
     });
   }
 
@@ -77,10 +79,25 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
     });
   }
 
+  mostrarMensaje: boolean = true;
+  hayDatos: boolean = false;
+
   dibujarGrafica(){
     var chartDom = document.getElementById('chart');
     var myChart = echarts.init(chartDom);
     var option: echarts.EChartsOption;
+
+    if(this.sesiones.Dias > 0 || this.sesiones.Ambitos.Amigos > 0 
+      || this.sesiones.Ambitos.Clase > 0 || this.sesiones.Ambitos.Familia > 0 
+      || this.sesiones.Ambitos.Emociones > 0 || this.sesiones.Ambitos["Fuera de clase"] > 0 ){
+
+      this.hayDatos = true;
+    } else {
+      this.hayDatos = false;
+    }
+
+    this.mostrarMensaje = !this.hayDatos;
+
 
     option = {
       tooltip: {
@@ -185,9 +202,6 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
       if(this.volverPag === 1){
         this.router.navigate(['profesores/actividad-negativa']);
       }
-      
     }
-    
   }
-
 }

@@ -270,6 +270,17 @@ export class ActividadRecienteNegativaComponent {
           }
         }
       }
+      const ordenarPorEstado = (a: AlumnosInfo, b: AlumnosInfo) => {
+        if (a.estado === 'Muy Malo' && b.estado !== 'Muy Malo') {
+          return -1; 
+        } else if (a.estado !== 'Muy Malo' && b.estado === 'Muy Malo') {
+          return 1; 
+        } else {
+          return 0; 
+        }
+      };
+      
+      this.alumnosInfo.sort(ordenarPorEstado);
     }
   }
 
@@ -290,6 +301,17 @@ export class ActividadRecienteNegativaComponent {
           }
         }
       }
+      const ordenarPorEstado = (a: AlumnosInfo, b: AlumnosInfo) => {
+        if (a.estado === 'Muy Bueno' && b.estado !== 'Muy Bueno') {
+          return -1; 
+        } else if (a.estado !== 'Muy Bueno' && b.estado === 'Muy Bueno') {
+          return 1; 
+        } else {
+          return 0; 
+        }
+      };
+      
+      this.alumnosInfo2.sort(ordenarPorEstado);
     }
   }
 

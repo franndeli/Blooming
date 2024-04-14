@@ -188,9 +188,20 @@ export class VerAlumnosPComponent implements OnInit{
     this.cambiarPagina(1);
   }
 
+  mostrarMensaje: boolean = true;
+  hayDatos: boolean = false;
+
   dibujarGrafica(){
     type EChartsOption = echarts.EChartsOption;
 
+    if(this.contMuyBueno > 0 || this.contBueno > 0 || this.contNormal > 0 || this.contMalo > 0 || this.contMuyMalo > 0){
+      this.hayDatos = true;
+    } else {
+      this.hayDatos = false;
+    }
+
+    this.mostrarMensaje = !this.hayDatos;
+    
     var chartDom = document.getElementById('chart1')!;
     var myChart = echarts.init(chartDom);
     var option: EChartsOption;

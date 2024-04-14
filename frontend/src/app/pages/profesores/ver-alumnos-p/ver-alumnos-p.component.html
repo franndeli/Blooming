@@ -11,7 +11,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                 <h5 class="card-title fw-semibold mb-4"> Clase {{claseData.Nombre}} <span><i class="ti ti-friends" style="font-size: 20px;"></i></span></h5>
                 <div class="card">
                   <div class="card-body">
-                    <div class="table-responsive">
+                    <div class="table-responsive" *ngIf="alumnosData.length > 0; else noAlumnos">
                       <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
                         <thead class="text-dark fs-4">
                             <tr>
@@ -37,6 +37,9 @@ data-sidebar-position="fixed" data-header-position="fixed">
                       <br>
                       <app-pagination (cambiarPagina)="cambiarPagina($event)" [texto]="true" [totalRegistros]="totalAlumnos" [registroActual]="posActual+1" (filasPagina)="cambiarFilasPagina($event)" [registroPag]="filPag"></app-pagination>
                     </div>
+                    <ng-template #noAlumnos>
+                      <p class="text-center" style="margin-top: 16px;">No hay alumnos todavía</p>
+                    </ng-template>
                   </div>
                 </div>
               </div>
@@ -65,6 +68,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                     </select>
                   </div>
                   <div id="chart1"></div>
+                  <p class="text-center" *ngIf="mostrarMensaje && !hayDatos">No hay datos registrados todavía</p>
                 </div>
                 </div>
               </div>
@@ -79,7 +83,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                     <h5 class="card-title fw-semibold mb-4">Últimas preguntas respondidas de esta clase <span><i class="ti ti-activity" style="font-size: 20px;"></i></span></h5>
                     <div class="card">
                         <div class="card-body">
-                            <div class="table-responsive">
+                            <div class="table-responsive" *ngIf="respuestasData.length > 0; else noRespuestas">
                                 <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
                                     <thead class="text-dark fs-4">
                                         <tr>
@@ -110,6 +114,9 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                     </tbody>
                                 </table>
                             </div>
+                            <ng-template #noRespuestas>
+                              <p class="text-center" style="margin-top: 16px; font-size: 20px;">No hay respuestas</p>
+                            </ng-template>
                         </div>
                     </div>
                 </div>

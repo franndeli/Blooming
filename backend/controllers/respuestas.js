@@ -86,8 +86,6 @@ const getRespuestas = async (req, res) => {
 
 const createRespuesta = async (req, res) => {
     try {
-        req.body.FechaRespuesta = new Date();
-
         await Respuesta.create(req.body);
 
         return res.json({

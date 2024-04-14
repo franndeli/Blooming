@@ -259,16 +259,17 @@ export class FinalScreenService {
     this.clock = new THREE.Clock(false);
   }
 
-  public setThisMostrarContador(boolean: boolean): void {
-    this.globalStateService.setThisMostrarContador(boolean);
-  }
-
   async initializeState(){
     try{
       await this.globalStateService.initializeState();
     } catch(error){
 
     }
+  }
+
+
+  public setMostrarContador(value: boolean): void {
+    this.globalStateService.setMostrarContador(value);
   }
   
   /*private centerCameraOnText(textMesh: THREE.Mesh): void {

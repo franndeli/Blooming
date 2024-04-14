@@ -1,24 +1,6 @@
 <div #rendererContainer>
-    <!--<p>sistema-preguntas works!</p>
-    <div *ngIf="!mostrarReiniciar">
-        <p *ngIf="preguntaActual">
-            {{ preguntaActual.TextoPreguntaElegido ? preguntaActual.TextoPreguntaElegido : preguntaActual.TextoPregunta }}
-            {{ " " + preguntaActual.NombreAmbito }}
-        </p>
-        <ul>
-            <li *ngFor="let opcion of preguntaActual.respuestas.opciones">
-                <button (click)="siguientePregunta(opcion.Gravedad, opcion.ID_Opcion)">{{ opcion.TextoOpcion + opcion.Gravedad }}</button>
-                <img [src]="opcion.Imagen">
-            </li>               
-        </ul>
+    <div class="button-container" *ngIf="shouldShowButton">
+      <button (click)="handleButtonClick()">Cerrar sesión</button>
     </div>
-    <div *ngIf="mostrarReiniciar">
-        <p>Resultados por ámbito:</p>
-        <ul>
-            <li *ngFor="let ambito of objectKeys(gravedadesPorAmbito)">
-                {{ ambito }}: {{ gravedadesPorAmbito[ambito] }}
-            </li>
-        </ul>
-        <button (click)="reiniciar()">Reiniciar</button>
-    </div>-->
-</div>
+  </div>
+  

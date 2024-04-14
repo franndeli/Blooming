@@ -13,6 +13,8 @@ export class CubeService {
 
   private buttonPressedCallback: (() => void) | null = null;
 
+  private originalColors: Map<number, THREE.Color | undefined> = new Map();
+
   private optionsMap: Map<number, any> = new Map();
   selectedOption: any = null;
 
@@ -69,9 +71,9 @@ export class CubeService {
 
   public createRotationButton(): void {
     const buttonGeometry = new THREE.CircleGeometry(4, 32); // Radio de 5 y 32 segmentos
-    const buttonMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 }); // Color verde
+    const buttonMaterial = new THREE.MeshBasicMaterial({ color: 0x4D8B21 }); // Color verde
     this.buttonMesh2 = new THREE.Mesh(buttonGeometry, buttonMaterial);
-    this.buttonMesh2.position.set(10, -30, 30); // Posicionado delante del cubo
+    this.buttonMesh2.position.set(30, 0, 30); // Posicionado delante del cubo
     this.scene.add(this.buttonMesh2);
   }  
 
@@ -262,7 +264,7 @@ export class CubeService {
         this.selectedFaceIndex = faceMaterialIndex;
   
         // Cambiar la opacidad del material de la cara seleccionada para dar un efecto de resaltado
-        selectedMaterial.opacity = 0.5;
+        selectedMaterial.opacity = 0.8;
         selectedMaterial.transparent = true;
   
         // Necesitamos actualizar la propiedad 'needsUpdate' para que los cambios tengan efecto

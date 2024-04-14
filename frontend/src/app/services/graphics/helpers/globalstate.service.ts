@@ -6,7 +6,7 @@ import { SesionService } from '../../sesiones.service';
 })
 export class GlobalStateService {
   public mostrarContador: boolean = true;
-  public countdownTime: number = 0; // Inicializar con 0
+  public countdownTime: number = 0;
 
   constructor(private sesionService: SesionService) {
   }
@@ -84,11 +84,6 @@ export class GlobalStateService {
     if (!value) {
       this.calculateTimeUntilNextPeriod();
     }
-  }
-
-
-  public setThisMostrarContador(boolean: boolean): void {
-    this.mostrarContador = boolean;
   }
 
   public calculateTimeUntilNextPeriod(): { hours: number, minutes: number, seconds: number } {

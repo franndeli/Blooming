@@ -43,8 +43,6 @@ const getSesiones = async (req, res) => {
 
 const createSesion = async (req, res) => {
     try {
-        req.body.FechaInicio = new Date();
-
         const sesion = await Sesion.create(req.body);
 
         return res.json({

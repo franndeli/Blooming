@@ -39,7 +39,7 @@ export class BoardService {
 
   constructor() {
     this.boardGroup = new THREE.Group();
-    this.boardGroup.rotation.x = Math.PI / -5; // Rotar todo el grupo del tablero 45 grados en X
+    this.boardGroup.rotation.x = Math.PI / -5;
   }
 
   initMouseEvents(rendererElement: HTMLElement) {
@@ -167,33 +167,13 @@ export class BoardService {
 
   //MOVIMIENTO ---------------------------------------------
   createMovableCube() {
-    // Asegúrate de que la escena está definida y de que hay cuadrantes sin imágenes
-    /*if (!this.scene || this.quadrantMeshes.length === 0) return;
-  
-    // Identifica cuadrantes vacíos (sin opción asignada o con opción null)
-    let emptyQuadrants = this.quadrantMeshes.filter(q => !this.quadrantOptionMap.get(q));
-  
-    if (emptyQuadrants.length === 0) {
-        console.warn("No hay cuadrantes vacíos disponibles.");
-        return; // Termina si no hay cuadrantes vacíos
-    }
-  
-    // Selecciona un cuadrante vacío al azar
-    let randomIndex = Math.floor(Math.random() * emptyQuadrants.length);
-    let chosenQuadrant = emptyQuadrants[randomIndex];
-    console.log("Donde debe aparecer el cubo", chosenQuadrant.position);
-    console.log(emptyQuadrants)*/
-
-    // Crea el cubo móvil
+    // Crea el cubo
     const geometry = new THREE.BoxGeometry(this.movableCubeWidth, this.movableCubeHeight, this.movableCubeDepth);
-    const material = new THREE.MeshBasicMaterial({ color: 0xFF5733 });
+    const material = new THREE.MeshBasicMaterial({ color: 0x4D8B21 });
     this.movableCube = new THREE.Mesh(geometry, material);
   
-    // Ajusta la posición del cubo para centrarlo en el cuadrante elegido
+    // Ajusta la posición del cubo
     this.movableCube.position.set(
-      /*chosenQuadrant.position.x,
-      chosenQuadrant.position.y + 20,
-      chosenQuadrant.position.z*/ // Asegura que el cubo esté ligeramente por encima del tablero
       0,25,0
     );
 
@@ -205,7 +185,7 @@ export class BoardService {
   
 
   onMouseDown(event: MouseEvent) {
-    // Calcula la posición del ratón en coordenadas normalizadas (-1 a +1)
+    // Calcula la posición del ratón en coordenadas normalizadas
     this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
       
@@ -216,9 +196,7 @@ export class BoardService {
       if (intersects.length > 0) {
         this.selectedObject = intersects[0].object as THREE.Mesh;
         this.isDragging = true;
-        // Aquí ajustamos el offset para que su componente y sea siempre el mismo, ignorando la posición de clic en y
-        // Manteniendo la altura inicial del cubo constante respecto al "suelo" del tablero
-        this.offset = new THREE.Vector3(0, this.floatingHeight, 0); // Asumiendo que `floatingHeight` es la distancia deseada desde el "suelo"
+        this.offset = new THREE.Vector3(0, this.floatingHeight, 0);
       }
     }
 
@@ -297,7 +275,7 @@ export class BoardService {
         if (this.quadrantOptionMap.get(quadrant)) {
           // Cambia el color del cuadrante porque tiene una imagen y el cubo está sobre él
           const material = quadrant.material as THREE.MeshBasicMaterial;
-          material.color.set(0xff0000); // Ejemplo: Cambia el color a rojo
+          material.color.set(0x8EBF6B); // Ejemplo: Cambia el color a rojo
         }
         
         this.selectedOption = this.quadrantOptionMap.get(quadrant);
@@ -356,6 +334,7 @@ export class BoardService {
       this.boardGroup.remove(child);
     }
 
+    this.selectedOption = null;
     this.scene.remove(this.boardGroup); // No olvides remover el grupo de la escena
   }
   

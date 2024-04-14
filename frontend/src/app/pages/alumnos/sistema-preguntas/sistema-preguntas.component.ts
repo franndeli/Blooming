@@ -3,14 +3,18 @@ import { PreguntaService } from '../../../services/preguntas.service';
 import { AlumnoService } from '../../../services/alumnos.service';
 import { SesionService } from '../../../services/sesiones.service';
 import { RespuestaService } from '../../../services/respuestas.service';
-import { GlobalStateService } from '../../../services/graphics/helpers/globalstate.service';
+import { AuthService } from '../../../services/auth.service';
 
+//ThreeJS
 import * as THREE from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import { CubeService } from '../../../services/graphics/cube.service';
 import { BoardService } from '../../../services/graphics/board.service';
 import { FinalScreenService } from '../../../services/graphics/finalscreen.service';
+
+//Alert
+import Swal from 'sweetalert2';
 
 type Resultados = { [ambito: string]: number };
 @Component({
@@ -21,10 +25,13 @@ type Resultados = { [ambito: string]: number };
 
 export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild('rendererContainer') rendererContainer!: ElementRef;
+
+  //Escena
   scene!: THREE.Scene;
   camera!: THREE.PerspectiveCamera;
   renderer!: THREE.WebGLRenderer;
 
+  //Botón de pulsar
   buttonMesh!: THREE.Mesh;
   buttonMaterial!: THREE.Material;
   buttonGeometry!: THREE.PlaneGeometry;
@@ -51,6 +58,8 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
 
   animationId: number | null = null;
 
+  shouldShowButton: boolean = false;
+
   private gravedadesActualizadas: any;
 
   constructor(
@@ -61,6 +70,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     private cubeService: CubeService,
     private boardService: BoardService,
     private finalScreenService: FinalScreenService,
+    private authService: AuthService
   ) {}
 
   async ngOnInit() {
@@ -68,6 +78,9 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       this.obtenerNumeroAleatorio();
       this.initializeScene();
       await this.iniciarGlobalState();
+      if(localStorage.getItem('mostrarContador') === 'true'){
+        this.shouldShowButton = true;
+      }
       //console.log(localStorage.getItem('mostrarContador'));
       console.log(localStorage.getItem('mostrarContador'));
       if (localStorage.getItem('mostrarContador') === 'false') {
@@ -135,6 +148,28 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     }
   }
 
+  handleButtonClick() {
+    console.log('Botón presionado');
+    Swal.fire({
+      title: "¿Estás seguro que quieres salir?",
+      //text: "Vas a salir de la aplicación",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "No",
+      confirmButtonText: "Sí"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.finalScreenService.setMostrarContador(false);
+
+        this.authService.logout();
+        
+        localStorage.removeItem('mostrarContador');
+      }
+    });
+  }
+
   private handleButtonPress(): void {
     const currentTime = new Date().getTime(); // Obtener el tiempo actual
 
@@ -189,12 +224,12 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   //BOTÓN --------------------------------------------------------------------------------
   initButton() {
     // Crear la geometría y el material para el botón
-    this.buttonGeometry = new THREE.BoxGeometry(10, 5, 2); // Profundidad agregada para el efecto 3D
-    this.buttonMaterial = new THREE.MeshStandardMaterial({ 
-      color: 0x156289, 
-      emissive: 0x072534, 
-      side: THREE.DoubleSide, 
-      flatShading: true 
+    this.buttonGeometry = new THREE.BoxGeometry(20, 7); // Profundidad agregada para el efecto 3D
+    this.buttonMaterial = new THREE.MeshBasicMaterial({ 
+      color: 0x68A63C, 
+      //emissive: 0x072534, 
+      //side: THREE.DoubleSide, 
+      //flatShading: true 
     });
     this.buttonMesh = new THREE.Mesh(this.buttonGeometry, this.buttonMaterial);
   
@@ -203,7 +238,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     loader.load('../../../../assets/fonts/helvetiker_regular.typeface.json', (font) => {
       const textGeometry = new TextGeometry('Pulsa', {
         font: font,
-        size: 1,
+        size: 3,
         height: 0.2,
         curveSegments: 12,
         bevelEnabled: true,
@@ -212,7 +247,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
         bevelOffset: 0,
         bevelSegments: 5
       });
-      const textMaterial = new THREE.MeshPhongMaterial({ color: 0x000000 });
+      const textMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
       const textMesh = new THREE.Mesh(textGeometry, textMaterial);
   
       // Ajustar la posición del texto en el botón
@@ -368,7 +403,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
 
     if(this.EL_NUMERO === 2 && !this.hasShownBoardMessage && ole === 0) {
       // Muestra el mensaje para el boardService si aún no se ha mostrado
-      this.addInstructionText("¡Pon el cubo naranja sobre la respuesta que quieras!");
+      this.addInstructionText("¡Pon el cubo verde sobre la respuesta que quieras!");
       this.hasShownBoardMessage = true;
     }
 
@@ -432,11 +467,9 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
         this.cubeService.clearScene();
     } else if (this.EL_NUMERO === 2) {
         this.boardService.removeMouseEvents(this.rendererContainer.nativeElement);
-        // Si decides implementar un fadeOut para el boardService, aquí iría el código similar al del cubeService
         this.boardService.clearScene();
     }
 
-    // Asumiendo que los textMesh siempre deben eliminarse, independientemente del número
     if (this.textMesh) {
         this.scene.remove(this.textMesh);
         this.textMesh = undefined;
@@ -469,11 +502,15 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   gravedadesPorAmbito: { [ambito: string]: number } = {};
 
   siguientePregunta(gravedad: number, id: any) {
+    let fechaRespuesta = new Date(); // Crea un objeto de fecha con la fecha y hora actual
+    fechaRespuesta.setHours(fechaRespuesta.getHours() + 2); // Suma dos horas a la fecha actual
+
+    let fechaInicioISO = fechaRespuesta.toISOString();
     const respuesta = {
       ID_Pregunta: this.preguntaActual.ID_Pregunta,
       ID_Opcion: id,
       ID_Alumno: localStorage.getItem('id'),
-      FechaRespuesta: new Date().toISOString(),
+      FechaRespuesta: fechaInicioISO,
       ID_Sesion: localStorage.getItem('sesionId')
     }
     this.respuestaService.postRespuesta(respuesta).subscribe({
@@ -512,8 +549,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       this.cargarAnimacion(this.preguntaActual, 0);
       this.add3DText();
     } else {
-      // Manejar el final del cuestionario si es necesario
-      //this.mostrarReiniciar = true;
+      // Manejar el final del cuestionario
       this.preguntaActual = null;
       this.scene.remove(this.buttonMesh);
       this.reiniciar();
@@ -643,11 +679,12 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       await this.multiplicarYActualizarAmbitos();
       console.log("Salgo de await this.multiplicarYActualizarAmbitos()");
       await this.sesionService.finalizarSesion(this.gravedadesActualizadas);
-      // window.location.reload();
       localStorage.setItem('mostrarContador', 'true');
-      this.finalScreenService.setThisMostrarContador(true);
+      this.finalScreenService.setMostrarContador(true);
+      if(localStorage.getItem('mostrarContador') === 'true'){
+        this.shouldShowButton = true;
+      }
       this.finalScreenService.initialize(this.scene, this.camera, this.renderer);
-      //this.finalScreenService.showFinalMessage();
     } catch (error) {
       console.error('Error en el proceso de reinicio:', error);
     }

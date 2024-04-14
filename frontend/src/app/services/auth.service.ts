@@ -57,6 +57,10 @@ export class AuthService {
     if (localStorage.getItem('token')) {
       localStorage.removeItem('token');
     }
+
+    if (localStorage.getItem('mostrarContador')) {
+      localStorage.removeItem('mostrarContador');
+    }
   
     // Redirigir al usuario a la página de login
     this.router.navigateByUrl('/login');

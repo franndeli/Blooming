@@ -73,6 +73,7 @@ export class SesionService {
         fechaInicio.setHours(fechaInicio.getHours() + 2); // Suma dos horas a la fecha actual
 
         let fechaInicioISO = fechaInicio.toISOString(); // Convierte la fecha modificada a formato ISO
+        console.log(fechaInicioISO);
         const inicioSesion = {
           ID_Alumno: alumnoId,
           FechaInicio: fechaInicioISO, // Guarda la fecha actual como el inicio de la sesión

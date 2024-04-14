@@ -1,0 +1,32 @@
+#rendererContainer {
+    position: relative; 
+}
+
+.button-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
+}
+
+button {
+    font-size: 17px;
+    margin-top: 20px;
+    margin-right: 20px;
+    padding: 0.5em 1em; 
+    background-color: #ff6767; 
+    color: #fff; 
+    border: none; 
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+button:hover {
+    background-color: #ffcdcd;
+    color:black;
+}
+
+button:active {
+    transform: translateY(2px);
+}

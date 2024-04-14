@@ -4,12 +4,13 @@ import { mat4, vec3 } from 'gl-matrix';
 import { TRecursoShader } from './TRecursoShader'
 
 export class TRecursoMalla extends TRecurso {
-  private indices: number[];
-  private vertices: number[];
+  private indices: Uint16Array;
+  private vertices: Float32Array;
   private normales: number[];
   private coordTex: number[];
   private colores: number[][];
   private nombreMalla: string;
+  private programId: any;
   private TRecusoShader: TRecursoShader;
   public override gl: WebGL2RenderingContext;
   private basePath: string = '../../../../assets/json/';
@@ -19,13 +20,14 @@ export class TRecursoMalla extends TRecurso {
   private bufIndex: any = null;
   private bufTextCood: any = null;
 
+
   constructor(nombre: string, shader: TRecursoShader) {
     super();
-    this.vertices = [];
+    this.vertices = new Float32Array();
     this.normales = new Array();
     this.coordTex = [];
     this.colores = [];
-    this.indices = new Array();
+    this.indices = new Uint16Array();
     var canvas = <HTMLCanvasElement>document.getElementById('canvasWebGL');
     var context = canvas.getContext('webgl2');
     if (context === null) {
@@ -33,6 +35,7 @@ export class TRecursoMalla extends TRecurso {
     }
     this.gl = context;
     this.TRecusoShader = shader;
+    this.programId = this.TRecusoShader.getProgramId();
     this.nombreMalla = nombre;
   }
 
@@ -50,8 +53,15 @@ export class TRecursoMalla extends TRecurso {
 
       this.vertices = mesh.vertices;
       this.normales = mesh.normals;
-      this.indices = [].concat(...mesh.faces);
+      //this.indices = [].concat(...mesh.faces);
+      this.indices = new Uint16Array([].concat(...mesh.faces));
       this.coordTex = mesh.texturecoords[0];
+
+      // this.vertices = data.vertices;
+      // this.vertices = data.vertices;
+      // this.normales = data.normales;
+      // this.coordTex = data.coordTexturas;
+      // this.indices = data.indices;
 
       //llamada a configurarBuffers
       this.configurarBuffers();
@@ -65,8 +75,9 @@ export class TRecursoMalla extends TRecurso {
 
   configurarBuffers() {
     let vertexBuffer, normalBuffer, indexBuffer, textCoodBuffer, colorBuffer;
-    const coloresAplanados = this.colores.flat();
 
+    const coloresAplanados = this.colores.flat();
+    
     this.gl.createVertexArray();
 
     vertexBuffer = this.gl.createBuffer();
@@ -82,14 +93,15 @@ export class TRecursoMalla extends TRecurso {
     //Vertices
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.vertices), this.gl.STATIC_DRAW);
-    const positionLocation = this.gl.getAttribLocation(this.TRecusoShader.getProgramId(), 'vertPosition');
-    this.gl.vertexAttribPointer(positionLocation, 3, this.gl.FLOAT, false, 0, 0);
+    const positionLocation = this.gl.getAttribLocation(this.programId, 'vertPosition');
     this.gl.enableVertexAttribArray(positionLocation);
+    this.gl.vertexAttribPointer(positionLocation, 3, this.gl.FLOAT, false, 0, 0);
+    
 
     //Normales
     // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, normalBuffer);
     // this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.normales), this.gl.STATIC_DRAW);
-    // const normalLocation = this.gl.getAttribLocation(this.TRecusoShader.getProgramId(), 'vertNormal');
+    // const normalLocation = this.gl.getAttribLocation(this.programId, 'vertNormal');
     // this.gl.vertexAttribPointer(normalLocation, 3, this.gl.FLOAT, false, 0, 0);
     // this.gl.enableVertexAttribArray(normalLocation);
 
@@ -100,14 +112,14 @@ export class TRecursoMalla extends TRecurso {
     //Coordenadas de textura
     // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, textCoodBuffer);
     // this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.coordTex), this.gl.STATIC_DRAW);
-    // const textCoordLocation = this.gl.getAttribLocation(this.TRecusoShader.getProgramId(), 'vertTexCoord');
+    // const textCoordLocation = this.gl.getAttribLocation(this.programId, 'vertTexCoord');
     // this.gl.vertexAttribPointer(textCoordLocation, 2, this.gl.FLOAT, false, 0, 0);
     // this.gl.enableVertexAttribArray(textCoordLocation);
 
     //Colores
     // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, colorBuffer);
     // this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(coloresAplanados), this.gl.STATIC_DRAW);
-    // const colorLocation = this.gl.getAttribLocation(this.TRecusoShader.getProgramId(), 'vertColor');
+    // const colorLocation = this.gl.getAttribLocation(this.programId, 'vertColor');
     // this.gl.vertexAttribPointer(colorLocation, 4, this.gl.FLOAT, false, 0, 0);
     // this.gl.enableVertexAttribArray(colorLocation);
 
@@ -121,29 +133,28 @@ export class TRecursoMalla extends TRecurso {
   dibujar(matrizTransf: mat4): void {
     console.log(`Dibujando la malla ${this.getNombre()}`);
 
-    this.gl.useProgram(this.TRecusoShader.getProgramId());
-    // console.log(this.TRecusoShader.getProgramId())
+    this.gl.useProgram(this.programId);
 
     //Vertices
     // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.bufVertex);
-    // const positionLocation = this.gl.getAttribLocation(this.TRecusoShader.getProgramId(), 'vertPosition');
+    // const positionLocation = this.gl.getAttribLocation(this.programId, 'vertPosition');
     // this.gl.vertexAttribPointer(positionLocation, 3, this.gl.FLOAT, false, 0, 0);
     // this.gl.enableVertexAttribArray(positionLocation);
 
     // //Normales
     // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.bufNormal);
-    // const normalLocation = this.gl.getAttribLocation(this.TRecusoShader.getProgramId(), 'vertNormal');
+    // const normalLocation = this.gl.getAttribLocation(this.programId, 'vertNormal');
     // this.gl.vertexAttribPointer(normalLocation, 3, this.gl.FLOAT, false, 0, 0);
     // this.gl.enableVertexAttribArray(normalLocation);
 
     //Indices
     // this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.bufIndex);
 
-    this.gl.useProgram(this.TRecusoShader.getProgramId());
+    this.gl.useProgram(this.programId);
     
-    // var locationPmatrix = this.gl.getUniformLocation(this.TRecusoShader.getProgramId(), 'u_ProjectionMatrix');
-    // var locationVmatrix = this.gl.getUniformLocation(this.TRecusoShader.getProgramId(), 'u_ModelViewMatrix');
-    // // var locationMmatrix = this.gl.getUniformLocation(this.TRecusoShader.getProgramId(), 'u_NormalMatrix');
+    // var locationPmatrix = this.gl.getUniformLocation(this.programId, 'u_ProjectionMatrix');
+    // var locationVmatrix = this.gl.getUniformLocation(this.programId, 'u_ModelViewMatrix');
+    // // var locationMmatrix = this.gl.getUniformLocation(this.programId, 'u_NormalMatrix');
 
     // if(locationPmatrix){
     //   this.gl.uniformMatrix4fv(locationPmatrix, false, this.TRecusoShader.getProjMatrix());
@@ -155,9 +166,9 @@ export class TRecursoMalla extends TRecurso {
     //   this.gl.uniformMatrix4fv(locationMmatrix, false, matrizTransf);
     // }
 
-    this.gl.bindAttribLocation(this.TRecusoShader.getProgramId(), 0, 'vertPosition');
-    // this.gl.bindAttribLocation(this.TRecusoShader.getProgramId(), 0, 'vertNormal');
-
+    this.gl.bindAttribLocation(this.programId, 0, 'vertPosition');
+    // this.gl.bindAttribLocation(this.programId, 0, 'vertNormal');
+    
     this.gl.drawElements(this.gl.TRIANGLES, this.indices.length, this.gl.UNSIGNED_SHORT, 0);
   }
 }

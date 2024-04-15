@@ -53,7 +53,6 @@ export class TRecursoMalla extends TRecurso {
 
       this.vertices = mesh.vertices;
       this.normales = mesh.normals;
-      //this.indices = [].concat(...mesh.faces);
       this.indices = new Uint16Array([].concat(...mesh.faces));
       this.coordTex = mesh.texturecoords[0];
 

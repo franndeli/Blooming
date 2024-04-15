@@ -49,10 +49,10 @@ export class TRecursoShader extends TRecurso {
         console.error('Error al compilar el vertex shader: ', this.gl.getShaderInfoLog(vertexShaderId));
         return;
       }
-        this.gl.compileShader(fragmentShaderId);
-        if (!this.gl.getShaderParameter(fragmentShaderId, this.gl.COMPILE_STATUS)) {
-          console.error('Error al compilar el fragment shader: ', this.gl.getShaderInfoLog(fragmentShaderId));
-          return;
+      this.gl.compileShader(fragmentShaderId);
+      if (!this.gl.getShaderParameter(fragmentShaderId, this.gl.COMPILE_STATUS)) {
+        console.error('Error al compilar el fragment shader: ', this.gl.getShaderInfoLog(fragmentShaderId));
+        return;
       }
 
       this.id = this.gl.createProgram();

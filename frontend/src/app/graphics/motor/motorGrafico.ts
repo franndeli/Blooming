@@ -48,10 +48,8 @@ export class MotorGrafico {
 
     // let render = () => {
     //   this.dibujarEscena();
-
     //   requestAnimationFrame(render);
     // }
-
     // render();
   }
 
@@ -66,7 +64,7 @@ export class MotorGrafico {
       padre.addHijo(nodo);
     }
 
-    console.log('nodo creado: ', nodo)
+    //console.log('nodo creado: ', nodo)
 
     return nodo;
   }
@@ -85,7 +83,7 @@ export class MotorGrafico {
       padre.addHijo(camara);
     }
 
-    console.log('camara creada: ', camara)
+    //console.log('camara creada: ', camara)
 
     return camara;
   }
@@ -102,7 +100,7 @@ export class MotorGrafico {
       padre.addHijo(luz);
     }
 
-    console.log('luz creada: ', luz)
+    //console.log('luz creada: ', luz)
 
     return luz;
   }
@@ -110,12 +108,12 @@ export class MotorGrafico {
   async crearModelo(padre: TNodo | null, fichero: string, trasl: vec3, rot: vec3, esc: vec3): Promise<TNodo> {
     const modelo = new TNodo(null, padre);
 
-    const recurso =  await this.gestorRecursos.getRecurso(fichero, 'malla', this.gl) as TRecursoMalla;
+    const recurso =  await this.gestorRecursos.getRecurso(fichero, 'malla') as TRecursoMalla;
     recurso.setNombre(fichero);
-    console.log('recurso: ', recurso)
+    //console.log('recurso: ', recurso)
 
     modelo.setEntidad(recurso);
-    console.log('entidad del modelo: ', modelo.getEntidad())
+    //console.log('entidad del modelo: ', modelo.getEntidad())
     modelo.setTraslacion(trasl);
     modelo.setRotacion(rot);
     modelo.setEscalado(esc);
@@ -126,41 +124,20 @@ export class MotorGrafico {
     }
 
     this.modelos.push(modelo);
-    console.log('modelo creado: ', modelo)
+    //console.log('modelo creado: ', modelo)
 
     return modelo;
   }
 
-  // Recorrer el arbol de nodos y dibujar cada uno de ellos
   async dibujarEscena() {
     this.gl = await this.initWebGL(this.canvas!);
     this.checkWebGLError();
-
-    // this.camActiva.recorrer(mat4.create());
-
-    // let viewMatrix = this.camActiva.getEntidad().getViewMatrix();
-    // let projectionMatrix = this.camActiva.getEntidad().getProjMatrix();
-
-    // if (this.program) {
-    //   let modelViewMatrixLocation = this.gl.getUniformLocation(this.program, 'u_ModelViewMatrix');
-    //   let projectionMatrixLocation = this.gl.getUniformLocation(this.program, 'u_ProjectionMatrix');
-
-    //   if (modelViewMatrixLocation && projectionMatrixLocation) {
-    //     this.gl.uniformMatrix4fv(modelViewMatrixLocation, false, viewMatrix);
-    //     this.gl.uniformMatrix4fv(projectionMatrixLocation, false, projectionMatrix);
-    //   }
-    // } else {
-    //     console.error('The shader program is not initialized.');
-    // }
-
     this.escena.recorrer(mat4.create());
   }
 
-
-
   registrarCamara(nodoCam: TNodo) {
     this.registroCamaras.push(nodoCam);
-    console.log('camara registrada: ', this.registroCamaras)
+    //console.log('camara registrada: ', this.registroCamaras)
     return this.registroCamaras.length - 1;
   }
 
@@ -168,9 +145,8 @@ export class MotorGrafico {
     return this.registroCamaras[this.camaraActiva];
   }
 
-  // Guardar el indice del array de la camara que hemos activado, solo 1 cam activa a la vez
   setCamaraActiva(numCam: number) {
-    console.log('activamos camara: ', numCam)
+    //console.log('activamos camara: ', numCam)
     this.camaraActiva = numCam;
   }
 
@@ -178,7 +154,6 @@ export class MotorGrafico {
     this.registroLuces.push(nodoLuz);
   }
 
-  // Guardar en un array las luces activas o que han sido desactivadas, se puede tener varias luces activas a la vez
   setLuzActiva(numLuz: number, activa: boolean) {
     this.lucesActivas[numLuz] = activa;
   }

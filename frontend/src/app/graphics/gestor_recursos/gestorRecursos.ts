@@ -12,7 +12,7 @@ export class GestorRecursos {
     this.recursos = [];
   }
 
-  async getRecurso(nombre: string, tipo: string, gl: WebGL2RenderingContext): Promise<any> {
+  async getRecurso(nombre: string, tipo: string): Promise<any> {
     let recurso = null;
 
     for(let i=0;i<this.recursos.length;i++){
@@ -26,7 +26,7 @@ export class GestorRecursos {
       switch (tipo) {
         case 'malla':
           console.log('Creando recurso malla');
-          recurso = new TRecursoMalla(nombre, await this.getRecurso('fragmentShader.glsl', 'shader', gl));
+          recurso = new TRecursoMalla(nombre, await this.getRecurso('fragmentShader.glsl', 'shader'));
           break;
         /*case 'textura':
           recurso = new TRecursoTextura(nombre);

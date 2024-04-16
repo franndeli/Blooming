@@ -25,5 +25,5 @@ app.use('/api/sesiones', require('./routes/sesiones'));
 app.use('/api/login', require('./routes/auth'));
 
 app.listen(process.env.PORT, () => {
-    console.log('http://localhost:' + process.env.PORT + '/api/ ');
+    //console.log('http://localhost:' + process.env.PORT + '/api/ ');
 });

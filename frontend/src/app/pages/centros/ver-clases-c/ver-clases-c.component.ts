@@ -11,7 +11,7 @@ import Swal from 'sweetalert2'
 })
 export class VerClasesCComponent implements OnInit {
 
-  clasesData: any;
+  clasesData: any = 0;
   private id: any;
   public totalClases = 0;
   public posActual: number = 0;
@@ -28,6 +28,7 @@ export class VerClasesCComponent implements OnInit {
     this.busqueda = buscar;
     this.id = localStorage.getItem('id');
     this.claseService.getClasesCentro(this.id, this.posActual, this.filPag, buscar).subscribe((res: any) => {
+      //console.log(res);
       if(res["clases"].length === 0){
         if(this.posActual > 0){
           this.posActual = this.posActual - this.filPag;

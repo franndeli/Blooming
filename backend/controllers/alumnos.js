@@ -2,6 +2,8 @@ const Clase = require('../models/clase');
 const nodemailer = require('nodemailer');
 const Centro = require('../models/centro');
 const Alumno = require('../models/alumno');
+const Respuesta = require('../models/respuesta');
+const Sesion = require('../models/sesion');
 const sequelize = require('../database/configdb');
 const hashPassword = require('../middleware/hashHelper');
 
@@ -163,7 +165,7 @@ ${centro.Nombre}`
             if (error) {
                 console.error('Error al enviar el email:', error);
             } else {
-                console.log('Email enviado: ' + info.response);
+                //console.log('Email enviado: ' + info.response);
             }
         });
 
@@ -206,6 +208,8 @@ const deleteAlumno = async (req, res) => {
             return res.status(404).json({ ok: false, message: "Alumno no encontrado" });
         }
 
+        await Respuesta.destroy({ where: { ID_Alumno: id } });
+        await Sesion.destroy({ where: { ID_Alumno: id } });
         await alumno.destroy();
 
         return res.json({
@@ -223,7 +227,7 @@ const resetAparicionAmbitos = async () => {
         const nuevoValorAparicionAmbitos = { "Clase": 0, "Amigos": 0, "Familia": 0, "Emociones": 0, "Fuera de clase": 0 };
         await Alumno.update({ AparicionAmbitos: nuevoValorAparicionAmbitos }, { where: {} }); // Actualiza todos los registros
 
-        console.log("AparicionAmbitos restablecido exitosamente para todos los alumnos.");
+        //console.log("AparicionAmbitos restablecido exitosamente para todos los alumnos.");
     } catch (error) {
         console.error("Error al restablecer AparicionAmbitos:", error);
     }

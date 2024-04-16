@@ -64,6 +64,7 @@ export class AuthService {
   
     // Redirigir al usuario a la página de login
     this.router.navigateByUrl('/login');
+    window.location.reload();
   }
   
 

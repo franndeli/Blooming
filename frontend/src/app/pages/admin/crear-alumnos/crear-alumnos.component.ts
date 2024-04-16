@@ -57,7 +57,7 @@ export class CrearAlumnosComponent implements OnInit, OnChanges {
   crearAlumno(){
     this.sendForm=true;
     if(!this.form.valid){
-      console.log('Errores en el formulario');
+      //console.log('Errores en el formulario');
     }else{
       this.alumnoService.postAlumno(this.form.value).subscribe(
         (response:any) => {

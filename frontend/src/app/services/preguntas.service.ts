@@ -55,7 +55,7 @@ export class PreguntaService {
     const totalPreguntas = 7;
     let preguntasPorSeleccionar: PreguntasPorSeleccionar = {};
 
-    console.log(ambitos);
+    //console.log(ambitos);
     
     // Calcular frecuencias
     let frecuencia: { [key: string]: number } = {};
@@ -63,7 +63,7 @@ export class PreguntaService {
       frecuencia[ambito] = aparicionambitos[ambito] / (sesiones * 2);
     });
 
-    console.log(frecuencia);
+    //console.log(frecuencia);
   
     // Array para almacenar ámbitos con su peso compuesto
     let ambitosConPeso: { ambito: string, peso: number, nota: number }[] = [];
@@ -88,7 +88,7 @@ export class PreguntaService {
       if (preguntasAsignadas >= totalPreguntas) break; // Detener si se alcanza el máximo de preguntas
     }
 
-    console.log(preguntasPorSeleccionar);
+    //console.log(preguntasPorSeleccionar);
 
     // Convertir el objeto JavaScript a una cadena JSON y almacenarlo
     localStorage.setItem('preguntasPorSeleccionar', JSON.stringify(preguntasPorSeleccionar));

@@ -56,7 +56,7 @@ export class CrearProfesoresComponent implements OnInit, OnChanges {
   crearProfesor(){
     this.sendForm=true;
     if(!this.form.valid){
-      console.log('Errores en el formulario');
+      //console.log('Errores en el formulario');
     }else{
       this.profesorService.postProfesor(this.form.value).subscribe(
         (response:any) => {

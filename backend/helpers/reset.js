@@ -24,13 +24,13 @@ cron.schedule('0 3 * * *', async () => {
   const diferenciaDias = Math.floor((ahora - ultimaEjecucion) / (1000 * 60 * 60 * 24));
 
   if (diferenciaDias <= 21) {
-    console.log("Todavía no han pasado 3 semanas");
+    //console.log("Todavía no han pasado 3 semanas");
   }
 
   if (diferenciaDias >= 21) { // 3 semanas
-    console.log("Ejecutando tarea para resetear AparicionAmbitos...");
+    //console.log("Ejecutando tarea para resetear AparicionAmbitos...");
     await resetAparicionAmbitos();
-    console.log("Tarea completada.");
+    //console.log("Tarea completada.");
     try {
       fs.writeFileSync(ultimaEjecucionPath, ahora.toISOString());
     } catch (error) {

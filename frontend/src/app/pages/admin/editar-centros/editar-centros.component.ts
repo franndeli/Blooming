@@ -42,7 +42,7 @@ export class EditarCentrosComponent implements OnInit {
 
   actualizarCentro(){
     if(!this.form.valid){
-      console.log('Errores en el formulario');
+      //console.log('Errores en el formulario');
     }else{
       this.centroService.putCentro(this.form.value).subscribe(
         (response:any) => {

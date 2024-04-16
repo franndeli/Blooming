@@ -18,7 +18,7 @@ export class GlobalStateService {
         this.sesionService.getSesionesAlumnoID(alumnoID).subscribe({
           next: (response: any) => {
             if (response.ok && response.sesiones.length > 0) {
-              console.log("Existen sesiones, vamos a calcularlas");
+              //console.log("Existen sesiones, vamos a calcularlas");
               this.handleSesiones(response.sesiones);
               resolve();  // Resuelve la promesa cuando la operación es exitosa
             } else {
@@ -40,7 +40,7 @@ export class GlobalStateService {
 
   private handleSesiones(sesiones: any[]) {
     const latestSession = sesiones[sesiones.length - 1];
-    console.log(latestSession);
+    //console.log(latestSession);
     const now = new Date();
 
     // Fecha y hora de la última sesión
@@ -58,15 +58,15 @@ export class GlobalStateService {
         lastReset.setDate(lastReset.getDate() - 1);
     }
 
-    console.log("Ultimo reseteo", lastReset);
+    //console.log("Ultimo reseteo", lastReset);
 
     // Calcular el próximo reinicio
     const nextReset = new Date(lastReset);
     nextReset.setDate(nextReset.getDate() + 1);
 
-    console.log("Próximo reseteo", nextReset);
+    //console.log("Próximo reseteo", nextReset);
 
-    console.log("Última sesión hecha", lastSessionDate );
+    //console.log("Última sesión hecha", lastSessionDate );
 
     // Verificar si la última sesión fue después del último reinicio y antes del próximo
     if (lastSessionDate >= lastReset && lastSessionDate < nextReset) {
@@ -90,7 +90,7 @@ export class GlobalStateService {
     //this.mostrarContador = false;
     if(this.mostrarContador === true){
       const now = new Date();
-      //console.log(now);
+      ////console.log(now);
       const resetHour = 15;
       const resetTime = new Date(now);
       resetTime.setHours(resetHour, 0, 0, 0);

@@ -10,7 +10,7 @@ import { ProfesorService } from '../../../services/profesores.service';
 })
 export class VerProfesoresCComponent implements OnInit {
 
-  profesoresData: any;
+  profesoresData: any = 0;
   private id: any;
   public totalProfesores = 0;
   public posActual = 0;
@@ -44,7 +44,7 @@ export class VerProfesoresCComponent implements OnInit {
         }
       }else {
         this.profesoresData = res.profesores;
-        console.log(this.profesoresData)
+        //console.log(this.profesoresData)
         this.totalProfesores = res.page.total;
       }
     })
@@ -74,7 +74,7 @@ export class VerProfesoresCComponent implements OnInit {
 
   verDatos(id: number){
     this.profesorService.getProfesorID(id, true).subscribe((res: any) => {
-      console.log(res.profesores);
+      //console.log(res.profesores);
       this.login = res.profesores[0].Email;
       this.password = res.profesores[0].Contraseña;
       

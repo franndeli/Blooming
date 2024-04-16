@@ -272,7 +272,7 @@ export class CubeService {
 
         this.isSelected = true;
         this.selectedOption = this.optionsMap.get(this.selectedFaceIndex);
-        console.log('Opción seleccionada:', this.selectedOption);
+        //console.log('Opción seleccionada:', this.selectedOption);
       }
     }
   }
@@ -383,12 +383,12 @@ export class CubeService {
   public updateCubeRotation() {
     if (!this.cube) return;
   
-    //console.log(this.cube.rotation);
+    ////console.log(this.cube.rotation);
     // Aplicar inercia a la rotación del cubo
     this.cube.rotation.y += this.inertia.x;
     this.cube.rotation.x += this.inertia.y;
     
-    //console.log(this.inertia);
+    ////console.log(this.inertia);
     // Reducir la inercia gradualmente
     this.inertia.x *= 0.99; // Ajusta este valor según necesites
     this.inertia.y *= 0.99;

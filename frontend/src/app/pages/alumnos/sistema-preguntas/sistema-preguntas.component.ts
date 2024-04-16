@@ -85,8 +85,8 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       const estadoPreguntas = localStorage.getItem('preguntas');
       const estadoIndiceActual = localStorage.getItem('indiceActual');
 
-      //console.log(estadoPreguntas)
-      //console.log(estadoIndiceActual)
+      ////console.log(estadoPreguntas)
+      ////console.log(estadoIndiceActual)
     
       if (estadoPreguntas && estadoIndiceActual) {
         this.preguntas = JSON.parse(estadoPreguntas);
@@ -95,10 +95,10 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
         this.cargarAnimacion(this.preguntaActual, 0);
         this.add3DText();
       } else {
+        ////console.log(localStorage.getItem('mostrarContador'));
         //console.log(localStorage.getItem('mostrarContador'));
-        console.log(localStorage.getItem('mostrarContador'));
         if (localStorage.getItem('mostrarContador') === 'false') {
-          console.log('hola');
+          //console.log('hola');
           // Procede con el flujo normal
           if(this.finalScreenService.scene){
             this.finalScreenService.clearScene();
@@ -111,7 +111,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
             this.boardService.setButtonPressedCallback(this.handleButtonPress.bind(this));
           }
         } else{
-          console.log("Inicializando finalScreenService");
+          //console.log("Inicializando finalScreenService");
           this.cargarAnimacion(this.preguntaActual!, 1);
         }
       }
@@ -126,7 +126,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   async iniciarGlobalState(){
     try {
       await this.finalScreenService.initializeState();
-      console.log("Estado inicializado correctamente.");
+      //console.log("Estado inicializado correctamente.");
       // Continuar con más lógica después de la inicialización
     } catch (error) {
       console.error("Error al inicializar el estado:", error);
@@ -134,7 +134,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   }
 
   ngAfterViewInit() {
-    console.log(this.EL_NUMERO);
+    //console.log(this.EL_NUMERO);
     this.rendererContainer.nativeElement.appendChild(this.renderer.domElement);
   }
 
@@ -164,7 +164,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   }
 
   handleButtonClick() {
-    console.log('Botón presionado');
+    //console.log('Botón presionado');
     Swal.fire({
       title: "¿Estás seguro que quieres salir?",
       //text: "Vas a salir de la aplicación",
@@ -190,24 +190,24 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
 
     if (currentTime - this.lastButtonClickTime < 1000) {
       // Si ha pasado menos de un segundo desde el último clic, ignorar este clic
-      console.log("Espera un segundo antes de volver a pulsar el botón.");
+      //console.log("Espera un segundo antes de volver a pulsar el botón.");
       return;
     }
 
     this.lastButtonClickTime = currentTime;
 
-    console.log("El botón ha sido presionado");
+    //console.log("El botón ha sido presionado");
 
     let selectedOption = undefined;
 
     if(this.EL_NUMERO === 1) {
-      console.log("Opción pulsada:", this.cubeService.selectedOption);
+      //console.log("Opción pulsada:", this.cubeService.selectedOption);
       selectedOption = this.cubeService.selectedOption;
     }
     
     if(this.EL_NUMERO === 2) {
       if (this.boardService.selectedOption !== null) {
-        console.log("Opción pulsada:", this.boardService.selectedOption);
+        //console.log("Opción pulsada:", this.boardService.selectedOption);
         selectedOption = this.boardService.selectedOption
       }
     }
@@ -471,10 +471,10 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       this.aparicionambitos = JSON.parse(ambitos.alumnos[0].AparicionAmbitos);
       this.sesionService.getSesionCount(localStorage.getItem('id')).subscribe((sesiones: any) => {
         this.nsesiones = sesiones.count;
-        console.log(this.nsesiones);
+        //console.log(this.nsesiones);
         this.preguntaService.seleccionarPreguntas(this.ambitos, this.aparicionambitos, this.nsesiones).subscribe(preguntas => {
           this.preguntas = preguntas;
-          console.log(preguntas);
+          //console.log(preguntas);
           if (this.preguntas && this.preguntas.length > 0) {
             this.preguntaActual = this.preguntas[this.indiceActual];
             this.cargarAnimacion(this.preguntaActual, 0);
@@ -543,7 +543,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     }
     this.respuestaService.postRespuesta(respuesta).subscribe({
       next: (response) => {
-        console.log('Respuesta creada con éxito:', response);
+        //console.log('Respuesta creada con éxito:', response);
       },
       error: (error) => {
         console.error('Error al crear respuesta:', error);
@@ -560,7 +560,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       this.gravedadesPorAmbito[ambitoActual] += gravedad;
     }
 
-    console.log(this.gravedadesPorAmbito);
+    //console.log(this.gravedadesPorAmbito);
 
     this.clearScene()
     this.loadNewQuestion();
@@ -573,7 +573,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       this.preguntaActual = this.preguntas[this.indiceActual];
   
       this.obtenerNumeroAleatorio();
-      console.log(this.EL_NUMERO);
+      //console.log(this.EL_NUMERO);
       this.cargarAnimacion(this.preguntaActual, 0);
       this.add3DText();
       this.guardarIndiceActual();
@@ -586,7 +586,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   }
 
   multiplicarYActualizarAmbitos() {
-    console.log("Entro en multiplicarYActualizarAmbitos");
+    //console.log("Entro en multiplicarYActualizarAmbitos");
     return new Promise((resolve, reject) => {
       this.alumnoService.getAlumnoID(localStorage.getItem('id')).subscribe({
         next: (resultado: any) => {
@@ -614,7 +614,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
           });
       
           // Actualiza los ámbitos en el backend
-          console.log(gravedadesActualizadas);
+          //console.log(gravedadesActualizadas);
           this.gravedadesActualizadas = gravedadesActualizadas;
           this.actualizarAmbitosEnBackend(gravedadesActualizadas).then(() => {
             // Una vez que se actualizan los ámbitos, actualizar aparicionAmbitos
@@ -629,10 +629,10 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   }
 
   actualizarAmbitosEnBackend(ambitosActualizados: any) {
-    console.log("Entro en actualizarAmbitosEnBackend");
+    //console.log("Entro en actualizarAmbitosEnBackend");
     return new Promise((resolve, reject) => {
       const alumnoId = localStorage.getItem('id');
-      console.log(ambitosActualizados);
+      //console.log(ambitosActualizados);
 
       const estado = this.obtenerEstado(ambitosActualizados);
 
@@ -644,7 +644,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       
       this.alumnoService.putAlumno(datosActualizados).subscribe({
         next: (response) => {
-          console.log('Ambitos actualizados con éxito:', response);
+          //console.log('Ambitos actualizados con éxito:', response);
           resolve(response); // Resuelve la promesa cuando la actualización es exitosa
         },
         error: (error) => {
@@ -659,28 +659,28 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     let estado = "";
     const valores = Object.values(ambitos);
     const suma = valores.reduce((a: number, b: number) => a + b, 0);
-    console.log(suma)
+    //console.log(suma)
     const media = suma / valores.length;
-    console.log(media)
+    //console.log(media)
 
     if (media >= 0 && media <= 20) {
       estado = "Muy Malo";
     } else if (media >= 21 && media <= 40) {
       estado = "Malo";
-    } else if (media >= 41 && media <= 60) {
+    } else if (media > 40 && media <= 60) {
       estado = "Normal";
-    } else if (media >= 61 && media <= 80) {
+    } else if (media > 60 && media <= 80) {
       estado = "Bueno";
-    } else if (media >= 81 && media <= 100) {
+    } else if (media > 80 && media <= 100) {
       estado = "Muy Bueno";
     }
-    console.log(estado)
+    //console.log(estado)
 
     return estado;
   }
   
   actualizarAparicionAmbitos() {
-    console.log("Entro en actualizarAparicionAmbitos");
+    //console.log("Entro en actualizarAparicionAmbitos");
     return new Promise((resolve, reject) => {
       this.alumnoService.getAlumnoID(localStorage.getItem('id')).subscribe((resultado: any) => {
         if (resultado.alumnos && resultado.alumnos.length > 0) {
@@ -712,7 +712,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   
             this.alumnoService.putAlumno(datosActualizados).subscribe({
               next: (response) => {
-                console.log('AparicionAmbitos actualizados con éxito:', response);
+                //console.log('AparicionAmbitos actualizados con éxito:', response);
                 resolve(response); // Resuelve la promesa cuando la actualización es exitosa
               },
               error: (error) => {
@@ -734,7 +734,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   async reiniciar() {
     try {
       await this.multiplicarYActualizarAmbitos();
-      console.log("Salgo de await this.multiplicarYActualizarAmbitos()");
+      //console.log("Salgo de await this.multiplicarYActualizarAmbitos()");
       await this.sesionService.finalizarSesion(this.gravedadesActualizadas);
       localStorage.setItem('mostrarContador', 'true');
       this.finalScreenService.setMostrarContador(true);

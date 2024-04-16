@@ -68,7 +68,7 @@ export class EditarProfesoresComponent implements OnInit, OnChanges {
 
   actualizarProfesor(){
     if(!this.form.valid){
-      console.log('Errores en el formulario');
+      //console.log('Errores en el formulario');
     }else{
       this.profesorService.putProfesor(this.form.value).subscribe(
         (response:any) => {

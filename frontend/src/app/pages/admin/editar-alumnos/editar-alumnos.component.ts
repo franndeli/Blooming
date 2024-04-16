@@ -70,7 +70,7 @@ export class EditarAlumnosComponent implements OnInit, OnChanges {
 
   actualizarAlumno(){
     if(!this.form.valid){
-      console.log('Errores en el formulario');
+      //console.log('Errores en el formulario');
     }else{
       this.alumnoService.putAlumno(this.form.value).subscribe(
         (response:any) => {

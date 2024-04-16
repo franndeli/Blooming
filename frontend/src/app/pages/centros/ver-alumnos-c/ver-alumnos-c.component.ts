@@ -11,7 +11,7 @@ import Swal from 'sweetalert2'
 })
 export class VerAlumnosCComponent implements OnInit{
 
-  alumnosData: any;
+  alumnosData: any = 0;
   private id: any;
   public totalAlumnos = 0;
   public posActual = 0;
@@ -42,7 +42,7 @@ export class VerAlumnosCComponent implements OnInit{
       }else {
         this.alumnosData = res.alumnos;
         this.totalAlumnos = res.page.total;
-        console.log(this.alumnosData);
+        //console.log(this.alumnosData);
       }
     })
     

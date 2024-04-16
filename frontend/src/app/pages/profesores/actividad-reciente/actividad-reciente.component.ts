@@ -49,7 +49,7 @@ export class ActividadRecienteComponent implements OnInit {
       }else{
         this.recientesData = res.respuestas;
         this.totalActividades = res.page.total;
-        console.log(this.recientesData)
+        //console.log(this.recientesData)
       }
     });
   }

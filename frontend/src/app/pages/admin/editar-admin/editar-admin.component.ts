@@ -22,7 +22,7 @@ export class EditarAdminComponent {
 
   cambiarPwd(){
     if(!this.form.valid){
-      console.log('Errores en el formulario');
+      //console.log('Errores en el formulario');
     }else{
       this.adminService.updateAdminPwd(this.form.value).subscribe(
         (response: any) => {

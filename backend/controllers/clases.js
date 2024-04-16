@@ -24,6 +24,8 @@ const getClases = async (req, res) => {
             if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde') {
                 if (param === 'ID_Clase') {
                     queryOptions[param] = queryParams[param];
+                } else if(param === 'ID_Centro'){
+                    queryOptions[param] = queryParams[param];
                 } else {
                     queryOptions[param] = { [sequelize.Op.like]: `%${queryParams[param]}%` };
                 }

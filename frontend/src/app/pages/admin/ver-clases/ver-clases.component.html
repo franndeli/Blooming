@@ -29,7 +29,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                         <tr *ngFor="let clase of clasesData">
                                             <td>{{clase.Nombre}}</td>
                                             <td>{{clase.NumAlumnos}}</td>
-                                            <td>{{clase.NomCentro}}</td>
+                                            <td>{{clase.Centro.Nombre}}</td>
                                             <td class="botones">
                                                 <button class="btn btn-primary ti ti-pencil fs-5" (click)="editarClase(clase)"></button>
                                                 <button class="btn btn-danger ti ti-trash fs-5" (click)="eliminarClase(clase.ID_Clase)"></button>

@@ -205,7 +205,7 @@ export class ActividadRecienteNegativaComponent {
       }
       this.obtenerAlumnosClases();
     }, (error) => {
-      console.log('Error al obtener la clase', error);
+      //console.log('Error al obtener la clase', error);
     });
 }
 
@@ -216,7 +216,7 @@ export class ActividadRecienteNegativaComponent {
             this.analizarAlumnos(res.alumnos, index);
           },
           (error) => {
-            console.log('Error al obtener los alumnos del centro:', error);
+            //console.log('Error al obtener los alumnos del centro:', error);
           }
         );
       });

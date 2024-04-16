@@ -22,7 +22,7 @@ export class EditarCentroComponent {
 
   cambiarPwd(){
     if(!this.form.valid){
-      console.log('Errores en el formulario');
+      //console.log('Errores en el formulario');
     }else{
       this.centroService.updateCentroPwd(this.form.value).subscribe(
         (response: any) => {

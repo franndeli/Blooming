@@ -28,6 +28,8 @@ const getProfesores = async (req, res) => {
             if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde' && param !== 'pwd') {
                 if (param === 'ID_Profesor') {
                     queryOptions[param] = queryParams[param];
+                } else if(param === 'ID_Centro'){
+                    queryOptions[param] = queryParams[param];
                 } else {
                     queryOptions[param] = { [sequelize.Op.like]: `%${queryParams[param]}%` };
                 }
@@ -134,7 +136,7 @@ ${centro.Nombre}`
             if (error) {
                 console.error('Error al enviar el email:', error);
             } else {
-                console.log('Email enviado: ' + info.response);
+                //console.log('Email enviado: ' + info.response);
             }
         });
     

@@ -48,7 +48,7 @@ export class EditarClasesComponent implements OnInit {
 
   actualizarClase(){
     if(!this.form.valid){
-      console.log('Errores en el formulario');
+      //console.log('Errores en el formulario');
     }else{
       this.claseService.putClase(this.form.value).subscribe(
         (response:any) => {

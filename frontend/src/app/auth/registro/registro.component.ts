@@ -29,9 +29,9 @@ export class RegistroComponent implements OnInit {
   registro(){
     this.sendForm=true;
     if(!this.form.valid){
-      console.log('Errores en el formulario');
+      //console.log('Errores en el formulario');
     }else{
-      console.log('registro');
+      //console.log('registro');
       this.authService.registro(this.form.value).subscribe(
         (response:any) => {
           Swal.fire({

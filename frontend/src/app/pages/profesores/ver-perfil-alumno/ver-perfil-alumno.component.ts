@@ -51,7 +51,7 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
       this.alumnosData = res.alumnos[0];
       this.alumnosData.Ambitos = JSON.parse(this.alumnosData.Ambitos);
       this.nombreClase = this.alumnosData.Clase.Nombre;
-      console.log(this.alumnosData);
+      //console.log(this.alumnosData);
     });
   }
 

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AlumnoService } from '../../../services/alumnos.service';
 import { ClaseService } from '../../../services/clases.service';
 import { FormBuilder, Validators } from '@angular/forms';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-editar-alumnos-c',
@@ -52,7 +53,18 @@ export class EditarAlumnosCComponent implements OnInit {
     }else{
       this.alumnoService.putAlumno(this.form.value).subscribe(
         (response:any) => {
-          this.router.navigate(['centros/ver-alumnos']);
+          Swal.fire({
+            icon: "success",
+            title: "Alumno editado con éxito",
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.router.navigate(['centros/ver-alumnos']);
+          });
+        },
+        (error) => {
+          console.error('Error de edición:', error);
+          Swal.fire(error.error.message);
         }
       );
     }

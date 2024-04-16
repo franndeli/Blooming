@@ -42,7 +42,14 @@ export class CrearClasesComponent implements OnInit {
     }else{
       this.claseService.postClase(this.form.value).subscribe(
         (response:any) => {
-          this.router.navigate(['admin/ver-clases']);
+          Swal.fire({
+            icon: "success",
+            title: "Clase creada con éxito",
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.router.navigate(['admin/ver-clases']);
+          });
         },
         (error) => {
           console.error('Error de creación:', error);

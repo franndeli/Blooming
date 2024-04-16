@@ -12,7 +12,7 @@ const getClases = async (req, res) => {
         const desde = Number(req.query.desde) || 0;
         const queryParams = req.query;
 
-        const validParams = ['ID_Clase', 'Nombre', 'NumAlumnos', 'ID_Centro', 'desde', 'numFilas'];
+        const validParams = ['ID_Clase', 'Nombre', 'NumAlumnos', 'ID_Centro', 'desde', 'numFilas', 'estado'];
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {

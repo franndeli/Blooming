@@ -1,8 +1,10 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { AlumnoService } from '../../../services/alumnos.service';
 import { SesionService } from '../../../services/sesiones.service';
 import { RespuestaService } from '../../../services/respuestas.service';
 import * as echarts from 'echarts';
+import { Console } from 'console';
 
 @Component({
   selector: 'app-ver-perfil-alumno',
@@ -11,16 +13,18 @@ import * as echarts from 'echarts';
 })
 
 export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
-
+  private alumnoID: any;
   public alumnosData: any;
+  public nombreClase: string = '';
   public respuestasData: any;
   private sesiones: any;
   private claseID: any;
   private dias: number = 7;
   private gravedad: number = 0;
   public nombresAmbitos: any = [];
+  private volverPag: number = 0;
 
-  constructor(private respuestaService: RespuestaService, private router: Router, private activatedRoute: ActivatedRoute, private sesionService: SesionService){
+  constructor(private respuestaService: RespuestaService, private router: Router, private activatedRoute: ActivatedRoute, private sesionService: SesionService, private alumnoService: AlumnoService){
     this.alumnosData = [];
     this.respuestasData = [];
     this.sesiones = {};
@@ -28,12 +32,13 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.sesiones.Ambitos = {};
-    this.sesiones.Dias= {};
+    this.sesiones.Dias = {};
     this.activatedRoute.paramMap.subscribe(params => {
-      this.alumnosData = history.state.alumno;
-      this.alumnosData.Ambitos = JSON.parse(this.alumnosData.Ambitos);
+      this.alumnoID = history.state.alumnoID;
+      this.volverPag = history.state.volverPag;
       this.claseID = history.state.claseID;
     });
+    this.obtenerAlumno();
     this.obtenerRespuestas();
   }
 
@@ -41,10 +46,18 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
     this.obtenerSesiones();
   }
 
-  obtenerSesiones(){
-    this.sesionService.getSesionesAlumno(this.alumnosData.ID_Alumno, this.dias).subscribe((res: any) => {
-      const sesionesData = res.sesiones;
+  obtenerAlumno(){
+    this.alumnoService.getAlumnoID(this.alumnoID).subscribe((res: any) => {
+      this.alumnosData = res.alumnos[0];
+      this.alumnosData.Ambitos = JSON.parse(this.alumnosData.Ambitos);
+      this.nombreClase = this.alumnosData.Clase.Nombre;
+      console.log(this.alumnosData);
+    });
+  }
 
+  obtenerSesiones(){
+    this.sesionService.getSesionesAlumno(this.alumnoID, this.dias).subscribe((res: any) => {
+      const sesionesData = res.sesiones;
       this.sesiones.Ambitos.Clase = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Clase);
       this.sesiones.Ambitos.Amigos = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Amigos);
       this.sesiones.Ambitos.Familia = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Familia);
@@ -66,10 +79,25 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
     });
   }
 
+  mostrarMensaje: boolean = true;
+  hayDatos: boolean = false;
+
   dibujarGrafica(){
     var chartDom = document.getElementById('chart');
     var myChart = echarts.init(chartDom);
     var option: echarts.EChartsOption;
+
+    if(this.sesiones.Dias > 0 || this.sesiones.Ambitos.Amigos > 0 
+      || this.sesiones.Ambitos.Clase > 0 || this.sesiones.Ambitos.Familia > 0 
+      || this.sesiones.Ambitos.Emociones > 0 || this.sesiones.Ambitos["Fuera de clase"] > 0 ){
+
+      this.hayDatos = true;
+    } else {
+      this.hayDatos = false;
+    }
+
+    this.mostrarMensaje = !this.hayDatos;
+
 
     option = {
       tooltip: {
@@ -133,10 +161,9 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
   }
 
   obtenerRespuestas(){
-    this.respuestaService.getRespuestasAlumno(this.alumnosData.ID_Alumno, this.gravedad).subscribe((res: any) => {
+    this.respuestaService.getRespuestasAlumno(this.alumnoID, this.gravedad, 0, 5).subscribe((res: any) => {
       this.respuestasData = res.respuestas;
     });
-  
   }
 
   cambiarDias(event: any) {
@@ -145,12 +172,16 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
   }
 
   getGravedadClass(gravedad: number){
-    if(gravedad >= 0 && gravedad < 50){
-      return 'grave-gravedad';
-    } else if(gravedad >= 50 && gravedad <= 65){
-      return 'leve-gravedad';
-    }else if(gravedad > 65 && gravedad <= 100){
-      return 'nula-gravedad';
+    if(gravedad >= 0 && gravedad < 20){
+      return 'muymalo-gravedad';
+    }else if(gravedad >= 20 && gravedad <= 40){
+      return 'malo-gravedad';
+    } else if(gravedad >= 40 && gravedad <= 60){
+      return 'normal-gravedad';
+    }else if(gravedad >= 60 && gravedad <= 80){
+      return 'bueno-gravedad';
+    }else if(gravedad > 80 && gravedad <= 100){
+      return 'muybueno-gravedad';
     } else {
       return '';
     }
@@ -162,7 +193,15 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
   }
 
   volver(){
-    this.router.navigate(['profesores/ver-alumnos'], {state: {claseID: this.claseID}});
+    if(this.claseID){
+      this.router.navigate(['profesores/ver-alumnos'], {state: {claseID: this.claseID}});
+    } else {
+      if(this.volverPag === 0){
+        this.router.navigate(['profesores/actividad-reciente']);
+      }
+      if(this.volverPag === 1){
+        this.router.navigate(['profesores/actividad-negativa']);
+      }
+    }
   }
-
 }

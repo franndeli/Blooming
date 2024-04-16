@@ -29,6 +29,11 @@ data-sidebar-position="fixed" data-header-position="fixed">
                       </div>
                       <p class="text-danger" *ngIf="!validarForm('Apellidos')">Los Apellidos son obligatorios</p>
                       <div class="mb-3">
+                        <label for="EmailTutor" class="form-label"><span><i class="ti ti-mail" style="font-size: 15px;"></i></span> Email del tutor</label>
+                        <input type="email" class="form-control" formControlName="EmailTutor" id="EmailTutor">
+                      </div>
+                      <p class="text-danger" *ngIf="!validarForm('EmailTutor')">El Email del tutor es obligatorio</p>
+                      <div class="mb-3">
                         <label for="Contraseña" class="form-label"><span><i class="ti ti-password" style="font-size: 15px;"></i></span> Contraseña</label>
                         <input type="password" class="form-control" formControlName="Contraseña" id="Contraseña">
                       </div>

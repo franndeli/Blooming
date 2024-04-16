@@ -4,125 +4,213 @@ data-sidebar-position="fixed" data-header-position="fixed">
 <div class="body-wrapper" style="margin-left: 0;">
   <div class="container-fluid"> 
     <div class="row">
-      <div class="col-lg-9 align-items-strech">
+      <div class="col-lg-12 align-items-strech">
         <div class="card">
           <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
-            <div class="card-body">
-              <h5 class="card-title fw-semibold mb-4">Informe Emocional Negativo <span><i class="ti ti-alert-triangle" style="font-size: 20px;"></i></span></h5>
-              <div class="card">
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
-                      <thead class="text-dark fs-4">
-                          <tr>
-                              <th class="border-bottom-0"><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
-                              <th class="border-bottom-0"><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Clase</th>
-                              <th class="border-bottom-0"><span><i class="ti ti-question-mark" style="font-size: 15px;"></i></span> Pregunta</th>
-                              <th class="border-bottom-0"><span><i class="ti ti-alert-triangle" style="font-size: 15px;"></i></span> Respuesta</th>
-                              <th class="border-bottom-0"></th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <tr>
-                              <td class="border-bottom-0">Pepe</td>
-                              <td class="border-bottom-0">1ºA</td>
-                              <td class="border-bottom-0">¿Cómo te has sentido hoy?</td>
-                              <td class="border-bottom-0"> Triste </td>
-                              <td class="border-bottom-0">
-                              <a href="/profesores/ver-perfil-alumno" class="btn btn-primary"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</a>
-                              </td>
-                          </tr>
-                          <tr>
-                            <td class="border-bottom-0">Pepe</td>
-                            <td class="border-bottom-0">1ºA</td>
-                            <td class="border-bottom-0">¿Cómo te has sentido hoy?</td>
-                            <td class="border-bottom-0"> Triste </td>
-                            <td class="border-bottom-0">
-                            <a href="/profesores/ver-perfil-alumno" class="btn btn-primary"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</a>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="border-bottom-0">Pepe</td>
-                            <td class="border-bottom-0">1ºA</td>
-                            <td class="border-bottom-0">¿Cómo te has sentido hoy?</td>
-                            <td class="border-bottom-0"> Triste </td>
-                            <td class="border-bottom-0">
-                            <a href="/profesores/ver-perfil-alumno" class="btn btn-primary"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</a>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="border-bottom-0">Pepe</td>
-                            <td class="border-bottom-0">1ºA</td>
-                            <td class="border-bottom-0">¿Cómo te has sentido hoy?</td>
-                            <td class="border-bottom-0"> Triste </td>
-                            <td class="border-bottom-0">
-                            <a href="/profesores/ver-perfil-alumno" class="btn btn-primary"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</a>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="border-bottom-0">Pepe</td>
-                            <td class="border-bottom-0">1ºA</td>
-                            <td class="border-bottom-0">¿Cómo te has sentido hoy?</td>
-                            <td class="border-bottom-0"> Triste </td>
-                            <td class="border-bottom-0">
-                            <a href="/profesores/ver-perfil-alumno" class="btn btn-primary"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Perfil</a>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+            <div class="card-body" style="padding-bottom: 0%;">
+              <div class="card overflow-hidden position-relative">
+                <div class="card-body" style="padding-bottom: 0%;">
+                  <h5 class="card-title fw-semibold"><span><i class="ti ti-graph" style="font-size: 20px; margin-bottom: 0px;"></i></span> Gráfica General Clases</h5> 
+                </div>
+                <div id="chartContainer">
+                  <div id="chart2"></div>
+                  <p class="text-center" *ngIf="mostrarMensaje && !hayDatos">No hay datos registrados todavía</p>
                 </div>
               </div>
-              <a href="/profesores/dashboard" class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</a>
+              <p>*Esta gráfica muestra qué clases tienen más alumnos con estados alarmantes</p>
             </div>
           </div>
         </div>
       </div>
-        <div class="col-lg-3">
-          <div class="row">
-            <div class="col-lg-12">
-              <!-- Yearly Breakup -->
-              <div class="card overflow-hidden">
-                <div class="card-body">
-                  <h5 class="card-title mb-9 fw-semibold">Listado de clases más alarmantes <span><i class="ti ti-alert-triangle" style="font-size: 15px;"></i></span></h5>
-                  <div style="text-align: center;">
-                    <p class="fw-semibold mb-3"><span class="badge bg-danger rounded-3 fw-semibold">1ºA </span> Media : 2</p>
-                    
-                    <p class="fw-semibold mb-3"><span class="badge bg-danger rounded-3 fw-semibold">3ºA </span> Media : 3</p>
-                    
-                    <p class="fw-semibold mb-3"><span class="badge bg-danger rounded-3 fw-semibold">1ºB </span> Media : 5</p>
-                    
-                    <p class="fw-semibold mb-3"><span class="badge bg-secondary rounded-3 fw-semibold">2ºA </span> Media : 7</p>
-                  </div>
-                </div>
-              </div>
+    </div>
+  </div>
+  <div class="container-fluid" style="padding-top: 10px;">
+    <div class="row">
+      <!-- Primer contenedor en la primera columna -->
+      <div class="col-lg-6">
+        <div class="card overflow-hidden">
+          <div class="card-body">
+            <h5 class="card-title mb-9 fw-semibold">Listado de clases más alarmantes <span><i class="ti ti-alert-triangle" style="font-size: 15px;"></i></span></h5>
+            <div class="table-responsive" *ngIf="conRiesgo.length > 0; else noClasesAlarmantes">
+              <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em; width: 100%;">
+                <thead class="text-dark fs-4">
+                  <tr>
+                    <th style="text-align: center;"><span><i class="ti ti-school" style="font-size: 15px;"></i></span> Clase</th>
+                    <th style="text-align: center;"><span><i class="ti ti-alert-triangle" style="font-size: 15px;"></i></span> Alumnos alarmantes/Total Alumnos</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let clase of conRiesgo.slice(0,5)">
+                    <td style="text-align: center;"><span class="badge bg-danger rounded-3 fw-semibold" style="cursor: pointer;" (click)="verClase(clase.claseid)">{{ clase.nombre }}</span></td>
+                    <td style="white-space: nowrap; text-align: center;">{{ clase.cont }} / {{ clase.maxalumnos}}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- <br>
+              <app-pagination (cambiarPagina)="cambiarPagina($event)" [texto]="false" [totalRegistros]="totalClases" [registroActual]="posActual+1" [registroPag]="filPag"></app-pagination> -->
             </div>
-            <div class="col-lg-12">
-              <!-- Yearly Breakup -->
-              <div class="card overflow-hidden">
+            <ng-template #noClasesAlarmantes>
+              <p class="text-center" style="margin-top: 45px;">No hay clases alarmantes</p>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Segundo contenedor en la segunda columna -->
+      <div class="col-lg-6">
+        <div class="card overflow-hidden">
+          <div class="card-body">
+            <h5 class="card-title mb-9 fw-semibold">Alumnos más alarmantes de las clases <span><i class="ti ti-alert-triangle" style="font-size: 15px; "></i></span></h5>
+            <select class="form-select py-1 ps-2 border-1 border-success bg-light rounded-pill" (change)="onChangeClase($event)" style="outline: none; margin-top: 10px; margin-bottom: 10px;">
+              <option *ngFor="let clase of clasesExisten">{{ clase.nombre }}</option>
+            </select>
+            <div class="table-responsive" *ngIf="alumnosInfo.length > 0; else noAlumnosAlarmantes">
+              <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em; width: 100%;">
+                <thead class="text-dark fs-4">
+                  <tr>
+                    <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
+                    <th style="text-align: center;"><span><i class="ti ti-pin" style="font-size: 15px;"></i></span> Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let info of alumnosInfo.slice(0, 5)">
+                    <td>{{ info.nombre }} {{ info.apellidos }}</td>
+                    <td style="white-space: nowrap; text-align: center;"><span class="badge bg-danger rounded-3 fw-semibold">{{ info.estado }}</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <ng-template #noAlumnosAlarmantes>
+              <p class="text-center" style="margin-top: 45px;">No hay alumnos alarmantes</p>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid" style="padding-top: 10px;">
+    <div class="row">
+      <!-- Primer contenedor en la primera columna -->
+      <div class="col-lg-6">
+        <div class="card overflow-hidden">
+          <div class="card-body">
+            <h5 class="card-title mb-9 fw-semibold">Listado de clases menos alarmantes <span><i class="ti ti-check" style="font-size: 15px;"></i></span></h5>
+            <div class="table-responsive" *ngIf="sinRiesgo.length > 0; else noClasesNoAlarmantes">
+              <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em; width: 100%;">
+                <thead class="text-dark fs-4">
+                  <tr>
+                    <th style="text-align: center;"><span><i class="ti ti-school" style="font-size: 15px;"></i></span> Clase</th>
+                    <th style="text-align: center;"><span><i class="ti ti-check" style="font-size: 15px;"></i></span> Alumnos no alarmantes/Total Alumnos</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let clase of sinRiesgo.slice(0, 5)">
+                    <td style="text-align: center;"><span class="badge rounded-3 fw-semibold" style="background-color: var(--mi-verde);">{{ clase.nombre }}</span></td>
+                    <td style="white-space: nowrap; text-align: center;">{{ clase.cont }} / {{ clase.maxalumnos}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <ng-template #noClasesNoAlarmantes>
+              <p class="text-center" style="margin-top: 45px;">No hay alumnos no alarmantes</p>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Segundo contenedor en la segunda columna -->
+      <div class="col-lg-6">
+        <div class="card overflow-hidden">
+          <div class="card-body">
+            <h5 class="card-title mb-9 fw-semibold">Alumnos en mejor estado de las clases <span><i class="ti ti-check" style="font-size: 15px; "></i></span></h5>
+            <select class="form-select py-1 ps-2 border-1 border-success bg-light rounded-pill" (change)="onChangeClase2($event)" style="outline: none; margin-top: 10px; margin-bottom: 10px;">
+              <option *ngFor="let clase of clasesExisten">{{ clase.nombre }}</option>
+            </select>
+            <div class="table-responsive" *ngIf="alumnosInfo2.length > 0; else noAlumnosBuenEstado">
+              <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em; width: 100%;">
+                <thead class="text-dark fs-4">
+                  <tr>
+                    <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
+                    <th style="text-align: center;"><span><i class="ti ti-pin" style="font-size: 15px;"></i></span> Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let info of alumnosInfo2.slice(0, 5)">
+                    <td>{{ info.nombre }} {{ info.apellidos }}</td>
+                    <td style="white-space: nowrap; text-align: center;"><span class="badge rounded-3 fw-semibold" style="background-color: var(--mi-verde);">{{ info.estado }}</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <ng-template #noAlumnosBuenEstado>
+              <p class="text-center" style="margin-top: 45px;">No hay alumnos en buen estado</p>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="container-fluid" style="padding-top: 0px;"> 
+    <div class="row">
+      <div class="col-lg-12 align-items-strech">
+        <div class="card">
+          <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
+            <div class="card-body">
+              <h5 class="card-title fw-semibold mb-4">Informe Emocional - Últimas 5 respuestas <span><i class="ti ti-alert-triangle" style="font-size: 20px;"></i></span></h5>
+              <div class="position-absolute top-0 end-0 mt-3 me-2">
+                <select class="form-select py-1 ps-2 border-1 border-success bg-light rounded-pill" 
+                        style="outline: none; margin-top: 10px;" (change)="cambiarGravedad($event)"> 
+                  <option value=0>Todas</option>
+                  <option value=2>Positivas</option>
+                  <option value=-2>Negativas</option>
+                </select>
+              </div>
+              <div class="card">
                 <div class="card-body">
-                  <h5 class="card-title mb-9 fw-semibold">Ambito más alarmante de cada curso <span><i class="ti ti-home" style="font-size: 15px;"></i></span></h5>
-                  <div style="text-align: center;">
-                    <p class="fw-semibold mb-3">1º : Emociones</p>
-                    <p class="fw-semibold mb-3">2º : Amigos</p>
-                    <p class="fw-semibold mb-3">3º : Emociones</p>
-                    <p class="fw-semibold mb-3">4º : Emociones</p>
-                    <p class="fw-semibold mb-3">5º : Clase</p>
-                    <p class="fw-semibold mb-3">6º : Familia</p>
-                  </div>
+                  <div class="table-responsive" *ngIf="respuestasData.length > 0; else noRespuestas">
+                    <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
+                      <thead class="text-dark fs-4">
+                          <tr>
+                              <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
+                              <th><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Clase</th>
+                              <th><span><i class="ti ti-question-mark" style="font-size: 15px;"></i></span> Pregunta</th>
+                              <th><span><i class="ti ti-alert-triangle" style="font-size: 15px;"></i></span> Respuesta</th>
+                              <th></th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr *ngFor="let respuesta of respuestasData;">
+                              <td>{{ respuesta.Alumno.Nombre }}</td>
+                              <td>{{ respuesta.Alumno.Clase.Nombre }}</td>
+                              <td>{{ respuesta.Pregunta.TextoPregunta }}</td>
+                              <td> {{ respuesta.Opcion.TextoOpcion }} </td>
+                              <td>
+                                <button class="btn btn-primary" (click)="verPerfil(respuesta.ID_Alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button>
+                              </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <ng-template #noRespuestas>
+                      <p class="text-center" style="margin-top: 16px; font-size: 20px;">No hay respuestas</p>
+                    </ng-template>
                 </div>
               </div>
             </div>
           </div>
-        </div> 
+        </div>
+        <a href="/profesores/dashboard" class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</a>
       </div>
     </div>
   </div>
-      <br>
-      <br>
-  
-      <div class="py-6 px-6 text-center">
-        <p class="copyright">&copy; 2023 Blooming. Proyecto académico de la Universidad de Alicante .</p>
-      </div>
+</div>
 
+<br>
+<br>
+
+<div class="py-6 px-6 text-center">
+  <p class="copyright">&copy; 2023 Blooming. Proyecto académico de la Universidad de Alicante .</p>
+</div>
 </div>

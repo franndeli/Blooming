@@ -42,8 +42,10 @@ export class VerAlumnosCComponent implements OnInit{
       }else {
         this.alumnosData = res.alumnos;
         this.totalAlumnos = res.page.total;
+        console.log(this.alumnosData);
       }
     })
+    
   }
 
   eliminarAlumno(id: number){

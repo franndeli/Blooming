@@ -12,24 +12,18 @@
                       <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
                           <thead class="text-dark fs-4">
                               <tr>
-                                  <th class="border-bottom-0"><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
-                                  <th class="border-bottom-0"><span><i class="ti ti-mail" style="font-size: 15px;"></i></span> Email</th>
-                                  <th class="border-bottom-0"><span><i class="ti ti-building-community" style="font-size: 15px;"></i></span> Dirección</th>
-                                  <!-- <th class="border-bottom-0">Provincia</th>
-                                  <th class="border-bottom-0">Calle</th>
-                                  <th class="border-bottom-0">CP</th>---->
-                                  <th class="border-bottom-0"></th>
+                                  <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
+                                  <th><span><i class="ti ti-mail" style="font-size: 15px;"></i></span> Email</th>
+                                  <th><span><i class="ti ti-building-community" style="font-size: 15px;"></i></span> Dirección</th>
+                                  <th></th>
                               </tr>
                           </thead>
-                          <tbody *ngFor="let centro of centrosData">
-                            <tr>
-                              <td class="border-bottom-0">{{centro.Nombre}}</td>
-                              <td class="border-bottom-0">{{centro.Email}}</td>
-                              <td class="border-bottom-0">{{centro.Calle}} , {{centro.Localidad}} , {{centro.Provincia}} , {{centro.CP}}</td>
-                              <!--<td class="border-bottom-0">{{centro.Provincia}}</td>
-                              <td class="border-bottom-0">{{centro.Calle}}</td>
-                              <td class="border-bottom-0">{{centro.CP}}</td>--->
-                              <td class="border-bottom-0">
+                          <tbody>
+                            <tr *ngFor="let centro of centrosData">
+                              <td>{{centro.Nombre}}</td>
+                              <td>{{centro.Email}}</td>
+                              <td>{{centro.Calle}}, {{centro.Localidad}}, {{centro.Provincia}}, {{centro.CP}}</td>
+                              <td class="botones">
                                 <button class="btn btn-primary ti ti-pencil fs-5" (click)="editarCentro(centro)"></button>
                                 <button class="btn btn-danger ti ti-trash fs-5" (click)="eliminarCentro(centro.ID_Centro)"></button>
                               </td>

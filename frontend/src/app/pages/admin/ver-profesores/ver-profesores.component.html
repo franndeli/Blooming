@@ -20,22 +20,22 @@ data-sidebar-position="fixed" data-header-position="fixed">
                           <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
                             <thead class="text-dark fs-4">
                                 <tr>
-                                    <th class="border-bottom-0"><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
-                                    <th class="border-bottom-0"><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Apellidos</th>
-                                    <th class="border-bottom-0"><span><i class="ti ti-mail" style="font-size: 15px;"></i></span> Email</th>
-                                    <th class="border-bottom-0"><span><i class="ti ti-home" style="font-size: 15px;"></i></span> Centro</th>
-                                    <th class="border-bottom-0"><span><i class="ti ti-school" style="font-size: 15px;"></i></span> Clase</th>
-                                    <th class="border-bottom-0"></th>
+                                    <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
+                                    <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Apellidos</th>
+                                    <th><span><i class="ti ti-mail" style="font-size: 15px;"></i></span> Email</th>
+                                    <th><span><i class="ti ti-home" style="font-size: 15px;"></i></span> Centro</th>
+                                    <th><span><i class="ti ti-school" style="font-size: 15px;"></i></span> Clase</th>
+                                    <th></th>
                                 </tr>
                             </thead>
-                            <tbody *ngFor="let profesor of profesoresData">
-                                <tr>
-                                    <td class="border-bottom-0">{{profesor.Nombre}}</td>
-                                    <td class="border-bottom-0">{{profesor.Apellidos}}</td>
-                                    <td class="border-bottom-0">{{profesor.Email}}</td>
-                                    <td class="border-bottom-0">{{profesor.NomCentro}}</td>
-                                    <td class="border-bottom-0">{{profesor.NomClase}}</td>
-                                    <td class="border-bottom-0">
+                            <tbody>
+                                <tr *ngFor="let profesor of profesoresData">
+                                    <td>{{profesor.Nombre}}</td>
+                                    <td>{{profesor.Apellidos}}</td>
+                                    <td>{{profesor.Email}}</td>
+                                    <td>{{profesor.NomCentro}}</td>
+                                    <td>{{profesor.NomClase}}</td>
+                                    <td class="botones">
                                       <button class="btn btn-primary ti ti-pencil fs-5" (click)="editarProfesor(profesor)"></button>
                                       <button class="btn btn-danger ti ti-trash fs-5" (click)="eliminarProfesor(profesor.ID_Profesor)"></button>
                                     </td>

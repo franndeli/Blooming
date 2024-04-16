@@ -47,7 +47,15 @@ export class CrearProfesoresCComponent implements OnInit {
     }else{
       this.profesorService.postProfesor(this.form.value).subscribe(
         (response:any) => {
-          this.router.navigate(['centros/ver-profesores']);
+          Swal.fire({
+            icon: "success",
+            title: "Profesor creado con éxito",
+            text: "El profesor recibirá los datos de acceso por correo electrónico",
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.router.navigate(['centros/ver-profesores']);
+          });
         },
         (error) => {
           console.error('Error de creación:', error);

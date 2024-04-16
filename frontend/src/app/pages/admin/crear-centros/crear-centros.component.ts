@@ -31,7 +31,14 @@ export class CrearCentrosComponent {
     }else{
       this.centroService.postCentro(this.form.value).subscribe(
         (response:any) => {
-          this.router.navigate(['admin/ver-centros']);
+          Swal.fire({
+            icon: "success",
+            title: "Centro creado con éxito",
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.router.navigate(['admin/ver-centros']);
+          });
         },
         (error) => {
           console.error('Error de creación:', error);

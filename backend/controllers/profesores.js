@@ -1,19 +1,22 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Clase = require('../models/clase');
+const nodemailer = require('nodemailer');
 const Centro = require('../models/centro');
 const Profesor = require('../models/profesor');
 const sequelize = require('../database/configdb');
 const hashPassword = require('../middleware/hashHelper');
 
 
+
 const getProfesores = async (req, res) => {
     try {
         const tam = Number(req.query.numFilas) || 0;
         const desde = Number(req.query.desde) || 0;
+        const pwd = req.query.pwd || false;
         const queryParams = req.query;
 
-        const validParams = ['ID_Profesor', 'Nombre', 'Apellidos', 'Email', 'Contraseña', 'ID_Clase', 'ID_Centro', 'desde', 'numFilas'];
+        const validParams = ['ID_Profesor', 'Nombre', 'Apellidos', 'Email', 'Contraseña', 'ID_Clase', 'ID_Centro', 'desde', 'numFilas', 'pwd'];
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {
@@ -22,7 +25,7 @@ const getProfesores = async (req, res) => {
         
         const queryOptions = {};
         for (const param in queryParams) {
-            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde') {
+            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde' && param !== 'pwd') {
                 if (param === 'ID_Profesor') {
                     queryOptions[param] = queryParams[param];
                 } else {
@@ -36,7 +39,7 @@ const getProfesores = async (req, res) => {
         const profesores = await Profesor.findAll({
             where: queryOptions,
             ...paginationOptions,
-            attributes: { exclude: ['Contraseña'] },
+            attributes: { exclude: pwd ? [] : ['Contraseña'] },
             include: [
                 {
                     model: Clase,
@@ -73,11 +76,13 @@ const getProfesores = async (req, res) => {
 const createProfesor = async (req, res) => {
     try {
         const { Email, ID_Centro } = req.body;
-
         const existProfesor = await Profesor.findOne({ where: { Email, ID_Centro } });
         if (existProfesor) {
             return res.status(400).json({ ok: false, msg: 'Ya existe esta profesor en el centro' });
         }
+
+        const datos = req.body;
+        await sendMail(datos);
 
         const hashedPassword = hashPassword(req.body.Contraseña);
         req.body.Contraseña = hashedPassword;
@@ -96,6 +101,44 @@ const createProfesor = async (req, res) => {
         res.status(500).json({ ok: false, msg: 'Error al crear el profesor' });
     }
 };
+
+    const sendMail = async (datos) => {
+
+        const centro = await Centro.findOne({ where: { ID_Centro: datos.ID_Centro } });
+        const clase = await Clase.findOne({ where: { ID_Clase: datos.ID_Clase } });
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'blooming.abp@gmail.com',
+                pass: 'fkpn mfrg bcal qrpb'
+            }
+        });
+    
+        const mailOptions = {
+            from: 'blooming.abp@gmail.com',
+            to: datos.Email,
+            subject: 'Bienvenido a Blooming',
+            text: 
+`Buenas ${datos.Nombre} ${datos.Apellidos},
+Desde el ${centro.Nombre} le damos la bienvenida a la plataforma Blooming. Le informamos además que se ha creado su cuenta en la misma y se le ha asignado como tutor de la clase ${clase.Nombre}.
+Sus datos de acceso son:
+Email: ${datos.Email}
+Contraseña: ${datos.Contraseña}
+            
+Un saludo.
+${centro.Nombre}`
+        };
+    
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error al enviar el email:', error);
+            } else {
+                console.log('Email enviado: ' + info.response);
+            }
+        });
+    
+    }
 
 
 const updateProfesor = async (req, res) => {

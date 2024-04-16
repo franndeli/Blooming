@@ -1,4 +1,5 @@
 const Clase = require('../models/clase');
+const nodemailer = require('nodemailer');
 const Centro = require('../models/centro');
 const Alumno = require('../models/alumno');
 const sequelize = require('../database/configdb');
@@ -103,36 +104,20 @@ const getAlumnos = async (req, res) => {
                 return res.status(400).json({ ok: false, message: "El usuario del alumno ya existe" });
             }
         
+            const datos = req.body;
+
             const hashedPassword = hashPassword(req.body.Contraseña);
-            
-            const ambitosDefault = {
-                "Clase": 50,
-                "Amigos": 50,
-                "Familia": 50,
-                "Emociones": 50,
-                "Fuera de clase": 50
-            };
-            
-            const aparicionAmbitosDefault = {
-                "Clase": 0,
-                "Amigos": 0,
-                "Familia": 0,
-                "Emociones": 0,
-                "Fuera de clase": 0
-            };
-    
-            const newAlumno = {
-                ...req.body,
-                Contraseña: hashedPassword,
-                Usuario: usuario,
-                Ambitos: ambitosDefault, 
-                AparicionAmbitos: aparicionAmbitosDefault 
-            };
+            const ambitos = {"Clase":50,"Amigos":50,"Familia":50,"Emociones":50,"Fuera de clase":50};
+            const frecuencia = {"Clase":0,"Amigos":0,"Familia":0,"Emociones":0,"Fuera de clase":0}
+            const estado = "Normal"
+            const newAlumno = { ...req.body, Contraseña: hashedPassword, Usuario: usuario, Estado: estado, Ambitos: ambitos, AparicionAmbitos: frecuencia};
         
             const createdAlumno = await Alumno.create(newAlumno);
         
             const idAlumno = createdAlumno.ID_Alumno;
             const nomUsuario = generarUsuario(req.body.Nombre, req.body.Apellidos, idAlumno);
+
+            await sendMail(datos, nomUsuario);
         
             await Alumno.update({ Usuario: nomUsuario }, { where: { ID_Alumno: idAlumno } });
         
@@ -145,7 +130,44 @@ const getAlumnos = async (req, res) => {
             return res.status(500).json({ ok: false, message: "Error al crear el alumno" });
         }
     };
-    
+
+    const sendMail = async (datos, usuario) => {
+
+        const centro = await Centro.findOne({ where: { ID_Centro: datos.ID_Centro } });
+        const clase = await Clase.findOne({ where: { ID_Clase: datos.ID_Clase } });
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'blooming.abp@gmail.com',
+                pass: 'fkpn mfrg bcal qrpb'
+            }
+        });
+
+        const mailOptions = {
+            from: 'blooming.abp@gmail.com',
+            to: datos.EmailTutor,
+            subject: 'Bienvenido a Blooming',
+            text: 
+`Buenas,
+Desde el ${centro.Nombre} le damos la bienvenida a su hijo a la plataforma Blooming. Se le ha matriculado en la clase ${clase.Nombre}.
+Los datos de acceso son:
+Usuario: ${usuario}
+Contraseña: ${datos.Contraseña}
+            
+Un saludo.
+${centro.Nombre}`
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error al enviar el email:', error);
+            } else {
+                console.log('Email enviado: ' + info.response);
+            }
+        });
+
+    }
 
 
 const updateAlumno = async (req, res) => {

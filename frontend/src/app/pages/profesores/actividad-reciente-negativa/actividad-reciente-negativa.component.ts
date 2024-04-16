@@ -51,6 +51,7 @@ export class ActividadRecienteNegativaComponent {
 
   public contMalo = 0;
   public contBueno = 0;
+  public contNormal = 0;
   public totalClases = 0;
   conRiesgo: ClaseInfo[] = [];
   sinRiesgo: ClaseInfo[] = [];
@@ -234,6 +235,8 @@ export class ActividadRecienteNegativaComponent {
           this.contBueno++;
         } else if (estado === 'Malo' || estado === 'Muy Malo') {
           this.contMalo++;
+        } else {
+          this.contNormal++;
         }
       }
     }
@@ -243,13 +246,16 @@ export class ActividadRecienteNegativaComponent {
     } else if (this.contMalo > this.contBueno) {
       this.conRiesgo.push({claseid: this.clasesData[index]?.ID_Clase,nombre: this.clasesData[index]?.Nombre, cont:this.contMalo, maxalumnos: this.clasesData[index]?.NumAlumnos});
       this.clasesExisten.push({nombre: this.clasesData[index].Nombre});
-    } else if (this.contBueno === this.contMalo && (this.contBueno !== 0 && this.contMalo !== 0 ) ) {
+    } else if ((this.contBueno === this.contMalo && (this.contBueno !== 0 && this.contMalo !== 0)) 
+      || (this.contBueno === this.contMalo && this.contNormal !== 0)) {
       this.conysinRiesgo.push(this.clasesData[index]?.Nombre);
       this.clasesExisten.push({nombre: this.clasesData[index].Nombre});
     }
     this.sinRiesgo.sort((a, b) => b.cont - a.cont);
     this.conRiesgo.sort((a, b) => b.cont - a.cont);
+
     this.dibujarGrafica();
+
     this.onChangeClase(this.clasesExisten[0].nombre);
     this.onChangeClase2(this.clasesExisten[0].nombre);
   }

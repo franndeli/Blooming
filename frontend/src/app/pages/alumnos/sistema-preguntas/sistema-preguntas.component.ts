@@ -85,8 +85,8 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       const estadoPreguntas = localStorage.getItem('preguntas');
       const estadoIndiceActual = localStorage.getItem('indiceActual');
 
-      console.log(estadoPreguntas)
-      console.log(estadoIndiceActual)
+      //console.log(estadoPreguntas)
+      //console.log(estadoIndiceActual)
     
       if (estadoPreguntas && estadoIndiceActual) {
         this.preguntas = JSON.parse(estadoPreguntas);

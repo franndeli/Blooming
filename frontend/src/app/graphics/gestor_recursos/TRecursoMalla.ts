@@ -49,12 +49,20 @@ export class TRecursoMalla extends TRecurso {
       const data = await response.json();
       console.log(data);
 
-      const mesh = data.meshes.find((m: any) => m.name === "Cube");
+      const malla = data.mallas[0];
 
-      this.vertices = mesh.vertices;
-      this.normales = mesh.normals;
-      this.indices = new Uint16Array([].concat(...mesh.faces));
-      this.coordTex = mesh.texturecoords[0];
+      this.vertices = malla.vertices;
+      this.normales = malla.normales;
+      this.indices = malla.indices;
+      this.coordTex = malla.coordTexturas;
+      this.colores = malla.colores
+
+      // const mesh = data.meshes.find((m: any) => m.name === "Cube");
+
+      // this.vertices = mesh.vertices;
+      // this.normales = mesh.normals;
+      // this.indices = new Uint16Array([].concat(...mesh.faces));
+      // this.coordTex = mesh.texturecoords[0];
 
       // this.vertices = data.vertices;
       // this.vertices = data.vertices;
@@ -116,11 +124,11 @@ export class TRecursoMalla extends TRecurso {
     // this.gl.enableVertexAttribArray(textCoordLocation);
 
     //Colores
-    // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, colorBuffer);
-    // this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(coloresAplanados), this.gl.STATIC_DRAW);
-    // const colorLocation = this.gl.getAttribLocation(this.programId, 'vertColor');
-    // this.gl.vertexAttribPointer(colorLocation, 4, this.gl.FLOAT, false, 0, 0);
-    // this.gl.enableVertexAttribArray(colorLocation);
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, colorBuffer);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(coloresAplanados), this.gl.STATIC_DRAW);
+    const colorLocation = this.gl.getAttribLocation(this.programId, 'vertColor');
+    this.gl.vertexAttribPointer(colorLocation, 4, this.gl.FLOAT, false, 0, 0);
+    this.gl.enableVertexAttribArray(colorLocation);
 
     this.bufVertex = vertexBuffer;
     this.bufNormal = normalBuffer;

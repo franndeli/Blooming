@@ -655,29 +655,29 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
     });
   }
 
-    obtenerEstado(ambitos: { [key: string]: number }){
-      let estado = "";
-      const valores = Object.values(ambitos);
-      const suma = valores.reduce((a: number, b: number) => a + b, 0);
-      console.log(suma)
-      const media = suma / valores.length;
-      console.log(media)
+  obtenerEstado(ambitos: { [key: string]: number }){
+    let estado = "";
+    const valores = Object.values(ambitos);
+    const suma = valores.reduce((a: number, b: number) => a + b, 0);
+    console.log(suma)
+    const media = suma / valores.length;
+    console.log(media)
 
-      if (media >= 0 && media <= 20) {
-        estado = "Muy Malo";
-      } else if (media >= 21 && media <= 40) {
-        estado = "Malo";
-      } else if (media >= 41 && media <= 60) {
-        estado = "Normal";
-      } else if (media >= 61 && media <= 80) {
-        estado = "Bueno";
-      } else if (media >= 81 && media <= 100) {
-        estado = "Muy Bueno";
-      }
-      console.log(estado)
-
-      return estado;
+    if (media >= 0 && media <= 20) {
+      estado = "Muy Malo";
+    } else if (media >= 21 && media <= 40) {
+      estado = "Malo";
+    } else if (media >= 41 && media <= 60) {
+      estado = "Normal";
+    } else if (media >= 61 && media <= 80) {
+      estado = "Bueno";
+    } else if (media >= 81 && media <= 100) {
+      estado = "Muy Bueno";
     }
+    console.log(estado)
+
+    return estado;
+  }
   
   actualizarAparicionAmbitos() {
     console.log("Entro en actualizarAparicionAmbitos");

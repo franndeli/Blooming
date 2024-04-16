@@ -81,24 +81,39 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       if(localStorage.getItem('mostrarContador') === 'true'){
         this.shouldShowButton = true;
       }
-      //console.log(localStorage.getItem('mostrarContador'));
-      console.log(localStorage.getItem('mostrarContador'));
-      if (localStorage.getItem('mostrarContador') === 'false') {
-        console.log('hola');
-        // Procede con el flujo normal
-        if(this.finalScreenService.scene){
-          this.finalScreenService.clearScene();
+
+      const estadoPreguntas = localStorage.getItem('preguntas');
+      const estadoIndiceActual = localStorage.getItem('indiceActual');
+
+      console.log(estadoPreguntas)
+      console.log(estadoIndiceActual)
+    
+      if (estadoPreguntas && estadoIndiceActual) {
+        this.preguntas = JSON.parse(estadoPreguntas);
+        this.indiceActual = JSON.parse(estadoIndiceActual);
+        this.preguntaActual = this.preguntas[this.indiceActual];
+        this.cargarAnimacion(this.preguntaActual, 0);
+        this.add3DText();
+      } else {
+        //console.log(localStorage.getItem('mostrarContador'));
+        console.log(localStorage.getItem('mostrarContador'));
+        if (localStorage.getItem('mostrarContador') === 'false') {
+          console.log('hola');
+          // Procede con el flujo normal
+          if(this.finalScreenService.scene){
+            this.finalScreenService.clearScene();
+          }
+          this.cargarPreguntas();
+          if(this.EL_NUMERO === 1) {
+            this.cubeService.setButtonPressedCallback(this.handleButtonPress.bind(this));
+          }
+          if(this.EL_NUMERO === 2) {
+            this.boardService.setButtonPressedCallback(this.handleButtonPress.bind(this));
+          }
+        } else{
+          console.log("Inicializando finalScreenService");
+          this.cargarAnimacion(this.preguntaActual!, 1);
         }
-        this.cargarPreguntas();
-        if(this.EL_NUMERO === 1) {
-          this.cubeService.setButtonPressedCallback(this.handleButtonPress.bind(this));
-        }
-        if(this.EL_NUMERO === 2) {
-          this.boardService.setButtonPressedCallback(this.handleButtonPress.bind(this));
-        }
-      } else{
-        console.log("Inicializando finalScreenService");
-        this.cargarAnimacion(this.preguntaActual!, 1);
       }
       
       window.addEventListener('resize', this.onWindowResize.bind(this), false);
@@ -395,16 +410,27 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
 
 
   cargarAnimacion(preguntaActual: any, ole: number){
+
+    if(localStorage.getItem('hasShownCubeMessage') === 'true'){
+      this.hasShownCubeMessage = true;
+    }
+
+    if(localStorage.getItem('hasShownBoardMessage') === 'true'){
+      this.hasShownBoardMessage = true;
+    }
+    
     if(this.EL_NUMERO === 1 && !this.hasShownCubeMessage && ole === 0) {
       // Muestra el mensaje para el cubeService si aún no se ha mostrado
       this.addInstructionText("¡Mueve el botón verde con el ratón y selecciona tu respuesta en el cubo!");
       this.hasShownCubeMessage = true;
+      localStorage.setItem('hasShownCubeMessage', 'true');
     }
 
     if(this.EL_NUMERO === 2 && !this.hasShownBoardMessage && ole === 0) {
       // Muestra el mensaje para el boardService si aún no se ha mostrado
       this.addInstructionText("¡Pon el cubo verde sobre la respuesta que quieras!");
       this.hasShownBoardMessage = true;
+      localStorage.setItem('hasShownBoardMessage', 'true');
     }
 
     if(this.EL_NUMERO === 1 && ole === 0) {
@@ -455,6 +481,8 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
             this.add3DText();
           }
           this.sesionService.crearSesion();
+          this.guardarPreguntas();
+          this.guardarIndiceActual();
         });
       });
     });
@@ -548,6 +576,7 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
       console.log(this.EL_NUMERO);
       this.cargarAnimacion(this.preguntaActual, 0);
       this.add3DText();
+      this.guardarIndiceActual();
     } else {
       // Manejar el final del cuestionario
       this.preguntaActual = null;
@@ -685,10 +714,27 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
         this.shouldShowButton = true;
       }
       this.finalScreenService.initialize(this.scene, this.camera, this.renderer);
+      this.finalizarSesion();
     } catch (error) {
       console.error('Error en el proceso de reinicio:', error);
     }
   }
+
+  guardarPreguntas() {
+    localStorage.setItem('preguntas', JSON.stringify(this.preguntas));
+  }
+
+  guardarIndiceActual(){
+    localStorage.setItem('indiceActual', JSON.stringify(this.indiceActual));
+  }
+
+  finalizarSesion() {
+    localStorage.removeItem('preguntas');
+    localStorage.removeItem('indiceActual');
+    localStorage.removeItem('hasShownCubeMessage');
+    localStorage.removeItem('hasShownBoardMessage');
+  }
+  
 
   obtenerNumeroAleatorio() {
     this.EL_NUMERO = Math.floor(Math.random() * 2) + 1;

@@ -142,6 +142,7 @@ export class VerAlumnosPComponent implements OnInit{
     this.alumnoService.getAlumnos().subscribe((res: any) => {
       this.alumnosTodosData = res.alumnos;
       this.totalAlumnos2 = this.alumnosTodosData.length;
+      console.log(this.totalAlumnos2);
       this.contarEstados();
     }, error => {
       console.error('Error al obtener los alumnos:', error);

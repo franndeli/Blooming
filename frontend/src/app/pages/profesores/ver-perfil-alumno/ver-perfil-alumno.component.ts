@@ -55,12 +55,12 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
   obtenerAlumno(){
     this.alumnoService.getAlumnoID(this.alumnoID).subscribe((res: any) => {
       this.alumnosData = res.alumnos[0];
-      console.log(this.alumnosData);
+      //console.log(this.alumnosData);
       this.alumnosData.Ambitos = JSON.parse(this.alumnosData.Ambitos);
       //this.sesiones.Ambitos = this.alumnosData.Ambitos;
       this.nombreClase = this.alumnosData.Clase.Nombre;
 
-      console.log(this.alumnosData.Ambitos);
+      //console.log(this.alumnosData.Ambitos);
       //console.log(this.sesiones.Ambitos);
     });
   }
@@ -69,7 +69,7 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
     this.sesionService.getSesionesAlumno(this.alumnoID, this.dias).subscribe((res: any) => {
       const sesionesData = res.sesiones;
 
-      console.log(this.sesiones.Ambitos);
+      //console.log(this.sesiones.Ambitos);
       this.sesiones.Ambitos.Clase = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Clase);
       this.sesiones.Ambitos.Amigos = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Amigos);
       this.sesiones.Ambitos.Familia = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Familia);

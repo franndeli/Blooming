@@ -88,10 +88,15 @@ export class VerAlumnosPComponent implements OnInit{
     this.contMuyBueno=0; this.contBueno=0; this.contNormal=0; this.contMalo=0; this.contMuyMalo=0;
     
     if(this.totalAlumnos2 !== 0){
+      //console.log('hola');
       let i: number;
       for(i = 0; i < this.totalAlumnos2 ; i++ ){
-        if(this.alumnosTodosData[i].ID_Clase === this.claseID){
+        //console.log(this.alumnosTodosData[i].ID_Clase);
+        //console.log(this.claseID);
+        if(this.alumnosTodosData[i].ID_Clase == this.claseID){
+          //console.log('Primer if');
           if(this.alumnosTodosData[i] && this.alumnosTodosData[i].Estado){
+            //console.log('Segundo if');
             if(this.alumnosTodosData[i].Estado === 'Bueno'){
               this.contBueno++; 
             } else if (this.alumnosTodosData[i].Estado === 'Malo') {
@@ -107,6 +112,12 @@ export class VerAlumnosPComponent implements OnInit{
         }
       }
     }
+    //console.log(this.contBueno);
+    //console.log(this.contMalo);
+    //console.log(this.contMuyMalo);
+    //console.log(this.contMuyBueno);
+    //console.log(this.contNormal);
+
     this.dibujarGrafica();
   }
   
@@ -141,8 +152,8 @@ export class VerAlumnosPComponent implements OnInit{
   obtenerTodosAlumnos(){
     this.alumnoService.getAlumnos().subscribe((res: any) => {
       this.alumnosTodosData = res.alumnos;
+      //console.log(this.alumnosTodosData);
       this.totalAlumnos2 = this.alumnosTodosData.length;
-      console.log(this.totalAlumnos2);
       this.contarEstados();
     }, error => {
       console.error('Error al obtener los alumnos:', error);
@@ -266,7 +277,7 @@ export class VerAlumnosPComponent implements OnInit{
     if(this.totalAlumnos2 !== 0){
       let i: number;
       for(i = 0; i < this.totalAlumnos2 ; i++ ){
-        if(this.alumnosTodosData[i].ID_Clase === this.claseID){
+        if(this.alumnosTodosData[i].ID_Clase == this.claseID){
           if(this.alumnosTodosData[i] && this.alumnosTodosData[i].Ambitos){
             const ambitoJSON = this.alumnosTodosData[i].Ambitos;
             const ambitoObj = JSON.parse(ambitoJSON);
@@ -294,7 +305,7 @@ export class VerAlumnosPComponent implements OnInit{
     if(this.totalAlumnos2 !== 0){
       let i: number;
       for(i = 0; i < this.totalAlumnos2 ; i++ ){
-        if(this.alumnosTodosData[i].ID_Clase === this.claseID){
+        if(this.alumnosTodosData[i].ID_Clase == this.claseID){
           if(this.alumnosTodosData[i] && this.alumnosTodosData[i].Ambitos){
             const ambitoJSON = this.alumnosTodosData[i].Ambitos;
             const ambitoObj = JSON.parse(ambitoJSON);
@@ -323,7 +334,7 @@ export class VerAlumnosPComponent implements OnInit{
     if(this.totalAlumnos2 !== 0){
       let i: number;
       for(i = 0; i < this.totalAlumnos2 ; i++ ){
-        if(this.alumnosTodosData[i].ID_Clase === this.claseID){
+        if(this.alumnosTodosData[i].ID_Clase == this.claseID){
           if(this.alumnosTodosData[i] && this.alumnosTodosData[i].Ambitos){
             const ambitoJSON = this.alumnosTodosData[i].Ambitos;
             const ambitoObj = JSON.parse(ambitoJSON);
@@ -352,7 +363,7 @@ export class VerAlumnosPComponent implements OnInit{
     if(this.totalAlumnos2 !== 0){
       let i: number;
       for(i = 0; i < this.totalAlumnos2 ; i++ ){
-        if(this.alumnosTodosData[i].ID_Clase === this.claseID){
+        if(this.alumnosTodosData[i].ID_Clase == this.claseID){
           if(this.alumnosTodosData[i] && this.alumnosTodosData[i].Ambitos){
             const ambitoJSON = this.alumnosTodosData[i].Ambitos;
             const ambitoObj = JSON.parse(ambitoJSON);
@@ -381,7 +392,7 @@ export class VerAlumnosPComponent implements OnInit{
     if(this.totalAlumnos2 !== 0){
       let i: number;
       for(i = 0; i < this.totalAlumnos2 ; i++ ){
-        if(this.alumnosTodosData[i].ID_Clase === this.claseID){
+        if(this.alumnosTodosData[i].ID_Clase == this.claseID){
           if(this.alumnosTodosData[i] && this.alumnosTodosData[i].Ambitos){
             const ambitoJSON = this.alumnosTodosData[i].Ambitos;
             const ambitoObj = JSON.parse(ambitoJSON);

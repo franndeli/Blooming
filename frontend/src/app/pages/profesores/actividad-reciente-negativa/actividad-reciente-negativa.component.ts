@@ -75,6 +75,15 @@ export class ActividadRecienteNegativaComponent {
   }
 
   ngOnInit() {
+
+    if(localStorage.getItem('ID_Clase')){
+      localStorage.removeItem('ID_Clase');
+    }
+
+    if(localStorage.getItem('ID_Alumno')){
+      localStorage.removeItem('ID_Alumno');
+    }
+    
     this.id = localStorage.getItem('id');
 
     this.obtenerCentro();
@@ -333,6 +342,7 @@ export class ActividadRecienteNegativaComponent {
 
   verPerfil(alumnoID: any){
     const volverPag = 1;
+    localStorage.setItem('ID_Alumno', alumnoID);
     this.router.navigate(['profesores/ver-perfil-alumno'], {state: {alumnoID, volverPag} });
   }
 

@@ -21,6 +21,15 @@ export class ActividadRecienteComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    if(localStorage.getItem('ID_Clase')){
+      localStorage.removeItem('ID_Clase');
+    }
+
+    if(localStorage.getItem('ID_Alumno')){
+      localStorage.removeItem('ID_Alumno');
+    }
+
     this.obtenerCentro();
   }
 
@@ -67,6 +76,7 @@ export class ActividadRecienteComponent implements OnInit {
 
   verPerfil(alumnoID: any){
     const volverPag = 0;
+    localStorage.setItem('ID_Alumno', alumnoID);
     this.router.navigate(['profesores/ver-perfil-alumno'], {state: {alumnoID, volverPag}});
   }
 }

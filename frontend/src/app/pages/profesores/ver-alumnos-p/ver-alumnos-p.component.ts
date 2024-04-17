@@ -39,13 +39,18 @@ export class VerAlumnosPComponent implements OnInit{
   }
 
   ngOnInit() {
+    if(localStorage.getItem('ID_Alumno')){
+      localStorage.removeItem('ID_Alumno');
+    }
+
     this.activatedRoute.paramMap.subscribe(params => {
         this.claseID = history.state.claseID;
     });
 
-    if(this.claseID === '' || undefined){
-      this.claseID = this.claseService.getClaseID();
+    if(this.claseID === undefined || this.claseID === null){
+      this.claseID = localStorage.getItem('ID_Clase');
     }
+
     this.obtenerClase();
     this.obtenerAlumnos(this.busqueda);
     this.obtenerTodosAlumnos();
@@ -174,6 +179,7 @@ export class VerAlumnosPComponent implements OnInit{
   }
 
   verPerfil(alumnoID: any){
+    localStorage.setItem('ID_Alumno', alumnoID);
     this.router.navigate(['profesores/ver-perfil-alumno'], {state: {alumnoID, claseID: this.claseID}});
   }
 

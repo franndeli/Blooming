@@ -11,15 +11,15 @@ data-sidebar-position="fixed" data-header-position="fixed">
             <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
               <img src="../assets/images/logos/logo.png" width="180" alt="">
             </a>
-            <p class="text-center">Bienvenido de nuevo</p>
+            <p class="text-center">¡Bienvenido a Blooming!</p>
             <form [formGroup]="form">
               <div class="mb-3">
-                <label for="Usuario" class="form-label">Usuario / Email</label>
+                <label for="Usuario" class="form-label"><span><i class="ti ti-mail" style="font-size: 15px;"></i></span> Usuario / Email</label>
                 <input class="form-control" formControlName="Usuario" id="Usuario">
               </div>
               <p class="text-danger" *ngIf="!validarLogin('Usuario')">El usuario es obligatorio</p>
               <div class="mb-4">
-                <label for="Contraseña" class="form-label">Constraseña</label>
+                <label for="Contraseña" class="form-label"><span><i class="ti ti-password" style="font-size: 15px;"></i></span> Constraseña</label>
                 <input type="password" class="form-control" formControlName="Contraseña" id="Constraseña">
               </div>
               <p class="text-danger" *ngIf="!validarLogin('Contraseña')">La contraseña es obligatoria</p>
@@ -30,10 +30,10 @@ data-sidebar-position="fixed" data-header-position="fixed">
                     Recuérdame
                   </label>
                 </div>
-                <a class="text-primary fw-bold" [routerLink]="['/recovery']">¿Has olvidado tu contraseña?</a>
+                <!--- <a class="text-primary fw-bold" [routerLink]="['/recovery']">¿Has olvidado tu contraseña?</a>-->
               </div>
-              <button class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2" (click)="login()">Entrar</button>
-              <button [routerLink]="['/inicio']" class="btn btn-secondary w-100 py-8 fs-4 mb-4 rounded-2">Volver</button>
+              <button class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2" (click)="login()"><span><i class="ti ti-check" style="font-size: 15px;"></i></span> Entrar</button>
+              <button [routerLink]="['/inicio']" class="btn btn-outline-dark w-100 py-8 fs-4 mb-4 rounded-2"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</button>
               <div class="d-flex align-items-center justify-content-center">
                 <p class="fs-4 mb-0 fw-bold">¿Eres un Centro?</p>
                 <a class="text-primary fw-bold ms-2" [routerLink]="['/registro']">Regístrate</a>

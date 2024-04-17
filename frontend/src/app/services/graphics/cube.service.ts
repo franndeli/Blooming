@@ -220,17 +220,6 @@ export class CubeService {
     const raycaster = new THREE.Raycaster();
     raycaster.setFromCamera(mouse, this.camera);
 
-    const intersects = raycaster.intersectObject(this.cube!, true);
-    if (intersects.length > 0) {
-      this.selectFace(intersects[0]);
-      this.isDragging = false;
-    } else {
-      this.isDragging = true;
-      this.previousMousePosition.x = event.clientX;
-      this.previousMousePosition.y = event.clientY;
-      // No resetees la inercia aquí, permitiendo que la inercia se acumule de movimientos previos
-    }
-
     const intersects2 = raycaster.intersectObjects(this.scene.children);
     for (let i = 0; i < intersects2.length; i++) {
       if (intersects2[i].object === this.buttonMesh) {
@@ -241,8 +230,23 @@ export class CubeService {
 
     if (intersects2.length > 0 && intersects2[0].object === this.buttonMesh2) {
       this.isDraggingButton = true; // Asume que existe una nueva propiedad isDraggingButton
-      event.preventDefault(); // Prevenir comportamientos predeterminados del navegador
+      this.isDragging = true;
+      this.previousMousePosition.x = event.clientX;
+      this.previousMousePosition.y = event.clientY;
+      return;
+      //event.preventDefault(); // Prevenir comportamientos predeterminados del navegador
     }
+
+    const intersects = raycaster.intersectObject(this.cube!, true);
+    if (intersects.length > 0) {
+      this.selectFace(intersects[0]);
+      this.isDragging = false;
+    } /*else {
+      this.isDragging = true;
+      this.previousMousePosition.x = event.clientX;
+      this.previousMousePosition.y = event.clientY;
+      // No resetees la inercia aquí, permitiendo que la inercia se acumule de movimientos previos
+    }*/
   }
 
   private selectFace(intersect: THREE.Intersection): void {

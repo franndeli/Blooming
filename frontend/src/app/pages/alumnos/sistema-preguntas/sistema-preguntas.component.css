@@ -9,9 +9,23 @@
     z-index: 10;
 }
 
+.beta-notice {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 15; /* Más alto que el z-index del button-container para asegurarse de que aparece encima */
+    width: 100%;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.904);
+    color: white;
+    padding: 10px 0;
+    font-size: 14px;
+}
+
 button {
     font-size: 17px;
-    margin-top: 20px;
+    margin-top: 50px;
     margin-right: 20px;
     padding: 0.5em 1em; 
     background-color: #ff6767; 

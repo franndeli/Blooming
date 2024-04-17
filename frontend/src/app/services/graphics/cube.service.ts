@@ -131,6 +131,8 @@ export class CubeService {
     return materials;
   }
   
+  
+  
 
   configureCube(preguntaActual: any): THREE.Mesh {
     const cubeSize = 30;
@@ -237,7 +239,8 @@ export class CubeService {
       //event.preventDefault(); // Prevenir comportamientos predeterminados del navegador
     }
 
-    const intersects = raycaster.intersectObject(this.cube!, true);
+    if(this.cube !== undefined){
+      const intersects = raycaster.intersectObject(this.cube!, true);
     if (intersects.length > 0) {
       this.selectFace(intersects[0]);
       this.isDragging = false;
@@ -247,6 +250,7 @@ export class CubeService {
       this.previousMousePosition.y = event.clientY;
       // No resetees la inercia aquí, permitiendo que la inercia se acumule de movimientos previos
     }*/
+    }
   }
 
   private selectFace(intersect: THREE.Intersection): void {

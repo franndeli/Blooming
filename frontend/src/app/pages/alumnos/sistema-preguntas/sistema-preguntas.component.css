@@ -44,3 +44,25 @@ button:hover {
 button:active {
     transform: translateY(2px);
 }
+
+.gradient-background {
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(-45deg, #84beff91, #84d8ff85, #0d92ff94, #63a7c780);
+    background-size: 400% 400%;
+    animation: gradientBG 30s ease infinite;
+    overflow: hidden;
+    position: relative;
+  }
+
+@keyframes gradientBG {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }

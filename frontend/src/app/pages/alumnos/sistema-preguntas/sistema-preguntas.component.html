@@ -1,9 +1,10 @@
-<div #rendererContainer>
-  <div class="beta-notice">
-    Las imágenes y preguntas mostradas son solo de prueba y no son definitivas. Versión Beta.
+<div class="gradient-background">
+  <div #rendererContainer>
+    <div class="beta-notice">
+      Las imágenes y preguntas mostradas son solo de prueba y no son definitivas. Versión Beta.
+    </div>
+    <div class="button-container" *ngIf="shouldShowButton">
+      <button (click)="handleButtonClick()">Cerrar sesión</button>
+    </div>
   </div>
-  <div class="button-container" *ngIf="shouldShowButton">
-    <button (click)="handleButtonClick()">Cerrar sesión</button>
-  </div>
-</div>
-  
+</div> 

@@ -98,14 +98,14 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                     <tbody>
                                       <tr *ngFor="let respuesta of respuestasData">
                                         <td>{{respuesta.Alumno.Nombre}} {{respuesta.Alumno.Apellidos}}</td>
-                                        <td>{{respuesta.Pregunta.Ambito.Nombre}}</td>
+                                        <td><span [ngClass]="getAmbito(respuesta.Pregunta.Ambito.Nombre)">{{respuesta.Pregunta.Ambito.Nombre}}</span></td>
                                         <td>{{respuesta.Pregunta.TextoPregunta}}</td>
                                         <td>{{respuesta.Opcion.TextoOpcion}}</td>
                                         <td [ngSwitch]="respuesta.Opcion.Gravedad">
-                                          <span *ngSwitchCase="-2">Alarmante</span>
-                                          <span *ngSwitchCase="0">Normal</span>
-                                          <span *ngSwitchCase="1">Buena</span>
-                                          <span *ngSwitchCase="2">Muy Buena</span>
+                                          <span class="badge bg-danger rounded-3 fw-semibold" *ngSwitchCase="-2">Alarmante</span>
+                                                        <span class="badge bg-amarillo rounded-3 fw-semibold" *ngSwitchCase="0">Normal</span>
+                                                        <span class="badge bg-verde1 rounded-3 fw-semibold" *ngSwitchCase="1">Buena</span>
+                                                        <span class="badge bg-success rounded-3 fw-semibold" *ngSwitchCase="2">Muy Buena</span>
                                         </td>
                                         <td>
                                           <button class="btn btn-primary" (click)="verPerfil(respuesta.ID_Alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button>

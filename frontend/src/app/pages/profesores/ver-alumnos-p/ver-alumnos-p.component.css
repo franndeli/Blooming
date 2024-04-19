@@ -29,3 +29,22 @@
 .bg-verde1{
   background-color: #8aca69;
 }
+
+.bg-inicio {
+  background-color: rgb(190, 190, 190) !important;
+}
+.bg-amigos {
+  background-color: rgb(255, 159, 188) !important;
+}
+.bg-familia {
+  background-color: rgb(127, 213, 228) !important;
+}
+.bg-clase {
+  background-color: rgb(160, 152, 236) !important;
+}
+.bg-fuera {
+  background-color: rgb(255, 187, 131) !important;
+}
+.bg-emociones {
+  background-color: rgb(163, 219, 189) !important;
+}

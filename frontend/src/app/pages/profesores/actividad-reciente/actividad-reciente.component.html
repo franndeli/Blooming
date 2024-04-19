@@ -28,14 +28,14 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                                 <tr *ngFor="let reciente of recientesData">
                                                     <td>{{reciente.Alumno.Nombre}} {{reciente.Alumno.Apellidos}}</td>
                                                     <td>{{reciente.Alumno.Clase.Nombre}}</td>
-                                                    <td>{{reciente.Pregunta.Ambito.Nombre}}</td>
+                                                    <td><span [ngClass]="getAmbito(reciente.Pregunta.Ambito.Nombre)">{{reciente.Pregunta.Ambito.Nombre}}</span></td>
                                                     <td>{{reciente.Pregunta.TextoPregunta}}</td>
                                                     <td>{{reciente.Opcion.TextoOpcion}}</td>
                                                     <td [ngSwitch]="reciente.Opcion.Gravedad">
-                                                        <span *ngSwitchCase="-2">Alarmante</span>
-                                                        <span *ngSwitchCase="0">Normal</span>
-                                                        <span *ngSwitchCase="1">Buena</span>
-                                                        <span *ngSwitchCase="2">Muy Buena</span>
+                                                        <span class="badge bg-danger rounded-3 fw-semibold" *ngSwitchCase="-2">Alarmante</span>
+                                                        <span class="badge bg-amarillo rounded-3 fw-semibold" *ngSwitchCase="0">Normal</span>
+                                                        <span class="badge bg-verde1 rounded-3 fw-semibold" *ngSwitchCase="1">Buena</span>
+                                                        <span class="badge bg-success rounded-3 fw-semibold" *ngSwitchCase="2">Muy Buena</span>
                                                     </td>
                                                     <td>
                                                         <button class="btn btn-primary" (click)="verPerfil(reciente.ID_Alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button>

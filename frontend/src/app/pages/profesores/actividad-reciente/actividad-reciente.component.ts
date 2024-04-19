@@ -69,4 +69,28 @@ export class ActividadRecienteComponent implements OnInit {
     const volverPag = 0;
     this.router.navigate(['profesores/ver-perfil-alumno'], {state: {alumnoID, volverPag}});
   }
+  getAmbito(ambito: any): string {
+    let color = "";
+    
+    if(ambito === 'Familia'){
+      color = 'badge bg-familia rounded-3 fw-semibold';
+    }
+    if(ambito === 'Emociones'){
+      color = 'badge bg-emociones rounded-3 fw-semibold';
+    }
+    if(ambito === 'Amigos'){
+      color = 'badge bg-amigos rounded-3 fw-semibold';
+    }
+    if(ambito === 'Clase'){
+      color = 'badge bg-clase rounded-3 fw-semibold';
+    }
+    if(ambito === 'Inicio'){
+      color = 'badge bg-inicio rounded-3 fw-semibold';
+    }
+    if(ambito === 'Fuera de clase'){
+      color = 'badge bg-fuera rounded-3 fw-semibold';
+    }
+
+    return color;
+  }
 }

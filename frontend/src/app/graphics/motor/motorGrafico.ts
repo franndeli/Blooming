@@ -39,7 +39,7 @@ export class MotorGrafico {
     this.camActiva = this.getCamaraActiva();
 
     //crear avatar
-    this.avatar = await this.crearModelo(this.escena, 'cubo.json', [0, 0, 0], [0, 0, 0], [1, 1, 1]);
+    this.avatar = await this.crearModelo(this.escena, 'cubo.gltf', [0, 0, 0], [0, 0, 0], [1, 1, 1]);
 
     //crear luces
 

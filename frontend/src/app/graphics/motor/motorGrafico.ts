@@ -33,7 +33,7 @@ export class MotorGrafico {
     this.escena = this.crearNodo(null, vec3.create(), vec3.create(), [1, 1, 1]);
 
     //crear camara
-    this.camara = this.crearCamara(this.escena, [2, 2, 3], [2, 0, 45], [1, 1, 1]);
+    this.camara = this.crearCamara(this.escena, [2, 2, 5], [2, 0, 45], [1, 1, 1]);
     var numCam = this.registrarCamara(this.camara);
     this.setCamaraActiva(numCam);
     this.camActiva = this.getCamaraActiva();

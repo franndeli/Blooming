@@ -6,7 +6,7 @@ import { TRecursoShader } from './TRecursoShader'
 export class TRecursoMalla extends TRecurso {
   private indices: Uint16Array;
   private vertices: Float32Array;
-  private normales: number[];
+  private normales: Float32Array;
   private coordTex: number[];
   private colores: number[][];
   private nombreMalla: string;
@@ -24,7 +24,7 @@ export class TRecursoMalla extends TRecurso {
   constructor(nombre: string, shader: TRecursoShader) {
     super();
     this.vertices = new Float32Array();
-    this.normales = new Array();
+    this.normales = new Float32Array();
     this.coordTex = [];
     this.colores = [];
     this.indices = new Uint16Array();
@@ -55,20 +55,7 @@ export class TRecursoMalla extends TRecurso {
       this.normales = malla.normales;
       this.indices = malla.indices;
       this.coordTex = malla.coordTexturas;
-      this.colores = malla.colores
-
-      // const mesh = data.meshes.find((m: any) => m.name === "Cube");
-
-      // this.vertices = mesh.vertices;
-      // this.normales = mesh.normals;
-      // this.indices = new Uint16Array([].concat(...mesh.faces));
-      // this.coordTex = mesh.texturecoords[0];
-
-      // this.vertices = data.vertices;
-      // this.vertices = data.vertices;
-      // this.normales = data.normales;
-      // this.coordTex = data.coordTexturas;
-      // this.indices = data.indices;
+      this.colores = malla.colores;
 
       //llamada a configurarBuffers
       this.configurarBuffers();
@@ -106,11 +93,11 @@ export class TRecursoMalla extends TRecurso {
     
 
     //Normales
-    // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, normalBuffer);
-    // this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.normales), this.gl.STATIC_DRAW);
-    // const normalLocation = this.gl.getAttribLocation(this.programId, 'vertNormal');
-    // this.gl.vertexAttribPointer(normalLocation, 3, this.gl.FLOAT, false, 0, 0);
-    // this.gl.enableVertexAttribArray(normalLocation);
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, normalBuffer);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.normales), this.gl.STATIC_DRAW);
+    const normalLocation = this.gl.getAttribLocation(this.programId, 'vertNormal');
+    this.gl.vertexAttribPointer(normalLocation, 3, this.gl.FLOAT, false, 0, 0);
+    this.gl.enableVertexAttribArray(normalLocation);
 
     //Indices
     this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
@@ -138,43 +125,26 @@ export class TRecursoMalla extends TRecurso {
 
   // En TRecursoMalla
   dibujar(matrizTransf: mat4): void {
-    console.log(`Dibujando la malla ${this.getNombre()}`);
-
-    this.gl.useProgram(this.programId);
-
-    //Vertices
-    // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.bufVertex);
-    // const positionLocation = this.gl.getAttribLocation(this.programId, 'vertPosition');
-    // this.gl.vertexAttribPointer(positionLocation, 3, this.gl.FLOAT, false, 0, 0);
-    // this.gl.enableVertexAttribArray(positionLocation);
-
-    // //Normales
-    // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.bufNormal);
-    // const normalLocation = this.gl.getAttribLocation(this.programId, 'vertNormal');
-    // this.gl.vertexAttribPointer(normalLocation, 3, this.gl.FLOAT, false, 0, 0);
-    // this.gl.enableVertexAttribArray(normalLocation);
-
-    //Indices
-    // this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.bufIndex);
+    console.log(`Dibujando la malla ${this.nombreMalla}`);
 
     this.gl.useProgram(this.programId);
     
-    // var locationPmatrix = this.gl.getUniformLocation(this.programId, 'u_ProjectionMatrix');
-    // var locationVmatrix = this.gl.getUniformLocation(this.programId, 'u_ModelViewMatrix');
+    var locationPmatrix = this.gl.getUniformLocation(this.programId, 'u_ProjectionMatrix');
+    var locationVmatrix = this.gl.getUniformLocation(this.programId, 'u_ModelViewMatrix');
     // // var locationMmatrix = this.gl.getUniformLocation(this.programId, 'u_NormalMatrix');
 
     // if(locationPmatrix){
     //   this.gl.uniformMatrix4fv(locationPmatrix, false, this.TRecusoShader.getProjMatrix());
     // }
-    // if(locationVmatrix){
-    //   this.gl.uniformMatrix4fv(locationVmatrix, false, this.TRecusoShader.getViewMatrix());
-    // }
+    if(locationVmatrix){
+      this.gl.uniformMatrix4fv(locationVmatrix, false, this.TRecusoShader.getViewMatrix());
+    }
     // if(locationMmatrix){
     //   this.gl.uniformMatrix4fv(locationMmatrix, false, matrizTransf);
     // }
 
     this.gl.bindAttribLocation(this.programId, 0, 'vertPosition');
-    // this.gl.bindAttribLocation(this.programId, 0, 'vertNormal');
+    this.gl.bindAttribLocation(this.programId, 0, 'vertNormal');
     
     this.gl.drawElements(this.gl.TRIANGLES, this.indices.length, this.gl.UNSIGNED_SHORT, 0);
   }

@@ -2,8 +2,26 @@ import { mat4, vec3 } from 'gl-matrix';
 import { ElementRef } from '@angular/core';
 import { GestorRecursos, TRecursoMalla, TNodo, TCamara, TLuz } from '../../graphics';
 
+var dragLeft = false;
+var old_x = 0;
+var old_y = 0;
+var dx = 0;
+var dy = 0;
+var theta = 0;
+var phi = 0;
+var scale = 0.5;
+var dragRight = false;
+var old_xRight = 0;
+var old_yRight = 0;
+var dxRight = 0;
+var dyRight = 0;
+var trasX = 0;
+var trasY = 0;
 
 export class MotorGrafico {
+
+  private width: number = 0;
+  private height: number = 0;
 
   public escena!: TNodo;
   private camara!: TNodo;
@@ -33,16 +51,15 @@ export class MotorGrafico {
     this.escena = this.crearNodo(null, vec3.create(), vec3.create(), [1, 1, 1]);
 
     //crear camara
-    this.camara = this.crearCamara(this.escena, [2, 2, 5], [2, 0, 45], [1, 1, 1]);
+    this.camara = this.crearCamara(this.escena, [2, 0, 5], [0, 4, 0], [1, 1, 1.5]);
     var numCam = this.registrarCamara(this.camara);
     this.setCamaraActiva(numCam);
     this.camActiva = this.getCamaraActiva();
 
     //crear avatar
-    this.avatar = await this.crearModelo(this.escena, 'cubo.json', [0, 0, 0], [0, 0, 0], [1, 1, 1]);
+    this.avatar = await this.crearModelo(this.escena, 'untitled.gltf', [0, 0, 0], [0, 0, 0], [1, 1, 1]);
 
     //crear luces
-
     
     this.dibujarEscena();
 

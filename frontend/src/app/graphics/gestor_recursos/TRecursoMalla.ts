@@ -7,8 +7,8 @@ export class TRecursoMalla extends TRecurso {
   private indices: Uint16Array;
   private vertices: Float32Array;
   private normales: Float32Array;
-  private coordTex: number[];
-  private colores: number[][];
+  private coordTexturas: Float32Array;
+  private colores: Float32Array;
   private nombreMalla: string;
   private programId: any;
   private TRecusoShader: TRecursoShader;
@@ -25,8 +25,8 @@ export class TRecursoMalla extends TRecurso {
     super();
     this.vertices = new Float32Array();
     this.normales = new Float32Array();
-    this.coordTex = [];
-    this.colores = [];
+    this.coordTexturas = new Float32Array();
+    this.colores = new Float32Array();
     this.indices = new Uint16Array();
     var canvas = <HTMLCanvasElement>document.getElementById('canvasWebGL');
     var context = canvas.getContext('webgl2');
@@ -41,21 +41,55 @@ export class TRecursoMalla extends TRecurso {
 
   override async cargarRecurso(nombre: string): Promise<void> {
     console.log(`Cargando recurso de malla ${nombre}...`);
+
     try {
       const url = this.basePath + nombre;
   
       const response = await fetch(url);
-      console.log(response);
-      const data = await response.json();
-      console.log(data);
+      const gltf = await response.json();
 
-      const malla = data.mallas[0];
+      const mesh = gltf.meshes[0]; // Usualmente, glTF tiene un array de 'meshes'
+      const primerPrimitive = mesh.primitives[0];
 
-      this.vertices = malla.vertices;
-      this.normales = malla.normales;
-      this.indices = malla.indices;
-      this.coordTex = malla.coordTexturas;
-      this.colores = malla.colores;
+      // Cargar posiciones
+      const accessorPosicion = gltf.accessors[primerPrimitive.attributes.POSITION];
+      const bufferViewPosicion = gltf.bufferViews[accessorPosicion.bufferView];
+      const posicionBuffer = await fetch(this.basePath + gltf.buffers[bufferViewPosicion.buffer].uri);
+      const posicionData = await posicionBuffer.arrayBuffer();
+      this.vertices = new Float32Array(posicionData);
+
+      // Cargar normales
+      const accessorNormal = gltf.accessors[primerPrimitive.attributes.NORMAL];
+      const bufferViewNormal = gltf.bufferViews[accessorNormal.bufferView];
+      const normalBuffer = await fetch(this.basePath + gltf.buffers[bufferViewNormal.buffer].uri);
+      const normalData = await normalBuffer.arrayBuffer();
+      this.normales = new Float32Array(normalData);
+
+      // Cargar coordenadas de textura (si existen)
+      if (primerPrimitive.attributes.TEXCOORD_0) {
+        const accessorTexCoords = gltf.accessors[primerPrimitive.attributes.TEXCOORD_0];
+        const bufferViewTexCoords = gltf.bufferViews[accessorTexCoords.bufferView];
+        const texCoordBuffer = await fetch(this.basePath + gltf.buffers[bufferViewTexCoords.buffer].uri);
+        const texCoordData = await texCoordBuffer.arrayBuffer();
+        this.coordTexturas = new Float32Array(texCoordData);
+      }
+
+      // Cargar colores
+      if (primerPrimitive.attributes.COLOR_0) {
+        const accessorColor = gltf.accessors[primerPrimitive.attributes.COLOR_0];
+        const bufferViewColor = gltf.bufferViews[accessorColor.bufferView];
+        const colorBuffer = await fetch(this.basePath + gltf.buffers[bufferViewColor.buffer].uri);
+        const colorData = await colorBuffer.arrayBuffer();
+        // this.colores = new Float32Array(colorData);
+      }
+      // Cargar índices
+      if (primerPrimitive.indices) {
+        const accessorIndices = gltf.accessors[primerPrimitive.indices];
+        const bufferViewIndices = gltf.bufferViews[accessorIndices.bufferView];
+        const indexBuffer = await fetch(this.basePath + gltf.buffers[bufferViewIndices.buffer].uri);
+        const indexData = await indexBuffer.arrayBuffer();
+        this.indices = new Uint16Array(indexData); // Asumiendo que los índices son Uint16
+      }
 
       //llamada a configurarBuffers
       this.configurarBuffers();
@@ -69,8 +103,6 @@ export class TRecursoMalla extends TRecurso {
 
   configurarBuffers() {
     let vertexBuffer, normalBuffer, indexBuffer, textCoodBuffer, colorBuffer;
-
-    const coloresAplanados = this.colores.flat();
     
     this.gl.createVertexArray();
 
@@ -112,7 +144,7 @@ export class TRecursoMalla extends TRecurso {
 
     //Colores
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, colorBuffer);
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(coloresAplanados), this.gl.STATIC_DRAW);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.colores), this.gl.STATIC_DRAW);
     const colorLocation = this.gl.getAttribLocation(this.programId, 'vertColor');
     this.gl.vertexAttribPointer(colorLocation, 4, this.gl.FLOAT, false, 0, 0);
     this.gl.enableVertexAttribArray(colorLocation);

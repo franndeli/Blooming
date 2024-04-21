@@ -44,7 +44,7 @@ export class AdminService {
 
     updateAdminPwd(formData: any){
       this.getHeader();
-      return this.http.put(this.basePath+'/newp/'+formData.ID_Admin, formData, this.httpOptions);
+      return this.http.put(this.basePath+'newp/'+formData.ID_Admin, formData, this.httpOptions);
     }
   
   }

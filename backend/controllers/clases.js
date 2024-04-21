@@ -65,12 +65,13 @@ const getClases = async (req, res) => {
 const createClase = async (req, res) => {
     try {
         const { Nombre, ID_Centro } = req.body;
-
+        //const NumAlumnos = 0;
         const existClase = await Clase.findOne({ where: { Nombre, ID_Centro } });
         if (existClase) {
             return res.status(400).json({ ok: false, msg: 'Ya existe esta clase en el centro' });
         }
-
+        
+        //req.body.NumAlumnos = NumAlumnos;
         const nuevaClase = await Clase.create(req.body);
 
         res.json({

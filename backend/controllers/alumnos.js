@@ -111,8 +111,9 @@ const getAlumnos = async (req, res) => {
             const hashedPassword = hashPassword(req.body.Contraseña);
             const ambitos = {"Clase":50,"Amigos":50,"Familia":50,"Emociones":50,"Fuera de clase":50};
             const frecuencia = {"Clase":0,"Amigos":0,"Familia":0,"Emociones":0,"Fuera de clase":0}
-            const estado = "Normal"
-            const newAlumno = { ...req.body, Contraseña: hashedPassword, Usuario: usuario, Estado: estado, Ambitos: ambitos, AparicionAmbitos: frecuencia};
+            const estado = "Normal";
+            const points = 0;
+            const newAlumno = { ...req.body, Contraseña: hashedPassword, Usuario: usuario, Estado: estado, Ambitos: ambitos, AparicionAmbitos: frecuencia, Puntos: points};
         
             const createdAlumno = await Alumno.create(newAlumno);
         

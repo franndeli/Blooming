@@ -1,65 +1,80 @@
-<!--  Body Wrapper -->
+<!-- Body Wrapper -->
 <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-data-sidebar-position="fixed" data-header-position="fixed">
-<div
-  class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
-  <div class="d-flex align-items-center justify-content-center w-100">
-    <div class="row justify-content-center w-100">
-      <div class="col-md-8 col-lg-6 col-xxl-3">
-        <div class="card mb-0" style="margin-top: 50px; margin-top: 50px;">
-          <div class="card-body">
-            <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
-              <img src="../assets/images/logos/logo.png" width="180" alt="">
-            </a>
-            <p class="text-center">¡Bienvenido a Blooming!</p>
-            <form [formGroup]="form">
-              <div class="mb-3">
-                <label for="Nombre" class="form-label"><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</label>
-                <input class="form-control" formControlName="Nombre" id="Nombre">
-              </div>
-              <p class="text-danger" *ngIf="!validarRegistro('Nombre')">El Nombre es obligatorio</p>
-              <div class="mb-3">
-                <label for="Email" class="form-label"><span><i class="ti ti-mail" style="font-size: 15px;"></i></span> Email</label>
-                <input type="email" class="form-control" formControlName="Email">
-              </div>
-              <p class="text-danger" *ngIf="!validarRegistro('Email')">El Email es obligatorio</p>
-              <div class="mb-4">
-                <label for="Contraseña" class="form-label"><span><i class="ti ti-password" style="font-size: 15px;"></i></span> Contraseña</label>
-                <input type="password" class="form-control" formControlName="Contraseña" id="Contraseña">
-              </div>
-              <p class="text-danger" *ngIf="!validarRegistro('Contraseña')">La Contraseña es obligatoria</p>
-              <div class="mb-4">
-                <label for="Calle" class="form-label"><span><i class="ti ti-building-community" style="font-size: 15px;"></i></span> Calle</label>
-                <input class="form-control" formControlName="Calle" id="Calle">
-              </div>
-              <p class="text-danger" *ngIf="!validarRegistro('Calle')">La Calle es obligatoria</p>
-              <div class="mb-4">
-                <label for="CP" class="form-label"><span><i class="ti ti-building-community" style="font-size: 15px;"></i></span> Código Postal</label>
-                <input class="form-control" formControlName="CP" id="CP">
-              </div>
-              <p class="text-danger" *ngIf="!validarRegistro('CP')">El Código Postal es obligatorio</p>
-              <div class="mb-4">
-                <label for="Localidad" class="form-label"><span><i class="ti ti-building-community" style="font-size: 15px;"></i></span> Localidad</label>
-                <input class="form-control" formControlName="Localidad" id="Localidad">
-              </div>
-              <p class="text-danger" *ngIf="!validarRegistro('Localidad')">La Localidad es obligatoria</p>
-              <div class="mb-4">
-                <label for="Provincia" class="form-label"><span><i class="ti ti-building-community" style="font-size: 15px;"></i></span> Provincia</label>
-                <input class="form-control" formControlName="Provincia" id="Provincia">
-              </div>
-              <p class="text-danger" *ngIf="!validarRegistro('Provincia')">La Provincia es obligatoria</p>
-              <button class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2" (click)="registro()"><span><i class="ti ti-check" style="font-size: 15px;"></i></span> Entrar</button>
-              <button [routerLink]="['/inicio']" class="btn btn-outline-dark w-100 py-8 fs-4 mb-4 rounded-2"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</button>
+  data-sidebar-position="fixed" data-header-position="fixed">
+  <div class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="d-flex align-items-center justify-content-center w-100">
+      <div class="row justify-content-center w-100">
+        <div class="col-md-8 col-lg-6 col-xxl-6">
+          <div class="card mb-0" style="margin-top: 50px;">
+            <div class="card-body">
+              <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
+                <img src="../assets/images/logos/logo.png" width="180" alt="">
+              </a>
+              <p class="text-center">¡Bienvenido a Blooming!</p>
+              <form [formGroup]="form" class="row g-3">
+                <div class="col-md-6">
+                  <label for="Nombre" class="form-label"><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</label>
+                  <input class="form-control" formControlName="Nombre" id="Nombre" placeholder="Introduce el nombre de tu centro">
+                  
+                  <p class="text-danger" *ngIf="!validarRegistro('Nombre')">El Nombre es obligatorio</p>
+                </div>
+                <div class="col-md-6">
+                  <label for="Email" class="form-label"><span><i class="ti ti-mail" style="font-size: 15px;"></i></span> Email</label>
+                  <input type="email" class="form-control" formControlName="Email" placeholder="Introduce el email de tu centro">
+                  <p class="text-danger" *ngIf="!validarRegistro('Email')">El Email es obligatorio</p>
+                </div>
+                <div class="col-md-6">
+                  <label for="Contraseña" class="form-label"><span><i class="ti ti-password" style="font-size: 15px;"></i></span> Contraseña</label>
+                  <input type="password" class="form-control" formControlName="Contraseña" id="Contraseña" placeholder="Introduce una contraseña">
+                  <p class="text-danger" *ngIf="!validarRegistro('Contraseña')">La Contraseña es obligatoria</p>
+                </div>
+                <div class="col-md-6">
+                  
+                </div>
+                <div class="col-md-6">
+                  <label for="Calle" class="form-label"><span><i class="ti ti-building-community" style="font-size: 15px;"></i></span> Calle</label>
+                  <input class="form-control" formControlName="Calle" id="Calle" placeholder="Introduce la calle de tu centro">
+                  <p class="text-danger" *ngIf="!validarRegistro('Calle')">La Calle es obligatoria</p>
+                </div>
+                <div class="col-md-6">
+                  <label for="CP" class="form-label"><span><i class="ti ti-building-community" style="font-size: 15px;"></i></span> Código Postal</label>
+                  <input class="form-control" formControlName="CP" id="CP" placeholder="Introduce el códido postal de tu centro">
+                  <p class="text-danger" *ngIf="!validarRegistro('CP')">El Código Postal es obligatorio</p>
+                </div>
+                <div class="col-md-6">
+                  <label for="Localidad" class="form-label"><span><i class="ti ti-building-community" style="font-size: 15px;"></i></span> Localidad</label>
+                  <input class="form-control" formControlName="Localidad" id="Localidad" placeholder="Introduce la localidad de tu centro">
+                  <p class="text-danger" *ngIf="!validarRegistro('Localidad')">La Localidad es obligatoria</p>
+                </div>
+                <div class="col-md-6">
+                  <label for="Provincia" class="form-label"><span><i class="ti ti-building-community" style="font-size: 15px;"></i></span> Provincia</label>
+                  <input class="form-control" formControlName="Provincia" id="Provincia" placeholder="Introduce la provincia de tu centro">
+                  <p class="text-danger" *ngIf="!validarRegistro('Provincia')">La Provincia es obligatoria</p>
+                </div>
+                <div class="col-12">
+                  <div class="d-grid justify-content-center">
+                    <button class="btn btn-primary py-2 fs-4 mb-4 rounded-2" style="width: 300px; margin-bottom: 0px !important;" (click)="registro()">
+                      <span><i class="ti ti-check" style="font-size: 15px;"></i></span> Entrar
+                    </button>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="d-grid justify-content-center">
+                    <button [routerLink]="['/inicio']" class="btn btn-outline-dark py-2 fs-4 mb-4 rounded-2" style="width: 300px;">
+                      <span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver
+                    </button>
+                  </div>
+                </div>
+                
+              </form>
               <div class="d-flex align-items-center justify-content-center">
                 <p class="fs-4 mb-0 fw-bold">¿Ya tienes una cuenta?</p>
-                <a class="text-primary fw-bold ms-2" [routerLink]="['/login']">Inicia sesión</a>
+                <a style="font-size: medium;" class="text-primary fw-bold ms-2" [routerLink]="['/login']">Inicia sesión</a>
               </div>
-            </form>
+            </div>
           </div>
         </div>
-      <div style="padding: 30px;"></div>
       </div>
     </div>
   </div>
-</div>
 </div>

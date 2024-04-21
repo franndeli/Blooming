@@ -42,6 +42,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                       <div class="mb-3">
                         <label for="FechaNacimiento" class="form-label"><span><i class="ti ti-cake" style="font-size: 15px;"></i></span> Fecha de Nacimiento</label>
                         <input type="date" class="form-control" formControlName="FechaNacimiento" id="FechaNacimiento">
+                        <div *ngIf="form.get('FechaNacimiento')?.hasError('invalidEdad')" class="text-danger">La edad debe estar entre 3 y 15 años.</div>
                       </div>
                       <p class="text-danger" *ngIf="!validarForm('FechaNacimiento')">La Fecha de Nacimiento es obligatoria</p>
                       <div class="mb-3">

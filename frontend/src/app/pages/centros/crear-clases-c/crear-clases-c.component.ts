@@ -17,7 +17,7 @@ export class CrearClasesCComponent {
   public form = this.fb.group({
     Nombre: ['', [Validators.required]],
     ID_Centro: [localStorage.getItem('id'), [Validators.required]],
-    NumAlumnos: ['', [Validators.required]]
+    NumAlumnos: 0
   });
 
   crearClase(){

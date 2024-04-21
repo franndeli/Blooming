@@ -183,7 +183,7 @@ const updateProfesor = async (req, res) => {
 const updateProfesorPwd = async (req, res) => {
     try {
         const token = req.header('x-token');
-        const id = req.params.ID_Profesor;
+        const id = parseInt(req.params.ID_Profesor, 10);
         const { Contraseña, newPassword, newPassword2 } = req.body;
             
         const decodedToken = verify(token);

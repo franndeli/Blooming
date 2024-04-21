@@ -127,7 +127,7 @@ const updateCentro = async (req, res) => {
 const updateCentroPwd = async (req, res) => {
     try {
         const token = req.header('x-token');
-        const id = req.params.ID_Centro;
+        const id = parseInt(req.params.ID_Centro, 10);
         const { Contraseña, newPassword, newPassword2 } = req.body;
         
         const decodedToken = verify(token);

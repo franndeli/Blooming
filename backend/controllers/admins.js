@@ -101,7 +101,7 @@ const updateAdmin = async (req, res) => {
 const updateAdminPwd = async (req, res) => {
     try {
         const token = req.header('x-token');
-        const id = req.params.ID_Admin;
+        const id = parseInt(req.params.ID_Admin, 10);
         const { Contraseña, newPassword, newPassword2 } = req.body;
     
         const decodedToken = verify(token);

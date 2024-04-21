@@ -75,13 +75,13 @@ export class TRecursoMalla extends TRecurso {
       }
 
       // Cargar colores
-      if (primerPrimitive.attributes.COLOR_0) {
+      /*if (primerPrimitive.attributes.COLOR_0) {
         const accessorColor = gltf.accessors[primerPrimitive.attributes.COLOR_0];
         const bufferViewColor = gltf.bufferViews[accessorColor.bufferView];
         const colorBuffer = await fetch(this.basePath + gltf.buffers[bufferViewColor.buffer].uri);
         const colorData = await colorBuffer.arrayBuffer();
         this.colores = new Float32Array(colorData);  // Asumiendo que los colores son vec4 RGBA
-      }
+      }*/
 
       // Cargar índices
       if (primerPrimitive.indices) {
@@ -163,28 +163,59 @@ export class TRecursoMalla extends TRecurso {
   }
 
   // En TRecursoMalla
+  // dibujar(matrizTransf: mat4): void {
+  //   console.log(`Dibujando la malla ${this.nombreMalla}`);
+
+  //   this.gl.useProgram(this.programId);
+    
+  //   var locationPmatrix = this.gl.getUniformLocation(this.programId, 'u_ProjectionMatrix');
+  //   var locationVmatrix = this.gl.getUniformLocation(this.programId, 'u_ModelViewMatrix');
+  //   // // var locationMmatrix = this.gl.getUniformLocation(this.programId, 'u_NormalMatrix');
+
+  //   if(locationPmatrix){
+  //     this.gl.uniformMatrix4fv(locationPmatrix, false, this.TRecusoShader.getProjMatrix());
+  //   }
+    
+  //   if(locationVmatrix){
+  //     this.gl.uniformMatrix4fv(locationVmatrix, false, this.TRecusoShader.getViewMatrix());
+  //   }
+  //   // if(locationMmatrix){
+  //   //   this.gl.uniformMatrix4fv(locationMmatrix, false, matrizTransf);
+  //   // }
+
+  //   this.gl.bindAttribLocation(this.programId, 0, 'vertPosition');
+  //   this.gl.bindAttribLocation(this.programId, 0, 'vertNormal');
+    
+  //   this.gl.drawElements(this.gl.TRIANGLES, this.indices.length, this.gl.UNSIGNED_SHORT, 0);
+  // }
+
   dibujar(matrizTransf: mat4): void {
     console.log(`Dibujando la malla ${this.nombreMalla}`);
 
+    // Usar el programa de shader actual
     this.gl.useProgram(this.programId);
     
-    var locationPmatrix = this.gl.getUniformLocation(this.programId, 'u_ProjectionMatrix');
-    var locationVmatrix = this.gl.getUniformLocation(this.programId, 'u_ModelViewMatrix');
-    // // var locationMmatrix = this.gl.getUniformLocation(this.programId, 'u_NormalMatrix');
-
-    // if(locationPmatrix){
+    // Obtener y configurar la matriz de proyección si es necesario
+    // var locationPmatrix = this.gl.getUniformLocation(this.programId, 'u_ProjectionMatrix');
+    // if (locationPmatrix) {
     //   this.gl.uniformMatrix4fv(locationPmatrix, false, this.TRecusoShader.getProjMatrix());
     // }
-    if(locationVmatrix){
-      this.gl.uniformMatrix4fv(locationVmatrix, false, this.TRecusoShader.getViewMatrix());
-    }
-    // if(locationMmatrix){
-    //   this.gl.uniformMatrix4fv(locationMmatrix, false, matrizTransf);
-    // }
 
-    this.gl.bindAttribLocation(this.programId, 0, 'vertPosition');
-    this.gl.bindAttribLocation(this.programId, 0, 'vertNormal');
-    
+    // Obtener y configurar la matriz de modelo-vista
+    var locationVmatrix = this.gl.getUniformLocation(this.programId, 'u_ModelViewMatrix');
+    if (locationVmatrix) {
+      let modelViewMatrix = mat4.create();
+      mat4.multiply(modelViewMatrix, this.TRecusoShader.getViewMatrix(), matrizTransf);
+      this.gl.uniformMatrix4fv(locationVmatrix, false, modelViewMatrix);
+    }
+
+    // Asegurarse de que los buffers de vértices y de índices estén correctamente vinculados
+    // Esto solo es necesario si los buffers podrían haber cambiado desde la última vez que se configuraron
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.bufVertex);
+    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.bufIndex);
+
+    // Dibujar los elementos
     this.gl.drawElements(this.gl.TRIANGLES, this.indices.length, this.gl.UNSIGNED_SHORT, 0);
   }
+
 }

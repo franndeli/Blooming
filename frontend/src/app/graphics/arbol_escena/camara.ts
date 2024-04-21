@@ -14,11 +14,13 @@ export class TCamara extends TEntidad {
     constructor() {
         super();
         console.log('Creando cámara...');
+
         var canvas = <HTMLCanvasElement>document.getElementById('canvasWebGL');
         var context = canvas.getContext('webgl2');
         if (context === null) {
             throw new Error('Unable to get WebGL2 context');
         }
+        
         this.gl = context;
         this.projMatrix = mat4.create();
         this.viewMatrix = mat4.create();

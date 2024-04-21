@@ -27,10 +27,10 @@ export class TNodo {
     }
 
     async recorrer(matrizPadre: mat4): Promise<void> {
-        console.log('Recorriendo nodo con id: ', this.id);
+        console.log('Recorriendo nodo con id: ', this.id, this.entidad);
         //let matrizLocal = mat4.clone(matrizPadre);
         //console.log('Matriz padre/local: ', matrizPadre);
-        console.log('Matriz sin actualizar: ', this.matrizTransf);
+        console.log('Matriz sin actualizar: ', this.matrizTransf, this.entidad);
         if(this.actualizarMatriz) {
             this.actualizarMatriz = false;
             console.log('Actualizando matriz');
@@ -50,7 +50,7 @@ export class TNodo {
             // mat4.multiply(matrizLocal, matrizLocal, matrizEsc);
             
             // this.setMatrizTransf(matrizLocal);
-            console.log('Matriz actualizada: ', this.matrizTransf);
+            console.log('Matriz actualizada: ', this.matrizTransf , this.entidad);
 
             if(this.entidad != null) {
                 console.log('Dibujando entidad: ',this.entidad.constructor.name);
@@ -58,7 +58,9 @@ export class TNodo {
             }
         }
 
-        this.hijos.forEach(hijo => hijo.recorrer(this.matrizTransf));
+        for (const hijo of this.hijos) {
+            await hijo.recorrer(this.matrizTransf);
+        }
     }
 
     async calcularMatriz(){
@@ -69,6 +71,8 @@ export class TNodo {
         mat4.rotateY(matrizAux, matrizAux, this.radianes(this.rotacion[1]));
         mat4.rotateZ(matrizAux, matrizAux, this.radianes(this.rotacion[2]));
         mat4.scale(matrizAux, matrizAux, this.escalado);
+
+        //console.log('Calculando matriz auxiliar', matrizAux);
 
         return matrizAux;
     }

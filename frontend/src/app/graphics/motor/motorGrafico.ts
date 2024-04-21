@@ -74,8 +74,7 @@ export class MotorGrafico {
       this.avatar.setTraslacion([trasX, trasY, 0]);
 
       if (this.rotando){
-        console.log('rotando')
-        this.time = this.time - 0.005;
+        this.time = this.time - 0.9;
         this.avatar.setRotacion([0,this.time,0]);
         phi = 0;
         theta = 0;

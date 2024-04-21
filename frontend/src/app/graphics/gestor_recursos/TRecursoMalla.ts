@@ -157,11 +157,11 @@ export class TRecursoMalla extends TRecurso {
 
   // En TRecursoMalla
   dibujar(matrizTransf: mat4): void {
-    console.log(`Dibujando la malla ${this.nombreMalla}`);
+    //console.log(`Dibujando la malla ${this.nombreMalla}`);
 
     this.gl.useProgram(this.programId);
     
-    var locationPmatrix = this.gl.getUniformLocation(this.programId, 'u_ProjectionMatrix');
+    // var locationPmatrix = this.gl.getUniformLocation(this.programId, 'u_ProjectionMatrix');
     var locationVmatrix = this.gl.getUniformLocation(this.programId, 'u_ModelViewMatrix');
     // // var locationMmatrix = this.gl.getUniformLocation(this.programId, 'u_NormalMatrix');
 
@@ -169,14 +169,16 @@ export class TRecursoMalla extends TRecurso {
     //   this.gl.uniformMatrix4fv(locationPmatrix, false, this.TRecusoShader.getProjMatrix());
     // }
     if(locationVmatrix){
-      this.gl.uniformMatrix4fv(locationVmatrix, false, this.TRecusoShader.getViewMatrix());
+      let modelViewMatrix = mat4.create();
+      mat4.multiply(modelViewMatrix, this.TRecusoShader.getViewMatrix(), matrizTransf);
+      this.gl.uniformMatrix4fv(locationVmatrix, false, modelViewMatrix);
     }
     // if(locationMmatrix){
     //   this.gl.uniformMatrix4fv(locationMmatrix, false, matrizTransf);
     // }
 
     this.gl.bindAttribLocation(this.programId, 0, 'vertPosition');
-    this.gl.bindAttribLocation(this.programId, 0, 'vertNormal');
+    // this.gl.bindAttribLocation(this.programId, 0, 'vertNormal');
     
     this.gl.drawElements(this.gl.TRIANGLES, this.indices.length, this.gl.UNSIGNED_SHORT, 0);
   }

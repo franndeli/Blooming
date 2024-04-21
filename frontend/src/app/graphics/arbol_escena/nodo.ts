@@ -27,13 +27,13 @@ export class TNodo {
     }
 
     async recorrer(matrizPadre: mat4): Promise<void> {
-        console.log('Recorriendo nodo con id: ', this.id);
+        //console.log('Recorriendo nodo con id: ', this.id);
         //let matrizLocal = mat4.clone(matrizPadre);
         //console.log('Matriz padre/local: ', matrizPadre);
-        console.log('Matriz sin actualizar: ', this.matrizTransf);
+        //console.log('Matriz sin actualizar: ', this.matrizTransf);
         if(this.actualizarMatriz) {
             this.actualizarMatriz = false;
-            console.log('Actualizando matriz');
+            //console.log('Actualizando matriz');
             mat4.multiply(this.matrizTransf, matrizPadre, await this.calcularMatriz());
             // let matrizTrans = mat4.create();
             // let matrizRot = mat4.create();
@@ -50,15 +50,17 @@ export class TNodo {
             // mat4.multiply(matrizLocal, matrizLocal, matrizEsc);
             
             // this.setMatrizTransf(matrizLocal);
-            console.log('Matriz actualizada: ', this.matrizTransf);
+            //console.log('Matriz actualizada: ', this.matrizTransf);
 
             if(this.entidad != null) {
-                console.log('Dibujando entidad: ',this.entidad.constructor.name);
+                //console.log('Dibujando entidad: ',this.entidad.constructor.name);
                 this.entidad.dibujar(this.matrizTransf);
             }
         }
 
-        this.hijos.forEach(hijo => hijo.recorrer(this.matrizTransf));
+        for (const hijo of this.hijos) {
+            await hijo.recorrer(this.matrizTransf);
+        }
     }
 
     async calcularMatriz(){

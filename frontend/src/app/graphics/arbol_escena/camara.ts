@@ -13,7 +13,7 @@ export class TCamara extends TEntidad {
 
     constructor() {
         super();
-        console.log('Creando cámara...');
+        //console.log('Creando cámara...');
         var canvas = <HTMLCanvasElement>document.getElementById('canvasWebGL');
         var context = canvas.getContext('webgl2');
         if (context === null) {
@@ -65,7 +65,7 @@ export class TCamara extends TEntidad {
     }
 
     override dibujar(matrizTransf: mat4): void {
-        console.log(`Configurando cámara ${this.esPerspectiva ? 'perspectiva' : 'paralela'} con planos ${this.cercano} - ${this.lejano}`);
+        //console.log(`Configurando cámara ${this.esPerspectiva ? 'perspectiva' : 'paralela'} con planos ${this.cercano} - ${this.lejano}`);
         
         this.gl.useProgram(this.gl.getParameter(this.gl.CURRENT_PROGRAM));
 

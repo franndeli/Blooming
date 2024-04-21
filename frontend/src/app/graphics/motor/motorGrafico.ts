@@ -9,7 +9,7 @@ var dx = 0;
 var dy = 0;
 var theta = 0;
 var phi = 0;
-var scale = 0.5;
+var scale = 1;
 var dragRight = false;
 var old_xRight = 0;
 var old_yRight = 0;
@@ -22,6 +22,8 @@ export class MotorGrafico {
 
   private width: number = 0;
   private height: number = 0;
+  public rotando:boolean = true;
+  public time:number = 0;
 
   public escena!: TNodo;
   private camara!: TNodo;
@@ -46,12 +48,17 @@ export class MotorGrafico {
   async iniciarEscena(canvasRef: ElementRef<HTMLCanvasElement>) {
     if(canvasRef && canvasRef.nativeElement) {
       this.canvas = canvasRef;
+      this.canvas.nativeElement.addEventListener("mousedown", this.mouseDown, false);
+      this.canvas.nativeElement.addEventListener("mouseup", this.mouseUp, false);
+      this.canvas.nativeElement.addEventListener("mouseout", this.mouseUp, false);
+      this.canvas.nativeElement.addEventListener("mousemove", this.mouseMove, false);
+      this.canvas.nativeElement.addEventListener("wheel", this.zoom, false);
     }
 
     this.escena = this.crearNodo(null, vec3.create(), vec3.create(), [1, 1, 1]);
 
     //crear camara
-    this.camara = this.crearCamara(this.escena, [2, 0, 5], [0, 4, 0], [1, 1, 1.5]);
+    this.camara = this.crearCamara(this.escena, [2, 0, 5], [0, 4, 0], [1, 1, 1]);
     var numCam = this.registrarCamara(this.camara);
     this.setCamaraActiva(numCam);
     this.camActiva = this.getCamaraActiva();
@@ -61,13 +68,28 @@ export class MotorGrafico {
 
     //crear luces
     
-    this.dibujarEscena();
+    //this.dibujarEscena();
 
-    // let render = () => {
-    //   this.dibujarEscena();
-    //   requestAnimationFrame(render);
-    // }
-    // render();
+    let render = () => {
+      this.avatar.setTraslacion([trasX, trasY, 0]);
+
+      if (this.rotando){
+        console.log('rotando')
+        this.time = this.time - 0.005;
+        this.avatar.setRotacion([0,this.time,0]);
+        phi = 0;
+        theta = 0;
+      } else {
+        this.time = 0;
+        this.avatar.setRotacion([phi, theta, 0]);
+      }
+
+      this.avatar.setEscalado([scale, scale, scale]);
+
+      this.dibujarEscena();
+      requestAnimationFrame(render);
+    }
+    render();
   }
 
   crearNodo(padre:TNodo | null, trasl: vec3, rot: vec3, esc: vec3): TNodo {
@@ -225,6 +247,71 @@ export class MotorGrafico {
     if (error != this.gl.NO_ERROR) {
       console.error('Se produjo un error de WebGL: ', error);
     }
+  }
+
+  mouseDown(event: MouseEvent){
+    event.preventDefault();
+
+    if(event.button == 0){
+      dragLeft = true;
+      old_x = event.pageX;
+      old_y = event.pageY;
+    }
+
+    if(event.button == 2){
+      dragRight = true;
+      old_xRight = event.pageX;
+      old_yRight = event.pageY;
+    }
+  }
+
+  mouseUp(event: MouseEvent){
+    event.preventDefault();
+
+    if(event.button == 0)
+      dragLeft = false;
+
+    if(event.button == 2)
+      dragRight = false;
+  }
+
+  mouseMove(event: MouseEvent){
+    event.preventDefault();
+    console.log('dragLeft', dragLeft )
+    console.log('dragRight', dragRight )
+    //Rotar
+    if(dragLeft){
+      dx = (event.pageX - old_x) * 2 * Math.PI / this.width;
+      dy = (event.pageY - old_y) * 2 * Math.PI / this.height;
+      theta += dx;
+      phi += dy;
+      old_x = event.pageX;
+      old_y = event.pageY;
+    }
+
+    //Mover
+    if(dragRight){
+      dxRight = (event.pageX - old_xRight) * 5 / this.width;
+      dyRight = (event.pageY - old_yRight) * 5 / this.height;
+      trasX += dxRight;
+      trasY += -dyRight;
+      old_xRight = event.pageX;
+      old_yRight = event.pageY;
+    }
+
+    console.log('theta: ', theta, 'phi: ', phi, 'trasX: ', trasX, 'trasY: ', trasY)
+  }
+
+  zoom(event: WheelEvent){
+    event.preventDefault();
+
+    if(event.deltaY < 0)
+      scale += 0.25;
+    else
+      scale -= 0.25;
+
+    scale = Math.min(Math.max(0.25, scale), 4);
+    console.log('scale: ', scale);
   }
 
 }

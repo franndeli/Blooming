@@ -1,7 +1,6 @@
 import { mat4, vec3 } from 'gl-matrix';
 import { ElementRef } from '@angular/core';
-import { GestorRecursos, TRecursoMalla, TNodo, TCamara, TLuz } from '../../graphics';
-
+import { GestorRecursos, TRecursoMalla, TNodo, TCamara, TLuz, TRecursoTextura } from '../../graphics';
 
 export class MotorGrafico {
 
@@ -57,6 +56,11 @@ export class MotorGrafico {
     //Crear cubo
     this.cubo = await this.crearModelo(this.escena, 'untitled.gltf', [0, 0, 0], [45, 0, 45], [1, 1, 1]);
     
+    const textura = new TRecursoTextura('../../../assets/images/profile/user-1.jpg');
+    
+    console.log(textura.getTexture());
+
+    console.log('Este es el cubo', this.cubo);
     //crear avatar
     //this.avatar = await this.crearModelo(this.escena, 'untitled.gltf', [0, 0, 0], [0, 0, 0], [1, 1, 1]);
 

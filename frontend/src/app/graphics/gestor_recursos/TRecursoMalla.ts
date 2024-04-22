@@ -124,9 +124,12 @@ export class TRecursoMalla extends TRecurso {
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vertexBuffer);
     this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.vertices), this.gl.STATIC_DRAW);
     const positionLocation = this.gl.getAttribLocation(this.programId, 'vertPosition');
-    this.gl.enableVertexAttribArray(positionLocation);
     this.gl.vertexAttribPointer(positionLocation, 3, this.gl.FLOAT, false, 0, 0);
-    
+    this.gl.enableVertexAttribArray(positionLocation);
+
+    var textCoordAttribLocation = this.gl.getAttribLocation(this.programId, 'vertTexCoord');
+    this.gl.vertexAttribPointer(textCoordAttribLocation, 2, this.gl.FLOAT, false, 0, 0);
+    this.gl.enableVertexAttribArray(textCoordAttribLocation);
 
     //Normales
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, normalBuffer);
@@ -155,6 +158,7 @@ export class TRecursoMalla extends TRecurso {
     this.gl.vertexAttribPointer(colorLocation, 4, this.gl.FLOAT, false, 0, 0);
     this.gl.enableVertexAttribArray(colorLocation);
 
+    
 
     this.bufVertex = vertexBuffer;
     this.bufNormal = normalBuffer;

@@ -152,14 +152,14 @@ const getAlumnos = async (req, res) => {
             to: datos.EmailTutor,
             subject: 'Bienvenido a Blooming',
             text: 
-`Buenas,
-Desde el ${centro.Nombre} le damos la bienvenida a su hijo a la plataforma Blooming. Se le ha matriculado en la clase ${clase.Nombre}.
-Los datos de acceso son:
-Usuario: ${usuario}
-Contraseña: ${datos.Contraseña}
-            
-Un saludo.
-${centro.Nombre}`
+                `Buenas,
+                Desde el ${centro.Nombre} le damos la bienvenida a su hijo a la plataforma Blooming. Se le ha matriculado en la clase ${clase.Nombre}.
+                Los datos de acceso son:
+                Usuario: ${usuario}
+                Contraseña: ${datos.Contraseña}
+                            
+                Un saludo.
+                ${centro.Nombre}`
         };
 
         transporter.sendMail(mailOptions, (error, info) => {

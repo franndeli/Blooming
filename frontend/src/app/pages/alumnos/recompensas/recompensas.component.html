@@ -1,0 +1,103 @@
+<div class="body-wrapper">
+    <div class="container-fluid">
+        <div class="container-fluid">
+            <h1>Mis puntos: {{ alumnosData.Puntos }}</h1>
+            <h5>Responde las preguntas diariamente para conseguir más puntos</h5>
+            <div class="card">
+                <div class="card-body">
+                    <h3>¡Elige tu recompensa favorita! </h3>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    100 puntos
+                                </div>
+                                <img src="../assets/images/pelicula.png" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Ver una pelicula</h5>
+                                    <p class="card-text">Día de peli y manta, elige tu pelicula favorita y a disfrutar :) </p>
+                                    <button class="btn btn-primary" (click)="canjearRecompensa(100)">¡Canjear!</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    100 puntos
+                                </div>
+                                <img src="../assets/images/parque.png" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Ir al parque</h5>
+                                    <p class="card-text">Ponte las zapatillas que nos vamos de paseo :)</p>
+                                    <button class="btn btn-primary" (click)="canjearRecompensa(100)">¡Canjear!</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    100 puntos
+                                </div>
+                                <img src="../assets/images/helado.png" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Vamos a por un helado</h5>
+                                    <p class="card-text">Empieza a hacer calor... es hora de tomarse un heladito :)</p>
+                                    <button class="btn btn-primary" (click)="canjearRecompensa(100)">¡Canjear!</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    100 puntos
+                                </div>
+                                <img src="../assets/images/juegosdemesa.jpg" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Tarde de juegos de mesa</h5>
+                                    <p class="card-text">Día de juegos de mesa, invita a tus amigos si quieres :) </p>
+                                    <button class="btn btn-primary" (click)="canjearRecompensa(100)">¡Canjear!</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    100 puntos
+                                </div>
+                                <img src="../assets/images/cocina.png" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">A cocinar</h5>
+                                    <p class="card-text">Hoy es el día perfecto para hacer ese plato que tanto echas de menos :)</p>
+                                    <button class="btn btn-primary" (click)="canjearRecompensa(100)">¡Canjear!</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    100 puntos
+                                </div>
+                                <img src="../assets/images/manualidades.jpg" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Hora de manualidades</h5>
+                                    <p class="card-text">Coge papel y pinturas, hoy toca ser imaginativos :)</p>
+                                    <button class="btn btn-primary" (click)="canjearRecompensa(100)">¡Canjear!</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="myModal" class="modal">
+                    <div class="modal-content">
+                        <p id="modalMensaje"></p>
+                        <button (click)="cerrarModal()">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        <a href="/alumnos/sistema-preguntas" class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</a>
+        
+        </div>
+    </div>
+</div>

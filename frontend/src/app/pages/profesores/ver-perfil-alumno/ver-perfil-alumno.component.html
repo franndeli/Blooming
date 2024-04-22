@@ -108,11 +108,12 @@
                             </div>
                             <div style=" text-align: center; margin-top: 20px;">
                                 <ul>
-                                    <li style="margin-top: 7px;"><div><button type="button" class="btn btn-primary m-1">PDF</button>
-                                        <button type="button" class="btn btn-primary m-1">ePub</button>
+                                    <li style="margin-top: 7px;"><div><button type="button" class="btn btn-primary m-1" (click)="generarPDF()">PDF</button>
+                                        <button type="button" class="btn btn-primary m-1" (click)="generarHTML()">HTML</button> 
+                                        
                                     </div></li>
-                                    <li style="margin-top: 7px;"><div><button type="button" class="btn btn-primary m-1">HTML</button>
-                                        <button type="button" class="btn btn-primary m-1">XML</button></div></li>
+                                    <li style="margin-top: 7px;"><div>
+                                        <button type="button" class="btn btn-primary m-1" (click)="generarXML()">XML</button></div></li>
                                 </ul>
                             </div>
                             <div class="mb-4">

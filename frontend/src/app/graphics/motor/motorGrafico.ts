@@ -1,6 +1,6 @@
 import { mat4, vec3 } from 'gl-matrix';
 import { ElementRef } from '@angular/core';
-import { GestorRecursos, TRecursoMalla, TNodo, TCamara, TLuz } from '../../graphics';
+import { GestorRecursos, TRecursoMalla, TNodo, TCamara, TLuz, TRecursoTextura } from '../../graphics';
 
 var clickIzq = false;
 var old_x = 0;
@@ -26,6 +26,7 @@ export class MotorGrafico {
   private height: number = 0;
   public rotando:boolean = true;
   public time:number = 0;
+  private cuboNecesitaActualizar: boolean = true;
 
   public escena!: TNodo;
   private camara!: TNodo;
@@ -40,73 +41,131 @@ export class MotorGrafico {
   private gestorRecursos = new GestorRecursos();
   
   private program: WebGLProgram | null = null;
-  private canvas: ElementRef<HTMLCanvasElement> | null = null;
+  private canvas!: HTMLCanvasElement;
   private gl!: WebGL2RenderingContext;
+
+  private cubo!: any;
 
   constructor(){
     this.modelos = [];
   }
 
   async iniciarEscena(canvasRef: ElementRef<HTMLCanvasElement>) {
+
+    //Iniciamos el canvas
     if(canvasRef && canvasRef.nativeElement) {
-      this.canvas = canvasRef;
-      this.canvas.nativeElement.addEventListener("mousedown", this.mouseDown, false);
-      this.canvas.nativeElement.addEventListener("mouseup", this.mouseUp, false);
-      this.canvas.nativeElement.addEventListener("mouseout", this.mouseUp, false);
-      this.canvas.nativeElement.addEventListener("mousemove", this.mouseMove, false);
-      this.canvas.nativeElement.addEventListener("wheel", this.zoom, false);
+      this.canvas = canvasRef.nativeElement;
+      this.canvas.addEventListener("mousedown", this.mouseDown, false);
+      this.canvas.addEventListener("mouseup", this.mouseUp, false);
+      this.canvas.addEventListener("mouseout", this.mouseUp, false);
+      this.canvas.addEventListener("mousemove", this.mouseMove, false);
+      this.canvas.addEventListener("wheel", this.zoom, false);
+      
+      this.canvas = canvasRef.nativeElement;
+      this.resizeCanvasToDisplaySize(this.canvas);
+
+      console.log('Canvas definido:', this.canvas);
+    } else {
+      console.error('Referencia de canvas no está definida en iniciarEscena');
+      return;
     }
 
+    //Cada vez que se hace resize de la pantalla se llama a la función para redibujar el canvas
+    window.addEventListener('resize', () => this.resizeCanvasToDisplaySize(this.canvas));
+
+    //Creamos el nodo escena
     this.escena = this.crearNodo(null, vec3.create(), vec3.create(), [1, 1, 1]);
 
-    //crear camara
-    this.camara = this.crearCamara(this.escena, [0, 0, 5], [0, 0, 0], [1, 1, 1]);
-    var numCam = this.registrarCamara(this.camara);
-    this.setCamaraActiva(numCam);
-    this.camActiva = this.getCamaraActiva();
+    //Creamos el nodo camara
+    this.camara = this.crearCamara(this.escena, [0, 0, 10], [0, 0, 0], [1, 1, 1]);
 
+    //Para probar si la camara funciona correctamente
+    /*var numCam = this.registrarCamara(this.camara);
+    this.setCamaraActiva(numCam);
+    this.camActiva = this.getCamaraActiva();*/
+
+    //Crear cubo
+    this.cubo = await this.crearModelo(this.escena, 'untitled.gltf', [0, 0, 0], [45, 0, 45], [1, 1, 1]);
+    
+    const textura = new TRecursoTextura('../../../assets/images/profile/user-1.jpg');
+    
+    //console.log(textura.getTexture());
+
+    console.log('Este es el cubo', this.cubo);
     //crear avatar
-    this.avatar = await this.crearModelo(this.escena, 'untitled.gltf', [0, 0, 0], [0, 0, 0], [1, 1, 1]);
+    //this.avatar = await this.crearModelo(this.escena, 'untitled.gltf', [0, 0, 0], [0, 0, 0], [1, 1, 1]);
 
     //crear luces
     
     //this.dibujarEscena();
 
     let render = () => {
-      this.avatar.setTraslacion([trasX, trasY, 0]);
-      this.avatar.setRotacion([phi, theta, psi])
-      this.avatar.setEscalado([escalado, escalado, escalado]);
-
-      this.dibujarEscena();
+      if (this.cuboNecesitaActualizar) {
+        this.cubo.setTraslacion([trasX, trasY, 0]);
+        this.cubo.setRotacion([phi, theta, psi])
+        this.cubo.setEscalado([escalado, escalado, escalado]);
+    
+        this.dibujarEscena();
+      }
       requestAnimationFrame(render);
     }
+    
     render();
+  }
+
+  resizeCanvasToDisplaySize(canvas: HTMLCanvasElement) {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    if (canvas.width !== width || canvas.height !== height) {
+        canvas.width = width;
+        canvas.height = height;
+        return true; //Tamaño ajustado
+    }
+    return false; //Tamaño no ajustado
   }
 
   crearNodo(padre:TNodo | null, trasl: vec3, rot: vec3, esc: vec3): TNodo {
     const nodo = new TNodo(null, padre);
+    
+    //console.log(trasl);
+    //console.log(rot);
+    //console.log(esc);
+
     nodo.setTraslacion(trasl);
     nodo.setRotacion(rot);
     nodo.setEscalado(esc);
     nodo.setActualizarMatriz(true);
 
-    if(padre != null){
+    if(padre !== null){
       padre.addHijo(nodo);
     }
 
-    //console.log('nodo creado: ', nodo)
+    console.log('Nodo creado: ', nodo)
 
     return nodo;
   }
 
   crearCamara(padre: TNodo | null, trasl: vec3, rot: vec3, esc: vec3): TNodo {
     const eCamara = new TCamara();
-    const camara = new TNodo(null, padre);
+    const camara = new TNodo(eCamara, padre);
 
-    camara.setEntidad(eCamara);
+    //Redundante, inicializamos ya el nodo camara con la entidad eCamara
+    //camara.setEntidad(eCamara);
+
+    console.log('Antes de la traslación de la camara', camara.getTraslacion());
     camara.setTraslacion(trasl);
+    console.log('Después de la traslación de la camara', camara.getTraslacion());
+    
+    console.log('Antes del rotado de la camara', camara.getRotacion());
     camara.setRotacion(rot);
+    console.log('Después del rotado de la camara', camara.getRotacion());
+
+    console.log('Antes del escalado de la camara', camara.getEscalado());
     camara.setEscalado(esc);
+    console.log('Después del escalado de la camara', camara.getEscalado());
+
+
     camara.setActualizarMatriz(true);
 
     if(padre != null){
@@ -114,7 +173,6 @@ export class MotorGrafico {
     }
 
     //console.log('camara creada: ', camara)
-
     return camara;
   }
 
@@ -133,20 +191,27 @@ export class MotorGrafico {
     //console.log('luz creada: ', luz)
 
     return luz;
-  }
+  } 
 
   async crearModelo(padre: TNodo | null, fichero: string, trasl: vec3, rot: vec3, esc: vec3): Promise<TNodo> {
-    const modelo = new TNodo(null, padre);
-
     const recurso =  await this.gestorRecursos.getRecurso(fichero, 'malla') as TRecursoMalla;
-    recurso.setNombre(fichero);
-    //console.log('recurso: ', recurso)
+    //recurso.setNombre(fichero);
+    
+    const modelo = new TNodo(recurso, padre);
 
-    modelo.setEntidad(recurso);
     //console.log('entidad del modelo: ', modelo.getEntidad())
+    console.log('Antes de la traslación del modelo', modelo.getTraslacion());
     modelo.setTraslacion(trasl);
+    console.log('Después de la traslación del modelo', modelo.getTraslacion());
+
+    console.log('Antes del rotado del modelo', modelo.getRotacion());
     modelo.setRotacion(rot);
+    console.log('Después del rotado del modelo', modelo.getRotacion());
+
+    console.log('Antes del escalado del modelo', modelo.getEscalado());
     modelo.setEscalado(esc);
+    console.log('Después del escalado del modelo', modelo.getEscalado());
+
     modelo.setActualizarMatriz(true);
 
     if(padre != null){
@@ -160,9 +225,10 @@ export class MotorGrafico {
   }
 
   async dibujarEscena() {
-    this.gl = await this.initWebGL(this.canvas!);
+    this.gl = await this.initWebGL(this.canvas);
     this.checkWebGLError();
-    this.escena.recorrer(mat4.create());
+    //console.log(this.escena.getHijos());
+    await this.escena.recorrer(mat4.create());
   }
 
   registrarCamara(nodoCam: TNodo) {
@@ -208,10 +274,12 @@ export class MotorGrafico {
     }
   }
 
-  private initWebGL(canvas: ElementRef<HTMLCanvasElement>): any{
+  private initWebGL(canvas: HTMLCanvasElement): any{
     let gl = null;
-    const canva = canvas.nativeElement;
-    gl = canva.getContext('webgl2', { antialias: true, depth: true, stencil: true });
+
+    //const canva = canvas;
+
+    gl = canvas.getContext('webgl2', { antialias: true, depth: true, stencil: true });
 
     if (!gl) {
       console.error('No se puede inicializar WebGL. Tu navegador o máquina puede no soportarlo.');
@@ -219,11 +287,13 @@ export class MotorGrafico {
     }
 
     gl.enable(gl.DEPTH_TEST);
-    gl.clearColor(0.0, 2.0, 4.0, 1.0);
+    gl.clearColor(0.0, 0.6, 1.0, 1.0);
     gl.clearDepth(1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.enable(gl.CULL_FACE);
     gl.cullFace(gl.BACK);
+
+    console.log('Se ha dibujado el canvas');
 
     return gl;
   }
@@ -245,6 +315,7 @@ export class MotorGrafico {
 
     if(event.button == 0){
       clickIzq = true;
+      this.cuboNecesitaActualizar = true
       old_x = event.pageX;
       old_y = event.pageY;
     }
@@ -261,6 +332,7 @@ export class MotorGrafico {
 
     if(event.button == 0){
       clickIzq = false;
+      this.cuboNecesitaActualizar = false; // Resetear la bandera
     }
     if(event.button == 2){
       clickDcho = false;
@@ -270,7 +342,7 @@ export class MotorGrafico {
   mouseMove(event: MouseEvent){
     event.preventDefault();
     //Rotar
-    let velocidadRotacion = 10;
+    let velocidadRotacion = 30;
     if(clickIzq){
       dx = (event.pageX - old_x) * 2 * Math.PI / this.width * velocidadRotacion;
       dy = (event.pageY - old_y) * 2 * Math.PI / this.height * velocidadRotacion;

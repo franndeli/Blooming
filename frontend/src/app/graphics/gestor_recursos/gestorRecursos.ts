@@ -15,7 +15,7 @@ export class GestorRecursos {
   async getRecurso(nombre: string, tipo: string): Promise<any> {
     let recurso = null;
 
-    for(let i=0;i<this.recursos.length;i++){
+    for(let i = 0; i < this.recursos.length; i++){
       if(this.recursos[i].getNombre() == nombre){
         recurso = this.recursos[i];
         console.log('Recurso encontrado');
@@ -42,7 +42,9 @@ export class GestorRecursos {
       }
 
       await recurso.cargarRecurso(nombre);
-      recurso.setNombre(nombre);
+
+      //recurso.setNombre(nombre);
+      
       this.recursos.push(recurso);
     }
     return recurso;

@@ -72,6 +72,8 @@ export class TNodo {
         mat4.rotateZ(matrizAux, matrizAux, this.radianes(this.rotacion[2]));
         mat4.scale(matrizAux, matrizAux, this.escalado);
 
+        //console.log('Calculando matriz auxiliar', matrizAux);
+
         return matrizAux;
     }
 

@@ -1,8 +1,10 @@
 precision mediump float;
 
-varying vec4 fragColor; // Añade esta línea
-varying vec3 fragNormal; // Añade esta línea
+varying vec4 fragColor;
+varying vec2 fragTextCoord;
+
+uniform sampler2D sampler;
 
 void main(){
-    gl_FragColor = fragColor; // Cambia esta línea
+    gl_FragColor = texture2D(sampler, fragTextCoord);
 }

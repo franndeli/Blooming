@@ -1,13 +1,10 @@
 html, body {
+    width: 100%;
+    height: 100%;
     margin: 0;
-    padding: 0;
-    overflow: hidden;
+    overflow: hidden; /* Evita desplazamiento */
 }
 
-canvas {
-    /* width: 100%;
-    height: 100vh;
-    display: block; */
-    width : 800px;
-    height : 600px;
+#canvasWebGL {
+    display: block; /* Elimina cualquier espacio extra */
 }

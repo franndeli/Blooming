@@ -1,0 +1,43 @@
+
+<body>
+    <div class="disposición">
+      <h1 class="title" *ngIf="!selectedAvatar">Elige tu avatar favorito</h1>
+    
+      <div class="container"> 
+        <div class="avatar-card" (click)="selectAvatar('bolita')">
+          <img src="assets/images/threejs/bolita.jpeg" alt="bolita">
+          <span class="avatar-name">Bolita</span>
+        </div>
+        <div class="avatar-card" (click)="selectAvatar('ovalito')">
+          <img src="assets/images/threejs/ovalito.jpeg" alt="ovalito">
+          <span class="avatar-name">Ovalito</span>
+        </div>
+        <div class="avatar-card" (click)="selectAvatar('saturnito')">
+          <img src="assets/images/threejs/saturnito.jpeg" alt="saturnito">
+          <span class="avatar-name">Saturnito</span>
+        </div>
+        <div class="avatar-card" (click)="selectAvatar('lapicito')">
+          <img src="assets/images/threejs/lapicito.jpeg" alt="lapicito">
+          <span class="avatar-name">Lapicito</span>
+        </div>
+        <div class="avatar-card" (click)="selectAvatar('cuadradin')">
+          <img src="assets/images/threejs/cuadradin.jpeg" alt="cuadradin">
+          <span class="avatar-name">Cuadradin</span>
+        </div>
+        <div class="avatar-card" (click)="selectAvatar('cilindrito')">
+          <img src="assets/images/threejs/cilindrito.jpg" alt="cilindrito">
+          <span class="avatar-name">Cilindrito</span>
+        </div>
+        <!-- Agrega las demás tarjetas aquí -->
+      </div>
+    </div>
+    <div *ngIf="selectedAvatar" class="selected-avatar">
+      <div class="avatar-card">
+        <img [src]="'assets/images/threejs/' + selectedAvatar + '.jpeg'" alt="">
+      </div>
+      <div class="message">Has elegido a {{ selectedAvatar }}</div>
+      <button class="boton" (click)="empezar()">Comenzar</button>
+    </div>
+    
+    
+    </body>

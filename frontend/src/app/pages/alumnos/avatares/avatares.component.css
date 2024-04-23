@@ -1,0 +1,155 @@
+/* Estilos para el fondo gradiente */
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background: linear-gradient(-45deg, #ee7752, #3ce7a5, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradientBG 8s ease infinite;
+  }
+  
+  /* Animación para el fondo gradiente */
+  @keyframes gradientBG {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+  }
+  
+  .title {
+    font-size: 24px;
+    color: #fff;
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-family: "Poppins", sans-serif;
+    animation: bounce 1s infinite alternate;
+  }
+  
+  @keyframes bounce {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-10px);
+    }
+  }
+  
+  /* Estilos para el contenedor principal */
+  .disposición {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  /* Estilos para el contenedor de avatares */
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  /* Estilos para las cartas de avatar */
+  .avatar-card {
+    width: 150px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    animation: pulse 1s infinite alternate;
+  }
+  
+  /* Animación para el pulso */
+  @keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.05);
+    }
+  }
+  
+  .avatar-card > * {
+    grid-area: 1/1;
+  }
+  
+  .avatar-card:hover {
+    transform: translateY(-10px);
+  }
+  
+  .avatar-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .avatar-card:hover img {
+    transform: scale(1.1);
+  }
+  
+  .avatar-name {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(209, 173, 173, 0.5);
+    color: white;
+    padding: 5px;
+    text-align: center;
+    font-size: 14px;
+  }
+  
+  .selected-avatar {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    z-index: 9999;
+    display: flex; /* Cambiar la disposición a vertical */
+    flex-direction: column; /* Alinear los elementos en columna */
+    align-items: center; /* Centrar los elementos horizontalmente */
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  .selected-avatar .avatar-card {
+    margin-bottom: 20px; /* Espacio entre la tarjeta y el mensaje/botón */
+  }
+  
+  .message {
+    font-size: 24px;
+    color: #000000;
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-family: "Poppins", sans-serif;
+  }
+  
+  .boton {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .boton:hover{
+    background-color: #247227;
+  }
+  

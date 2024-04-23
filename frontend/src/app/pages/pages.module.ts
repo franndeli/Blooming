@@ -57,6 +57,7 @@ import { EditarProfesorComponent } from './profesores/editar-profesor/editar-pro
 //ALUMNOS
 import { SistemaPreguntasComponent } from './alumnos/sistema-preguntas/sistema-preguntas.component';
 import { ActividadRecienteNegativaComponent } from './profesores/actividad-reciente-negativa/actividad-reciente-negativa.component';
+import { AvataresComponent } from './alumnos/avatares/avatares.component';
 
 @NgModule({
   declarations: [
@@ -96,7 +97,8 @@ import { ActividadRecienteNegativaComponent } from './profesores/actividad-recie
       PerfilProfesorComponent,
       EditarProfesorComponent,
       SistemaPreguntasComponent,
-      ActividadRecienteNegativaComponent
+      ActividadRecienteNegativaComponent,
+      AvataresComponent
   ],
   exports: [
     AdminLayoutComponent,

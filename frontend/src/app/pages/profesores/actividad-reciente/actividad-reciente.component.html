@@ -21,12 +21,11 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                                     <th><span><i class="ti ti-question-mark" style="font-size: 15px;"></i></span> Pregunta</th>
                                                     <th><span><i class="ti ti-check" style="font-size: 15px;"></i></span> Respuesta</th>
                                                     <th><span><i class="ti ti-alert-circle" style="font-size: 15px;"></i></span> Grado</th>
-                                                    <th></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr *ngFor="let reciente of recientesData">
-                                                    <td>{{reciente.Alumno.Nombre}} {{reciente.Alumno.Apellidos}}</td>
+                                                    <td><button class="btn-hover" (click)="verPerfil(reciente.ID_Alumno)">{{reciente.Alumno.Nombre}} {{reciente.Alumno.Apellidos}}</button></td>
                                                     <td>{{reciente.Alumno.Clase.Nombre}}</td>
                                                     <td><span [ngClass]="getAmbito(reciente.Pregunta.Ambito.Nombre)">{{reciente.Pregunta.Ambito.Nombre}}</span></td>
                                                     <td>{{reciente.Pregunta.TextoPregunta}}</td>
@@ -36,10 +35,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                                         <span class="badge bg-amarillo rounded-3 fw-semibold" *ngSwitchCase="0">Normal</span>
                                                         <span class="badge bg-verde1 rounded-3 fw-semibold" *ngSwitchCase="1">Buena</span>
                                                         <span class="badge bg-success rounded-3 fw-semibold" *ngSwitchCase="2">Muy Buena</span>
-                                                    </td>
-                                                    <td>
-                                                        <button class="btn btn-primary" (click)="verPerfil(reciente.ID_Alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button>
-                                                    </td>
+                                                    </td>   
                                                 </tr>
                                             </tbody>
                                         </table>

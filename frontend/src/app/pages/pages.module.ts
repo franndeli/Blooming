@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SidebarComponent } from '../commons/sidebar/sidebar.component';
@@ -111,6 +111,7 @@ import { RecompensasComponent } from './alumnos/recompensas/recompensas.componen
     FormsModule,
     ReactiveFormsModule,
     ComponentsModule
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class PagesModule { }

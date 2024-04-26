@@ -6,7 +6,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
       <div class="row">
         <div class="col-lg-6 align-items-strech">
           <div class="card">
-            <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
+            
               <div class="card-body">
                 <h5 class="card-title fw-semibold mb-4"> Clase {{claseData.Nombre}} <span><i class="ti ti-friends" style="font-size: 20px;"></i></span></h5>
                 <div class="card">
@@ -17,20 +17,20 @@ data-sidebar-position="fixed" data-header-position="fixed">
                             <tr>
                                 <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
                                 <th><span><i class="ti ti-pin" style="font-size: 15px;"></i></span> Estado</th>
-                                <th></th>
+                                <!--<th></th>-->
                             </tr>
                         </thead>
                         <tbody>
                           <tr *ngFor="let alumno of alumnosData">
-                              <td>{{alumno.Nombre}} {{alumno.Apellidos}}</td>
+                              <td><button class="btn-hover" (click)="verPerfil(alumno.ID_Alumno)">{{alumno.Nombre}} {{alumno.Apellidos}}</button></td>
                               <td>
                                   <div class="d-flex align-items-center gap-2">
                                       <span [ngClass]="getClaseEstado(alumno.Estado)">{{alumno.Estado}}</span>
                                   </div>
                               </td>
-                              <td>
+                              <!---<td>
                                   <button class="btn btn-primary" (click)="verPerfil(alumno.ID_Alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button>
-                              </td>
+                              </td>-->
                           </tr>
                         </tbody>
                       </table>
@@ -45,16 +45,16 @@ data-sidebar-position="fixed" data-header-position="fixed">
               </div>
             </div> 
           </div>
-        </div>
+        
         <div class="col-lg-6">
           <div class="row">
             <div class="col-lg-12">
               <div class="card overflow-hidden position-relative">
-                <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
+                
                   <div class="card-body"  >
                     <h5 class="card-title mb-9 fw-semibold" style="margin-left: 10px; margin-top: 10px;">Gráfica general <span><i class="ti ti-graph" style="font-size: 20px;"></i></span></h5> 
                   </div>
-                  <div class="card-body" style="background-color: #fff; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);">
+                  <!--<div class="card-body" style="background-color: #fff; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);">--->
                   <div class="position-absolute top-0 end-0 mt-3 me-2">
                     <select class="form-select py-1 ps-2 border-1 border-success bg-light rounded-pill" 
                             (change)="onChangeOption($event)" 
@@ -69,16 +69,16 @@ data-sidebar-position="fixed" data-header-position="fixed">
                   </div>
                   <div id="chart1"></div>
                   <p class="text-center" *ngIf="mostrarMensaje && !hayDatos">No hay datos registrados todavía</p>
-                </div>
+                
                 </div>
               </div>
             </div>
           </div>
         </div>   
-      </div>
+     
       <div class="container-fluid" style="padding: 0;">
         <div class="card">
-            <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
+            
                 <div class="card-body">
                     <h5 class="card-title fw-semibold mb-4">Últimas preguntas respondidas de esta clase <span><i class="ti ti-activity" style="font-size: 20px;"></i></span></h5>
                     <div class="card">
@@ -92,12 +92,11 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                             <th><span><i class="ti ti-question-mark" style="font-size: 15px;"></i></span> Pregunta</th>
                                             <th><span><i class="ti ti-check" style="font-size: 15px;"></i></span> Respuesta</th>
                                             <th><span><i class="ti ti-alert-circle" style="font-size: 15px;"></i></span> Grado</th>
-                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                       <tr *ngFor="let respuesta of respuestasData">
-                                        <td>{{respuesta.Alumno.Nombre}} {{respuesta.Alumno.Apellidos}}</td>
+                                        <td><button class="btn-hover" (click)="verPerfil(respuesta.ID_Alumno)">{{respuesta.Alumno.Nombre}} {{respuesta.Alumno.Apellidos}}</button></td>
                                         <td><span [ngClass]="getAmbito(respuesta.Pregunta.Ambito.Nombre)">{{respuesta.Pregunta.Ambito.Nombre}}</span></td>
                                         <td>{{respuesta.Pregunta.TextoPregunta}}</td>
                                         <td>{{respuesta.Opcion.TextoOpcion}}</td>
@@ -106,9 +105,6 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                                         <span class="badge bg-amarillo rounded-3 fw-semibold" *ngSwitchCase="0">Normal</span>
                                                         <span class="badge bg-verde1 rounded-3 fw-semibold" *ngSwitchCase="1">Buena</span>
                                                         <span class="badge bg-success rounded-3 fw-semibold" *ngSwitchCase="2">Muy Buena</span>
-                                        </td>
-                                        <td>
-                                          <button class="btn btn-primary" (click)="verPerfil(respuesta.ID_Alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button>
                                         </td>
                                       </tr>
                                     </tbody>
@@ -121,7 +117,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                     </div>
                 </div>
             </div>
-        </div>
+        
         <a href="/profesores/dashboard" class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</a>
       </div>
     </div>

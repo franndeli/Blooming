@@ -15,6 +15,8 @@ export class ArbolEscenaComponent implements AfterViewInit {
   constructor(private motorService: MotorService) {}
 
   async ngAfterViewInit() {
-    this.motorService.inicializarMotor(this.canvasRef);
+    // Se calcula aleatoriamente que interfaz toca
+    let interfaz = 1;
+    this.motorService.inicializarMotor(this.canvasRef, interfaz);
   }
 }

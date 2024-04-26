@@ -86,9 +86,9 @@ export class MotorGrafico {
     this.camActiva = this.getCamaraActiva();*/
 
     //Crear cubo
-    this.cubo = await this.crearModelo(this.escena, 'untitled.gltf', [0, 0, 0], [0, 0, 0], [1, 1, 1]);
+    this.cubo = await this.crearModelo(this.escena, 'cuadradin_avatar.gltf', [0, 0, 0], [0, 0, 0], [1, 1, 1]);
     
-    const textura = new TRecursoTextura('../../../assets/images/profile/user-1.jpg');
+    //const textura = new TRecursoTextura('../../../assets/images/profile/user-1.jpg');
 
     //crear luces
 
@@ -193,7 +193,7 @@ export class MotorGrafico {
 
   async dibujarEscena() {
     this.gl = await this.initWebGL(this.canvas);
-    this.checkWebGLError();
+    //this.checkWebGLError();
     //console.log(this.escena.getHijos());
     await this.escena.recorrer(mat4.create());
   }

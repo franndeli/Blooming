@@ -8,7 +8,13 @@ import { Console } from 'console';
 import * as xmlbuilder from 'xmlbuilder';
 import jsPDF from 'jspdf';
 import Epub from 'epub-gen';
+import Papa from 'papaparse';
 
+interface Respuesta {
+  FechaRespuesta: string;
+  Pregunta: { TextoPregunta: string };
+  Opcion: { TextoOpcion: string };
+}
 
 @Component({
   selector: 'app-ver-perfil-alumno',
@@ -308,4 +314,43 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
     window.URL.revokeObjectURL(url);
   }
 
+  generarCSV() {
+    function quitarAcentos(cadena: string): string {
+      return cadena.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+    const nombreAlumno = `${this.alumnosData.Nombre} ${this.alumnosData.Apellidos}`;
+    const csvData: any[] = this.respuestasData.map((respuesta: Respuesta) => ({
+      Fecha: respuesta.FechaRespuesta,
+      Pregunta: quitarAcentos(respuesta.Pregunta.TextoPregunta),
+      Opcion: quitarAcentos(respuesta.Opcion.TextoOpcion)
+    }));
+  
+    let csvContent = `"Nombre del Alumno: ${nombreAlumno}"\n`;
+    csvContent += 'Fecha,Pregunta,Opcion\n';
+    csvData.forEach((item: any) => {
+      const row = [
+        item.Fecha,
+        `"${decodeURIComponent(item.Pregunta).replace(/"/g, '""')}"`,
+        `"${decodeURIComponent(item.Opcion).replace(/"/g, '""')}"`
+      ];
+      csvContent += row.join(',') + '\n';
+    });
+  
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.setAttribute('download', 'respuestas_alumno.csv');
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
 }

@@ -57,3 +57,10 @@
 .bg-emociones {
     background-color: rgb(163, 219, 189) !important;
 }
+
+#chart {
+    position: relative;
+    height: 45vh;
+    overflow: hidden;
+  }
+  

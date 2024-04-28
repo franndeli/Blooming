@@ -2,13 +2,15 @@
 const sequelize = require('../database/configdb');
 const { QueryTypes } = require('sequelize');
 const Sesion = require('../models/sesion');
+const Alumno = require('../models/alumno');
 
 const getSesiones = async (req, res) => {
     try {
-        const limite = Number(req.query.dias) || 7;
+        const dias = Number(req.query.dias);
+        const limite = dias || 7;
         const queryParams = req.query;
 
-        const validParams = ['ID_Sesion', 'ID_Alumno', 'FechaInicio', 'FechaFin', 'dias'];
+        const validParams = ['ID_Sesion', 'ID_Alumno', 'ID_Centro', 'FechaInicio', 'FechaFin', 'dias'];
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {
@@ -17,54 +19,35 @@ const getSesiones = async (req, res) => {
         
         const queryOptions = {};
         for (const param in queryParams) {
-            if (validParams.includes(param) &&  param !== 'dias') {
+            if (validParams.includes(param) &&  param !== 'dias' && param !== 'ID_Centro') {
                 if (param === 'ID_Sesion') {
                     queryOptions[param] = queryParams[param];
                 } else {
                     queryOptions[param] = { [sequelize.Op.like]: `${queryParams[param]}` };
                 }
             }
-        }
-
-        let sesiones = await Sesion.findAll({ where: queryOptions, order: [['FechaFin', 'DESC']], limit: limite });
-
-        sesiones = sesiones.sort((a, b) => a.FechaFin.fecha > b.FechaFin.fecha ? 1 : -1);
-
-        res.json({
-            ok: true,
-            msg: 'getSesiones',
-            sesiones
-        });
-    } catch (error) {
-        console.error("Error al obtener las sesiones:", error);
-        res.status(500).json({ statusCode: 500, message: "Error al obtener las sesiones" });
-    }
-}
-
-const getSesionesAlumnosCentro = async (req, res) => {
-    try {
-        const limite = Number(req.query.dias) || 7;
-        const queryParams = req.query;
-
-        const validParams = ['ID_Sesion', 'ID_Alumno', 'FechaInicio', 'FechaFin', 'dias'];
-
-        const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
-        if (!isValidQuery) {
-            return res.status(400).json({ statusCode: 400, message: "Parámetros de búsqueda no válidos en Sesiones" });
         }
         
-        const queryOptions = {};
-        for (const param in queryParams) {
-            if (validParams.includes(param) &&  param !== 'dias') {
-                if (param === 'ID_Sesion') {
-                    queryOptions[param] = queryParams[param];
-                } else {
-                    queryOptions[param] = { [sequelize.Op.like]: `${queryParams[param]}` };
-                }
-            }
+        if(dias == 0){
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+            queryOptions['FechaInicio'] = { [sequelize.Op.gte]: sevenDaysAgo };
         }
 
-        let sesiones = await Sesion.findAll({ where: queryOptions, order: [['FechaFin', 'DESC']], limit: limite });
+        let sesiones;
+        if (dias == 0) {
+            sesiones = await Sesion.findAll({
+                include: [{
+                    model: Alumno,
+                    where: { ID_Centro: queryParams.ID_Centro },
+                    required: true
+                }],
+                where: queryOptions,
+                order: [['FechaFin', 'DESC']]
+            });
+        } else {
+            sesiones = await Sesion.findAll({ where: queryOptions, order: [['FechaFin', 'DESC']], limit: limite });
+        }
 
         sesiones = sesiones.sort((a, b) => a.FechaFin.fecha > b.FechaFin.fecha ? 1 : -1);
 
@@ -171,4 +154,4 @@ const getSesionesCount = async (req, res) => {
     }
 };
 
-module.exports = { getSesiones, createSesion, updateSesion, deleteSesion, getSesionesCount, getSesionesAlumnosCentro};
+module.exports = { getSesiones, createSesion, updateSesion, deleteSesion, getSesionesCount};

@@ -50,7 +50,7 @@ export class ActividadRecienteComponent implements OnInit {
   }
 
   obtenerSesionesAlumnos(){
-    this.sesionService.getSesiones().subscribe((res: any) => {
+    this.sesionService.getSesionesCentro(this.idCentro).subscribe((res: any) => {
       console.log(res);
       this.sesionesData = [];
       for(let i=0; i < this.alumnosData.length ; i++){
@@ -60,7 +60,7 @@ export class ActividadRecienteComponent implements OnInit {
           }
         }  
       }
-      console.log(this.sesionesData);
+      //console.log(this.sesionesData);
       this.contarSesionesPorDia();
       
     }); 

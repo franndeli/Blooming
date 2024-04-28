@@ -1,4 +1,5 @@
 const Clase = require('./clase');
+const Sesion = require('./sesion');
 const Centro = require('./centro');
 const Alumno = require('./alumno');
 const Ambito = require('./ambito');
@@ -38,3 +39,7 @@ Respuesta.belongsTo(Opcion, { foreignKey: 'ID_Opcion' });
 Alumno.hasMany(Respuesta, { foreignKey: 'ID_Alumno' });
 Pregunta.hasMany(Respuesta, { foreignKey: 'ID_Pregunta' });
 Opcion.hasMany(Respuesta, { foreignKey: 'ID_Opcion' });
+
+//Relaciones entre tablas Sesion-Alumno, obtener las sesiones de un determinado Centro
+Alumno.hasMany(Sesion, { foreignKey: 'ID_Alumno' });
+Sesion.belongsTo(Alumno, { foreignKey: 'ID_Alumno' });

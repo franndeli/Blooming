@@ -63,12 +63,9 @@ export class MotorGrafico {
       this.canvas.addEventListener("click", this.cuboService.rayPicking.bind(this), false);
 
       this.canvas = canvas;
-      console.log(this.canvas)
       
-      //this.canvas = canvas;
       this.resizeCanvasToDisplaySize(this.canvas);
 
-      //console.log('Canvas definido:', this.canvas);
     } else {
       console.error('Canvas no definido en iniciarEscena');
       return;
@@ -384,12 +381,14 @@ export class MotorGrafico {
 
     let tvec = vec3.subtract(vec3.create(), rayOrigin, v0);
     let u = vec3.dot(tvec, pvec) * invDet;
+
     if (u < 0 || u > 1) {
       return null;
     }
 
     let qvec = vec3.cross(vec3.create(), tvec, edge1);
     let v = vec3.dot(rayDirection, qvec) * invDet;
+    
     if (v < 0 || u + v > 1) {
       return null;
     }

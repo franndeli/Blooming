@@ -25,6 +25,15 @@ export class CuboService {
     private camActiva: any;
     private cubo!: TNodo;
 
+    private caras = [
+        { vertices: [vec3.fromValues(-1, -1, 1), vec3.fromValues(-1, 1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, -1, 1)], nombre: "Delantera" },
+        { vertices: [vec3.fromValues(1, -1, -1), vec3.fromValues(1, 1, -1), vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, -1, -1)], nombre: "Trasera" },
+        { vertices: [vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, 1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, 1, -1)], nombre: "Superior" },
+        { vertices: [vec3.fromValues(-1, -1, -1), vec3.fromValues(1, -1, -1), vec3.fromValues(1, -1, 1), vec3.fromValues(-1, -1, 1)], nombre: "Inferior" },
+        { vertices: [vec3.fromValues(1, -1, -1), vec3.fromValues(1, -1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, 1, -1)], nombre: "Derecha" },
+        { vertices: [vec3.fromValues(-1, -1, 1), vec3.fromValues(-1, -1, -1), vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, 1, 1)], nombre: "Izquierda" }
+    ];
+
     public async crearCubo(motor: MotorGrafico, escena: TNodo){
         this.motorGrafico = motor;
         this.canvas = this.motorGrafico.getCanvas();
@@ -85,40 +94,31 @@ export class CuboService {
     }
 
     rayPicking(event: MouseEvent) {
-        let caras = [{ vertices: [vec3.fromValues(-1, -1, 1), vec3.fromValues(-1, 1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, -1, 1)], nombre: "Delantera" },{ vertices: [vec3.fromValues(1, -1, -1), vec3.fromValues(1, 1, -1), vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, -1, -1)], nombre: "Trasera" },{ vertices: [vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, 1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, 1, -1)], nombre: "Superior" },{ vertices: [vec3.fromValues(-1, -1, -1), vec3.fromValues(1, -1, -1), vec3.fromValues(1, -1, 1), vec3.fromValues(-1, -1, 1)], nombre: "Inferior" },{ vertices: [vec3.fromValues(1, -1, -1), vec3.fromValues(1, -1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, 1, -1)], nombre: "Derecha" },{ vertices: [vec3.fromValues(-1, -1, 1), vec3.fromValues(-1, -1, -1), vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, 1, 1)], nombre: "Izquierda" }];
-        // Paso 1: Calcular el rayo de picking
         let rect = this.canvas.getBoundingClientRect();
-        // Coordenadas normalizadas del click del ratón
         let x = ((event.clientX - rect.left) / (rect.right - rect.left)) * 2 - 1;
         let y = -((event.clientY - rect.top) / (rect.bottom - rect.top)) * 2 + 1;
     
-        // Rayo disparado desde la cámara hacia la escena
         let rayClip = vec3.fromValues(x, y, -1);
         let rayEye = vec3.transformMat4(vec3.create(), rayClip, mat4.invert(mat4.create(), this.camActiva.getEntidad().getProjMatrix()));
         rayEye[2] = -1;
         rayEye[3] = 0;
     
-        // Rayo en coordenadas de mundo
         let rayWorld = vec3.transformMat4(vec3.create(), rayEye, mat4.invert(mat4.create(), this.camActiva.getEntidad().getViewMatrix()));
         rayWorld = vec3.normalize(rayWorld, rayWorld);
     
-        // Paso 2: Iterar sobre todos los objetos en la escena
         let intersecciones = [];
         let caraSeleccionada = null;
     
-        // Paso 3: Transformar el rayo al espacio local del objeto
         let matrizTransfInversa = mat4.invert(mat4.create(), this.modelos[0].getMatrizTransf());
-        let localRayOrigin = vec3.transformMat4(vec3.create(), this.camActiva.getTraslacion(), matrizTransfInversa); // Origen del rayo en espacio local
-        let localRayDirection = vec3.transformMat3(vec3.create(), rayWorld, mat3.normalFromMat4(mat3.create(), matrizTransfInversa)); // Dirección del rayo en espacio local
+        let localRayOrigin = vec3.transformMat4(vec3.create(), this.camActiva.getTraslacion(), matrizTransfInversa);
+        let localRayDirection = vec3.transformMat3(vec3.create(), rayWorld, mat3.normalFromMat4(mat3.create(), matrizTransfInversa));
         
-        // Paso 4: Realizar la intersección del rayo con el objeto en su espacio local
-        for (let cara of caras) {
+        for (let cara of this.caras) {
           let v0 = cara.vertices[0];
           let v1 = cara.vertices[1];
           let v2 = cara.vertices[2];
           let v3 = cara.vertices[3];
     
-          // Comprobar la intersección con los dos triángulos de la cara
           let t1 = this.intersectRayTriangle(localRayOrigin, localRayDirection, v0, v1, v2);
           let t2 = this.intersectRayTriangle(localRayOrigin, localRayDirection, v0, v2, v3);
     
@@ -127,20 +127,18 @@ export class CuboService {
           }
         }
     
-        // Si no se encontró ninguna intersección, devolver un mensaje indicando que el click fue fuera del cubo
         if (intersecciones.length === 0) {
             console.log("Click fuera del cubo");
             return;
         }
     
-        // Ordenar las intersecciones por la distancia desde el origen del rayo y seleccionar la más cercana
         intersecciones.sort((a, b) => a.t - b.t);
         caraSeleccionada = intersecciones[0].cara;
         
         console.log("Cara seleccionada: " + caraSeleccionada);
-      }
+    }
     
-      intersectRayTriangle(rayOrigin: vec3, rayDirection: vec3, v0: vec3, v1: vec3, v2: vec3): number | null {
+    intersectRayTriangle(rayOrigin: vec3, rayDirection: vec3, v0: vec3, v1: vec3, v2: vec3): number | null {
        return null
     }
 }

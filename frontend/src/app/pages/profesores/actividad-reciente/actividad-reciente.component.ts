@@ -44,8 +44,8 @@ export class ActividadRecienteComponent implements OnInit {
   obtenerAlumnosCentro(){
     this.alumnoService.getAlumnosCentro(this.idCentro).subscribe((res: any) => {
       this.alumnosData = res.alumnos;
-      this.obtenerSesionesAlumnos();
-      this.contarSesiones();  
+      this.obtenerSesionesAlumnos(); 
+      console.log(this.alumnosData);
     });
   }
 
@@ -53,34 +53,22 @@ export class ActividadRecienteComponent implements OnInit {
     this.sesionService.getSesiones().subscribe((res: any) => {
       console.log(res);
       this.sesionesData = [];
-      for(let i=0; i < res.sesiones.length; i++){
-        for(let j=0; j < this.alumnosData.length; j++){
-          if(res.sesiones[i].ID_Alumno === this.alumnosData[j].ID_Alumno){
-            this.sesionesData.push(res.sesiones[i]);
-            
+      for(let i=0; i < this.alumnosData.length ; i++){
+        for(let j=0; j < res.sesiones.length; j++){
+          if(res.sesiones[j].ID_Alumno === this.alumnosData[i].ID_Alumno){
+            this.sesionesData.push(res.sesiones[j]);
           }
         }  
       }
       console.log(this.sesionesData);
-      this.dibujarGrafica();
+      this.contarSesionesPorDia();
+      
     }); 
     const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   }
 
-  contarSesiones(){
-    this.sesionService.getSessionsByDay(this.idCentro).subscribe(
-      (res: any) => {
-        this.sessionsData = res;
-        console.log('Datos de sesiones por día:', this.sessionsData);
-      },
-      (error) => {
-        console.error('Error al obtener datos de sesiones por día:', error);
-      }
-    );
-  }
-
+  
  
-
   obtenerActividadReciente(buscar: string) {
     this.busqueda = buscar;
     this.respuestaService.getRespuestasCentro(this.idCentro, 0, this.posActual, this.filPag).subscribe((res: any) => {
@@ -143,54 +131,51 @@ export class ActividadRecienteComponent implements OnInit {
     return color;
   }
 
+  contarSesionesPorDia() {
+    const sesionesPorDia: { [fecha: string]: number } = {};
   
-  dibujarGrafica(){
+    this.sesionesData.forEach((sesion: any) => {
+      // Verificar si la propiedad 'FechaInicio.Fecha' está presente y tiene un formato correcto
+      if (sesion.FechaInicio && sesion.FechaInicio.Fecha && typeof sesion.FechaInicio.Fecha === 'string') {
+        const fechaInicio = new Date(sesion.FechaInicio.Fecha);
+        const diaSemana = fechaInicio.getDay(); // Obtener el día de la semana (0: Domingo, 1: Lunes, ...)
+        sesionesPorDia[diaSemana] = (sesionesPorDia[diaSemana] || 0) + 1; // Contar sesiones por día
+      } else {
+        console.error('La propiedad "FechaInicio.Fecha" no está presente o tiene un formato incorrecto:', sesion);
+        // Puedes agregar lógica adicional para manejar estos casos, como ignorar la sesión o registrar un error
+      }
+    });
+  
+    // Actualizar el array actividadPorDia con los datos de sesionesPorDia
+    this.actividadPorDia = [0, 0, 0, 0, 0, 0, 0]; // Inicializar el array con 0 para cada día de la semana
+    Object.keys(sesionesPorDia).forEach((dia) => {
+      this.actividadPorDia[parseInt(dia)] = sesionesPorDia[dia];
+    });
+    console.log(sesionesPorDia);
+    this.dibujarGrafica(); // Llamar a la función para dibujar la gráfica
+  }
+  
+  dibujarGrafica() {
     var chartDom = document.getElementById('chart');
     var myChart = echarts.init(chartDom);
     var option;
 
-    const axisData = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    const data = axisData.map(function (item, i) {
-      return Math.round(Math.random() * 1000 * (i + 1));
-    });
-    const links = data.map(function (item, i) {
-      return {
-        source: i,
-        target: i + 1
-      };
-    });
-    links.pop();
     option = {
       title: {
-        text: 'Actividad Reciente'
+        text: 'Actividad de los alumnos en la aplicación'
       },
       tooltip: {},
       xAxis: {
         type: 'category',
-        boundaryGap: false,
-        data: axisData
+        data: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
       },
       yAxis: {
         type: 'value'
       },
-      series: [
-        {
-          type: 'graph',
-          layout: 'none',
-          coordinateSystem: 'cartesian2d',
-          symbolSize: 40,
-          label: {
-            show: true
-          },
-          edgeSymbol: ['circle', 'arrow'],
-          edgeSymbolSize: [4, 10],
-          data: data,
-          links: links,
-          lineStyle: {
-            color: '#2f4554'
-          }
-        }
-      ]
+      series: [{
+        type: 'bar',
+        data: this.actividadPorDia
+      }]
     };
     option && myChart.setOption(option);
   }

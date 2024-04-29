@@ -164,18 +164,24 @@ export class ActividadRecienteComponent implements OnInit {
       title: {
         text: 'Actividad de los alumnos en la aplicación'
       },
-      tooltip: {},
       xAxis: {
         type: 'category',
+        boundaryGap: false,
         data: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
       },
       yAxis: {
         type: 'value'
       },
-      series: [{
-        type: 'bar',
-        data: this.actividadPorDia
-      }]
+      series: [
+        {
+          data: this.actividadPorDia,
+          type: 'line',
+          areaStyle: {},
+          itemStyle: {
+            color: 'rgba(91, 184, 115, 0.7)' 
+          }
+        }
+      ]
     };
     option && myChart.setOption(option);
   }

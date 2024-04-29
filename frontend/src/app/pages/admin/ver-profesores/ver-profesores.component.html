@@ -15,6 +15,9 @@ data-sidebar-position="fixed" data-header-position="fixed">
               <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
                 <div class="card-body">
                     <h5 class="card-title fw-semibold mb-4">Profesores <span><i class="ti ti-users" style="font-size: 20px;"></i></span></h5>
+                    <div class="container-btn-crear-clase">
+                      <a href="/admin/crear-profesores" class="btn btn-primary"><span><i class="ti ti-circle-plus" style="font-size: 15px;"></i></span> Crear Profesor</a>
+                    </div>
                     <div class="card">
                         <div class="card-body table-responsive">
                           <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
@@ -46,7 +49,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                           <app-pagination (cambiarPagina)="cambiarPagina($event)" [texto]="true" [totalRegistros]="totalProfesores" [registroActual]="posActual+1" (filasPagina)="cambiarFilasPagina($event)" [registroPag]="filPag"></app-pagination>
                         </div>
                     </div>
-                    <a href="/admin/crear-profesores" class="btn btn-primary"><span><i class="ti ti-circle-plus" style="font-size: 15px;"></i></span> Crear Profesor</a>
+                    
                     <a href="/admin/dashboard" class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</a>
                   </div>
                 </div>

@@ -319,13 +319,15 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
       return cadena.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     }
     const nombreAlumno = `${this.alumnosData.Nombre} ${this.alumnosData.Apellidos}`;
+    const nombreAlumnoSinAcentos = quitarAcentos(nombreAlumno);
+
     const csvData: any[] = this.respuestasData.map((respuesta: Respuesta) => ({
       Fecha: respuesta.FechaRespuesta,
       Pregunta: quitarAcentos(respuesta.Pregunta.TextoPregunta),
       Opcion: quitarAcentos(respuesta.Opcion.TextoOpcion)
     }));
   
-    let csvContent = `"Nombre del Alumno: ${nombreAlumno}"\n`;
+    let csvContent = `"Nombre del Alumno: ${nombreAlumnoSinAcentos}"\n`;
     csvContent += 'Fecha,Pregunta,Opcion\n';
     csvData.forEach((item: any) => {
       const row = [
@@ -345,12 +347,5 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
     document.body.removeChild(a);
   }
   
-  
-  
-  
-  
-  
-  
-  
-  
+
 }

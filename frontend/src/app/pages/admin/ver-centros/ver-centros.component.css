@@ -10,3 +10,9 @@
     display: flex;
     justify-content: space-evenly;
 }
+
+.container-btn-crear-clase {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+}

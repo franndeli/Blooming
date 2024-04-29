@@ -10,3 +10,9 @@
 .hidden {
     display: none;
 }
+
+.container-btn-crear-clase {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+}

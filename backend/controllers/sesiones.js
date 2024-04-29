@@ -30,7 +30,7 @@ const getSesiones = async (req, res) => {
         
         if(dias == 0){
             const sevenDaysAgo = new Date();
-            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 15);
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
             queryOptions['FechaInicio'] = { [sequelize.Op.gte]: sevenDaysAgo };
         }
 

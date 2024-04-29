@@ -5,6 +5,7 @@ import { ProfesorService } from '../../../services/profesores.service';
 import { SesionService } from '../../../services/sesiones.service';
 import { AlumnoService } from '../../../services/alumnos.service';
 import * as echarts from 'echarts';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-actividad-reciente',
@@ -135,24 +136,21 @@ export class ActividadRecienteComponent implements OnInit {
     const sesionesPorDia: { [fecha: string]: number } = {};
   
     this.sesionesData.forEach((sesion: any) => {
-      // Verificar si la propiedad 'FechaInicio.Fecha' está presente y tiene un formato correcto
       if (sesion.FechaInicio && sesion.FechaInicio.Fecha && typeof sesion.FechaInicio.Fecha === 'string') {
         const fechaInicio = new Date(sesion.FechaInicio.Fecha);
-        const diaSemana = fechaInicio.getDay(); // Obtener el día de la semana (0: Domingo, 1: Lunes, ...)
-        sesionesPorDia[diaSemana] = (sesionesPorDia[diaSemana] || 0) + 1; // Contar sesiones por día
+        const diaSemana = fechaInicio.getDay(); 
+        sesionesPorDia[diaSemana] = (sesionesPorDia[diaSemana] || 0) + 1; 
       } else {
         console.error('La propiedad "FechaInicio.Fecha" no está presente o tiene un formato incorrecto:', sesion);
-        // Puedes agregar lógica adicional para manejar estos casos, como ignorar la sesión o registrar un error
       }
     });
   
-    // Actualizar el array actividadPorDia con los datos de sesionesPorDia
-    this.actividadPorDia = [0, 0, 0, 0, 0, 0, 0]; // Inicializar el array con 0 para cada día de la semana
+    this.actividadPorDia = [0, 0, 0, 0, 0, 0, 0]; 
     Object.keys(sesionesPorDia).forEach((dia) => {
       this.actividadPorDia[parseInt(dia)] = sesionesPorDia[dia];
     });
     console.log(sesionesPorDia);
-    this.dibujarGrafica(); // Llamar a la función para dibujar la gráfica
+    this.dibujarGrafica(); 
   }
   
   dibujarGrafica() {
@@ -170,7 +168,8 @@ export class ActividadRecienteComponent implements OnInit {
         data: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
       },
       yAxis: {
-        type: 'value'
+        type: 'value',
+        interval: 1
       },
       series: [
         {

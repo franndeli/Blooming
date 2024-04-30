@@ -69,3 +69,11 @@
 .bg-emociones {
   background-color: rgb(163, 219, 189) !important;
 }
+
+.arrow{
+  cursor: pointer; 
+  transition: box-shadow 0.3s ease;
+}
+.arrow:hover {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); 
+}

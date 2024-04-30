@@ -31,6 +31,8 @@ export class VerAlumnosPComponent implements OnInit{
   public contMuyMalo = 0;
   public contMalo = 0;
 
+  private contar = 0;
+
   constructor(private alumnoService: AlumnoService, private router: Router, private activatedRoute: ActivatedRoute, private claseService: ClaseService, private respuestaService: RespuestaService){
     this.alumnosData = [];
     this.alumnosTodosData = [];
@@ -114,7 +116,7 @@ export class VerAlumnosPComponent implements OnInit{
 
   obtenerAlumnos(buscar : string){
     this.busqueda = buscar;
-    this.alumnoService.getAlumnosClase(this.claseID, this.posActual, this.filPag, buscar).subscribe((res: any) => {
+    this.alumnoService.getAlumnosClase(this.claseID, this.posActual, this.filPag, this.contar).subscribe((res: any) => {
       if(res["alumnos"].length === 0){
         if(this.posActual > 0){
           this.posActual = this.posActual - this.filPag;
@@ -133,6 +135,15 @@ export class VerAlumnosPComponent implements OnInit{
     })
   }
 
+  onClickContar(num: number){
+    if(num == 1){
+      this.contar = 1;
+      this.obtenerAlumnos(this.busqueda);
+    } else{
+      this.contar = 2;
+      this.obtenerAlumnos(this.busqueda);
+    }
+  }
   obtenerTodosAlumnos(){
     this.alumnoService.getAlumnos().subscribe((res: any) => {
       this.alumnosTodosData = res.alumnos;

@@ -86,7 +86,7 @@ export class MotorGrafico {
     this.camActiva = this.getCamaraActiva();*/
 
     //Crear cubo
-    this.cubo = await this.crearModelo(this.escena, 'cuadradin_avatar.gltf', [0, 0, 0], [0, 0, 0], [1, 1, 1]);
+    this.cubo = await this.crearModelo(this.escena, 'plano.gltf', [0, 0, 0], [0, 0, 0], [1, 1, 1]);
     
     //const textura = new TRecursoTextura('../../../assets/images/profile/user-1.jpg');
 

@@ -160,6 +160,7 @@ export class TRecursoMalla extends TRecurso {
             }
         }
 
+        
         console.log(`Recurso malla ${nombre} cargado correctamente.`);
 
     } catch (error) {
@@ -273,12 +274,12 @@ export class TRecursoMalla extends TRecurso {
   //   this.gl.useProgram(this.programId);
 
   //   // Obtener y configurar la matriz de modelo-vista
-  //   var locationVmatrix = this.gl.getUniformLocation(this.programId, 'u_ModelViewMatrix');
-  //   if (locationVmatrix) {
-  //     let modelViewMatrix = mat4.create();
-  //     mat4.multiply(modelViewMatrix, this.TRecusoShader.getViewMatrix(), matrizTransf);
-  //     this.gl.uniformMatrix4fv(locationVmatrix, false, modelViewMatrix);
-  //   }
+    // var locationVmatrix = this.gl.getUniformLocation(this.programId, 'u_ModelViewMatrix');
+    // if (locationVmatrix) {
+    //   let modelViewMatrix = mat4.create();
+    //   mat4.multiply(modelViewMatrix, this.TRecusoShader.getViewMatrix(), matrizTransf);
+    //   this.gl.uniformMatrix4fv(locationVmatrix, false, modelViewMatrix);
+    // }
 
   //   // Asegurarse de que los buffers de vértices y de índices estén correctamente vinculados
   //   // Esto solo es necesario si los buffers podrían haber cambiado desde la última vez que se configuraron
@@ -308,10 +309,12 @@ export class TRecursoMalla extends TRecurso {
         gl.enableVertexAttribArray(normalLocation);
 
         // Configuración de la matriz de modelo-vista
-        let locationVmatrix = gl.getUniformLocation(this.programId, 'u_ModelViewMatrix');
-        let modelViewMatrix = mat4.create();
-        mat4.multiply(modelViewMatrix, this.TRecusoShader.getViewMatrix(), matrizTransf);
-        gl.uniformMatrix4fv(locationVmatrix, false, modelViewMatrix);
+        var locationVmatrix = this.gl.getUniformLocation(this.programId, 'u_ModelViewMatrix');
+        if (locationVmatrix) {
+          let modelViewMatrix = mat4.create();
+          mat4.multiply(modelViewMatrix, this.TRecusoShader.getViewMatrix(), matrizTransf);
+          this.gl.uniformMatrix4fv(locationVmatrix, false, modelViewMatrix);
+        }
 
         // Configuración del buffer de coordenadas de textura, si existe
         if (this.texCoordBuffers[i]) {

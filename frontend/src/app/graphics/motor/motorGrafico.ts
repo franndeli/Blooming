@@ -174,6 +174,11 @@ export class MotorGrafico {
     return modelo;
   }
 
+  async cargarTextura(fichero: string){
+    const textura = await this.gestorRecursos.getRecurso(fichero, 'textura') as TRecursoTextura;
+    console.log('Textura cargada: ', textura)
+  }
+
   registrarCamara(nodoCam: TNodo) {
     this.registroCamaras.push(nodoCam);
     return this.registroCamaras.length - 1;

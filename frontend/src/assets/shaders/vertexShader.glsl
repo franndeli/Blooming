@@ -2,11 +2,12 @@ precision mediump float;
 
 attribute vec3 vertNormal;
 attribute vec3 vertPosition;
-attribute vec4 vertColor;
+
+uniform vec4 u_Color;
 
 //Prueba texturas
-// attribute vec2 vertTextCoord;
-// varying vec2 fragTextCoord;
+// attribute vec2 vertTexCoord;
+// varying vec2 fragTexCoord;
 
 uniform mat4 u_ModelViewMatrix;
 uniform mat4 u_ProjectionMatrix;
@@ -18,8 +19,9 @@ void main() {
     gl_Position = u_ProjectionMatrix * u_ModelViewMatrix * vec4(vertPosition, 1.0);
 
     //Pruba texturas
-    //fragTextCoord = vertTextCoord;
+    // fragTexCoord = vertTexCoord;
+    
+    fragColor = u_Color;
 
-    fragColor = vertColor;
     fragNormal = vertNormal; 
 }

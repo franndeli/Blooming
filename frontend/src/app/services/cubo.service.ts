@@ -17,41 +17,41 @@ var dy = 0;
 })
 
 export class CuboService {
-    private canvas!: HTMLCanvasElement;
-    private modelos: TNodo[] = [];
-    private height: number = 0;
-    private width: number = 0;
-    private motorGrafico: any;
-    private camActiva: any;
     private cubo!: TNodo;
-
-    private caras = [
-        { vertices: [vec3.fromValues(-1, -1, 1), vec3.fromValues(-1, 1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, -1, 1)], nombre: "Delantera" },
-        { vertices: [vec3.fromValues(1, -1, -1), vec3.fromValues(1, 1, -1), vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, -1, -1)], nombre: "Trasera" },
-        { vertices: [vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, 1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, 1, -1)], nombre: "Superior" },
-        { vertices: [vec3.fromValues(-1, -1, -1), vec3.fromValues(1, -1, -1), vec3.fromValues(1, -1, 1), vec3.fromValues(-1, -1, 1)], nombre: "Inferior" },
-        { vertices: [vec3.fromValues(1, -1, -1), vec3.fromValues(1, -1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, 1, -1)], nombre: "Derecha" },
-        { vertices: [vec3.fromValues(-1, -1, 1), vec3.fromValues(-1, -1, -1), vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, 1, 1)], nombre: "Izquierda" }
-    ];
-
+    private camActiva: any;
+    private motorGrafico: any;
+    private width: number = 0;
+    private height: number = 0;
+    private modelos: TNodo[] = [];
+    private canvas!: HTMLCanvasElement;
+    private requestId: number | null = null;
+    
     public async crearCubo(motor: MotorGrafico, escena: TNodo){
         this.motorGrafico = motor;
         this.canvas = this.motorGrafico.getCanvas();
-        console.log(this.canvas);
-        this.cubo = await this.motorGrafico.crearModelo(escena, 'untitled.gltf', [0, 0, 0], [0, 0, 0], [1, 1, 1])
+        
+        this.cubo = await this.motorGrafico.crearModelo(escena, 'untitled.gltf', [0, 0, 0], [0, 0, 0], [1, 1, 1]);
+        
+        console.log(escena);
         this.dibujado(escena);
     }
 
     private dibujado(escena: TNodo){
+        if (this.requestId !== null) {
+            cancelAnimationFrame(this.requestId);
+        }
+
         let render = () => {
-            this.cubo.setRotacion([phi, theta, 0]);
-            this.cubo.setEscalado([escalado, escalado, escalado]);
+            if(this.cubo !== null){
+                this.cubo.setRotacion([phi, theta, 0]);
+                this.cubo.setEscalado([escalado, escalado, escalado]);
+            }
           
             this.motorGrafico.dibujarEscena(escena);
 
-            requestAnimationFrame(render);
+            this.requestId = requestAnimationFrame(render);
         }
-        render();
+        this.requestId = requestAnimationFrame(render);
     }
 
     mouseDown(event: MouseEvent){
@@ -94,6 +94,15 @@ export class CuboService {
     }
 
     rayPicking(event: MouseEvent) {
+        let caras = [
+            { vertices: [vec3.fromValues(-1, -1, 1), vec3.fromValues(-1, 1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, -1, 1)], nombre: "Delantera" },
+            { vertices: [vec3.fromValues(1, -1, -1), vec3.fromValues(1, 1, -1), vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, -1, -1)], nombre: "Trasera" },
+            { vertices: [vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, 1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, 1, -1)], nombre: "Superior" },
+            { vertices: [vec3.fromValues(-1, -1, -1), vec3.fromValues(1, -1, -1), vec3.fromValues(1, -1, 1), vec3.fromValues(-1, -1, 1)], nombre: "Inferior" },
+            { vertices: [vec3.fromValues(1, -1, -1), vec3.fromValues(1, -1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, 1, -1)], nombre: "Derecha" },
+            { vertices: [vec3.fromValues(-1, -1, 1), vec3.fromValues(-1, -1, -1), vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, 1, 1)], nombre: "Izquierda" }
+        ];
+
         let rect = this.canvas.getBoundingClientRect();
         let x = ((event.clientX - rect.left) / (rect.right - rect.left)) * 2 - 1;
         let y = -((event.clientY - rect.top) / (rect.bottom - rect.top)) * 2 + 1;
@@ -106,14 +115,22 @@ export class CuboService {
         let rayWorld = vec3.transformMat4(vec3.create(), rayEye, mat4.invert(mat4.create(), this.camActiva.getEntidad().getViewMatrix()));
         rayWorld = vec3.normalize(rayWorld, rayWorld);
     
+        let cubo;
         let intersecciones = [];
         let caraSeleccionada = null;
-    
-        let matrizTransfInversa = mat4.invert(mat4.create(), this.modelos[0].getMatrizTransf());
+
+        for (let modelo of this.modelos) {
+            if (modelo.getEntidad().getNombre() === 'untitled.gltf') {
+                cubo = modelo;
+                break;
+            }
+        }
+        
+        let matrizTransfInversa = mat4.invert(mat4.create(), cubo!.getMatrizTransf());
         let localRayOrigin = vec3.transformMat4(vec3.create(), this.camActiva.getTraslacion(), matrizTransfInversa);
         let localRayDirection = vec3.transformMat3(vec3.create(), rayWorld, mat3.normalFromMat4(mat3.create(), matrizTransfInversa));
         
-        for (let cara of this.caras) {
+        for (let cara of caras) {
           let v0 = cara.vertices[0];
           let v1 = cara.vertices[1];
           let v2 = cara.vertices[2];
@@ -140,5 +157,12 @@ export class CuboService {
     
     intersectRayTriangle(rayOrigin: vec3, rayDirection: vec3, v0: vec3, v1: vec3, v2: vec3): number | null {
        return null
+    }
+
+    public detenerDibujado() {
+        if (this.requestId !== null) {
+            cancelAnimationFrame(this.requestId);
+            this.requestId = null;
+        }
     }
 }

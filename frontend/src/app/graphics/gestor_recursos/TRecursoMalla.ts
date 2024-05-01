@@ -1,24 +1,21 @@
 import { TRecurso } from './recurso';
-import { TMalla } from '../arbol_escena/malla';
 import { mat4, vec3 } from 'gl-matrix';
-import { TRecursoShader } from './TRecursoShader'
-import { Vector3 } from 'three';
+import { TRecursoShader } from './TRecursoShader';
 
 export class TRecursoMalla extends TRecurso {
+  private programId: any;
   private indices: Uint16Array;
+  private colores: Float32Array;
   private vertices: Float32Array;
   private normales: Float32Array;
   private coordTexturas: Float32Array;
-  private colores: Float32Array;
-  private nombreMalla: string;
-  private programId: any;
   private TRecusoShader: TRecursoShader;
   public override gl: WebGL2RenderingContext;
-  private basePath: string = '../../../../assets/json/';
+  private basePath: string = '../../../../assets/glTF/';
 
+  private bufIndex: any = null;
   private bufVertex: any = null;
   private bufNormal: any = null;
-  private bufIndex: any = null;
   private bufTextCood: any = null;
 
   constructor(nombre: string, shader: TRecursoShader) {
@@ -37,7 +34,8 @@ export class TRecursoMalla extends TRecurso {
     this.gl = context;
     this.TRecusoShader = shader;
     this.programId = this.TRecusoShader.getProgramId();
-    this.nombreMalla = nombre;
+    this.setNombre(nombre);
+    console.log(this.getNombre())
   }
 
   override async cargarRecurso(nombre: string): Promise<void> {
@@ -89,7 +87,7 @@ export class TRecursoMalla extends TRecurso {
         const bufferViewIndices = gltf.bufferViews[accessorIndices.bufferView];
         const indexBuffer = await fetch(this.basePath + gltf.buffers[bufferViewIndices.buffer].uri);
         const indexData = await indexBuffer.arrayBuffer();
-        this.indices = new Uint16Array(indexData); // Asumiendo que los índices son Uint16
+        this.indices = new Uint16Array(indexData);
       }
 
       this.configurarBuffers();
@@ -155,7 +153,7 @@ export class TRecursoMalla extends TRecurso {
   }
 
   dibujar(matrizTransf: mat4): void {
-
+    //console.log('dibujando: ', this.getNombre())
     // Usar el programa de shader actual
     this.gl.useProgram(this.programId);
 

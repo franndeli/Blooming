@@ -10,8 +10,6 @@ export class TRecursoShader extends TRecurso {
   private vertexShaderCode: string = '';
   private id: WebGLProgram | null = null;
   private fragmentShaderCode: string = '';
-  
-
   private basePath: string = '../../../../assets/shaders/';
 
   private constructor(nombre: string) {
@@ -22,6 +20,8 @@ export class TRecursoShader extends TRecurso {
     this.projMatrix = this.camara.getProjMatrix();
     this.modelMatrix = mat4.create();
     this.viewMatrix = mat4.create();
+    this.setNombre(nombre);
+    console.log(this.getNombre())
   }
 
   static async create(nombre: string): Promise<TRecursoShader> {

@@ -1,9 +1,9 @@
+import { TRecurso  } from './recurso'
 import { TRecursoMalla } from './TRecursoMalla';
 //import TRecursoTextura from './TRecursoTextura';
 import { TRecursoShader } from './TRecursoShader';
 import TRecusroMaterial from './TRecursoMaterial';
-import { HttpClient } from '@angular/common/http';
-import { TRecurso  } from './recurso'
+
 
 export class GestorRecursos {
   private recursos: TRecurso[];
@@ -46,6 +46,7 @@ export class GestorRecursos {
       //recurso.setNombre(nombre);
       
       this.recursos.push(recurso);
+      console.log(this.recursos)
     }
     return recurso;
   }

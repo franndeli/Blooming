@@ -2,7 +2,7 @@ import { mat4, vec3 } from 'gl-matrix';
 
 export class TNodo {
     private entidad: any;
-    public hijos: TNodo[];
+    private hijos: TNodo[];
     private rotacion: vec3;
     private escalado: vec3;
     private traslacion: vec3;
@@ -27,36 +27,15 @@ export class TNodo {
     }
 
     async recorrer(matrizPadre: mat4): Promise<void> {
-        //console.log('Recorriendo nodo con id: ', this.id);
-        //let matrizLocal = mat4.clone(matrizPadre);
-        //console.log('Matriz padre/local: ', matrizPadre);
-        //console.log('Matriz sin actualizar: ', this.matrizTransf);
         if(this.actualizarMatriz) {
             this.actualizarMatriz = false;
-            //console.log('Actualizando matriz');
             mat4.multiply(this.matrizTransf, matrizPadre, await this.calcularMatriz());
-            // let matrizTrans = mat4.create();
-            // let matrizRot = mat4.create();
-            // let matrizEsc = mat4.create();
-
-            // mat4.translate(matrizTrans, matrizTrans, this.traslacion);
-            // mat4.rotateX(matrizRot, matrizRot, this.radianes(this.rotacion[0]));
-            // mat4.rotateY(matrizRot, matrizRot, this.radianes(this.rotacion[1]));
-            // mat4.rotateZ(matrizRot, matrizRot, this.radianes(this.rotacion[2]));
-            // mat4.scale(matrizEsc, matrizEsc, this.escalado);
-
-            // mat4.multiply(matrizLocal, matrizLocal, matrizTrans);
-            // mat4.multiply(matrizLocal, matrizLocal, matrizRot);
-            // mat4.multiply(matrizLocal, matrizLocal, matrizEsc);
-            
-            // this.setMatrizTransf(matrizLocal);
-            //console.log('Matriz actualizada: ', this.matrizTransf);
-
-            if(this.entidad != null) {
-                //console.log('Dibujando entidad: ',this.entidad.constructor.name);
-                this.entidad.dibujar(this.matrizTransf);
-            }
         }
+
+        if(this.entidad != null) {
+            //console.log('Dibujando entidad: ',this.entidad.getNombre());
+            this.entidad.dibujar(this.matrizTransf);
+        }    
 
         for (const hijo of this.hijos) {
             await hijo.recorrer(this.matrizTransf);
@@ -72,24 +51,7 @@ export class TNodo {
         mat4.rotateZ(matrizAux, matrizAux, this.radianes(this.rotacion[2]));
         mat4.scale(matrizAux, matrizAux, this.escalado);
 
-        //console.log('Calculando matriz auxiliar', matrizAux);
-
         return matrizAux;
-    }
-
-    setTraslacion(traslacion: vec3): void {
-        this.actualizarMatrizHijos();
-        vec3.copy(this.traslacion, traslacion);
-    }
-
-    setRotacion(rotacion: vec3): void {
-        this.actualizarMatrizHijos();
-        vec3.copy(this.rotacion, rotacion);
-    }
-
-    setEscalado(escalado: vec3): void {
-        this.actualizarMatrizHijos();
-        vec3.copy(this.escalado, escalado);
     }
 
     trasladar(delta: vec3): void {
@@ -105,6 +67,21 @@ export class TNodo {
     escalar(factor: vec3): void {
         this.actualizarMatrizHijos();
         vec3.multiply(this.escalado, this.escalado, factor);
+    }
+
+    setTraslacion(traslacion: vec3): void {
+        this.actualizarMatrizHijos();
+        vec3.copy(this.traslacion, traslacion);
+    }
+
+    setRotacion(rotacion: vec3): void {
+        this.actualizarMatrizHijos();
+        vec3.copy(this.rotacion, rotacion);
+    }
+
+    setEscalado(escalado: vec3): void {
+        this.actualizarMatrizHijos();
+        vec3.copy(this.escalado, escalado);
     }
 
     getTraslacion(): vec3 {
@@ -127,6 +104,22 @@ export class TNodo {
         return this.matrizTransf;
     }
 
+    setEntidad(entidad: any): void {
+        this.entidad = entidad;
+    }
+
+    getEntidad(): any {
+        return this.entidad;
+    }
+
+    getPadre(): TNodo | null {
+        return this.padre;
+    }
+
+    getHijos(): TNodo[] {
+        return this.hijos;
+    }
+
     addHijo(hijo: TNodo) {
         hijo.padre = this;
         this.hijos.push(hijo);
@@ -142,31 +135,13 @@ export class TNodo {
         return false;
     }
 
-    public getHijos(): TNodo[] {
-        return this.hijos;
-    }
-
     setActualizarMatriz(actualizar: boolean): void {
-        // console.log('Actualizar matriz? ', actualizar);
-        // console.log(this)
         this.actualizarMatriz = actualizar;
     }
 
     private actualizarMatrizHijos(){
         this.actualizarMatriz = true;
         this.hijos.forEach(hijo => hijo.actualizarMatriz = true);
-    }
-
-    setEntidad(entidad: any): void {
-        this.entidad = entidad;
-    }
-
-    getEntidad(): any {
-        return this.entidad;
-    }
-
-    getPadre(): TNodo | null {
-        return this.padre;
     }
 
     private radianes(grados: number): number {

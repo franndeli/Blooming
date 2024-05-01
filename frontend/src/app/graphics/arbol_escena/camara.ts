@@ -8,13 +8,11 @@ export class TCamara extends TEntidad {
     private projMatrix: mat4;
     private viewMatrix: mat4;
     private esPerspectiva: boolean;
-    public actualizarCamara: boolean = true;
     public gl: WebGL2RenderingContext;
+    public actualizarCamara: boolean = true;
 
     constructor() {
         super();
-        //console.log('Creando cámara...');
-
         var canvas = <HTMLCanvasElement>document.getElementById('canvasWebGL');
         var context = canvas.getContext('webgl2');
         if (context === null) {
@@ -67,8 +65,6 @@ export class TCamara extends TEntidad {
     }
 
     override dibujar(matrizTransf: mat4): void {
-        //console.log(`Configurando cámara ${this.esPerspectiva ? 'perspectiva' : 'paralela'} con planos ${this.cercano} - ${this.lejano}`);
-        
         this.gl.useProgram(this.gl.getParameter(this.gl.CURRENT_PROGRAM));
 
         if(this.actualizarCamara){

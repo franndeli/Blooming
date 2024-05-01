@@ -14,7 +14,7 @@ const getRespuestas = async (req, res) => {
         const desde = Number(req.query.desde) || 0;
         const queryParams = req.query;
 
-        const validParams = ['ID_Respuesta', 'ID_Pregunta', 'ID_Opcion', 'ID_Alumno', 'FechaRespuesta', 'ID_Sesion', 'Gravedad', 'ID_Clase', 'ID_Centro', 'desde', 'numFilas'];
+        const validParams = ['ID_Respuesta', 'ID_Pregunta', 'ID_Opcion', 'ID_Alumno', 'FechaRespuesta', 'ID_Sesion', 'Gravedad', 'ID_Clase', 'ID_Centro', 'desde', 'numFilas', 'ordenar'];
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {
@@ -23,7 +23,7 @@ const getRespuestas = async (req, res) => {
         
         const queryOptions = {};
         for (const param in queryParams) {
-            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde' && !(param === 'Gravedad' && queryParams[param] === '0')) {
+            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde' && !(param === 'Gravedad' && queryParams[param] === '0') && param !== 'ordenar') {
                 if (param === 'ID_Respuesta') {
                     queryOptions[param] = queryParams[param];
                 } else if (param === 'Gravedad') {
@@ -39,11 +39,20 @@ const getRespuestas = async (req, res) => {
         }
 
         const paginationOptions = tam > 0 ? { limit: tam, offset: desde } : {};
+        let orderOptions;
+        if(queryParams.ordenar == 1){
+            orderOptions = [[Alumno, 'Nombre', 'ASC']];
+        }else if(queryParams.ordenar == 2){
+            orderOptions = [[Alumno, 'Nombre', 'DESC']];
+        }else if(queryParams.ordenar == 0){
+            orderOptions = [];
+        }
 
         const respuestas = await Respuesta.findAll({
             where: queryOptions,
             ...paginationOptions,
             subQuery: false,
+            order: orderOptions,
             include: [
                 {
                     model: Pregunta,

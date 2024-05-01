@@ -36,7 +36,7 @@ export class CentroService {
     }
 
   //LLAMADAS API
-  getCentros(desde?: number, filas?: number, textoBusqueda?: string){
+  getCentros(desde?: number, filas?: number, ordenar?: number, textoBusqueda?: string){
     this.getHeader();
     if(!desde){
       desde = 0;
@@ -47,7 +47,7 @@ export class CentroService {
     if(!textoBusqueda){
       textoBusqueda = '';
     }
-    return this.http.get(this.basePath+'?numFilas='+filas+'&desde='+desde, this.httpOptions);
+    return this.http.get(this.basePath+'?numFilas='+filas+'&desde='+desde+'&ordenar='+ordenar, this.httpOptions);
   }
 
   getCentro(id: any){

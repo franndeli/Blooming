@@ -12,7 +12,7 @@ const getClases = async (req, res) => {
         const desde = Number(req.query.desde) || 0;
         const queryParams = req.query;
 
-        const validParams = ['ID_Clase', 'Nombre', 'NumAlumnos', 'ID_Centro', 'desde', 'numFilas', 'estado'];
+        const validParams = ['ID_Clase', 'Nombre', 'NumAlumnos', 'ID_Centro', 'desde', 'numFilas', 'estado', 'ordenar'];
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {
@@ -21,7 +21,7 @@ const getClases = async (req, res) => {
         
         const queryOptions = {};
         for (const param in queryParams) {
-            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde') {
+            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde'  && param !== 'ordenar') {
                 if (param === 'ID_Clase') {
                     queryOptions[param] = queryParams[param];
                 } else if(param === 'ID_Centro'){
@@ -33,10 +33,27 @@ const getClases = async (req, res) => {
         }
 
         const paginationOptions = tam > 0 ? { limit: tam, offset: desde } : {};
+        let orderOptions;
+        if(queryParams.ordenar == 1){
+            orderOptions = [['Nombre', 'ASC']];
+        }else if(queryParams.ordenar == 2){
+            orderOptions = [['Nombre', 'DESC']];
+        }else if(queryParams.ordenar == 0){
+            orderOptions = [];
+        }else if(queryParams.ordenar == 3){
+            orderOptions = [['NumAlumnos', 'ASC']];
+        }else if(queryParams.ordenar == 4){
+            orderOptions = [['NumAlumnos', 'DESC']];
+        }else if(queryParams.ordenar == 5){
+            orderOptions = [[Centro, 'Calle', 'ASC']];
+        }else if(queryParams.ordenar == 6){
+            orderOptions = [[Centro, 'Calle', 'DESC']];
+        }
 
         const clases = await Clase.findAll({
             where: queryOptions,
             ...paginationOptions,
+            order: orderOptions,
             include: [{
                 model: Centro,
                 attributes: ['Nombre']

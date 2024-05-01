@@ -18,6 +18,8 @@ export class VerClasesCComponent implements OnInit {
   public filPag: number = 5;
   private busqueda = '';
 
+  private contar = 0;
+
   constructor(private claseService: ClaseService, private router: Router){}
 
   ngOnInit() {
@@ -27,7 +29,7 @@ export class VerClasesCComponent implements OnInit {
   obtenerClases(buscar: string){
     this.busqueda = buscar;
     this.id = localStorage.getItem('id');
-    this.claseService.getClasesCentro(this.id, this.posActual, this.filPag, buscar).subscribe((res: any) => {
+    this.claseService.getClasesCentro(this.id, this.posActual, this.filPag, this.contar).subscribe((res: any) => {
       //console.log(res);
       if(res["clases"].length === 0){
         if(this.posActual > 0){
@@ -82,6 +84,22 @@ export class VerClasesCComponent implements OnInit {
   cambiarFilasPagina(filas: number){
     this.filPag = filas;
     this.cambiarPagina(1);
+  }
+
+  onClickContar(num: number){
+    if(num == 1){
+      this.contar = 1;
+      this.obtenerClases(this.busqueda);
+    }  else if(num == 2){
+      this.contar = 2;
+      this.obtenerClases(this.busqueda);
+    } else if(num == 3){
+      this.contar = 3;
+      this.obtenerClases(this.busqueda);
+    } else if(num == 4){
+      this.contar = 4;
+      this.obtenerClases(this.busqueda);
+    }
   }
 
 }

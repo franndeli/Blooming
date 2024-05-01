@@ -139,8 +139,14 @@ export class VerAlumnosPComponent implements OnInit{
     if(num == 1){
       this.contar = 1;
       this.obtenerAlumnos(this.busqueda);
-    } else{
+    } else if(num == 2){
       this.contar = 2;
+      this.obtenerAlumnos(this.busqueda);
+    }else if(num == 11){
+      this.contar = 11;
+      this.obtenerAlumnos(this.busqueda);
+    }else if(num == 12){
+      this.contar = 12;
       this.obtenerAlumnos(this.busqueda);
     }
   }

@@ -18,6 +18,8 @@ export class VerAlumnosCComponent implements OnInit{
   public filPag = 5;
   private busqueda = '';
 
+  private contar = 0;
+
   constructor(private alumnoService: AlumnoService, private router: Router){}
 
   ngOnInit() {
@@ -27,7 +29,7 @@ export class VerAlumnosCComponent implements OnInit{
   obtenerAlumnos(buscar: string){
     this.busqueda = buscar;
     this.id = localStorage.getItem('id');
-    this.alumnoService.getAlumnosCentro(this.id, this.posActual, this.filPag, buscar).subscribe((res: any) => {
+    this.alumnoService.getAlumnosCentro(this.id, this.posActual, this.filPag, this.contar).subscribe((res: any) => {
       if(res["alumnos"].length === 0){
         if(this.posActual > 0){
           this.posActual = this.posActual - this.filPag;
@@ -85,4 +87,25 @@ export class VerAlumnosCComponent implements OnInit{
     this.cambiarPagina(1);
   }
 
+  onClickContar(num: number){
+    if(num == 1){
+      this.contar = 1;
+      this.obtenerAlumnos(this.busqueda);
+    } else if(num == 2){
+      this.contar = 2;
+      this.obtenerAlumnos(this.busqueda);
+    } else if(num == 3){
+      this.contar = 3;
+      this.obtenerAlumnos(this.busqueda);
+    } else if(num == 4){
+      this.contar = 4;
+      this.obtenerAlumnos(this.busqueda);
+    }else if(num == 5){
+      this.contar = 5;
+      this.obtenerAlumnos(this.busqueda);
+    }else if(num == 6){
+      this.contar = 6;
+      this.obtenerAlumnos(this.busqueda);
+    }
+  }
 }

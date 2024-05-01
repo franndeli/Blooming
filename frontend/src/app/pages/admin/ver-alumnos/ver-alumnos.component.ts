@@ -16,6 +16,7 @@ export class VerAlumnosComponent implements OnInit{
   public posActual = 0;
   public filPag = 5;
   private busqueda = '';
+  private contar = 0;
 
   constructor(private alumnoService: AlumnoService, private router: Router){}
 
@@ -25,7 +26,7 @@ export class VerAlumnosComponent implements OnInit{
 
   obtenerAlumnos(buscar: string){
     this.busqueda = buscar;
-    this.alumnoService.getAlumnos(this.posActual, this.filPag, buscar).subscribe((res: any) => {
+    this.alumnoService.getAlumnos(this.posActual, this.filPag, this.contar).subscribe((res: any) => {
       if(res["alumnos"].length === 0){
         if(this.posActual > 0){
           this.posActual = this.posActual - this.filPag;
@@ -81,5 +82,38 @@ export class VerAlumnosComponent implements OnInit{
     this.filPag = filas;
     this.cambiarPagina(1);
   }
-  
+
+  onClickContar(num: number){
+    if(num == 1){
+      this.contar = 1;
+      this.obtenerAlumnos(this.busqueda);
+    } else if (num == 2){
+      this.contar = 2;
+      this.obtenerAlumnos(this.busqueda);
+    }else if (num == 3){
+      this.contar = 3;
+      this.obtenerAlumnos(this.busqueda);
+    }else if (num == 4){
+      this.contar = 4;
+      this.obtenerAlumnos(this.busqueda);
+    }else if (num == 5){
+      this.contar = 5;
+      this.obtenerAlumnos(this.busqueda);
+    }else if (num == 6){
+      this.contar = 6;
+      this.obtenerAlumnos(this.busqueda);
+    }else if (num == 7){
+      this.contar = 7;
+      this.obtenerAlumnos(this.busqueda);
+    }else if (num == 8){
+      this.contar = 8;
+      this.obtenerAlumnos(this.busqueda);
+    }else if (num == 9){
+      this.contar = 9;
+      this.obtenerAlumnos(this.busqueda);
+    }else if (num == 10){
+      this.contar = 10;
+      this.obtenerAlumnos(this.busqueda);
+    }
+  }
 }

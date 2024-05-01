@@ -24,6 +24,8 @@ export class ActividadRecienteComponent implements OnInit {
   public actividadPorDia: number[] = [];
   sessionsData: any[] = [];
 
+  private contar = 0;
+
   constructor(private sesionService: SesionService, private alumnoService: AlumnoService, private respuestaService: RespuestaService, private profesorService: ProfesorService, private router: Router, private activatedRoute: ActivatedRoute) {
     this.recientesData = [];
   }
@@ -46,13 +48,11 @@ export class ActividadRecienteComponent implements OnInit {
     this.alumnoService.getAlumnosCentro(this.idCentro).subscribe((res: any) => {
       this.alumnosData = res.alumnos;
       this.obtenerSesionesAlumnos(); 
-      console.log(this.alumnosData);
     });
   }
 
   obtenerSesionesAlumnos(){
     this.sesionService.getSesionesCentro(this.idCentro).subscribe((res: any) => {
-      console.log(res);
       this.sesionesData = [];
       for(let i=0; i < this.alumnosData.length ; i++){
         for(let j=0; j < res.sesiones.length; j++){
@@ -72,7 +72,8 @@ export class ActividadRecienteComponent implements OnInit {
  
   obtenerActividadReciente(buscar: string) {
     this.busqueda = buscar;
-    this.respuestaService.getRespuestasCentro(this.idCentro, 0, this.posActual, this.filPag).subscribe((res: any) => {
+    this.respuestaService.getRespuestasCentro(this.idCentro, 0, this.posActual, this.filPag, this.contar).subscribe((res: any) => {
+      console.log(this.contar);
       if(res["respuestas"].length === 0){
         if(this.posActual > 0){
           this.posActual = this.posActual - this.filPag;
@@ -149,7 +150,6 @@ export class ActividadRecienteComponent implements OnInit {
     Object.keys(sesionesPorDia).forEach((dia) => {
       this.actividadPorDia[parseInt(dia)] = sesionesPorDia[dia];
     });
-    console.log(sesionesPorDia);
     this.dibujarGrafica(); 
   }
   
@@ -183,5 +183,17 @@ export class ActividadRecienteComponent implements OnInit {
       ]
     };
     option && myChart.setOption(option);
+  }
+
+  onClickContar(num: number){
+    if(num == 1){
+      this.contar = 1;
+      this.obtenerActividadReciente(this.busqueda);
+
+    } else {
+      this.contar = 2;
+      this.obtenerActividadReciente(this.busqueda);
+
+    }
   }
 }

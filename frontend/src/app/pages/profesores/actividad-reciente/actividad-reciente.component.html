@@ -6,6 +6,16 @@ data-sidebar-position="fixed" data-header-position="fixed">
         <div class="container-fluid">
             <div class="container-fluid">
                 <div class="card">
+                    <div class="card-body">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="chart"></div>
+                            </div>
+                        </div>
+                        <p>*Esta gráfica muestra la cantidad de alumnos que respoden al día</p>
+                    </div>
+                </div>
+                <div class="card">
                     <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
                         <div class="card-body">
                             <h5 class="card-title fw-semibold mb-4">Últimas preguntas respondidas <span><i class="ti ti-activity" style="font-size: 20px;"></i></span></h5>
@@ -15,7 +25,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                         <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
                                             <thead class="text-dark fs-4">
                                                 <tr>
-                                                    <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
+                                                    <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre <span class="arrow" (click)="onClickContar(1)">&#x25B2;</span><span class="arrow" (click)="onClickContar(2)"> &#x25BC;</span></th>
                                                     <th><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Clase</th>
                                                     <th><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Ámbito</th>
                                                     <th><span><i class="ti ti-question-mark" style="font-size: 15px;"></i></span> Pregunta</th>
@@ -50,16 +60,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                         </div>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-body">
-                        <div class="card">
-                            <div class="card-body">
-                                <div id="chart"></div>
-                            </div>
-                        </div>
-                        <p>*Esta gráfica muestra la cantidad de alumnos que respoden al día</p>
-                    </div>
-                </div>
+                
                 <a href="/profesores/dashboard" class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</a>
             </div>
         </div>

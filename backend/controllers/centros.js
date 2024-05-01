@@ -14,7 +14,7 @@ const getCentros = async (req, res) => {
         const desde = Number(req.query.desde) || 0;
         const queryParams = req.query;
 
-        const validParams = ['ID_Centro', 'Nombre', 'Email', 'Localidad', 'Provincia', 'Calle', 'CP', 'numFilas', 'desde'];
+        const validParams = ['ID_Centro', 'Nombre', 'Email', 'Localidad', 'Provincia', 'Calle', 'CP', 'numFilas', 'desde', 'ordenar'];
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {
@@ -23,7 +23,7 @@ const getCentros = async (req, res) => {
         
         const queryOptions = {};
         for (const param in queryParams) {
-            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde') {
+            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde' && param !== 'ordenar') {
                 if (param === 'ID_Centro') {
                     queryOptions[param] = queryParams[param];
                 } else {
@@ -33,11 +33,28 @@ const getCentros = async (req, res) => {
         }
 
         const paginationOptions = tam > 0 ? { limit: tam, offset: desde } : {};
+        let orderOptions;
+        if(queryParams.ordenar == 1){
+            orderOptions = [['Nombre', 'ASC']];
+        }else if(queryParams.ordenar == 2){
+            orderOptions = [['Nombre', 'DESC']];
+        }else if(queryParams.ordenar == 0){
+            orderOptions = [];
+        }else if(queryParams.ordenar == 3){
+            orderOptions = [['Email', 'ASC']];
+        }else if(queryParams.ordenar == 4){
+            orderOptions = [['Email', 'DESC']];
+        }else if(queryParams.ordenar == 5){
+            orderOptions = [['Calle', 'ASC']];
+        }else if(queryParams.ordenar == 6){
+            orderOptions = [['Calle', 'DESC']];
+        }
 
         const centros = await Centro.findAll({
             where: queryOptions,
             ...paginationOptions,
-            attributes: { exclude: ['Contraseña'] }
+            attributes: { exclude: ['Contraseña'] },
+            order: orderOptions
         });
 
         const total = await Centro.count({ where: queryOptions});

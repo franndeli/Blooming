@@ -5,6 +5,7 @@ const Alumno = require('../models/alumno');
 const Respuesta = require('../models/respuesta');
 const Sesion = require('../models/sesion');
 const sequelize = require('../database/configdb');
+
 const hashPassword = require('../middleware/hashHelper');
 
 
@@ -31,7 +32,23 @@ const getAlumnos = async (req, res) => {
                 }
             }
         }
-
+        function asignarValorEstado(estado) {
+            switch (estado) {
+                case 'Muy Bueno':
+                    return 5;
+                case 'Bueno':
+                    return 4;
+                case 'Normal':
+                    return 3;
+                case 'Malo':
+                    return 2;
+                case 'Muy Malo':
+                    return 1;
+                default:
+                    return 0; // Para manejar otros valores no especificados
+            }
+        }
+        
         const paginationOptions = tam > 0 ? { limit: tam, offset: desde } : {};
         let orderOptions;
         if(queryParams.ordenar == 1){
@@ -40,6 +57,26 @@ const getAlumnos = async (req, res) => {
             orderOptions = [['Nombre', 'DESC']];
         }else if(queryParams.ordenar == 0){
             orderOptions = [];
+        }else if(queryParams.ordenar == 3){
+            orderOptions = [['Apellidos', 'ASC']];
+        }else if(queryParams.ordenar == 4){
+            orderOptions = [['Apellidos', 'DESC']];
+        }else if(queryParams.ordenar == 5){
+            orderOptions = [[Clase, 'Nombre', 'ASC']];
+        }else if(queryParams.ordenar == 6){
+            orderOptions = [[Clase, 'Nombre', 'DESC']];
+        }else if(queryParams.ordenar == 7){
+            orderOptions = [['FechaNacimiento', 'ASC']];
+        }else if(queryParams.ordenar == 8){
+            orderOptions = [['FechaNacimiento', 'DESC']];
+        }else if(queryParams.ordenar == 9){
+            orderOptions = [[Centro, 'Calle', 'ASC']];
+        }else if(queryParams.ordenar == 10){
+            orderOptions = [[Centro, 'Calle', 'DESC']];
+        }else if(queryParams.ordenar == 11){
+            orderOptions = [[Alumno.sequelize.literal("CASE WHEN Estado = 'Muy Bueno' THEN 5 WHEN Estado = 'Bueno' THEN 4 WHEN Estado = 'Normal' THEN 3 WHEN Estado = 'Malo' THEN 2 ELSE 1 END"), 'DESC']];
+        }else if(queryParams.ordenar == 12){
+            orderOptions =  [[Alumno.sequelize.literal("CASE WHEN Estado = 'Muy Bueno' THEN 5 WHEN Estado = 'Bueno' THEN 4 WHEN Estado = 'Normal' THEN 3 WHEN Estado = 'Malo' THEN 2 ELSE 1 END"), 'ASC']];
         }
     
         const alumnos = await Alumno.findAll({

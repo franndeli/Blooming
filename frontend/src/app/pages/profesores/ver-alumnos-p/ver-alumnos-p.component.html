@@ -16,7 +16,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                         <thead class="text-dark fs-4">
                             <tr>
                                 <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre <span class="arrow" (click)="onClickContar(1)">&#x25B2;</span><span class="arrow" (click)="onClickContar(2)"> &#x25BC;</span></th>
-                                <th><span><i class="ti ti-pin" style="font-size: 15px;"></i></span> Estado</th>
+                                <th><span><i class="ti ti-pin" style="font-size: 15px;"></i></span> Estado  <span class="arrow" (click)="onClickContar(11)">&#x25B2;</span><span class="arrow" (click)="onClickContar(12)"> &#x25BC;</span></th>
                                 <!--<th></th>-->
                             </tr>
                         </thead>
@@ -28,9 +28,6 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                       <span [ngClass]="getClaseEstado(alumno.Estado)">{{alumno.Estado}}</span>
                                   </div>
                               </td>
-                              <!---<td>
-                                  <button class="btn btn-primary" (click)="verPerfil(alumno.ID_Alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button>
-                              </td>-->
                           </tr>
                         </tbody>
                       </table>

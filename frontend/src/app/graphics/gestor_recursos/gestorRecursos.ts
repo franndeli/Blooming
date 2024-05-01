@@ -1,8 +1,8 @@
 import { TRecursoMalla } from './TRecursoMalla';
 //import TRecursoTextura from './TRecursoTextura';
 import { TRecursoShader } from './TRecursoShader';
-import TRecusroMaterial from './TRecursoMaterial';
-import { HttpClient } from '@angular/common/http';
+import { TRecursoTextura } from './TRecursoTextura';
+// import { HttpClient } from '@angular/common/http';
 import { TRecurso  } from './recurso'
 
 export class GestorRecursos {
@@ -15,10 +15,13 @@ export class GestorRecursos {
   async getRecurso(nombre: string, tipo: string): Promise<any> {
     let recurso = null;
 
+    // console.log(this.recursos.length);
+
     for(let i = 0; i < this.recursos.length; i++){
+      // console.log(this.recursos[i].getNombre());
       if(this.recursos[i].getNombre() == nombre){
         recurso = this.recursos[i];
-        console.log('Recurso encontrado');
+        console.log('Recurso encontrado', recurso);
       }
     }
 
@@ -28,15 +31,17 @@ export class GestorRecursos {
           console.log('Creando recurso malla');
           recurso = new TRecursoMalla(nombre, await this.getRecurso('fragmentShader.glsl', 'shader'));
           break;
-        /*case 'textura':
-          recurso = new TRecursoTextura(nombre);
-          break;*/
+        case 'textura':
+          console.log('Creando recurso textura');
+          recurso = await new TRecursoTextura(nombre);
+          await recurso.setNombre(recurso.url);
+          break;
         case 'shader':
           recurso = await TRecursoShader.create(nombre);
           break;
-        case 'material':
-          recurso = new TRecusroMaterial(nombre);
-          break;
+        // case 'material':
+        //   recurso = new TRecusroMaterial(nombre);
+        //   break;
         default:
           throw new Error(`Tipo de recurso '${tipo}' no reconocido.`);
       }
@@ -46,6 +51,8 @@ export class GestorRecursos {
       //recurso.setNombre(nombre);
       
       this.recursos.push(recurso);
+      // console.log(this.recursos.length);
+      // console.log(this.recursos);
     }
     return recurso;
   }

@@ -191,6 +191,11 @@ export class MotorGrafico {
     return modelo;
   }
 
+  async cargarTextura(fichero: string){
+    const textura = await this.gestorRecursos.getRecurso(fichero, 'textura') as TRecursoTextura;
+    console.log('Textura cargada: ', textura)
+  }
+
   async dibujarEscena(escena: TNodo) {
     this.gl = await this.initWebGL(this.canvas);
     this.checkWebGLError();

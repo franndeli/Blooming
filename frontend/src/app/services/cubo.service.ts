@@ -38,7 +38,7 @@ export class CuboService {
         this.motorGrafico = motor;
         this.canvas = this.motorGrafico.getCanvas();
         console.log(this.canvas);
-        this.cubo = await this.motorGrafico.crearModelo(escena, 'untitled.gltf', [0, 0, 0], [0, 0, 0], [1, 1, 1])
+        this.cubo = await this.motorGrafico.crearModelo(escena, 'cuadradin_prueba_colores.gltf', [0, 0, 0], [0, 0, 0], [1, 1, 1])
         this.dibujado(escena);
     }
 
@@ -94,6 +94,15 @@ export class CuboService {
     }
 
     rayPicking(event: MouseEvent) {
+        const caras = [
+            { vertices: [vec3.fromValues(-1, -1, 1), vec3.fromValues(-1, 1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, -1, 1)], nombre: "Delantera" },
+            { vertices: [vec3.fromValues(1, -1, -1), vec3.fromValues(1, 1, -1), vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, -1, -1)], nombre: "Trasera" },
+            { vertices: [vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, 1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, 1, -1)], nombre: "Superior" },
+            { vertices: [vec3.fromValues(-1, -1, -1), vec3.fromValues(1, -1, -1), vec3.fromValues(1, -1, 1), vec3.fromValues(-1, -1, 1)], nombre: "Inferior" },
+            { vertices: [vec3.fromValues(1, -1, -1), vec3.fromValues(1, -1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, 1, -1)], nombre: "Derecha" },
+            { vertices: [vec3.fromValues(-1, -1, 1), vec3.fromValues(-1, -1, -1), vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, 1, 1)], nombre: "Izquierda" }
+        ];
+
         let rect = this.canvas.getBoundingClientRect();
         let x = ((event.clientX - rect.left) / (rect.right - rect.left)) * 2 - 1;
         let y = -((event.clientY - rect.top) / (rect.bottom - rect.top)) * 2 + 1;
@@ -113,7 +122,7 @@ export class CuboService {
         let localRayOrigin = vec3.transformMat4(vec3.create(), this.camActiva.getTraslacion(), matrizTransfInversa);
         let localRayDirection = vec3.transformMat3(vec3.create(), rayWorld, mat3.normalFromMat4(mat3.create(), matrizTransfInversa));
         
-        for (let cara of this.caras) {
+        for (let cara of caras) {
           let v0 = cara.vertices[0];
           let v1 = cara.vertices[1];
           let v2 = cara.vertices[2];

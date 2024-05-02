@@ -26,12 +26,13 @@ export class CuboService {
     private canvas!: HTMLCanvasElement;
     private requestId: number | null = null;
     
-    public async crearCubo(motor: MotorGrafico, escena: TNodo){
+    public async crearCubo(motor: MotorGrafico, escena: TNodo, texturas: any){
         this.motorGrafico = motor;
         this.canvas = this.motorGrafico.getCanvas();
         
-        this.cubo = await this.motorGrafico.crearModelo(escena, 'untitled.gltf', [0, 0, 0], [0, 0, 0], [1, 1, 1]);
+        this.cubo = await this.motorGrafico.crearModelo(escena, 'cubo_prueba_seis_caras.gltf', [0, 0, 0], [0, 0, 0], [1, 1, 1], texturas);
         
+        console.log(this.cubo);
         console.log(escena);
         this.dibujado(escena);
     }
@@ -120,7 +121,7 @@ export class CuboService {
         let caraSeleccionada = null;
 
         for (let modelo of this.modelos) {
-            if (modelo.getEntidad().getNombre() === 'untitled.gltf') {
+            if (modelo.getEntidad().getNombre() === 'cubo_prueba_seis_caras.gltf') {
                 cubo = modelo;
                 break;
             }

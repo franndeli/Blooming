@@ -26,13 +26,23 @@ export class TRecursoMalla extends TRecurso {
 
   private baseColor!: Float32Array;
 
-  constructor(nombre: string, shader: TRecursoShader) {
+  private objectIDs: any = {};
+
+  private texturas: any
+
+  constructor(nombre: string, shader: TRecursoShader, texturas: any) {
     super();
     this.vertices = new Float32Array();
     this.normales = new Float32Array();
     this.coordTexturas = new Float32Array();
     this.baseColor = new Float32Array(4);
     this.indices = new Uint16Array();
+
+    // console.log(texturas);
+
+    this.texturas = texturas;
+
+    // console.log(this.texturas);
 
     var canvas = <HTMLCanvasElement>document.getElementById('canvasWebGL');
     var context = canvas.getContext('webgl2');
@@ -63,11 +73,18 @@ export class TRecursoMalla extends TRecurso {
             return bufferResponse.arrayBuffer();
         }));
 
-        console.log(bufferData);
+        // console.log(bufferData);
+
+        
+        let meshIndex = 0;
 
         // Recorrer cada malla en el archivo GLTF
         for (const mesh of gltf.meshes) {
             console.log(`Procesando malla: ${mesh.name}`);
+
+            this.objectIDs[mesh.name] = meshIndex;
+            meshIndex++;
+            console.log(mesh.name);
 
             // Recorrer cada primitiva en la malla
             for (const primitive of mesh.primitives) {
@@ -133,7 +150,7 @@ export class TRecursoMalla extends TRecurso {
     gl.bufferData(gl.ARRAY_BUFFER, vertexData, gl.STATIC_DRAW);
     this.vertexBuffers.push(vertexBuffer!);
 
-    console.log(vertexBuffer);
+    // console.log(vertexBuffer);
 
     let error = gl.getError();
     if (error !== gl.NO_ERROR) {
@@ -152,8 +169,8 @@ export class TRecursoMalla extends TRecurso {
         texCoordBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, texCoordData, gl.STATIC_DRAW);
+        this.texCoordBuffers.push(texCoordBuffer!);
     }
-    this.texCoordBuffers.push(texCoordBuffer!);
 
     //Crear y configurar el buffer de color, si existe
     let colorBuffer = null;
@@ -183,6 +200,14 @@ export class TRecursoMalla extends TRecurso {
     let gl = this.gl;
     gl.useProgram(this.programId);
 
+    // let applyTextureArray = [0, 0, 0, 0, 0, 0];
+    // applyTextureArray[2] = 1;
+
+    const texturaPorCara = {
+      [this.objectIDs["Cube.002"]]: 0,  // Índice de la textura en this.texturas
+      [this.objectIDs["Cube.005"]]: 1
+  };
+
     // Iterar sobre cada mesh registrado (cada uno tiene su propio conjunto de buffers)
     for (let i = 0; i < this.vertexBuffers.length; i++) {
         // Configuración del buffer de vértices y atributo en el shader
@@ -196,6 +221,30 @@ export class TRecursoMalla extends TRecurso {
         let normalLocation = gl.getAttribLocation(this.programId, 'vertNormal');
         gl.vertexAttribPointer(normalLocation, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(normalLocation);
+
+        //Configuración de buffer de textura
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordBuffers[i]);
+        let texCoordLocation = gl.getAttribLocation(this.programId, 'vertTexCoord');
+        gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(texCoordLocation);
+
+        // let applyTexture = (i === this.objectIDs["Cube.006"]);
+        // let applyTextureUniform = gl.getUniformLocation(this.programId, 'applyTexture');
+        // gl.uniform1i(applyTextureUniform, applyTexture ? 1 : 0);
+
+        
+
+        let texturaIndex = texturaPorCara[i];
+
+        // console.log(this.texturas[texturaIndex].tex);
+        if (texturaIndex !== undefined) {
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, this.texturas[texturaIndex].texture);
+            gl.uniform1i(gl.getUniformLocation(this.programId, 'sampler'), 0);
+            gl.uniform1i(gl.getUniformLocation(this.programId, 'applyTexture'), 1);
+        } else {
+            gl.uniform1i(gl.getUniformLocation(this.programId, 'applyTexture'), 0);
+        }
 
         // Configuración de la matriz de modelo-vista
         var locationVmatrix = this.gl.getUniformLocation(this.programId, 'u_ModelViewMatrix');

@@ -17,6 +17,9 @@ export class MotorService {
   private canvas!: HTMLCanvasElement;
   private motorGrafico: MotorGrafico;
 
+  private textura: any;
+  private texturas: any;
+
   constructor(private cuboService: CuboService, private planoService: PlanoService) {
     this.motorGrafico = new MotorGrafico(cuboService, planoService);
   }
@@ -30,28 +33,45 @@ export class MotorService {
       this.escenaCubo = this.motorGrafico.crearNodo(null, vec3.create(), vec3.create(), [1, 1, 1]);
       this.motorGrafico.crearCamara(this.escenaCubo, [0, 0, 10], [0, 0, 0], [1, 1, 1]);
 
-      this.escenaPlano = this.motorGrafico.crearNodo(null, vec3.create(), vec3.create(), [1, 1, 1]);
-      this.motorGrafico.crearCamara(this.escenaPlano, [0, 0, 10], [0, 0, 0], [1, 1, 1]);
+      this.textura = await this.motorGrafico.cargarTextura('../../assets/images/logos/favicon.png');
+      await this.cargarTexturas();
+      
+      // this.escenaPlano = this.motorGrafico.crearNodo(null, vec3.create(), vec3.create(), [1, 1, 1]);
+      // this.motorGrafico.crearCamara(this.escenaPlano, [0, 0, 10], [0, 0, 0], [1, 1, 1]);
 
       if(this.interfaz == 1){
-        this.cuboService.crearCubo(this.motorGrafico, this.escenaCubo);
+        console.log(this.texturas);
+        this.cuboService.crearCubo(this.motorGrafico, this.escenaCubo, this.texturas);
         this.escenaActual = this.escenaCubo;
       }
-      if(this.interfaz == 2){
-        this.planoService.crearPlano(this.motorGrafico, this.escenaPlano);
-        this.escenaActual = this.escenaPlano;
-      }
+      // if(this.interfaz == 2){
+      //   this.planoService.crearPlano(this.motorGrafico, this.escenaPlano);
+      //   this.escenaActual = this.escenaPlano;
+      // }
 
-      setInterval(() => {
-        this.interfaz = this.interfaz == 1 ? 2 : 1;
-        this.cambiarInterfaz(this.interfaz);
-      }, 5000);
+      // setInterval(() => {
+      //   this.interfaz = this.interfaz == 1 ? 2 : 1;
+      //   this.cambiarInterfaz(this.interfaz);
+      // }, 5000);
     
     }else {
       console.error('Referencia de canvas no definida');
       return;
     }
   }
+
+  async cargarTexturas() {
+    const texturas = [
+        '../../assets/images/logos/favicon.png',
+        '../../assets/images/logos/logo1.png'
+        // '../../assets/images/logos/logo2.png',
+        // '../../assets/images/logos/logo3.png'
+    ];
+
+    this.texturas = await Promise.all(texturas.map(async url => await this.motorGrafico.cargarTextura(url)));
+    console.log(this.texturas);
+  }
+
 
   // public limpiarCanvas(){
   //   this.motorGrafico.initWebGL(this.canvas);
@@ -76,7 +96,7 @@ export class MotorService {
     if (this.interfaz == 1) {
       this.escenaActual = this.escenaCubo;
       this.planoService.detenerDibujado();
-      this.cuboService.crearCubo(this.motorGrafico, this.escenaCubo);
+      this.cuboService.crearCubo(this.motorGrafico, this.escenaCubo, this.texturas);
     }
     if (this.interfaz == 2) {
       this.escenaActual = this.escenaPlano;

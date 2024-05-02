@@ -154,8 +154,8 @@ export class MotorGrafico {
     return luz;
   } 
 
-  async crearModelo(padre: TNodo | null, fichero: string, trasl: vec3, rot: vec3, esc: vec3): Promise<TNodo> {
-    const recurso =  await this.gestorRecursos.getRecurso(fichero, 'malla') as TRecursoMalla;
+  async crearModelo(padre: TNodo | null, fichero: string, trasl: vec3, rot: vec3, esc: vec3, texturas: any): Promise<TNodo> {
+    const recurso =  await this.gestorRecursos.getRecurso(fichero, 'malla', texturas) as TRecursoMalla;
     const modelo = new TNodo(recurso, padre);
 
     modelo.setTraslacion(trasl);
@@ -175,8 +175,9 @@ export class MotorGrafico {
   }
 
   async cargarTextura(fichero: string){
-    const textura = await this.gestorRecursos.getRecurso(fichero, 'textura') as TRecursoTextura;
+    const textura = await this.gestorRecursos.getRecurso(fichero, 'textura', null) as TRecursoTextura;
     console.log('Textura cargada: ', textura)
+    return textura;
   }
 
   registrarCamara(nodoCam: TNodo) {

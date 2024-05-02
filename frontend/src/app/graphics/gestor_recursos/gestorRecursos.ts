@@ -10,7 +10,7 @@ export class GestorRecursos {
     this.recursos = [];
   }
 
-  async getRecurso(nombre: string, tipo: string): Promise<any> {
+  async getRecurso(nombre: string, tipo: string, texturas: any): Promise<any> {
     let recurso = null;
 
     // console.log(this.recursos.length);
@@ -27,7 +27,7 @@ export class GestorRecursos {
       switch (tipo) {
         case 'malla':
           console.log('Creando recurso malla');
-          recurso = new TRecursoMalla(nombre, await this.getRecurso('fragmentShader.glsl', 'shader'));
+          recurso = new TRecursoMalla(nombre, await this.getRecurso('fragmentShader.glsl', 'shader', null), texturas);
           break;
         case 'textura':
           console.log('Creando recurso textura');

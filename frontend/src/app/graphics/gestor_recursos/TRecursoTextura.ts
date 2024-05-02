@@ -28,7 +28,7 @@ export class TRecursoTextura extends TRecurso {
       const image = new Image();
       image.onload = () => {
         this.texture = this.gl.createTexture();
-        console.log(this.texture);
+        // console.log(this.texture);
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
         this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, image);
         this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR_MIPMAP_LINEAR);

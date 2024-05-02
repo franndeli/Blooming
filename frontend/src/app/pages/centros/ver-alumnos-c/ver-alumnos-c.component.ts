@@ -2,6 +2,7 @@ import { Component, OnInit  } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlumnoService } from '../../../services/alumnos.service';
 import { environment } from '../../../../environments/environment.produccion';
+import { ClaseService } from '../../../services/clases.service';
 import Swal from 'sweetalert2'
 
 @Component({
@@ -19,11 +20,13 @@ export class VerAlumnosCComponent implements OnInit{
   private busqueda = '';
 
   private contar = 0;
+  private numero: number = 0;
 
-  constructor(private alumnoService: AlumnoService, private router: Router){}
+  constructor(private alumnoService: AlumnoService, private router: Router, private claseService: ClaseService){}
 
   ngOnInit() {
-    this.obtenerAlumnos(this.busqueda);;
+    this.obtenerAlumnos(this.busqueda);
+    
   }
 
   obtenerAlumnos(buscar: string){
@@ -50,7 +53,7 @@ export class VerAlumnosCComponent implements OnInit{
     
   }
 
-  eliminarAlumno(id: number){
+  eliminarAlumno(id: number, idClase: number){
     Swal.fire({
       title: "¿Estás seguro?",
       text: "Esta acción no se podrá deshacer",
@@ -61,6 +64,7 @@ export class VerAlumnosCComponent implements OnInit{
       confirmButtonText: "Eliminar"
     }).then((result) => {
       if (result.isConfirmed) {
+        this.quitarAlumno(idClase);
         this.alumnoService.deleteAlumno(id).subscribe(res => {
           this.obtenerAlumnos(this.busqueda);
         })
@@ -69,6 +73,12 @@ export class VerAlumnosCComponent implements OnInit{
           icon: "success"
         });
       }
+    });
+  }
+
+  quitarAlumno(idClase: number){
+    this.claseService.getClase(idClase).subscribe((res: any) => {
+      //this.numero = res.
     });
   }
 

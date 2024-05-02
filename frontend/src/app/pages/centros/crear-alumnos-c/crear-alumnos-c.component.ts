@@ -15,7 +15,7 @@ export class CrearAlumnosCComponent implements OnInit {
   sendForm: boolean=false;
   clasesData: any;
   private id: any;
-  numero: number = 0;
+  private numero: number = 0;
 
   constructor(private fb:FormBuilder, private alumnoService: AlumnoService, private router: Router, private claseService: ClaseService){
     this.clasesData = [];

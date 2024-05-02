@@ -35,7 +35,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                             <td>{{profesor.Nombre}}</td>
                                             <td>{{profesor.Apellidos}}</td>
                                             <td>{{profesor.Email}}</td>
-                                            <td>{{profesor.Clase.Nombre}}</td>
+                                            <td>{{profesor.Clase?.Nombre || 'Sin Clase'}}</td>
                                             <td class="botones">
                                                 <button class="btn btn-primary ti ti-pencil fs-5" (click)="editarProfesor(profesor)"></button>
                                                 <button class="btn btn-danger ti ti-trash fs-5" (click)="eliminarProfesor(profesor.ID_Profesor)"></button>

@@ -37,7 +37,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                             <td>{{alumno.Clase.Nombre}}</td>
                                             <td class="botones">
                                                 <button class="btn btn-primary ti ti-pencil fs-5" (click)="editarAlumno(alumno)"></button>
-                                                <button class="btn btn-danger ti ti-trash fs-5" (click)="eliminarAlumno(alumno.ID_Alumno)"></button>
+                                                <button class="btn btn-danger ti ti-trash fs-5" (click)="eliminarAlumno(alumno.ID_Alumno, alumno.Clase.ID_Clase)"></button>
                                             </td>
                                         </tr>
                                     </tbody>

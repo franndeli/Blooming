@@ -32,22 +32,6 @@ const getAlumnos = async (req, res) => {
                 }
             }
         }
-        function asignarValorEstado(estado) {
-            switch (estado) {
-                case 'Muy Bueno':
-                    return 5;
-                case 'Bueno':
-                    return 4;
-                case 'Normal':
-                    return 3;
-                case 'Malo':
-                    return 2;
-                case 'Muy Malo':
-                    return 1;
-                default:
-                    return 0; // Para manejar otros valores no especificados
-            }
-        }
         
         const paginationOptions = tam > 0 ? { limit: tam, offset: desde } : {};
         let orderOptions;

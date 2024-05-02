@@ -34,7 +34,7 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
   private sesiones: any;
   private claseID: any;
   private dias: number = 7;
-  private gravedad: number = 0;
+  private gravedad: number = -1;
   public nombresAmbitos: any = [];
   private volverPag: number = 0;
 

@@ -62,7 +62,7 @@ export class ActividadRecienteNegativaComponent {
   alumnosInfo: AlumnosInfo[] = [];
   alumnosInfo2: AlumnosInfo[] = [];
   private claseID: any;
-  private gravedad: number = 0;
+  private gravedad: number = -1;
   
 
   constructor(private clasesService: ClaseService, private profesorService: ProfesorService, private centroService: CentroService, private alumnoService: AlumnoService, private respuestaService: RespuestaService, private router: Router, private activatedRoute: ActivatedRoute, private sesionService: SesionService){

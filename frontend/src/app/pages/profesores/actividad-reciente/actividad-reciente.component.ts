@@ -39,6 +39,7 @@ export class ActividadRecienteComponent implements OnInit {
     
     this.profesorService.getProfesorID(idPorfesor).subscribe((res: any) => {
       this.idCentro = res.profesores[0].ID_Centro;
+      this.obtenerRespuestasCentro();
       this.obtenerActividadReciente(this.busqueda);
       this.obtenerAlumnosCentro();
     });
@@ -63,17 +64,18 @@ export class ActividadRecienteComponent implements OnInit {
       }
       //console.log(this.sesionesData);
       this.contarSesionesPorDia();
-      
     }); 
-    const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+  }
+  obtenerRespuestasCentro(){
+    this.respuestaService.getRespuestasCentro(this.idCentro, 0).subscribe((res: any) => {
+      console.log(res);
+    });
   }
 
-  
- 
   obtenerActividadReciente(buscar: string) {
     this.busqueda = buscar;
-    this.respuestaService.getRespuestasCentro(this.idCentro, 0, this.posActual, this.filPag, this.contar).subscribe((res: any) => {
-      console.log(this.contar);
+    this.respuestaService.getRespuestasCentro(this.idCentro, -1, this.posActual, this.filPag, this.contar).subscribe((res: any) => {
+      console.log(res)
       if(res["respuestas"].length === 0){
         if(this.posActual > 0){
           this.posActual = this.posActual - this.filPag;
@@ -189,11 +191,39 @@ export class ActividadRecienteComponent implements OnInit {
     if(num == 1){
       this.contar = 1;
       this.obtenerActividadReciente(this.busqueda);
-
-    } else {
+    } else if(num == 2) {
       this.contar = 2;
       this.obtenerActividadReciente(this.busqueda);
-
+    }else if(num == 3) {
+      this.contar = 3;
+      this.obtenerActividadReciente(this.busqueda);
+    }else if(num == 4) {
+      this.contar = 4;
+      this.obtenerActividadReciente(this.busqueda);
+    }else if(num == 5) {
+      this.contar = 5;
+      this.obtenerActividadReciente(this.busqueda);
+    }else if(num == 6) {
+      this.contar = 6;
+      this.obtenerActividadReciente(this.busqueda);
+    }else if(num == 7) {
+      this.contar = 7;
+      this.obtenerActividadReciente(this.busqueda);
+    }else if(num == 8) {
+      this.contar = 8;
+      this.obtenerActividadReciente(this.busqueda);
+    }else if(num == 9) {
+      this.contar = 9;
+      this.obtenerActividadReciente(this.busqueda);
+    }else if(num == 10) {
+      this.contar = 10;
+      this.obtenerActividadReciente(this.busqueda);
+    }else if(num == 11) {
+      this.contar = 11;
+      this.obtenerActividadReciente(this.busqueda);
+    }else if(num == 12) {
+      this.contar = 12;
+      this.obtenerActividadReciente(this.busqueda);
     }
   }
 }

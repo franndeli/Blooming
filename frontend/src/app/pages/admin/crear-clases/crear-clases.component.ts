@@ -22,7 +22,7 @@ export class CrearClasesComponent implements OnInit {
   public form = this.fb.group({
     Nombre: ['', [Validators.required]],
     ID_Centro: ['', [Validators.required]],
-    NumAlumnos: ['', [Validators.required]]
+    NumAlumnos: 0
   });
 
   ngOnInit() {

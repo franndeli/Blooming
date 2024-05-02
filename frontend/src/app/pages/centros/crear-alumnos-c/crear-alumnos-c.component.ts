@@ -70,34 +70,21 @@ export class CrearAlumnosCComponent implements OnInit {
   }
 
   contarAlumno(id: any){
-    id = parseInt(id,10);
-    for(let i=0; i < this.clasesData.clases.length; i++){
-      if(this.clasesData.clases[i].ID_Clase === id){
-        this.numero = this.clasesData.clases[i].NumAlumnos + 1;
-        const datosActualizados = {
-          ID_Clase: id,
-          NumAlumnos: this.numero
-        }
-        
-        this.claseService.putClase(datosActualizados).subscribe(
-          (response: any) => {
-            Swal.fire({
-              icon: "success",
-              title: "Alumno creado con éxito",
-              text: "Se han enviado los datos de acceso al tutor por correo electrónico",
-              showConfirmButton: false,
-              timer: 1500
-            }).then(() => {
-              this.router.navigate(['centros/ver-alumnos']);
-            });
-          },
-          (error) => {
-            console.error('Error de creación:', error);
-            Swal.fire(error.error.message);
-          }
-        )
+    this.claseService.getClase(id).subscribe((res: any) => {
+      this.numero = res.clases[0].NumAlumnos + 1;
+      const datosActualizados = {
+        ID_Clase: id,
+        NumAlumnos: this.numero
       }
-    }
+      this.claseService.putClase(datosActualizados).subscribe(
+        (response: any) => {
+          console.log('Clase actualizada exitosamente');
+        },
+        (error) => {
+          console.error('Error de creación');
+        }
+      )
+    });
   }
 
   validarForm(campo: string){

@@ -45,6 +45,8 @@ import { EditarProfesorComponent } from './profesores/editar-profesor/editar-pro
 
 import { SistemaPreguntasComponent } from './alumnos/sistema-preguntas/sistema-preguntas.component';
 
+import { ArbolEscenaComponent } from './alumnos/arbol-escena/arbol-escena.component';
+
 import { ActividadRecienteNegativaComponent } from './profesores/actividad-reciente-negativa/actividad-reciente-negativa.component';
 
 
@@ -101,7 +103,8 @@ const routes: Routes = [
     children: [
       { path: 'dashboard', component: AlumnosComponent},
       { path: 'sidebar', component: SidebarComponent },
-      { path: 'sistema-preguntas', component: SistemaPreguntasComponent }
+      { path: 'sistema-preguntas', component: SistemaPreguntasComponent },
+      { path: 'arbol-escena', component: ArbolEscenaComponent }
   ]},
 ];
 

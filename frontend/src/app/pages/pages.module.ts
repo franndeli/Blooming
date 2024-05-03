@@ -55,14 +55,8 @@ import { PerfilProfesorComponent } from './profesores/perfil-profesor/perfil-pro
 import { EditarProfesorComponent } from './profesores/editar-profesor/editar-profesor.component';
 
 //ALUMNOS
-import { ThreejsComponent } from './alumnos/threejs/threejs.component';
-import { ConversacionComponent } from './alumnos/conversacion/conversacion.component';
-import { CargaComponent } from './alumnos/carga/carga.component';
 import { SistemaPreguntasComponent } from './alumnos/sistema-preguntas/sistema-preguntas.component';
-import { InterfazComponent } from './alumnos/interfaz/interfaz.component';
-import { Interfaz2Component } from './alumnos/interfaz2/interfaz2.component';
-import { Interfaz3Component } from './alumnos/interfaz3/interfaz3.component';
-import { EnrutamientoComponent } from './alumnos/enrutamiento/enrutamiento.component';
+import { ActividadRecienteNegativaComponent } from './profesores/actividad-reciente-negativa/actividad-reciente-negativa.component';
 
 @NgModule({
   declarations: [
@@ -101,14 +95,8 @@ import { EnrutamientoComponent } from './alumnos/enrutamiento/enrutamiento.compo
       EditarCentroComponent,
       PerfilProfesorComponent,
       EditarProfesorComponent,
-      ThreejsComponent,
-      ConversacionComponent,
-      CargaComponent,
       SistemaPreguntasComponent,
-      InterfazComponent,
-      Interfaz2Component,
-      Interfaz3Component,
-      EnrutamientoComponent
+      ActividadRecienteNegativaComponent
   ],
   exports: [
     AdminLayoutComponent,

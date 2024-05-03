@@ -1,6 +1,9 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Centro = require('../models/centro');
+const Clase = require('../models/clase');
+const Alumno = require('../models/alumno');
+const Profesor = require('../models/profesor');
 const sequelize = require('../database/configdb');
 const hashPassword = require('../middleware/hashHelper');
 
@@ -189,7 +192,7 @@ const deleteCentro = async (req, res) => {
 
         await Clase.destroy({ where: { ID_Centro: id } });
 
-        await Centro.destroy({ where: { ID_Centro: id } });
+        await centro.destroy();
 
         res.json({
             ok: true,

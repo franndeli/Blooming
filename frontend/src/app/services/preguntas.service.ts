@@ -3,16 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, map, forkJoin, switchMap} from 'rxjs'; // Asegúrate de importar Observable y of
 import { environment } from '../../environments/environment';
 
-type Puntuaciones = {
-    [ambito: string]: number;
-};
-
 type PreguntasPorSeleccionar = {
     [ambito: string]: number;
-};
-
-type Frecuencias = {
-  [ambito: string]: number;
 };
 
 @Injectable({
@@ -22,14 +14,6 @@ export class PreguntaService {
   private basePath = `${environment.base_url}/preguntas`;
   private basePathOpcion = `${environment.base_url}/opciones`
   constructor(private http: HttpClient) {}
-
-  private conteoAmbitosTratados: { [ambito: string]: number } = {
-    'Clase': 0,
-    'Amigos': 0,
-    'Emociones': 0,
-    'Familia': 0,
-    'Fuera de clase': 0
-  };
 
   private httpOptions = {
       headers: new HttpHeaders({
@@ -46,60 +30,71 @@ export class PreguntaService {
       return this.http.get(`${this.basePath}?ID_Pregunta=${id}`, this.httpOptions);
   }
 
-  seleccionarPreguntas(): Observable<any> {
-    const ambitos = ['Clase', 'Amigos', 'Emociones', 'Familia', 'Fuera de clase'];
-    const puntuaciones: Puntuaciones = {};
-    const frecuencias: Frecuencias = {};
-    
-    // Generar puntuaciones aleatorias
-    ambitos.forEach(ambito => {
-        puntuaciones[ambito] = Math.floor(Math.random() * 101);
-        frecuencias[ambito] = Math.random(); // Número entre 0 y 1
-    });
+  calcularPeso (nota: number, frecuencia: number): number {
+    let peso = 0;
+  
+    // Considerar la nota
+    if (nota <= 50) {
+      peso += 2; // Mayor urgencia para mejorar
+    } else if (nota < 60) {
+      peso += 1; // Alguna urgencia para mejorar
+    }
+  
+    // Ajustar según la frecuencia de aparición
+    if (frecuencia < 0.3) {
+      peso += 2; // Muy pocas apariciones, necesita repaso
+    } else if (frecuencia < 0.6) {
+      peso += 1; // Algunas apariciones, podría necesitar repaso
+    }
+  
+    // Asegurar que el peso no excede el máximo permitido
+    return Math.min(peso, 2);
+  };
 
-    console.log(puntuaciones);
-    console.log(frecuencias);
-
-    const totalPreguntas = 7; // Máximo de preguntas a seleccionar
+  seleccionarPreguntas(ambitos: any, aparicionambitos: any, sesiones: any): Observable<any> {
+    const totalPreguntas = 7;
     let preguntasPorSeleccionar: PreguntasPorSeleccionar = {};
 
-    // Filtrar ámbitos con puntuaciones por debajo de 50
-    const ambitosPorDebajoDe50 = Object.keys(puntuaciones).filter(ambito => puntuaciones[ambito] <= 50);
-    if (ambitosPorDebajoDe50.length === 0) {
-        // Si no hay ámbitos por debajo de 50, seleccionar 1 pregunta de cada ámbito
-        Object.keys(puntuaciones).forEach(ambito => {
-          // Excluir ámbitos con frecuencia superior a 0.85
-          preguntasPorSeleccionar[ambito] = frecuencias[ambito] > 0.85 ? 0 : 1;
-        });
-    } else {
-        // Asignar preguntas basado en puntuaciones y ajustar según frecuencias de aparición
-        let preguntasAsignadas = 0;
-        ambitosPorDebajoDe50.forEach(ambito => {
-            if (preguntasAsignadas < totalPreguntas) {
-                const asignacionBasadaEnFrecuencia = frecuencias[ambito] < 0.6 ? 2 : 1; // Menor frecuencia, mayor prioridad
-                preguntasPorSeleccionar[ambito] = Math.min(asignacionBasadaEnFrecuencia, totalPreguntas - preguntasAsignadas);
-                preguntasAsignadas += preguntasPorSeleccionar[ambito];
-            }
-        });
+    //console.log(ambitos);
+    
+    // Calcular frecuencias
+    let frecuencia: { [key: string]: number } = {};
+    Object.keys(aparicionambitos).forEach(ambito => {
+      frecuencia[ambito] = aparicionambitos[ambito] / (sesiones * 2);
+    });
 
-        // Ajustar asignaciones para ámbitos restantes si aún hay espacio
-        const ambitosRestantes = Object.keys(puntuaciones).filter(ambito => !ambitosPorDebajoDe50.includes(ambito) && frecuencias[ambito] <= 0.85);
-        ambitosRestantes.forEach(ambito => {
-            if (preguntasAsignadas < totalPreguntas) {
-                preguntasPorSeleccionar[ambito] = 1;
-                preguntasAsignadas += 1;
-            } else if (!preguntasPorSeleccionar.hasOwnProperty(ambito)) {
-                preguntasPorSeleccionar[ambito] = 0; // Asegura que todos los ámbitos estén representados
-            }
-        });
+    //console.log(frecuencia);
+  
+    // Array para almacenar ámbitos con su peso compuesto
+    let ambitosConPeso: { ambito: string, peso: number, nota: number }[] = [];
+  
+    // Calcular el peso compuesto para cada ámbito
+    Object.entries(ambitos as { [key: string]: number }).forEach(([ambito, nota]) => {
+      const peso = this.calcularPeso(nota, frecuencia[ambito]);
+      ambitosConPeso.push({ ambito, peso, nota });
+    });
+  
+    // Ordenar los ámbitos por peso (priorizando los de mayor peso) y luego por nota si tienen el mismo peso
+    ambitosConPeso.sort((a, b) => b.peso - a.peso || a.nota - b.nota);
+  
+    // Asignar preguntas basándose en el orden de prioridad
+    let preguntasAsignadas = 0;
+    for (const { ambito, peso } of ambitosConPeso) {
+      if (preguntasAsignadas < totalPreguntas) {
+        const preguntasAAgregar = Math.min(peso, totalPreguntas - preguntasAsignadas);
+        preguntasPorSeleccionar[ambito] = preguntasAAgregar;
+        preguntasAsignadas += preguntasAAgregar;
+      }
+      if (preguntasAsignadas >= totalPreguntas) break; // Detener si se alcanza el máximo de preguntas
     }
 
-    console.log(preguntasPorSeleccionar);
+    //console.log(preguntasPorSeleccionar);
 
-    // Asumiendo que existe una función obtenerPreguntasSeleccionadas que acepta este input
+    // Convertir el objeto JavaScript a una cadena JSON y almacenarlo
+    localStorage.setItem('preguntasPorSeleccionar', JSON.stringify(preguntasPorSeleccionar));
+  
     return this.obtenerPreguntasSeleccionadas(preguntasPorSeleccionar);
   }
-
 
   // Método ajustado para realizar llamadas individuales por ámbito
   obtenerPreguntasSeleccionadas(preguntasPorSeleccionar: { [ambito: string]: number }): Observable<any> {
@@ -116,7 +111,6 @@ export class PreguntaService {
 
     Object.entries(preguntasPorSeleccionar).forEach(([ambito, cantidad]) => {
         const id = ambitoToID[ambito];
-        console.log(cantidad);
         if (cantidad > 0) {
             requests.push(this.http.get<any[]>(`${this.basePath}/porAmbito?ID_Ambito=${id}&cantidad=${cantidad}`));
         }
@@ -136,7 +130,7 @@ export class PreguntaService {
     return forkJoin(requests).pipe(
       map(responses => {
           // Extraer la primera pregunta (ámbito "Inicio") y el resto de las preguntas
-          const preguntaInicio = responses[0].preguntas[0]; // Asume que la primera respuesta corresponde al ámbito "Inicio"
+          const preguntaInicio = responses[0].preguntas[0];
           const restoPreguntas = responses.slice(1).map(resp => resp.preguntas).flat();
 
           // Mezclar de forma aleatoria el resto de preguntas

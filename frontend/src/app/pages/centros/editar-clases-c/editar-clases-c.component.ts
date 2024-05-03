@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
-
 import { ClaseService } from '../../../services/clases.service';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-editar-clases-c',
@@ -36,11 +36,22 @@ export class EditarClasesCComponent {
 
   actualizarClase(){
     if(!this.form.valid){
-      console.log('Errores en el formulario');
+      //console.log('Errores en el formulario');
     }else{
       this.claseService.putClase(this.form.value).subscribe(
         (response:any) => {
-          this.router.navigate(['centros/ver-clases']);
+          Swal.fire({
+            icon: "success",
+            title: "Clase editada con éxito",
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.router.navigate(['centros/ver-clases']);
+          });
+        },
+        (error) => {
+          console.error('Error de edición:', error);
+          Swal.fire(error.error.message);
         }
       );
     }

@@ -10,6 +10,11 @@
   border: 3px solid #fff;
 }  
 
+#chart {
+  position: relative;
+  height: 45vh;
+  overflow: hidden;
+}
 
 .gravedad-circle {
   width: 8px;
@@ -21,20 +26,48 @@
   margin: 0 auto;
   overflow: hidden;
   border-bottom: 1px solid transparent;
+  font-weight: bold;
 }
 
-.nula-gravedad {
-  background-color: rgba(0, 128, 0, 0.786);
+.muybueno-gravedad {
+  background-color: var(--mi-verde);
+  margin: 0 auto;
+  text-align: center;
+  border-radius: 65px;
   color: white;
 }
 
-.leve-gravedad {
-  background-color: rgb(255, 174, 31);
+.bueno-gravedad {
+  /* background-color: rgb(255, 174, 31); */
+  background-color: #8aca69;
+  margin: 0 auto;
+  text-align: center;
+  border-radius: 65px;
   color: white;
 }
-  
-.grave-gravedad {
+
+.normal-gravedad {
+  /* background-color: rgb(255, 174, 31); */
+  background-color: #dce232;
+  margin: 0 auto;
+  text-align: center;
+  border-radius: 65px;
+  color: white;
+}
+
+.malo-gravedad {
+  background-color: #F7C65B;
+  margin: 0 auto;
+  text-align: center;
+  border-radius: 65px;
+  color: white;
+}
+
+.muymalo-gravedad {
   background-color: rgba(233, 31, 31, 0.855);
+  margin: 0 auto;
+  text-align: center;
+  border-radius: 65px;
   color: white;
 }
 

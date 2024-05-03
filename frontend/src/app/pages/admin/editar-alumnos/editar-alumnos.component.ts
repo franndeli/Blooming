@@ -4,6 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { AlumnoService } from '../../../services/alumnos.service';
 import { CentroService } from '../../../services/centros.service';
 import { ClaseService } from '../../../services/clases.service';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-editar-alumnos',
@@ -69,11 +70,22 @@ export class EditarAlumnosComponent implements OnInit, OnChanges {
 
   actualizarAlumno(){
     if(!this.form.valid){
-      console.log('Errores en el formulario');
+      //console.log('Errores en el formulario');
     }else{
       this.alumnoService.putAlumno(this.form.value).subscribe(
         (response:any) => {
-          this.router.navigate(['admin/ver-alumnos']);
+          Swal.fire({
+            icon: "success",
+            title: "Alumno editado con éxito",
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.router.navigate(['admin/ver-alumnos']);
+          });
+        },
+        (error) => {
+          console.error('Error de edición:', error);
+          Swal.fire(error.error.message);
         }
       );
     }

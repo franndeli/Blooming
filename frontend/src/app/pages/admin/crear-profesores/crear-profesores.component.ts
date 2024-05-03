@@ -56,11 +56,19 @@ export class CrearProfesoresComponent implements OnInit, OnChanges {
   crearProfesor(){
     this.sendForm=true;
     if(!this.form.valid){
-      console.log('Errores en el formulario');
+      //console.log('Errores en el formulario');
     }else{
       this.profesorService.postProfesor(this.form.value).subscribe(
         (response:any) => {
-          this.router.navigate(['admin/ver-profesores']);
+          Swal.fire({
+            icon: "success",
+            title: "Profesor creado con éxito",
+            text: "El profesor recibirá los datos de acceso por correo electrónico",
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.router.navigate(['admin/ver-profesores']);
+          });
         },
         (error) => {
           console.error('Error de creación:', error);

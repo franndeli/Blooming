@@ -29,13 +29,19 @@ export class RegistroComponent implements OnInit {
   registro(){
     this.sendForm=true;
     if(!this.form.valid){
-      console.log('Errores en el formulario');
+      //console.log('Errores en el formulario');
     }else{
-      console.log('registro');
+      //console.log('registro');
       this.authService.registro(this.form.value).subscribe(
         (response:any) => {
-          console.log('registro!', response);
-          this.router.navigate(['centros']);
+          Swal.fire({
+            icon: "success",
+            title: "Cuenta creada con éxito",
+            text: "Te has registrado como centro educativo. A continuación, podrás empezar a agregar las clases, profesores y alumnos que tiene tu centro.",
+            showConfirmButton: true
+          }).then(() => {
+            this.router.navigate(['centros']);
+          });
         },
         (error) => {
           console.error('Error de registro:', error);

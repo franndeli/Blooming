@@ -4,25 +4,27 @@
         <!--  Row 1 -->
         <div class="container-fluid">
             <div class="container-fluid">
-                <div class="card" >
-                    <div class="card-body">
-                        <h5 class="card-title fw-semibold mb-4">Profesor</h5>
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="mb-4">
-                                    <h4 class="card-title fw-semibold">Mi Perfil</h4>
+                <div class="card mx-auto" style="max-width: 600px;">
+                    <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
+                        <div class="card-body">
+                            <h5 class="card-title fw-semibold mb-4">Profesor <span><i class="ti ti-users" style="font-size: 20px;"></i></span></h5>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="mb-4">
+                                        <h4 class="card-title fw-semibold">Mi Perfil <span><i class="ti ti-user" style="font-size: 20px;"></i></span></h4> 
+                                    </div>
+                                    <div class="mb-4" >
+                                        <p><span><i class="ti ti-writing" style="font-size: 15px;"></i></span> Nombre: {{profesoresData.Nombre}}</p>
+                                    </div>
+                                    <div class="mb-4">
+                                        <p> <span><i class="ti ti-writing" style="font-size: 15px;"></i></span> Apellidos: {{profesoresData.Apellidos}}</p>
+                                    </div>
+                                    <div class="mb-4">
+                                        <p><span><i class="ti ti-mail" style="font-size: 15px;"></i></span> Email: {{profesoresData.Email}}</p>
+                                    </div>
+                                    <a href="/profesores/editar-profesor" class="btn btn-primary"><span><i class="ti ti-edit" style="font-size: 15px;"></i></span> Cambiar Contraseña</a>
+                                    <a href="/profesores/dashboard" class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</a>
                                 </div>
-                                <div class="mb-4">
-                                    <p>Nombre: {{profesoresData.Nombre}}</p>
-                                </div>
-                                <div class="mb-4">
-                                    <p>Apellidos: {{profesoresData.Apellidos}}</p>
-                                </div>
-                                <div class="mb-4">
-                                    <p>Email: {{profesoresData.Email}}</p>
-                                </div>
-                                <a href="/profesores/editar-profesor" class="btn btn-danger">Editar Perfil</a>
-                                <a href="/profesores/dashboard" class="btn btn-danger">Volver</a>
                             </div>
                         </div>
                     </div>

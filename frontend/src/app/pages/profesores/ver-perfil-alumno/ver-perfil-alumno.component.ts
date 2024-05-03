@@ -1,72 +1,219 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AlumnoService } from '../../../services/alumnos.service';
-import { ClaseService } from '../../../services/clases.service';
-import { ResultadoService } from '../../../services/resultados.service';
+import { SesionService } from '../../../services/sesiones.service';
+import { RespuestaService } from '../../../services/respuestas.service';
+import * as echarts from 'echarts';
+import { Console } from 'console';
 
 @Component({
   selector: 'app-ver-perfil-alumno',
   templateUrl: './ver-perfil-alumno.component.html',
   styleUrl: './ver-perfil-alumno.component.css'
 })
-export class VerPerfilAlumnoComponent implements OnInit {
 
-  alumnosData: any;
-  resultadosData: any;
+export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
+  private alumnoID: any;
+  public alumnosData: any;
+  public nombreClase: string = '';
+  public respuestasData: any;
+  private sesiones: any;
   private claseID: any;
+  private dias: number = 7;
+  private gravedad: number = 0;
+  public nombresAmbitos: any = [];
+  private volverPag: number = 0;
 
-  constructor(private alumnoService: AlumnoService, private router: Router, private activatedRoute: ActivatedRoute, private resultadoService: ResultadoService){
+  constructor(private respuestaService: RespuestaService, private router: Router, private activatedRoute: ActivatedRoute, private sesionService: SesionService, private alumnoService: AlumnoService){
     this.alumnosData = [];
-    this.resultadosData = [];
+    this.respuestasData = [];
+    this.sesiones = {};
   }
 
   ngOnInit() {
+    this.sesiones.Ambitos = {};
+    this.sesiones.Dias = {};
     this.activatedRoute.paramMap.subscribe(params => {
-      this.alumnosData = history.state.alumno;
+      this.alumnoID = history.state.alumnoID;
+      this.volverPag = history.state.volverPag;
       this.claseID = history.state.claseID;
-      
     });
-    console.log(this.alumnosData);
 
-    this.getResultados();
+    if(this.alumnoID === undefined || this.alumnoID === null){
+      this.alumnoID = localStorage.getItem('ID_Alumno');
+    }
+
+    this.obtenerAlumno();
+    this.obtenerRespuestas();
+    //this.obtenerSesiones();
   }
 
-  getResultados(){
-    this.resultadoService.getResultadoAlumno(this.alumnosData.ID_Alumno).subscribe( (res: any) => {
-      this.resultadosData = res.respuestas;
-    })
+  ngAfterViewInit() {
+    this.obtenerSesiones();
   }
 
-  getGravedadClass(gravedad: string): string {
-    switch (gravedad) {
-      case 'Nula':
-        return 'nula-gravedad';
-      case 'Leve':
-        return 'leve-gravedad';
-      case 'Grave':
-        return 'grave-gravedad';
-      default:
-        return '';
+  obtenerAlumno(){
+    this.alumnoService.getAlumnoID(this.alumnoID).subscribe((res: any) => {
+      this.alumnosData = res.alumnos[0];
+      //console.log(this.alumnosData);
+      this.alumnosData.Ambitos = JSON.parse(this.alumnosData.Ambitos);
+      //this.sesiones.Ambitos = this.alumnosData.Ambitos;
+      this.nombreClase = this.alumnosData.Clase.Nombre;
+
+      //console.log(this.alumnosData.Ambitos);
+      //console.log(this.sesiones.Ambitos);
+    });
+  }
+
+  obtenerSesiones(){
+    this.sesionService.getSesionesAlumno(this.alumnoID, this.dias).subscribe((res: any) => {
+      const sesionesData = res.sesiones;
+
+      //console.log(this.sesiones.Ambitos);
+      this.sesiones.Ambitos.Clase = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Clase);
+      this.sesiones.Ambitos.Amigos = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Amigos);
+      this.sesiones.Ambitos.Familia = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Familia);
+      this.sesiones.Ambitos.Emociones = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Emociones);
+      this.sesiones.Ambitos["Fuera de clase"] = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin)["Fuera de clase"]);
+
+      this.nombresAmbitos = Object.keys(this.sesiones.Ambitos);
+
+      const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+      
+      this.sesiones.Dias = sesionesData.map((sesion: any) => {
+        const partes = sesion.FechaFin.Fecha.split("-");
+        const date = new Date(`${partes[1]}-${partes[0]}-${partes[2]}`);
+        const dayName = days[date.getDay()];
+        return dayName;
+      });
+
+      this.dibujarGrafica();
+    });
+  }
+
+  mostrarMensaje: boolean = true;
+  hayDatos: boolean = false;
+
+  dibujarGrafica(){
+    var chartDom = document.getElementById('chart');
+    var myChart = echarts.init(chartDom);
+    var option: echarts.EChartsOption;
+
+    if(this.sesiones.Dias > 0 || this.sesiones.Ambitos.Amigos > 0 
+      || this.sesiones.Ambitos.Clase > 0 || this.sesiones.Ambitos.Familia > 0 
+      || this.sesiones.Ambitos.Emociones > 0 || this.sesiones.Ambitos["Fuera de clase"] > 0 ){
+
+      this.hayDatos = true;
+    } else {
+      this.hayDatos = false;
+    }
+
+    this.mostrarMensaje = !this.hayDatos;
+
+
+    option = {
+      tooltip: {
+        trigger: 'axis'
+      },
+      legend: {
+        data: this.nombresAmbitos
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      toolbox: {
+        feature: {
+          saveAsImage: {}
+        }
+      },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: this.sesiones.Dias
+      },
+      yAxis: {
+        type: 'value',
+        min: 0,
+        max: 100
+      },
+      series: [
+        {
+          name: 'Amigos',
+          type: 'line',
+          data: this.sesiones.Ambitos.Amigos
+        },
+        {
+          name: 'Clase',
+          type: 'line',
+          data: this.sesiones.Ambitos.Clase
+        },
+        
+        {
+          name: 'Familia',
+          type: 'line',
+          data: this.sesiones.Ambitos.Familia
+        },
+        {
+          name: 'Emociones',
+          type: 'line',
+          data: this.sesiones.Ambitos.Emociones
+        },
+        {
+          name: 'Fuera de clase',
+          type: 'line',
+          data: this.sesiones.Ambitos["Fuera de clase"]
+        }
+      ]
+    };
+
+    option && myChart.setOption(option);
+  }
+
+  obtenerRespuestas(){
+    this.respuestaService.getRespuestasAlumno(this.alumnoID, this.gravedad, 0, 5).subscribe((res: any) => {
+      this.respuestasData = res.respuestas;
+    });
+  }
+
+  cambiarDias(event: any) {
+    this.dias = parseInt(event.target?.value);
+    this.obtenerSesiones();
+  }
+
+  getGravedadClass(gravedad: number){
+    if(gravedad >= 0 && gravedad < 20){
+      return 'muymalo-gravedad';
+    }else if(gravedad >= 20 && gravedad <= 40){
+      return 'malo-gravedad';
+    } else if(gravedad >= 40 && gravedad <= 60){
+      return 'normal-gravedad';
+    }else if(gravedad >= 60 && gravedad <= 80){
+      return 'bueno-gravedad';
+    }else if(gravedad > 80 && gravedad <= 100){
+      return 'muybueno-gravedad';
+    } else {
+      return '';
     }
   }
 
-  getClaseEstado(): string {
-    let clase = "";
-    if(this.alumnosData.Estado === 'Bueno'){
-      clase = 'badge bg-success rounded-3 fw-semibold';
-    }
-    if(this.alumnosData.Estado === 'Normal'){
-      clase = 'badge bg-warning rounded-3 fw-semibold';
-    }
-    if(this.alumnosData.Estado === 'Malo'){
-      clase = 'badge bg-danger rounded-3 fw-semibold';
-    }
-
-    return clase;
+  cambiarGravedad(event: any){
+    this.gravedad = parseInt(event.target?.value);
+    this.obtenerRespuestas();
   }
 
   volver(){
-    this.router.navigate(['profesores/ver-alumnos'], {state: {claseID: this.claseID}});
+    if(this.claseID){
+      this.router.navigate(['profesores/ver-alumnos'], {state: {claseID: this.claseID}});
+    } else {
+      if(this.volverPag === 0){
+        this.router.navigate(['profesores/actividad-reciente']);
+      }
+      if(this.volverPag === 1){
+        this.router.navigate(['profesores/actividad-negativa']);
+      }
+    }
   }
-
 }

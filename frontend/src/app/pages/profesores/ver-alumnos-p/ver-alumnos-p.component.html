@@ -1,50 +1,134 @@
 <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
 data-sidebar-position="fixed" data-header-position="fixed">
 
-<div class="body-wrapper" style="margin-left: 0;">
-        <div class="container-fluid">
-            <div class="card">
+  <div class="body-wrapper" style="margin-left: 0;">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-6 align-items-strech">
+          <div class="card">
+            <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
+              <div class="card-body">
+                <h5 class="card-title fw-semibold mb-4"> Clase {{claseData.Nombre}} <span><i class="ti ti-friends" style="font-size: 20px;"></i></span></h5>
+                <div class="card">
+                  <div class="card-body">
+                    <div class="table-responsive" *ngIf="alumnosData.length > 0; else noAlumnos">
+                      <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
+                        <thead class="text-dark fs-4">
+                            <tr>
+                                <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
+                                <th><span><i class="ti ti-pin" style="font-size: 15px;"></i></span> Estado</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let alumno of alumnosData">
+                              <td>{{alumno.Nombre}} {{alumno.Apellidos}}</td>
+                              <td>
+                                  <div class="d-flex align-items-center gap-2">
+                                      <span [ngClass]="getClaseEstado(alumno.Estado)">{{alumno.Estado}}</span>
+                                  </div>
+                              </td>
+                              <td>
+                                  <button class="btn btn-primary" (click)="verPerfil(alumno.ID_Alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button>
+                              </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <br>
+                      <app-pagination (cambiarPagina)="cambiarPagina($event)" [texto]="true" [totalRegistros]="totalAlumnos" [registroActual]="posActual+1" (filasPagina)="cambiarFilasPagina($event)" [registroPag]="filPag"></app-pagination>
+                    </div>
+                    <ng-template #noAlumnos>
+                      <p class="text-center" style="margin-top: 16px;">No hay alumnos todavía</p>
+                    </ng-template>
+                  </div>
+                </div>
+              </div>
+            </div> 
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="card overflow-hidden position-relative">
+                <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
+                  <div class="card-body"  >
+                    <h5 class="card-title mb-9 fw-semibold" style="margin-left: 10px; margin-top: 10px;">Gráfica General/Ámbitos <span><i class="ti ti-graph" style="font-size: 20px;"></i></span></h5> 
+                  </div>
+                  <div class="card-body" style="background-color: #fff; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);">
+                  <div class="position-absolute top-0 end-0 mt-3 me-2">
+                    <select class="form-select py-1 ps-2 border-1 border-success bg-light rounded-pill" 
+                            (change)="onChangeOption($event)" 
+                            style="outline: none; margin-top: 10px;">
+                      <option>General</option>
+                      <option>Clase</option>
+                      <option>Amigos</option>
+                      <option>Familia</option>
+                      <option>Emociones</option>
+                      <option>Fuera de clase</option>
+                    </select>
+                  </div>
+                  <div id="chart1"></div>
+                  <p class="text-center" *ngIf="mostrarMensaje && !hayDatos">No hay datos registrados todavía</p>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>   
+      </div>
+      <div class="container-fluid" style="padding: 0;">
+        <div class="card">
+            <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
                 <div class="card-body">
-                    <h5 class="card-title fw-semibold mb-4">Clase {{claseData.Nombre}}</h5>
+                    <h5 class="card-title fw-semibold mb-4">Últimas preguntas respondidas de esta clase <span><i class="ti ti-activity" style="font-size: 20px;"></i></span></h5>
                     <div class="card">
-                        <div class="card-body table-responsive">
-                            <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
-                                <thead class="text-dark fs-4">
-                                    <tr>
-                                        <th class="border-bottom-0">Nombre</th>
-                                        <th class="border-bottom-0">Apellidos</th>
-                                        <th class="border-bottom-0">Usuario</th>
-                                        <th class="border-bottom-0">Estado</th>
-                                        <th class="border-bottom-0"></th>
-                                    </tr>
-                                </thead>
-                                <tbody *ngFor="let alumno of alumnosData">
-                                    <tr>
-                                        <td class="border-bottom-0">{{alumno.Nombre}}</td>
-                                        <td class="border-bottom-0">{{alumno.Apellidos}}</td>
-                                        <td class="border-bottom-0">{{alumno.Usuario}}</td>
-                                        <td class="border-bottom-0">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <span [ngClass]="getClaseEstado(alumno.Estado)">{{alumno.Estado}}</span>
-                                            </div>
+                        <div class="card-body">
+                            <div class="table-responsive" *ngIf="respuestasData.length > 0; else noRespuestas">
+                                <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
+                                    <thead class="text-dark fs-4">
+                                        <tr>
+                                            <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
+                                            <th><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Ámbito</th>
+                                            <th><span><i class="ti ti-question-mark" style="font-size: 15px;"></i></span> Pregunta</th>
+                                            <th><span><i class="ti ti-check" style="font-size: 15px;"></i></span> Respuesta</th>
+                                            <th><span><i class="ti ti-alert-circle" style="font-size: 15px;"></i></span> Grado</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr *ngFor="let respuesta of respuestasData">
+                                        <td>{{respuesta.Alumno.Nombre}} {{respuesta.Alumno.Apellidos}}</td>
+                                        <td>{{respuesta.Pregunta.Ambito.Nombre}}</td>
+                                        <td>{{respuesta.Pregunta.TextoPregunta}}</td>
+                                        <td>{{respuesta.Opcion.TextoOpcion}}</td>
+                                        <td [ngSwitch]="respuesta.Opcion.Gravedad">
+                                          <span *ngSwitchCase="-2">Alarmante</span>
+                                          <span *ngSwitchCase="0">Normal</span>
+                                          <span *ngSwitchCase="1">Buena</span>
+                                          <span *ngSwitchCase="2">Muy Buena</span>
                                         </td>
-                                        <td class="border-bottom-0">
-                                            <button class="btn btn-light" (click)="verPerfil(alumno)">Ver Perfil</button>
+                                        <td>
+                                          <button class="btn btn-primary" (click)="verPerfil(respuesta.ID_Alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button>
                                         </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <br>
-                            <app-pagination (cambiarPagina)="cambiarPagina($event)" [texto]="true" [totalRegistros]="totalAlumnos" [registroActual]="posActual+1" (filasPagina)="cambiarFilasPagina($event)" [registroPag]="filPag"></app-pagination>
+                                      </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <ng-template #noRespuestas>
+                              <p class="text-center" style="margin-top: 16px; font-size: 20px;">No hay respuestas</p>
+                            </ng-template>
                         </div>
                     </div>
-                    <a href="/profesores/dashboard" class="btn btn-light">Volver</a>
                 </div>
             </div>
         </div>
-    <br>
-    <br>
-    <div class="py-6 px-6 text-center">
-      <p class="copyright">&copy; 2023 Blooming. Proyecto académico de la Universidad de Alicante .</p>
+        <a href="/profesores/dashboard" class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</a>
+      </div>
     </div>
+  </div>
+  <br>
+  <br>
+  <div class="py-6 px-6 text-center">
+    <p class="copyright">&copy; 2023 Blooming. Proyecto académico de la Universidad de Alicante .</p>
+  </div>
 </div>

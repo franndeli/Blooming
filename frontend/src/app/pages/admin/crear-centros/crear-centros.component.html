@@ -9,57 +9,58 @@ data-sidebar-position="fixed" data-header-position="fixed">
     <!--  Row 1 -->
     
     <div class="container-fluid">
-        <div class="container-fluid">
-          <div class="card">
+      <div class="container-fluid">
+        <div class="card">
+          <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
             <div class="card-body">
-              <h5 class="card-title fw-semibold mb-4">Crear Centro</h5>
+              <h5 class="card-title fw-semibold mb-4">Crea un Centro <span><i class="ti ti-home" style="font-size: 20px;"></i></span></h5>
               <div class="card">
                 <div class="card-body">
                   <form [formGroup]="form">
                     <div class="mb-3">
-                      <label for="Nombre" class="form-label">Nombre</label>
+                      <label for="Nombre" class="form-label"><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</label>
                       <input class="form-control" formControlName="Nombre" id="Nombre">
                     </div>
                     <p class="text-danger" *ngIf="!validarForm('Nombre')">El Nombre es obligatorio</p>
                     <div class="mb-3">
-                      <label for="Email" class="form-label">Email</label>
+                      <label for="Email" class="form-label"><span><i class="ti ti-mail" style="font-size: 15px;"></i></span> Email</label>
                       <input type="email" class="form-control" formControlName="Email">
                     </div>
                     <p class="text-danger" *ngIf="!validarForm('Email')">El Email es obligatorio</p>
                     <div class="mb-4">
-                      <label for="Contraseña" class="form-label">Contraseña</label>
+                      <label for="Contraseña" class="form-label"><span><i class="ti ti-password" style="font-size: 15px;"></i></span> Contraseña</label>
                       <input type="password" class="form-control" formControlName="Contraseña" id="Contraseña">
                     </div>
                     <p class="text-danger" *ngIf="!validarForm('Contraseña')">La Contraseña es obligatoria</p>
                     <div class="mb-4">
-                      <label for="Calle" class="form-label">Calle</label>
+                      <label for="Calle" class="form-label"><span><i class="ti ti-building" style="font-size: 15px;"></i></span> Calle</label>
                       <input class="form-control" formControlName="Calle" id="Calle">
                     </div>
                     <p class="text-danger" *ngIf="!validarForm('Calle')">La Calle es obligatoria</p>
                     <div class="mb-4">
-                      <label for="CP" class="form-label">Cóigo Postal</label>
+                      <label for="CP" class="form-label"><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Código Postal</label>
                       <input class="form-control" formControlName="CP" id="CP">
                     </div>
                     <p class="text-danger" *ngIf="!validarForm('CP')">El Código Postal es obligatorio</p>
                     <div class="mb-4">
-                      <label for="Localidad" class="form-label">Localidad</label>
+                      <label for="Localidad" class="form-label"><span><i class="ti ti-location" style="font-size: 15px;"></i></span> Localidad</label>
                       <input class="form-control" formControlName="Localidad" id="Localidad">
                     </div>
                     <p class="text-danger" *ngIf="!validarForm('Localidad')">La Localidad es obligatoria</p>
                     <div class="mb-4">
-                      <label for="Provincia" class="form-label">Provincia</label>
+                      <label for="Provincia" class="form-label"><span><i class="ti ti-map" style="font-size: 15px;"></i></span> Provincia</label>
                       <input class="form-control d-inline-block" formControlName="Provincia" id="Provincia">
                     </div>
                     <p class="text-danger" *ngIf="!validarForm('Provincia')">La Provincia es obligatoria</p>
-                    <button class="btn btn-danger" (click)="crearCentro()">Aceptar</button>
-                    <button  routerLink="/admin/ver-centros" class="btn btn-danger">Volver</button>
+                    <button class="btn btn-primary" (click)="crearCentro()"><span><i class="ti ti-check" style="font-size: 15px;"></i></span> Aceptar</button>
+                    <button  routerLink="/admin/ver-centros" class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</button>
                   </form>
                 </div>
               </div>
-              
             </div>
           </div>
         </div>
+      </div>
     </div>
     
       

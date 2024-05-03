@@ -11,41 +11,42 @@ data-sidebar-position="fixed" data-header-position="fixed">
     <div class="container-fluid">
         <div class="container-fluid">
           <div class="card">
-            <div class="card-body">
-              <h5 class="card-title fw-semibold mb-4">Editar Centro</h5>
-              <div class="card">
-                <div class="card-body">
-                  <form [formGroup]="form">
-                    <div class="mb-3">
-                      <label for="Nombre" class="form-label">Nombre</label>
-                      <input class="form-control" formControlName="Nombre" id="Nombre">
-                    </div>
-                    <div class="mb-3">
-                      <label for="Email" class="form-label">Email</label>
-                      <input type="email" class="form-control" formControlName="Email">
-                    </div>
-                    <div class="mb-3">
-                      <label for="Calle" class="form-label">Calle</label>
-                      <input class="form-control" formControlName="Calle" id="Calle">
-                    </div>
-                    <div class="mb-3">
-                      <label for="CP" class="form-label">Cóigo Postal</label>
-                      <input class="form-control" formControlName="CP" id="CP">
-                    </div>
-                    <div class="mb-3">
-                      <label for="Localidad" class="form-label">Localidad</label>
-                      <input class="form-control" formControlName="Localidad" id="Localidad">
-                    </div>
-                    <div class="mb-3">
-                      <label for="Provincia" class="form-label">Provincia</label>
-                      <input class="form-control d-inline-block" formControlName="Provincia" id="Provincia">
-                    </div>
-                    <button class="btn btn-danger" (click)="actualizarCentro()">Aceptar</button>
-                    <a routerLink="/admin/ver-centros" class="btn btn-danger">Volver</a>
-                  </form>
+            <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
+              <div class="card-body">
+                <h5 class="card-title fw-semibold mb-4">Edita el Centro <span><i class="ti ti-home" style="font-size: 20px;"></i></span></h5>
+                <div class="card">
+                  <div class="card-body">
+                    <form [formGroup]="form">
+                      <div class="mb-3">
+                        <label for="Nombre" class="form-label"><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</label>
+                        <input class="form-control" formControlName="Nombre" id="Nombre">
+                      </div>
+                      <div class="mb-3">
+                        <label for="Email" class="form-label"><span><i class="ti ti-mail" style="font-size: 15px;"></i></span> Email</label>
+                        <input type="email" class="form-control" formControlName="Email">
+                      </div>
+                      <div class="mb-3">
+                        <label for="Calle" class="form-label"><span><i class="ti ti-building" style="font-size: 15px;"></i></span> Calle</label>
+                        <input class="form-control" formControlName="Calle" id="Calle">
+                      </div>
+                      <div class="mb-3">
+                        <label for="CP" class="form-label"><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Código Postal</label>
+                        <input class="form-control" formControlName="CP" id="CP">
+                      </div>
+                      <div class="mb-3">
+                        <label for="Localidad" class="form-label"><span><i class="ti ti-location" style="font-size: 15px;"></i></span> Localidad</label>
+                        <input class="form-control" formControlName="Localidad" id="Localidad">
+                      </div>
+                      <div class="mb-3">
+                        <label for="Provincia" class="form-label"><span><i class="ti ti-map" style="font-size: 15px;"></i></span> Provincia</label>
+                        <input class="form-control d-inline-block" formControlName="Provincia" id="Provincia">
+                      </div>
+                      <button class="btn btn-primary" (click)="actualizarCentro()"><span><i class="ti ti-check" style="font-size: 15px;"></i></span> Aceptar</button>
+                      <a routerLink="/admin/ver-centros" class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</a>
+                    </form>
+                  </div>
                 </div>
               </div>
-              
             </div>
           </div>
         </div>

@@ -11,27 +11,28 @@ data-sidebar-position="fixed" data-header-position="fixed">
     <div class="container-fluid">
         <div class="container-fluid">
           <div class="card">
-            <div class="card-body">
-              <h5 class="card-title fw-semibold mb-4">Crear Clase</h5>
-              <div class="card">
-                <div class="card-body">
-                  <form [formGroup]="form">
-                    <div class="mb-3">
-                      <label for="Nombre" class="form-label">Nombre</label>
-                      <input class="form-control" formControlName="Nombre" id="Nombre">
-                    </div>
-                    <p class="text-danger" *ngIf="!validarForm('Nombre')">El Nombre es obligatorio</p>
-                    <div class="mb-3">
-                      <label for="NumAlumnos" class="form-label">Nº Alumnos</label>
-                      <input class="form-control" formControlName="NumAlumnos" id="NumAlumnos">
-                    </div>
-                    <p class="text-danger" *ngIf="!validarForm('NumAlumnos')">El Número de alumnos es obligatorio</p>
-                    <button class="btn btn-danger" (click)="crearClase()">Aceptar</button>
-                    <a href="/centros/ver-clases" class="btn btn-secondary">Volver</a>
-                  </form>
+            <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
+              <div class="card-body">
+                <h5 class="card-title fw-semibold mb-4">Crear Clase <span><i class="ti ti-school" style="font-size: 20px;"></i></span></h5>
+                <div class="card">
+                  <div class="card-body">
+                    <form [formGroup]="form">
+                      <div class="mb-3">
+                        <label for="Nombre" class="form-label"><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</label>
+                        <input class="form-control" formControlName="Nombre" id="Nombre">
+                      </div>
+                      <p class="text-danger" *ngIf="!validarForm('Nombre')">El Nombre es obligatorio</p>
+                      <div class="mb-3">
+                        <label for="NumAlumnos" class="form-label"><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Nº Alumnos</label>
+                        <input class="form-control" formControlName="NumAlumnos" id="NumAlumnos">
+                      </div>
+                      <p class="text-danger" *ngIf="!validarForm('NumAlumnos')">El Número de alumnos es obligatorio</p>
+                      <button class="btn btn-primary" (click)="crearClase()"><span><i class="ti ti-check" style="font-size: 15px;"></i></span> Aceptar</button>
+                      <a href="/centros/ver-clases" class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</a>
+                    </form>
+                  </div>
                 </div>
               </div>
-              
             </div>
           </div>
         </div>

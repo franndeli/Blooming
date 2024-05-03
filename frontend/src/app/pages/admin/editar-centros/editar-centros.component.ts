@@ -42,11 +42,22 @@ export class EditarCentrosComponent implements OnInit {
 
   actualizarCentro(){
     if(!this.form.valid){
-      console.log('Errores en el formulario');
+      //console.log('Errores en el formulario');
     }else{
       this.centroService.putCentro(this.form.value).subscribe(
         (response:any) => {
-          this.router.navigate(['admin/ver-centros']);
+          Swal.fire({
+            icon: "success",
+            title: "Centro editado con éxito",
+            showConfirmButton: false,
+            timer: 1500
+          }).then(() => {
+            this.router.navigate(['admin/ver-centros']);
+          });
+        },
+        (error) => {
+          console.error('Error de edición:', error);
+          Swal.fire(error.error.message);
         }
       );
     }

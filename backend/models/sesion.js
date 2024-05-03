@@ -1,5 +1,6 @@
-const { DataTypes } = require('sequelize');
 const { sequelize } = require('../database/configdb');
+const { DataTypes } = require('sequelize');
+const moment = require('moment');
 
 const Sesion = sequelize.define('Sesion', {
     ID_Sesion: {
@@ -13,18 +14,38 @@ const Sesion = sequelize.define('Sesion', {
     },
     FechaInicio: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            isDate: true
+        },
+        get() {
+            const fechaInicio = this.getDataValue('FechaInicio');
+            return {
+                Fecha: moment.utc(fechaInicio).format('YYYY-MM-DD'),
+                Hora: moment.utc(fechaInicio).format('HH:mm:ss')
+            };
+        }
     },
     FechaFin: {
         type: DataTypes.DATE,
-        allowNull: true
+        allowNull: true,
+        validate: {
+            isDate: true
+        },
+        get() {
+            const fechaFin = this.getDataValue('FechaFin');
+            return {
+                Fecha: moment.utc(fechaFin).format('DD-MM-YYYY'),
+                Hora: moment.utc(fechaFin).format('HH:mm:ss')
+            };
+        }
     },
     ValorAmbitoInicio: {
-        type: DataTypes.STRING,
+        type: DataTypes.JSON,
         allowNull: false
     },
     ValorAmbitoFin: {
-        type: DataTypes.STRING,
+        type: DataTypes.JSON,
         allowNull: true
     }
 }, {

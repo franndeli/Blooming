@@ -1,0 +1,19 @@
+#chart2 {
+    width: 800px; /* Ancho deseado */
+    height: 500px;
+    margin: 0 auto;
+}
+.body-wrapper > .container-fluid{
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 24px;
+    -webkit-transition: 0.2s ease-in;
+    transition: 0.2s ease-in;
+}
+.card-body > .h5{
+    margin-bottom: 0px;
+}
+.bg-danger {
+    background-color: rgb(233, 31, 31) !important;
+}
+    

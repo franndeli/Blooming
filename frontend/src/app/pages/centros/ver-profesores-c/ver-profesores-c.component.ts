@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ProfesorService } from '../../../services/profesores.service';
 import Swal from 'sweetalert2'
+import { Router } from '@angular/router';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ProfesorService } from '../../../services/profesores.service';
 
 @Component({
   selector: 'app-ver-profesores-c',
@@ -10,12 +10,16 @@ import Swal from 'sweetalert2'
 })
 export class VerProfesoresCComponent implements OnInit {
 
-  profesoresData: any;
+  profesoresData: any = 0;
   private id: any;
   public totalProfesores = 0;
   public posActual = 0;
   public filPag = 5;
   private busqueda = '';
+  public login: string = '';
+  public password: string = '';
+
+  @ViewChild('modalDialog') modalDialog!: ElementRef;
 
   constructor(private profesorService: ProfesorService, private router: Router){}
 
@@ -40,8 +44,8 @@ export class VerProfesoresCComponent implements OnInit {
         }
       }else {
         this.profesoresData = res.profesores;
+        //console.log(this.profesoresData)
         this.totalProfesores = res.page.total;
-        console.log(this.totalProfesores);
       }
     })
   }
@@ -66,6 +70,35 @@ export class VerProfesoresCComponent implements OnInit {
         });
       }
     });
+  }
+
+  verDatos(id: number){
+    this.profesorService.getProfesorID(id, true).subscribe((res: any) => {
+      //console.log(res.profesores);
+      this.login = res.profesores[0].Email;
+      this.password = res.profesores[0].Contraseña;
+      
+      this.modalDialog.nativeElement.classList.add('show');
+      this.modalDialog.nativeElement.setAttribute('aria-modal', 'true');
+      this.modalDialog.nativeElement.style.display = 'block';
+      document.body.classList.add('modal-open');
+
+      const backdrop = document.createElement('div');
+      backdrop.className = 'modal-backdrop fade show';
+      document.body.appendChild(backdrop);
+    });
+  }
+
+  cerrar(): void {
+    this.modalDialog.nativeElement.classList.remove('show');
+    this.modalDialog.nativeElement.setAttribute('aria-modal', 'false');
+    this.modalDialog.nativeElement.style.display = 'none';
+    document.body.classList.remove('modal-open');
+
+    const backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+      document.body.removeChild(backdrop);
+    }
   }
 
   editarProfesor(profesor: any){

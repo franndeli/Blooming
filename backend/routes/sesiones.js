@@ -1,4 +1,4 @@
-const { getSesiones, createSesion, updateSesion, deleteSesion } = require('../controllers/sesiones');
+const { getSesiones, createSesion, updateSesion, deleteSesion, getSesionesCount } = require('../controllers/sesiones');
 const { validarCampos } = require('../middleware/validaciones');
 const { validarRol } = require('../middleware/validar-rol');
 const { validarJWT } = require('../middleware/validar-jwt');
@@ -15,6 +15,14 @@ router.get('/', [
     });
 });
 
+router.get('/:ID_Alumno', [
+    validarJWT, validarRol(['Alumno', 'Admin'])
+], (req, res) => {
+    getSesionesCount(req, res).catch(error => {
+        res.status(error.statusCode || 500).json({ error: error.message });
+    })
+})
+
 router.post('/', [
     validarJWT, validarRol(['Admin', 'Alumno']),
     check('ID_Alumno', 'El argumento "ID_Alumno" es obligatorio').not().isEmpty(),
@@ -30,13 +38,12 @@ router.post('/', [
 });
 
 router.put('/:ID_Sesion', [
-    validarJWT, validarRol(['Admin']),
+    validarJWT, validarRol(['Admin', 'Alumno']),
     check('ID_Alumno').optional().not().isEmpty().withMessage('Error en el argumento "ID_Alumno"'),
     check('FechaInicio').optional().not().isEmpty().withMessage('Error en el argumento "FechaInicio"'),
     check('FechaFin').optional().not().isEmpty().withMessage('Error en el argumento "FechaFin"'),
     check('ValorAmbitoInicio').optional().not().isEmpty().withMessage('Error en el argumento "ValorAmbitoInicio"'),
     check('ValorAmbitoFin').optional().not().isEmpty().withMessage('Error en el argumento "ValorAmbitoFin"'),
-    check('ID_Sesion').isInt().withMessage('El campo "ID_Sesion" debe ser un número entero'),
     validarCampos
 ], (req, res) => {
     updateSesion(req, res).catch(error => {

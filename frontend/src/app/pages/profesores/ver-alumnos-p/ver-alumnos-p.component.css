@@ -1,11 +1,31 @@
+.card-body{
+  -webkit-box-flex: 1;
+  flex: 1 1 auto;
+  padding: 20px 10px;
+}
+
 .bg-danger {
-    background-color: rgb(233, 31, 31) !important;
-  }
+  background-color: rgb(233, 31, 31) !important;
+}
   
-  .bg-warning {
-    background-color: rgb(255, 174, 31) !important;
-  }
+.bg-warning {
+  background-color: rgb(255, 174, 31) !important;
+}
   
-  .bg-success {
-    background-color: green !important;
-  }
+.bg-success {
+  background-color: green !important;
+}
+#chart1 {
+  width: 540px;
+  height: 400px;
+  margin: 0 auto;
+}
+.body-wrapper > .container-fluid{
+  max-width: 1300px;
+}
+.bg-amarillo{
+  background-color: #dce232;
+}
+.bg-verde1{
+  background-color: #8aca69;
+}

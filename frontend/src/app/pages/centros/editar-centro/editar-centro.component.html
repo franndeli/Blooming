@@ -12,30 +12,31 @@ data-sidebar-position="fixed" data-header-position="fixed">
     
     <div class="container-fluid">
         <div class="container-fluid">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title fw-semibold mb-4">Editar mi perfil</h5>
-              <div class="card">
-                <div class="card-body">
-                  <form [formGroup]="form">
-                    <div class="mb-3">
-                      <label for="Contraseña" class="form-label">Contraseña</label>
-                      <input type="password" class="form-control" formControlName="Contraseña" id="Contraseña">
-                    </div>
-                    <div class="mb-3">
-                      <label for="newPassword" class="form-label">Nueva contraseña</label>
-                      <input type="password" class="form-control" formControlName="newPassword" id="newPassword">
-                    </div> 
-                    <div class="mb-3">
-                      <label for="newPassword2" class="form-label">Repetir contraseña</label>
-                      <input type="password" class="form-control" formControlName="newPassword2" id="newPassword2">
-                    </div>
-                    <button class="btn btn-danger" (click)="cambiarPwd()">Aceptar</button>
-                    <a routerLink="/centros/perfil" class="btn btn-danger">Volver</a>
-                  </form>
+          <div class="card mx-auto" style="max-width: 600px;">
+            <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
+              <div class="card-body">
+                <h5 class="card-title fw-semibold mb-4">Cambiar Contraseña <span><i class="ti ti-password" style="font-size: 20px;"></i></span></h5>
+                <div class="card">
+                  <div class="card-body">
+                    <form [formGroup]="form">
+                      <div class="mb-3">
+                        <label for="Contraseña" class="form-label"><span><i class="ti ti-password" style="font-size: 15px;"></i></span> Contraseña</label>
+                        <input type="password" class="form-control" formControlName="Contraseña" id="Contraseña">
+                      </div>
+                      <div class="mb-3">
+                        <label for="newPassword" class="form-label"><span><i class="ti ti-plus" style="font-size: 15px;"></i></span> Nueva contraseña</label>
+                        <input type="password" class="form-control" formControlName="newPassword" id="newPassword">
+                      </div> 
+                      <div class="mb-3">
+                        <label for="newPassword2" class="form-label"><span><i class="ti ti-repeat" style="font-size: 15px;"></i></span> Repetir contraseña</label>
+                        <input type="password" class="form-control" formControlName="newPassword2" id="newPassword2">
+                      </div>
+                      <button class="btn btn-primary" (click)="cambiarPwd()"><span><i class="ti ti-check" style="font-size: 15px;"></i></span> Aceptar</button>
+                      <a routerLink="/centros/perfil" class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</a>
+                    </form>
+                  </div>
                 </div>
               </div>
-              
             </div>
           </div>
         </div>

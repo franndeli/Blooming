@@ -84,6 +84,10 @@ export class AlumnoService {
     return this.http.get(this.basePath+'id/?ID_Alumno='+id, this.httpOptions);
   }
 
+  actualizaAmbitos(id: any){
+    this.getHeader();
+  }
+
   deleteAlumno(id:number){
     this.getHeader();
     return this.http.delete(this.basePath+id, this.httpOptions);

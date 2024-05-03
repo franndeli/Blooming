@@ -66,9 +66,12 @@ export class ProfesorService {
     return this.http.get(this.basePath+'?ID_Centro='+id+'&numFilas='+filas+'&desde='+desde, this.httpOptions);
   }
 
-  getProfesorID(id: any){
+  getProfesorID(id: any, password?: boolean){
     this.getHeader();
-    return this.http.get(this.basePath+'?ID_Profesor='+id, this.httpOptions );
+    if(!password){
+      password = false;
+    }
+    return this.http.get(this.basePath+'?ID_Profesor='+id+'&pwd='+password, this.httpOptions );
   }
 
   deleteProfesor(id:number){

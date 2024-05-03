@@ -1,6 +1,9 @@
 const Clase = require('../models/clase');
+const nodemailer = require('nodemailer');
 const Centro = require('../models/centro');
 const Alumno = require('../models/alumno');
+const Respuesta = require('../models/respuesta');
+const Sesion = require('../models/sesion');
 const sequelize = require('../database/configdb');
 const hashPassword = require('../middleware/hashHelper');
 
@@ -102,34 +105,79 @@ const getAlumnos = async (req, res) => {
     }
 
 
-const createAlumno = async (req, res) => {
-    try {
-        const usuario = "";
+    const createAlumno = async (req, res) => {
+        try {
+            const usuario = "";
+    
+            const existAlumno = await Alumno.findOne({ where: { Usuario: usuario } });
+            if (existAlumno) {
+                return res.status(400).json({ ok: false, message: "El usuario del alumno ya existe" });
+            }
+        
+            const datos = req.body;
 
-        const existAlumno = await Alumno.findOne({ where: { Usuario: usuario } });
-        if (existAlumno) {
-            return res.status(400).json({ ok: false, message: "El usuario del alumno ya existe" });
+            const hashedPassword = hashPassword(req.body.Contraseña);
+            const ambitos = {"Clase":50,"Amigos":50,"Familia":50,"Emociones":50,"Fuera de clase":50};
+            const frecuencia = {"Clase":0,"Amigos":0,"Familia":0,"Emociones":0,"Fuera de clase":0}
+            const estado = "Normal"
+            const newAlumno = { ...req.body, Contraseña: hashedPassword, Usuario: usuario, Estado: estado, Ambitos: ambitos, AparicionAmbitos: frecuencia};
+        
+            const createdAlumno = await Alumno.create(newAlumno);
+        
+            const idAlumno = createdAlumno.ID_Alumno;
+            const nomUsuario = generarUsuario(req.body.Nombre, req.body.Apellidos, idAlumno);
+
+            await sendMail(datos, nomUsuario);
+        
+            await Alumno.update({ Usuario: nomUsuario }, { where: { ID_Alumno: idAlumno } });
+        
+            return res.json({
+                ok: true,
+                msg: 'createAlumno'
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ ok: false, message: "Error al crear el alumno" });
         }
-    
-        const hashedPassword = hashPassword(req.body.Contraseña);
-        const newAlumno = { ...req.body, Contraseña: hashedPassword, Usuario: usuario };
-    
-        const createdAlumno = await Alumno.create(newAlumno);
-    
-        const idAlumno = createdAlumno.ID_Alumno;
-        const nomUsuario = generarUsuario(req.body.Nombre, req.body.Apellidos, idAlumno);
-    
-        await Alumno.update({ Usuario: nomUsuario }, { where: { ID_Alumno: idAlumno } });
-    
-        return res.json({
-            ok: true,
-            msg: 'createAlumno'
+    };
+
+    const sendMail = async (datos, usuario) => {
+
+        const centro = await Centro.findOne({ where: { ID_Centro: datos.ID_Centro } });
+        const clase = await Clase.findOne({ where: { ID_Clase: datos.ID_Clase } });
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'blooming.abp@gmail.com',
+                pass: 'fkpn mfrg bcal qrpb'
+            }
         });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ ok: false, message: "Error al crear el alumno" });
+
+        const mailOptions = {
+            from: 'blooming.abp@gmail.com',
+            to: datos.EmailTutor,
+            subject: 'Bienvenido a Blooming',
+            text: 
+`Buenas,
+Desde el ${centro.Nombre} le damos la bienvenida a su hijo a la plataforma Blooming. Se le ha matriculado en la clase ${clase.Nombre}.
+Los datos de acceso son:
+Usuario: ${usuario}
+Contraseña: ${datos.Contraseña}
+            
+Un saludo.
+${centro.Nombre}`
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Error al enviar el email:', error);
+            } else {
+                //console.log('Email enviado: ' + info.response);
+            }
+        });
+
     }
-};
 
 
 const updateAlumno = async (req, res) => {
@@ -168,6 +216,8 @@ const deleteAlumno = async (req, res) => {
             return res.status(404).json({ ok: false, message: "Alumno no encontrado" });
         }
 
+        await Respuesta.destroy({ where: { ID_Alumno: id } });
+        await Sesion.destroy({ where: { ID_Alumno: id } });
         await alumno.destroy();
 
         return res.json({
@@ -180,5 +230,16 @@ const deleteAlumno = async (req, res) => {
     }
 };
 
+const resetAparicionAmbitos = async () => {
+    try {
+        const nuevoValorAparicionAmbitos = { "Clase": 0, "Amigos": 0, "Familia": 0, "Emociones": 0, "Fuera de clase": 0 };
+        await Alumno.update({ AparicionAmbitos: nuevoValorAparicionAmbitos }, { where: {} }); // Actualiza todos los registros
 
-module.exports = { getAlumnos, createAlumno, updateAlumno, deleteAlumno };
+        //console.log("AparicionAmbitos restablecido exitosamente para todos los alumnos.");
+    } catch (error) {
+        console.error("Error al restablecer AparicionAmbitos:", error);
+    }
+};
+
+
+module.exports = { getAlumnos, createAlumno, updateAlumno, deleteAlumno, resetAparicionAmbitos };

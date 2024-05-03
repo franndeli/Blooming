@@ -21,6 +21,13 @@ export class ProfesoresComponent implements OnInit{
   }
 
   ngOnInit() {
+    if(localStorage.getItem('ID_Alumno')){
+      localStorage.removeItem('ID_Alumno');
+    }
+    if(localStorage.getItem('ID_Clase')){
+      localStorage.removeItem('ID_Clase');
+    }
+    
     this.getClases();
   }
 
@@ -64,7 +71,8 @@ export class ProfesoresComponent implements OnInit{
   }
 
   setClaseID(){
-    this.claseService.setClaseID(this.clasID);
+    //this.claseService.setClaseID(this.clasID);
+    localStorage.setItem('ID_Clase', this.clasID);
   }
   
 }

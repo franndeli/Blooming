@@ -13,3 +13,13 @@
     }
 }
   
+h1{
+    text-align: center;
+    margin-bottom: 25px;
+}
+.btn {
+    font-size: 18px;
+}
+.alert-secondary{
+    padding: 0;
+}

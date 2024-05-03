@@ -30,6 +30,8 @@ export class TRecursoMalla extends TRecurso {
 
   private texturas: any
 
+  private texturaPorCara: any;
+
   constructor(nombre: string, shader: TRecursoShader, texturas: any) {
     super();
     this.vertices = new Float32Array();
@@ -132,7 +134,8 @@ export class TRecursoMalla extends TRecurso {
                 this.configurarBuffers(vertexData, normalData, texCoordData, indexData);
             }
         }
-
+        
+        this.calcularCarasTexturas();
         
         console.log(`Recurso malla ${nombre} cargado correctamente.`);
 
@@ -196,17 +199,19 @@ export class TRecursoMalla extends TRecurso {
     // No se configuraron buffers de colores en este ejemplo, pero puedes agregarlo si es necesario
   }
 
+  calcularCarasTexturas() {
+    this.texturaPorCara = {
+      [this.objectIDs["Cube.002"]]: 0,  // Índice de la textura en this.texturas
+      [this.objectIDs["Cube.005"]]: 1
+    };
+  }
+
   dibujar(matrizTransf: mat4): void {
     let gl = this.gl;
     gl.useProgram(this.programId);
 
     // let applyTextureArray = [0, 0, 0, 0, 0, 0];
     // applyTextureArray[2] = 1;
-
-    const texturaPorCara = {
-      [this.objectIDs["Cube.002"]]: 0,  // Índice de la textura en this.texturas
-      [this.objectIDs["Cube.005"]]: 1
-  };
 
     // Iterar sobre cada mesh registrado (cada uno tiene su propio conjunto de buffers)
     for (let i = 0; i < this.vertexBuffers.length; i++) {
@@ -234,7 +239,7 @@ export class TRecursoMalla extends TRecurso {
 
         
 
-        let texturaIndex = texturaPorCara[i];
+        let texturaIndex = this.texturaPorCara[i];
 
         // console.log(this.texturas[texturaIndex].tex);
         if (texturaIndex !== undefined) {

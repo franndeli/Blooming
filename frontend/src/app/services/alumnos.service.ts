@@ -76,7 +76,7 @@ export class AlumnoService {
     if(!textoBusqueda){
       textoBusqueda = '';
     }
-    return this.http.get(this.basePath+'?ID_Clase='+id+'&numFilas='+filas+'&desde='+desde+'&ordenar='+ordenar, this.httpOptions);
+    return this.http.get(this.basePath+'?ID_Clase='+id+'&numFilas='+filas+'&desde='+desde+'&ordenar='+ordenar+'&textoBusqueda='+textoBusqueda, this.httpOptions);
   }
 
   getAlumnoID(id: any){

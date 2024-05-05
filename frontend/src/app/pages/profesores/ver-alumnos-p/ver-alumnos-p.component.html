@@ -6,9 +6,13 @@ data-sidebar-position="fixed" data-header-position="fixed">
       <div class="row">
         <div class="col-lg-6 align-items-strech">
           <div class="card">
-            
               <div class="card-body">
-                <h5 class="card-title fw-semibold mb-4"> Clase {{claseData.Nombre}} <span><i class="ti ti-friends" style="font-size: 20px;"></i></span></h5>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                  <h5 class="card-title fw-semibold mb-0">Clase {{claseData.Nombre}} <span><i class="ti ti-friends" style="font-size: 20px;"></i></span></h5>
+                  <div class="input-group" style="width: 200px;">
+                    <input type="text" placeholder="Buscar alumno..." [(ngModel)]="filtroNombre" (input)="filtrarAlumnos()" class="form-control buscador">  
+                  </div>
+                </div>
                 <div class="card">
                   <div class="card-body">
                     <div class="table-responsive" *ngIf="alumnosData.length > 0; else noAlumnos">

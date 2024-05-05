@@ -13,18 +13,29 @@ const getAlumnos = async (req, res) => {
     try {
         const tam = Number(req.query.numFilas) || 0;
         const desde = Number(req.query.desde) || 0;
+        const textoBusqueda = req.query.textoBusqueda || '';
         const queryParams = req.query;
 
-        const validParams = ['ID_Alumno', 'Nombre', 'Apellidos', 'Usuario', 'FechaNacimiento', 'ID_Clase', 'ID_Centro', 'Estado', 'desde', 'numFilas', 'ordenar'];
+        const validParams = ['ID_Alumno', 'Nombre', 'Apellidos', 'Usuario', 'FechaNacimiento', 'ID_Clase', 'ID_Centro', 'Estado', 'desde', 'numFilas', 'ordenar', 'textoBusqueda'];
+        
+        let queryOptions = {};
+
+        if (textoBusqueda) {
+            queryOptions[sequelize.Op.or] = [
+                { Nombre: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { Apellidos: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { Estado: { [sequelize.Op.like]: `%${textoBusqueda}%` } }
+            ];  
+        }
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
+        console.log(isValidQuery);
         if (!isValidQuery) {
             return res.status(400).json({ statusCode: 400, message: "Parámetros de búsqueda no válidos en Alumnos" });
         }
-        
-        const queryOptions = {};
+
         for (const param in queryParams) {
-            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde' && param !== 'ordenar') {
+            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde' && param !== 'ordenar' && param !== 'textoBusqueda') {
                 if (param === 'ID_Alumno') {
                     queryOptions[param] = queryParams[param];
                 } else {
@@ -32,6 +43,8 @@ const getAlumnos = async (req, res) => {
                 }
             }
         }
+
+        
         
         const paginationOptions = tam > 0 ? { limit: tam, offset: desde } : {};
         let orderOptions;

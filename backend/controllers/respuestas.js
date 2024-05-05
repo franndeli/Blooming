@@ -12,18 +12,27 @@ const getRespuestas = async (req, res) => {
     try {
         const tam = Number(req.query.numFilas) || 0;
         const desde = Number(req.query.desde) || 0;
+        const textoBusqueda = req.query.textoBusqueda || '';
         const queryParams = req.query;
 
-        const validParams = ['ID_Respuesta', 'ID_Pregunta', 'ID_Opcion', 'ID_Alumno', 'FechaRespuesta', 'ID_Sesion', 'Gravedad', 'ID_Clase', 'ID_Centro', 'desde', 'numFilas', 'ordenar'];
+        const validParams = ['ID_Respuesta', 'ID_Pregunta', 'ID_Opcion', 'ID_Alumno', 'FechaRespuesta', 'ID_Sesion', 'Gravedad', 'ID_Clase', 'ID_Centro', 'desde', 'numFilas', 'ordenar', 'textoBusqueda'];
+
+        let queryOptions = {};
+
+        if (textoBusqueda) {
+            queryOptions[sequelize.Op.or] = [
+                { '$Alumno.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } }
+            ];  
+        }
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {
             return res.status(400).json({ statusCode: 400, message: "Parámetros de búsqueda no válidos en Respuestas" });
         }
         
-        const queryOptions = {};
+        //const queryOptions = {};
         for (const param in queryParams) {
-            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde' && !(param === 'Gravedad' && queryParams[param] == -1) && param !== 'ordenar') {
+            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde' && !(param === 'Gravedad' && queryParams[param] == -1) && param !== 'ordenar' && param !== 'textoBusqueda') {
                 if (param === 'ID_Respuesta') {
                     queryOptions[param] = queryParams[param];
                 } else if (param === 'Gravedad') {

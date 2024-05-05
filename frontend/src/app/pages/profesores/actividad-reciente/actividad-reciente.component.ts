@@ -26,6 +26,8 @@ export class ActividadRecienteComponent implements OnInit {
 
   private contar = 0;
 
+  filtroNombre: string = ''; 
+
   constructor(private sesionService: SesionService, private alumnoService: AlumnoService, private respuestaService: RespuestaService, private profesorService: ProfesorService, private router: Router, private activatedRoute: ActivatedRoute) {
     this.recientesData = [];
   }
@@ -71,10 +73,12 @@ export class ActividadRecienteComponent implements OnInit {
       console.log(res);
     });
   }
-
+  filtrarAlumnos() {
+    this.obtenerActividadReciente(this.filtroNombre);
+  }
   obtenerActividadReciente(buscar: string) {
     this.busqueda = buscar;
-    this.respuestaService.getRespuestasCentro(this.idCentro, -1, this.posActual, this.filPag, this.contar).subscribe((res: any) => {
+    this.respuestaService.getRespuestasCentro(this.idCentro, -1, this.posActual, this.filPag, this.contar, this.busqueda).subscribe((res: any) => {
       console.log(res)
       if(res["respuestas"].length === 0){
         if(this.posActual > 0){

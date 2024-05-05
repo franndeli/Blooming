@@ -1,3 +1,21 @@
+/* Estilo para el contenedor del input */
+.input-group {
+  width: fit-content; /* Ancho según el contenido */
+  margin-left: auto; /* Alineado a la derecha */
+}
+
+/* Estilos para el input del buscador */
+.buscador {
+  padding: 6px 8px; /* Espaciado interno reducido */
+  border-radius: 5px; /* Bordes redondeados */
+  width: 200px; /* Ancho del input */
+}
+
+/* Estilos al enfocar el input */
+.buscador:focus {
+  outline: none; /* Quita el contorno predeterminado */
+  border-color: dodgerblue; /* Cambia el color del borde al enfocar */
+}
 
 
 .btn-hover {

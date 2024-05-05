@@ -33,6 +33,8 @@ export class VerAlumnosPComponent implements OnInit{
 
   private contar = 0;
 
+  filtroNombre: string = ''; 
+
   constructor(private alumnoService: AlumnoService, private router: Router, private activatedRoute: ActivatedRoute, private claseService: ClaseService, private respuestaService: RespuestaService){
     this.alumnosData = [];
     this.alumnosTodosData = [];
@@ -114,9 +116,13 @@ export class VerAlumnosPComponent implements OnInit{
     })
   }
 
+  filtrarAlumnos() {
+    this.obtenerAlumnos(this.filtroNombre);
+  }
+
   obtenerAlumnos(buscar : string){
     this.busqueda = buscar;
-    this.alumnoService.getAlumnosClase(this.claseID, this.posActual, this.filPag, this.contar).subscribe((res: any) => {
+    this.alumnoService.getAlumnosClase(this.claseID, this.posActual, this.filPag, this.contar, this.busqueda).subscribe((res: any) => {
       if(res["alumnos"].length === 0){
         if(this.posActual > 0){
           this.posActual = this.posActual - this.filPag;
@@ -434,7 +440,6 @@ export class VerAlumnosPComponent implements OnInit{
     if(ambito === 'Fuera de clase'){
       color = 'badge bg-fuera rounded-3 fw-semibold';
     }
-
     return color;
   }
 }

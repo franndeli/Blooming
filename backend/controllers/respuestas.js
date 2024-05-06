@@ -19,11 +19,14 @@ const getRespuestas = async (req, res) => {
 
         let queryOptions = {};
 
-        if (textoBusqueda) {
+        /*if (textoBusqueda) {
             queryOptions[sequelize.Op.or] = [
-                { '$Alumno.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } }
+                { '$Opcion.TextoOpcion$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { '$Alumno.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { '$Pregunta.TextoPregunta$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { '$Pregunta.Ambito.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
             ];  
-        }
+        }*/
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {
@@ -78,7 +81,16 @@ const getRespuestas = async (req, res) => {
         }
 
         const respuestas = await Respuesta.findAll({
-            where: queryOptions,
+            where:{
+                [sequelize.Op.or]: [
+                    { '$Opcion.TextoOpcion$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                    { '$Alumno.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                    { '$Alumno.Clase.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                    { '$Pregunta.TextoPregunta$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                    { '$Pregunta.Ambito.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                ]
+            }, 
+            queryOptions,
             ...paginationOptions,
             subQuery: false,
             order: orderOptions,
@@ -139,6 +151,30 @@ const getRespuestas = async (req, res) => {
                 where: { Gravedad: queryParams['Gravedad'] }
             });
         }
+
+        /*if (textoBusqueda) {
+            countOptions.include.push({
+                model: Opcion,
+                where: { TextoOpcion: { [sequelize.Op.like]: `${textoBusqueda}` } },
+                required: true
+            });
+        }
+        if (textoBusqueda) {
+            countOptions.include.push({
+                model: Pregunta,
+                as: 'Pregunta',
+                where: { TextoPregunta: { [sequelize.Op.like]: `${textoBusqueda}` } },
+                required: true,
+                include: [
+                    {
+                        model: Ambito,
+                        where: { Nombre: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                        required: true
+                    }
+                ]
+            });
+        }   */
+
 
         const total = await Respuesta.count(countOptions);
         // let total;

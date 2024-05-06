@@ -466,10 +466,10 @@ export class SistemaPreguntasComponent implements AfterViewInit, OnDestroy, OnIn
   }
 
   cargarPreguntas() {
-    this.alumnoService.getAlumnoID(localStorage.getItem('id')).subscribe((ambitos: any) => {
+    this.alumnoService.getAlumnoID(localStorage.getItem('id')).subscribe(async (ambitos: any) => {
       this.ambitos = JSON.parse(ambitos.alumnos[0].Ambitos);
       this.aparicionambitos = JSON.parse(ambitos.alumnos[0].AparicionAmbitos);
-      this.sesionService.getSesionCount(localStorage.getItem('id')).subscribe((sesiones: any) => {
+      (await this.sesionService.getSesionCount(localStorage.getItem('id'))).subscribe((sesiones: any) => {
         this.nsesiones = sesiones.count;
         //console.log(this.nsesiones);
         this.preguntaService.seleccionarPreguntas(this.ambitos, this.aparicionambitos, this.nsesiones).subscribe(preguntas => {

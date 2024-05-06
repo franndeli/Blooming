@@ -32,6 +32,8 @@ export class TRecursoMalla extends TRecurso {
 
   private texturaPorCara: any;
 
+  private selectedFaceIndex: number | null = null;
+
   constructor(nombre: string, shader: TRecursoShader, texturas: any) {
     super();
     this.vertices = new Float32Array();
@@ -200,11 +202,31 @@ export class TRecursoMalla extends TRecurso {
   }
 
   calcularCarasTexturas() {
-    this.texturaPorCara = {
-      [this.objectIDs["Cube.002"]]: 0,  // Índice de la textura en this.texturas
-      [this.objectIDs["Cube.005"]]: 1
-    };
+    const caras = ["Cube.001", "Cube.002", "Cube.003", "Cube.004", "Cube.005", "Cube.006"];
+    const texturasDisponibles = this.texturas.length;
+    this.texturaPorCara = {};
+
+    // Mezclar aleatoriamente el array de caras
+    caras.sort(() => 0.5 - Math.random());
+
+    // Asegurarse de que el número de texturas no exceda el número de caras
+    const carasParaTexturizar = Math.min(caras.length, texturasDisponibles);
+
+    // Crear un array de índices de textura y mezclarlo aleatoriamente
+    let indicesTexturas = Array.from({length: texturasDisponibles}, (_, index) => index);
+    indicesTexturas.sort(() => 0.5 - Math.random());
+
+    for (let i = 0; i < carasParaTexturizar; i++) {
+        // Asignar cada textura a una cara diferente
+        this.texturaPorCara[this.objectIDs[caras[i]]] = indicesTexturas[i];
+    }
   }
+
+  public seleccionarCara(index: number) {
+    this.selectedFaceIndex = index;
+  }
+
+
 
   dibujar(matrizTransf: mat4): void {
     let gl = this.gl;
@@ -237,8 +259,6 @@ export class TRecursoMalla extends TRecurso {
         // let applyTextureUniform = gl.getUniformLocation(this.programId, 'applyTexture');
         // gl.uniform1i(applyTextureUniform, applyTexture ? 1 : 0);
 
-        
-
         let texturaIndex = this.texturaPorCara[i];
 
         // console.log(this.texturas[texturaIndex].tex);
@@ -250,6 +270,9 @@ export class TRecursoMalla extends TRecurso {
         } else {
             gl.uniform1i(gl.getUniformLocation(this.programId, 'applyTexture'), 0);
         }
+
+        let isSelectedUniform = gl.getUniformLocation(this.programId, 'isSelected');
+        gl.uniform1i(isSelectedUniform, this.selectedFaceIndex === i ? 1 : 0);
 
         // Configuración de la matriz de modelo-vista
         var locationVmatrix = this.gl.getUniformLocation(this.programId, 'u_ModelViewMatrix');

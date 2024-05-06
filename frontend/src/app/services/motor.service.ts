@@ -4,6 +4,7 @@ import { CuboService } from './cubo.service';
 import { PlanoService } from './plano.service';
 import { ElementRef, Injectable } from '@angular/core';
 import { MotorGrafico } from '../graphics/motor/motorGrafico';
+import { CargarPreguntasService } from './cargaPreguntas.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,9 @@ export class MotorService {
   private textura: any;
   private texturas: any;
 
-  constructor(private cuboService: CuboService, private planoService: PlanoService) {
+  private preguntas: any;
+
+  constructor(private cuboService: CuboService, private planoService: PlanoService, private cargarPreguntas: CargarPreguntasService) {
     this.motorGrafico = new MotorGrafico(cuboService, planoService);
   }
 
@@ -32,8 +35,12 @@ export class MotorService {
 
       this.escenaCubo = this.motorGrafico.crearNodo(null, vec3.create(), vec3.create(), [1, 1, 1]);
       this.motorGrafico.crearCamara(this.escenaCubo, [0, 0, 10], [0, 0, 0], [1, 1, 1]);
+      
+      this.preguntas = await this.cargarPreguntas.cargarPreguntas();
 
-      this.textura = await this.motorGrafico.cargarTextura('../../assets/images/logos/favicon.png');
+      console.log(this.cargarPreguntas.preguntaActual);
+
+      // this.textura = await this.motorGrafico.cargarTextura(this.cargarPreguntas.preguntaActual);
       await this.cargarTexturas();
       
       // this.escenaPlano = this.motorGrafico.crearNodo(null, vec3.create(), vec3.create(), [1, 1, 1]);
@@ -61,12 +68,19 @@ export class MotorService {
   }
 
   async cargarTexturas() {
-    const texturas = [
-        '../../assets/images/logos/favicon.png',
-        '../../assets/images/logos/logo1.png'
-        // '../../assets/images/logos/logo2.png',
-        // '../../assets/images/logos/logo3.png'
-    ];
+    const texturas: any[] = [];
+    
+    for(let i=0; i<this.cargarPreguntas.preguntaActual.respuestas.opciones.length; i++){
+      texturas.push(this.cargarPreguntas.preguntaActual.respuestas.opciones[i].Imagen);
+    }
+
+    console.log(texturas);
+    // const texturas = [
+    //     '../../assets/images/opciones/1.png',
+    //     '../../assets/images/opciones/2.png',
+    //     '../../assets/images/opciones/3.png',
+    //     '../../assets/images/opciones/4.png'
+    // ];
 
     this.texturas = await Promise.all(texturas.map(async url => await this.motorGrafico.cargarTextura(url)));
     console.log(this.texturas);

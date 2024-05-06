@@ -25,6 +25,8 @@ export class CuboService {
     private modelos: TNodo[] = [];
     private canvas!: HTMLCanvasElement;
     private requestId: number | null = null;
+
+    constructor() { }
     
     public async crearCubo(motor: MotorGrafico, escena: TNodo, texturas: any){
         this.motorGrafico = motor;
@@ -152,7 +154,6 @@ export class CuboService {
     
         intersecciones.sort((a, b) => a.t - b.t);
         caraSeleccionada = intersecciones[0].cara;
-        
         console.log("Cara seleccionada: " + caraSeleccionada);
     }
     

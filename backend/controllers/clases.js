@@ -117,8 +117,6 @@ const deleteClase = async (req, res) => {
             return res.status(404).json({ ok: false, msg: 'Clase no encontrada' });
         }
 
-        await Profesor.update({ ID_Clase: null }, { where: { ID_Clase: id } });
-        await Alumno.destroy({ where: { ID_Clase: id } });
         await Clase.destroy({ where: { ID_Clase: id } });
 
         res.json({

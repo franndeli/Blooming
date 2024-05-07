@@ -25,15 +25,17 @@ export class PlanoService {
     private canvas!: HTMLCanvasElement;
     private requestId: number | null = null;
 
-    public async crearPlano(motor: MotorGrafico, escena: TNodo){
+    public async crearPlano(motor: MotorGrafico, escena: TNodo, texturas: any){
         this.motorGrafico = motor;
         this.canvas = this.motorGrafico.getCanvas();
 
         this.motorGrafico.getCamaraActiva().setTraslacion([0, 5, 11]);
         this.motorGrafico.getCamaraActiva().setRotacion([-20, 0, 0]);
 
-        this.plano = await this.motorGrafico.crearModelo(escena, 'plano.gltf', [0, 0, 0], [0, 90, 0], [1.45, 1.45, 1.45]);
-        this.avatar = await this.motorGrafico.crearModelo(escena, 'avatar.gltf', [0, 2.25, 0], [0, 0, 0], [0.5, 0.5, 0.5]);
+        console.log(escena);
+
+        this.plano = await this.motorGrafico.crearModelo(escena, 'prueba_plano_mecagoendios.gltf', [0, 0, 0], [0, 0, 0], [1.45, 1.45, 1.45], texturas);
+        this.avatar = await this.motorGrafico.crearModelo(escena, 'avatar.gltf', [0, 2.25, 0], [0, 0, 0], [0.5, 0.5, 0.5], texturas);
 
         console.log(escena);
         this.dibujado(escena);

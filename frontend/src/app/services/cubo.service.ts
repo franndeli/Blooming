@@ -46,9 +46,7 @@ export class CuboService {
                 this.cubo.setRotacion([phi, theta, 0]);
                 this.cubo.setEscalado([escalado, escalado, escalado]);
             }
-          
             this.motorGrafico.dibujarEscena(escena);
-
             this.requestId = requestAnimationFrame(render);
         }
         this.requestId = requestAnimationFrame(render);

@@ -208,8 +208,6 @@ const deleteAlumno = async (req, res) => {
             return res.status(404).json({ ok: false, message: "Alumno no encontrado" });
         }
 
-        await Respuesta.destroy({ where: { ID_Alumno: id } });
-        await Sesion.destroy({ where: { ID_Alumno: id } });
         await alumno.destroy();
 
         return res.json({

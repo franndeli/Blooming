@@ -186,12 +186,6 @@ const deleteCentro = async (req, res) => {
             return res.status(404).json({ statusCode: 404, message: "Centro no encontrado" });
         }
 
-        await Alumno.destroy({ where: { ID_Centro: id } });
-
-        await Profesor.destroy({ where: { ID_Centro: id } });
-
-        await Clase.destroy({ where: { ID_Centro: id } });
-
         await centro.destroy();
 
         res.json({

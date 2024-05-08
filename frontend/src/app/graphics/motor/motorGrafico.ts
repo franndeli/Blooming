@@ -3,24 +3,6 @@ import { CuboService } from '../../services/cubo.service';
 import { PlanoService } from '../../services/plano.service';
 import { GestorRecursos, TRecursoMalla, TNodo, TCamara, TLuz, TRecursoTextura } from '../../graphics';
 
-
-var clickIzq = false;
-var old_x = 0;
-var old_y = 0;
-var dx = 0;
-var dy = 0;
-var theta = 0;
-var phi = 0;
-var psi = 0;
-var escalado = 1;
-var clickDcho = false;
-var old_xRight = 0;
-var old_yRight = 0;
-var dxRight = 0;
-var dyRight = 0;
-var trasX = 0;
-var trasY = 0;
-
 export class MotorGrafico {
 
   public time:number = 0;
@@ -54,15 +36,14 @@ export class MotorGrafico {
 
   async iniciarEscena(canvas: HTMLCanvasElement, interfaz: number) {
 
-    if (this.canvas) {
-      this.canvas.removeEventListener("mousedown", this.cuboService.mouseDown);
-      this.canvas.removeEventListener("mouseup", this.cuboService.mouseUp);
-      this.canvas.removeEventListener("mouseout", this.cuboService.mouseUp);
-      this.canvas.removeEventListener("mousemove", this.cuboService.mouseMove);
-      this.canvas.removeEventListener("wheel", this.cuboService.zoom);
-      this.canvas.removeEventListener("click", this.cuboService.rayPicking.bind(this));
-      this.canvas.removeEventListener("wheel", this.planoService.zoom);
-    }
+    // if (this.canvas) {
+    //   this.canvas.removeEventListener("mousedown", this.cuboService.mouseDown);
+    //   this.canvas.removeEventListener("mouseup", this.cuboService.mouseUp);
+    //   this.canvas.removeEventListener("mouseout", this.cuboService.mouseUp);
+    //   this.canvas.removeEventListener("mousemove", this.cuboService.mouseMove);
+    //   this.canvas.removeEventListener("wheel", this.cuboService.zoom);
+    //   this.canvas.removeEventListener("click", this.cuboService.rayPicking.bind(this));
+    // }
 
     if(canvas) {
       this.canvas = canvas;
@@ -76,8 +57,15 @@ export class MotorGrafico {
       }
 
       if(interfaz == 2){
-        this.canvas.addEventListener("wheel", this.planoService.zoom, false);
-      }
+        this.canvas.addEventListener("mousedown", this.planoService.mouseDown, false);
+        this.canvas.addEventListener("mouseup", this.planoService.mouseUp, false);
+        this.canvas.addEventListener("mouseout", this.planoService.mouseUp, false);
+        // this.canvas.addEventListener("mousemove", this.planoService.mouseMove, false);
+        this.canvas.addEventListener("mousemove", (event) => {
+          this.planoService.mouseMove(event, this.canvas.width, this.canvas.height);
+          this.planoService.raycast();
+          }, false);
+        }
       
       this.resizeCanvasToDisplaySize(this.canvas);
 
@@ -273,5 +261,72 @@ export class MotorGrafico {
 
     return t;
   }
+
+  // raycast(){
+  //   let max = [2.0007832050323486, 0.05491405725479126, 3.999821424484253];
+  //   let min = [-2.0007832050323486, -0.05491405725479126, -3.999821424484253];
+
+  //   let vertices = [
+  //       vec3.fromValues(min[0], min[1], min[2]), // vértice inferior izquierdo
+  //       vec3.fromValues(max[0], min[1], min[2]), // vértice inferior derecho
+  //       vec3.fromValues(min[0], min[1], max[2]), // vértice superior izquierdo
+  //       vec3.fromValues(max[0], min[1], max[2])  // vértice superior derecho
+  //   ]
+
+  //   let avatar;
+  //   for (let modelo of this.modelos) {
+  //       if (modelo.getEntidad().getNombre() === 'avatar.gltf') {
+  //           avatar = modelo;
+  //           break;
+  //       }
+  //   }
+
+  //   let rayOrigin = avatar!.getTraslacion();
+  //   let rayDirection = vec3.fromValues(0, -1, 0);
+
+  //   let v0 = vertices[0];
+  //   let v1 = vertices[1];
+  //   let v2 = vertices[2];
+  //   let v3 = vertices[3];
+
+  //   if (this.intersectRayTriangle2(rayOrigin, rayDirection, v0, v1, v2) || this.intersectRayTriangle2(rayOrigin, rayDirection, v0, v2, v3)) {
+  //       console.log('sobre el plano')
+  //       return true;
+  //   }
+
+  //   return false;
+  // }
+
+  // intersectRayTriangle2(rayOrigin: vec3, rayDirection: vec3, v0: vec3, v1: vec3, v2: vec3): boolean | null {
+  //   let edge1 = vec3.subtract(vec3.create(), v1, v0);
+  //   let edge2 = vec3.subtract(vec3.create(), v2, v0);
+
+  //   let pvec = vec3.cross(vec3.create(), rayDirection, edge2);
+  //   let det = vec3.dot(edge1, pvec);
+
+  //   if (Math.abs(det) < 1e-8) {
+  //       return false;
+  //   }
+
+  //   let invDet = 1 / det;
+
+  //   let tvec = vec3.subtract(vec3.create(), rayOrigin, v0);
+  //   let u = vec3.dot(tvec, pvec) * invDet;
+
+  //   if (u < 0 || u > 1) {
+  //       return false;
+  //   }
+
+  //   let qvec = vec3.cross(vec3.create(), tvec, edge1);
+  //   let v = vec3.dot(rayDirection, qvec) * invDet;
+    
+  //   if (v < 0 || u + v > 1) {
+  //       return false;
+  //   }
+
+  //   let t = vec3.dot(edge2, qvec) * invDet;
+
+  //   return t > 1e-8;
+  // }
 
 }

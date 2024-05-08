@@ -11,6 +11,7 @@ import { CargarPreguntasService } from './cargaPreguntas.service';
 })
 
 export class MotorService {
+  private escena !: TNodo;
   private escenaCubo!: TNodo;
   private escenaPlano!: TNodo;
   private escenaActual!: TNodo;
@@ -33,8 +34,8 @@ export class MotorService {
       this.canvas = canvasRef.nativeElement;
       await this.motorGrafico.iniciarEscena(this.canvas, this.interfaz);
 
-      this.escenaCubo = this.motorGrafico.crearNodo(null, vec3.create(), vec3.create(), [1, 1, 1]);
-      this.motorGrafico.crearCamara(this.escenaCubo, [0, 0, 10], [0, 0, 0], [1, 1, 1]);
+      this.escena = this.motorGrafico.crearNodo(null, vec3.create(), vec3.create(), [1, 1, 1]);
+      this.motorGrafico.crearCamara(this.escena, [0, 0, 10], [0, 0, 0], [1, 1, 1]);
       
       this.preguntas = await this.cargarPreguntas.cargarPreguntas();
 
@@ -48,13 +49,14 @@ export class MotorService {
 
       if(this.interfaz == 1){
         console.log(this.texturas);
-        this.cuboService.crearCubo(this.motorGrafico, this.escenaCubo, this.texturas);
-        this.escenaActual = this.escenaCubo;
+        this.cuboService.crearCubo(this.motorGrafico, this.escena, this.texturas);
+        //this.escenaACtual = this.escenaCubo
       }
-      // if(this.interfaz == 2){
-      //   this.planoService.crearPlano(this.motorGrafico, this.escenaPlano);
-      //   this.escenaActual = this.escenaPlano;
-      // }
+
+      if(this.interfaz == 2){
+        this.planoService.crearPlano(this.motorGrafico, this.escena, this.texturas);
+        //this.escenaACtual = this.escenaPlano
+      }
 
       // setInterval(() => {
       //   this.interfaz = this.interfaz == 1 ? 2 : 1;
@@ -63,7 +65,6 @@ export class MotorService {
     
     }else {
       console.error('Referencia de canvas no definida');
-      return;
     }
   }
 
@@ -103,19 +104,19 @@ export class MotorService {
     this.interfaz = interfaz;
     console.log('Cambiando a interfaz: ' + interfaz)
 
-    this.motorGrafico.limpiarEscena(this.escenaActual);
+    this.motorGrafico.limpiarEscena(this.escena);
 
     await this.motorGrafico.iniciarEscena(this.canvas, this.interfaz);
 
     if (this.interfaz == 1) {
-      this.escenaActual = this.escenaCubo;
+      // this.escenaActual = this.escenaCubo;
       this.planoService.detenerDibujado();
-      this.cuboService.crearCubo(this.motorGrafico, this.escenaCubo, this.texturas);
+      this.cuboService.crearCubo(this.motorGrafico, this.escena, this.texturas);
     }
     if (this.interfaz == 2) {
-      this.escenaActual = this.escenaPlano;
+      // this.escenaActual = this.escenaPlano;
       this.cuboService.detenerDibujado();
-      this.planoService.crearPlano(this.motorGrafico, this.escenaPlano);
+      this.planoService.crearPlano(this.motorGrafico, this.escena, this.texturas);
     }
   }
 

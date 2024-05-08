@@ -14,9 +14,10 @@ const getProfesores = async (req, res) => {
         const tam = Number(req.query.numFilas) || 0;
         const desde = Number(req.query.desde) || 0;
         const pwd = req.query.pwd || false;
+        const textoBusqueda = req.query.textoBusqueda || '';
         const queryParams = req.query;
 
-        const validParams = ['ID_Profesor', 'Nombre', 'Apellidos', 'Email', 'Contraseña', 'ID_Clase', 'ID_Centro', 'desde', 'numFilas', 'pwd', 'ordenar'];
+        const validParams = ['ID_Profesor', 'Nombre', 'Apellidos', 'Email', 'Contraseña', 'ID_Clase', 'ID_Centro', 'desde', 'numFilas', 'pwd', 'ordenar', 'textoBusqueda'];
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {
@@ -25,7 +26,7 @@ const getProfesores = async (req, res) => {
         
         const queryOptions = {};
         for (const param in queryParams) {
-            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde' && param !== 'pwd' && param !== 'ordenar') {
+            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde' && param !== 'pwd' && param !== 'ordenar' && param !== 'textoBusqueda') {
                 if (param === 'ID_Profesor') {
                     queryOptions[param] = queryParams[param];
                 } else if(param === 'ID_Centro'){
@@ -58,8 +59,23 @@ const getProfesores = async (req, res) => {
             orderOptions = [[Centro, 'Calle', 'DESC']];
         }
 
+        let whereOptions = [
+            { Nombre: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+            { Apellidos: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+            { '$Clase.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+            
+        ];
+
+        if (req.Rol === 'Admin') {
+            whereOptions.push(
+                { '$Centro.Nombre$' : { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+            );
+        }
+
         const profesores = await Profesor.findAll({
-            where: queryOptions,
+            where:{
+                [sequelize.Op.or]: whereOptions
+            },  queryOptions,
             ...paginationOptions,
             attributes: { exclude: pwd ? [] : ['Contraseña'] },
             order: orderOptions,

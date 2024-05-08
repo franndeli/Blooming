@@ -20,13 +20,14 @@ const getAlumnos = async (req, res) => {
         
         let queryOptions = {};
 
-        if (textoBusqueda) {
+        /*if (textoBusqueda) {
             queryOptions[sequelize.Op.or] = [
                 { Nombre: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
                 { Apellidos: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-                { Estado: { [sequelize.Op.like]: `%${textoBusqueda}%` } }
+                { Estado: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { '$Clase.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } }
             ];  
-        }
+        }*/
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         console.log(isValidQuery);
@@ -43,8 +44,6 @@ const getAlumnos = async (req, res) => {
                 }
             }
         }
-
-        
         
         const paginationOptions = tam > 0 ? { limit: tam, offset: desde } : {};
         let orderOptions;
@@ -75,9 +74,31 @@ const getAlumnos = async (req, res) => {
         }else if(queryParams.ordenar == 12){
             orderOptions =  [[Alumno.sequelize.literal("CASE WHEN Estado = 'Muy Bueno' THEN 5 WHEN Estado = 'Bueno' THEN 4 WHEN Estado = 'Normal' THEN 3 WHEN Estado = 'Malo' THEN 2 ELSE 1 END"), 'ASC']];
         }
-    
+
+        let whereOptions = [
+            { Nombre: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+            { Apellidos: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+            { Estado: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+            
+            
+        ];
+
+        if (req.Rol === 'Centro') {
+            whereOptions.push(
+                { '$Clase.Nombre$' : { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+            );
+        }
+
+        if (req.Rol === 'Admin') {
+            whereOptions.push(
+                { '$Centro.Nombre$' : { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+            );
+        }
+
         const alumnos = await Alumno.findAll({
-            where: queryOptions,
+            where: {
+                [sequelize.Op.or]: whereOptions
+            }, queryOptions,
             ...paginationOptions,
             attributes: { exclude: ['Contraseña'] },
             order: orderOptions,

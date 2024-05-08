@@ -18,7 +18,10 @@ data-sidebar-position="fixed" data-header-position="fixed">
                             <a href="/centros/crear-alumnos" class="btn btn-primary"><span><i class="ti ti-circle-plus" style="font-size: 15px;"></i></span> Crear Alumno</a>
                         </div>
                         <div class="card">
-                            <div class="card-body table-responsive" *ngIf="alumnosData.length > 0; else noAlumnos">
+                            <div class="input-group" style="width: 200px; margin-left: auto;">
+                                <input type="text" placeholder="Buscar alumno..." [(ngModel)]="filtroNombre" (input)="filtrarAlumnos()" class="form-control buscador">  
+                            </div>
+                            <div class="card-body table-responsive" style="margin-top: -30px;" *ngIf="alumnosData.length > 0; else noAlumnos">
                                 <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
                                     <thead class="text-dark fs-4">
                                         <tr>
@@ -46,10 +49,24 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                 <app-pagination (cambiarPagina)="cambiarPagina($event)" [texto]="true" [totalRegistros]="totalAlumnos" [registroActual]="posActual+1" (filasPagina)="cambiarFilasPagina($event)" [registroPag]="filPag"></app-pagination>
                             </div>
                             <ng-template #noAlumnos>
-                                <p class="text-center" style="margin-top: 16px; font-size: 20px;">No hay datos todavía</p>
+                                <div class="card-body table-responsive">
+                                    <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
+                                        <thead class="text-dark fs-4">
+                                            <tr>
+                                                <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre <span class="arrow" (click)="onClickContar(1)">&#x25B2;</span><span class="arrow" (click)="onClickContar(2)"> &#x25BC;</span></th>
+                                                <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Apellidos <span class="arrow" (click)="onClickContar(3)">&#x25B2;</span><span class="arrow" (click)="onClickContar(4)"> &#x25BC;</span></th>
+                                                <th><span><i class="ti ti-user" style="font-size: 15px;"></i></span> Usuario</th>
+                                                <th><span><i class="ti ti-school" style="font-size: 15px;"></i></span> Clase <span class="arrow" (click)="onClickContar(5)">&#x25B2;</span><span class="arrow" (click)="onClickContar(6)"> &#x25BC;</span></th>
+                                                <th><div class="input-group" style="width: 200px; margin-left: auto;">
+                                                    <input type="text" placeholder="Buscar alumno..." [(ngModel)]="filtroNombre" (input)="filtrarAlumnos()" class="form-control buscador">  
+                                                </div></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                    <p class="text-center" style="margin-top: 16px; font-size: 20px;">No hay datos todavía</p>
+                                </div>
                             </ng-template>
                         </div>
-                        
                         <a href="/centros/dashboard" class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</a>
                     </div>
                 </div>

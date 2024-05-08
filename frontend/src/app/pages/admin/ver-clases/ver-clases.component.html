@@ -18,7 +18,10 @@ data-sidebar-position="fixed" data-header-position="fixed">
                             <a href="/admin/crear-clases" class="btn btn-primary"><span><i class="ti ti-circle-plus" style="font-size: 15px;"></i></span> Crear Clase</a>
                         </div>
                         <div class="card">
-                            <div class="card-body table-responsive">
+                            <div class="input-group" style="width: 200px; margin-left: auto;">
+                                <input type="text" placeholder="Buscar clase..." [(ngModel)]="filtroNombre" (input)="filtrarAlumnos()" class="form-control buscador">  
+                              </div>
+                            <div class="card-body table-responsive"  style="margin-top: -30px;">
                                 <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
                                     <thead class="text-dark fs-4">
                                         <tr>

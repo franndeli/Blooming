@@ -18,15 +18,21 @@ export class VerCentrosComponent implements OnInit{
 
   private contar = 0;
 
+  filtroNombre: string = ''; 
+
   constructor(private centroService: CentroService, private router: Router){}
 
   ngOnInit() {
     this.obtenerCentros(this.busqueda);
   }
 
+  filtrarAlumnos() {
+    this.obtenerCentros(this.filtroNombre);
+  }
+
   obtenerCentros(buscar: string){
     this.busqueda = buscar;
-    this.centroService.getCentros(this.posActual, this.filPag, this.contar).subscribe((res: any) => {
+    this.centroService.getCentros(this.posActual, this.filPag, this.contar, this.busqueda).subscribe((res: any) => {
       if(res["centros"].length === 0){
         if(this.posActual > 0){
           this.posActual = this.posActual - this.filPag;

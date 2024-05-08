@@ -12,9 +12,10 @@ const getCentros = async (req, res) => {
     try {
         const tam = Number(req.query.numFilas) || 0;
         const desde = Number(req.query.desde) || 0;
+        const textoBusqueda = req.query.textoBusqueda || '';
         const queryParams = req.query;
 
-        const validParams = ['ID_Centro', 'Nombre', 'Email', 'Localidad', 'Provincia', 'Calle', 'CP', 'numFilas', 'desde', 'ordenar'];
+        const validParams = ['ID_Centro', 'Nombre', 'Email', 'Localidad', 'Provincia', 'Calle', 'CP', 'numFilas', 'desde', 'ordenar', 'textoBusqueda'];
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {
@@ -23,7 +24,7 @@ const getCentros = async (req, res) => {
         
         const queryOptions = {};
         for (const param in queryParams) {
-            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde' && param !== 'ordenar') {
+            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde' && param !== 'ordenar' && param !== 'textoBusqueda') {
                 if (param === 'ID_Centro') {
                     queryOptions[param] = queryParams[param];
                 } else {
@@ -51,7 +52,16 @@ const getCentros = async (req, res) => {
         }
 
         const centros = await Centro.findAll({
-            where: queryOptions,
+            where:{
+                [sequelize.Op.or]: [
+                    { Nombre: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                    { Email: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                    { Localidad: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                    { Provincia: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                    { Calle: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                    { CP: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                ]
+            }, queryOptions,
             ...paginationOptions,
             attributes: { exclude: ['Contraseña'] },
             order: orderOptions

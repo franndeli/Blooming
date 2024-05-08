@@ -10,9 +10,10 @@ const getClases = async (req, res) => {
     try {
         const tam = Number(req.query.numFilas) || 0;
         const desde = Number(req.query.desde) || 0;
+        const textoBusqueda = req.query.textoBusqueda || '';
         const queryParams = req.query;
 
-        const validParams = ['ID_Clase', 'Nombre', 'NumAlumnos', 'ID_Centro', 'desde', 'numFilas', 'estado', 'ordenar'];
+        const validParams = ['ID_Clase', 'Nombre', 'NumAlumnos', 'ID_Centro', 'desde', 'numFilas', 'estado', 'ordenar', 'textoBusqueda'];
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {
@@ -21,7 +22,7 @@ const getClases = async (req, res) => {
         
         const queryOptions = {};
         for (const param in queryParams) {
-            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde'  && param !== 'ordenar') {
+            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde'  && param !== 'ordenar' && param !== 'textoBusqueda') {
                 if (param === 'ID_Clase') {
                     queryOptions[param] = queryParams[param];
                 } else if(param === 'ID_Centro'){
@@ -50,8 +51,22 @@ const getClases = async (req, res) => {
             orderOptions = [[Centro, 'Calle', 'DESC']];
         }
 
+        let whereOptions = [
+            { Nombre: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+            { NumAlumnos: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+            
+        ];
+
+        if (req.Rol === 'Admin') {
+            whereOptions.push(
+                { '$Centro.Nombre$' : { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+            );
+        }
+
         const clases = await Clase.findAll({
-            where: queryOptions,
+            where: {
+                [sequelize.Op.or]: whereOptions
+            },queryOptions,
             ...paginationOptions,
             order: orderOptions,
             include: [{

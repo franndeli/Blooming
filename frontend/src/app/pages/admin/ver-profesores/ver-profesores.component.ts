@@ -20,15 +20,21 @@ export class VerProfesoresComponent implements OnInit{
 
   private contar = 0;
 
+  filtroNombre: string = ''; 
+
   constructor(private profesorService: ProfesorService, private router: Router){}
 
   ngOnInit() {
     this.obtenerProfesores(this.busqueda);
   }
 
+  filtrarAlumnos() {
+    this.obtenerProfesores(this.filtroNombre);
+  }
+
   obtenerProfesores(buscar: string){
     this.busqueda = buscar;
-    this.profesorService.getProfesores(this.posActual, this.filPag, this.contar).subscribe((res: any) => {
+    this.profesorService.getProfesores(this.posActual, this.filPag, this.contar, this.busqueda).subscribe((res: any) => {
       if(res["profesores"].length === 0){
         if(this.posActual > 0){
           this.posActual = this.posActual - this.filPag;

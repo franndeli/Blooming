@@ -21,6 +21,8 @@ export class VerProfesoresCComponent implements OnInit {
 
   private contar = 0;
 
+ filtroNombre: string = ''; 
+
   @ViewChild('modalDialog') modalDialog!: ElementRef;
 
   constructor(private profesorService: ProfesorService, private router: Router){}
@@ -29,10 +31,14 @@ export class VerProfesoresCComponent implements OnInit {
     this.obtenerProfesores(this.busqueda);
   }
 
+  filtrarAlumnos() {
+    this.obtenerProfesores(this.filtroNombre);
+  }
+
   obtenerProfesores(buscar: string){
     this.busqueda = buscar;
     this.id = localStorage.getItem('id');
-    this.profesorService.getProfesoresCentro(this.id, this.posActual, this.filPag, this.contar).subscribe((res: any) => {
+    this.profesorService.getProfesoresCentro(this.id, this.posActual, this.filPag, this.contar, this.busqueda).subscribe((res: any) => {
       if(res["profesores"].length === 0){
         if(this.posActual > 0){
           this.posActual = this.posActual - this.filPag;

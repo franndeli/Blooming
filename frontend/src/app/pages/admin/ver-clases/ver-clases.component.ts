@@ -19,15 +19,21 @@ export class VerClasesComponent implements OnInit {
 
   private contar = 0;
 
+  filtroNombre: string = ''; 
+
   constructor(private claseService: ClaseService, private router: Router){}
 
   ngOnInit() {
     this.obtenerClases(this.busqueda);
   }
 
+  filtrarAlumnos() {
+    this.obtenerClases(this.filtroNombre);
+  }
+
   obtenerClases(buscar: string){
     this.busqueda = buscar;
-    this.claseService.getClases(this.posActual, this.filPag, this.contar).subscribe((res: any) => {
+    this.claseService.getClases(this.posActual, this.filPag, this.contar, this.busqueda).subscribe((res: any) => {
       if(res["clases"].length === 0){
         if(this.posActual > 0){
           this.posActual = this.posActual - this.filPag;

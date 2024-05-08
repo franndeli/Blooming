@@ -21,6 +21,8 @@ export class VerAlumnosCComponent implements OnInit{
 
   private contar = 0;
   private numero: number = 0;
+  
+ filtroNombre: string = ''; 
 
   constructor(private alumnoService: AlumnoService, private router: Router, private claseService: ClaseService){}
 
@@ -29,10 +31,14 @@ export class VerAlumnosCComponent implements OnInit{
     
   }
 
+  filtrarAlumnos() {
+    this.obtenerAlumnos(this.filtroNombre);
+  }
+
   obtenerAlumnos(buscar: string){
     this.busqueda = buscar;
     this.id = localStorage.getItem('id');
-    this.alumnoService.getAlumnosCentro(this.id, this.posActual, this.filPag, this.contar).subscribe((res: any) => {
+    this.alumnoService.getAlumnosCentro(this.id, this.posActual, this.filPag, this.contar, this.busqueda).subscribe((res: any) => {
       if(res["alumnos"].length === 0){
         if(this.posActual > 0){
           this.posActual = this.posActual - this.filPag;

@@ -19,6 +19,8 @@ export class VerClasesCComponent implements OnInit {
   private busqueda = '';
 
   private contar = 0;
+  
+  filtroNombre: string = ''; 
 
   constructor(private claseService: ClaseService, private router: Router){}
 
@@ -26,10 +28,14 @@ export class VerClasesCComponent implements OnInit {
     this.obtenerClases(this.busqueda);
   }
 
+  filtrarAlumnos() {
+    this.obtenerClases(this.filtroNombre);
+  }
+
   obtenerClases(buscar: string){
     this.busqueda = buscar;
     this.id = localStorage.getItem('id');
-    this.claseService.getClasesCentro(this.id, this.posActual, this.filPag, this.contar).subscribe((res: any) => {
+    this.claseService.getClasesCentro(this.id, this.posActual, this.filPag, this.contar, this.busqueda).subscribe((res: any) => {
       //console.log(res);
       if(res["clases"].length === 0){
         if(this.posActual > 0){

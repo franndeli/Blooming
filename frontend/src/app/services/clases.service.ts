@@ -57,7 +57,7 @@ export class ClaseService {
       if(!textoBusqueda){
         textoBusqueda = '';
       }
-      return this.http.get(this.basePath+'?numFilas='+filas+'&desde='+desde+'&ordenar='+ordenar, this.httpOptions);
+      return this.http.get(this.basePath+'?numFilas='+filas+'&desde='+desde+'&ordenar='+ordenar+'&textoBusqueda='+textoBusqueda, this.httpOptions);
     }
 
     getClasesCentro(id: any, desde?: number, filas?: number, ordenar?: number, textoBusqueda?: string){
@@ -71,7 +71,7 @@ export class ClaseService {
       if(!textoBusqueda){
         textoBusqueda = '';
       }
-      return this.http.get(this.basePath+'?ID_Centro='+id+'&numFilas='+filas+'&desde='+desde+'&ordenar='+ordenar, this.httpOptions);
+      return this.http.get(this.basePath+'?ID_Centro='+id+'&numFilas='+filas+'&desde='+desde+'&ordenar='+ordenar+'&textoBusqueda='+textoBusqueda, this.httpOptions);
     }
 
     // getClasesCentroEstado(id: any, estado: any, desde?: number, filas?: number){

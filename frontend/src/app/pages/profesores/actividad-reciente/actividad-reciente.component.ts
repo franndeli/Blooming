@@ -168,22 +168,39 @@ export class ActividadRecienteComponent implements OnInit {
       title: {
         text: 'Actividad de los alumnos en la aplicación'
       },
-      xAxis: {
-        type: 'category',
-        boundaryGap: false,
-        data: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
-      },
-      yAxis: {
-        type: 'value',
-        interval: 1
-      },
+      xAxis: [
+        {
+          type: 'category',
+          boundaryGap: true,
+          data: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
+        }
+      ],
+      yAxis: [
+        {
+          type: 'value',
+          scale: true,
+          name: '',
+          min: 0,
+          boundaryGap: [0.2, 0.2]
+        } 
+      ],
       series: [
         {
+          name: 'Actividad Bar',
+          type: 'bar',
           data: this.actividadPorDia,
-          type: 'line',
-          areaStyle: {},
           itemStyle: {
-            color: 'rgba(91, 184, 115, 0.7)' 
+            color: '#8aca69',
+            barBorderRadius: [5, 5, 0, 0]
+          },
+          barWidth: 80
+        },
+        {
+          name: 'Actividad Line',
+          type: 'line',
+          data: this.actividadPorDia,
+          itemStyle: {
+            color: 'green'
           }
         }
       ]

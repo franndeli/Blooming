@@ -34,7 +34,7 @@ export class PlanoService {
 
         console.log(escena);
 
-        this.plano = await this.motorGrafico.crearModelo(escena, 'prueba_plano_mecagoendios.gltf', [0, 0, 0], [0, 0, 0], [1.45, 1.45, 1.45], texturas);
+        this.plano = await this.motorGrafico.crearModelo(escena, 'plano_final.gltf', [0, 0, 0], [0, 0, 0], [1.2, 1.2, 1.2], texturas);
         this.avatar = await this.motorGrafico.crearModelo(escena, 'avatar.gltf', [0, 2.25, 0], [0, 0, 0], [0.5, 0.5, 0.5], texturas);
 
         console.log(escena);

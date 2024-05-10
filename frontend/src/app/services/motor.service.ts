@@ -75,7 +75,7 @@ export class MotorService {
       texturas.push(this.cargarPreguntas.preguntaActual.respuestas.opciones[i].Imagen);
     }
 
-    console.log(texturas);
+    //console.log(texturas);
     // const texturas = [
     //     '../../assets/images/opciones/1.png',
     //     '../../assets/images/opciones/2.png',
@@ -84,7 +84,7 @@ export class MotorService {
     // ];
 
     this.texturas = await Promise.all(texturas.map(async url => await this.motorGrafico.cargarTextura(url)));
-    console.log(this.texturas);
+    //console.log(this.texturas);
   }
 
 

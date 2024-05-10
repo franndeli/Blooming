@@ -29,12 +29,14 @@ export class PlanoService {
         this.motorGrafico = motor;
         this.canvas = this.motorGrafico.getCanvas();
 
-        this.motorGrafico.getCamaraActiva().setTraslacion([0, 5, 11]);
-        this.motorGrafico.getCamaraActiva().setRotacion([-20, 0, 0]);
+        // this.motorGrafico.getCamaraActiva().setTraslacion([0, 5, 11]);
+        // this.motorGrafico.getCamaraActiva().setRotacion([-20, 0, 0]);
+        this.motorGrafico.getCamaraActiva().setTraslacion([0, 10, 0]);
+        this.motorGrafico.getCamaraActiva().setRotacion([-90, 0, 0]);
 
         console.log(escena);
 
-        this.plano = await this.motorGrafico.crearModelo(escena, 'prueba_plano_mecagoendios.gltf', [0, 0, 0], [0, 0, 0], [1.45, 1.45, 1.45], texturas);
+        this.plano = await this.motorGrafico.crearModelo(escena, 'plano_final.gltf', [0, 0, 0], [0, 0, 0], [1.2, 1.2, 1.2], texturas);
         this.avatar = await this.motorGrafico.crearModelo(escena, 'avatar.gltf', [0, 2.25, 0], [0, 0, 0], [0.5, 0.5, 0.5], texturas);
 
         console.log(escena);
@@ -81,7 +83,6 @@ export class PlanoService {
 
     mouseMove(event: MouseEvent, width: number, height: number){
         event.preventDefault();
-        console.log('mouseMove')
         let velocidadMovimiento = 5;
         if(clickIzq){
             dx = (event.pageX - old_x) * 5 / width * velocidadMovimiento;
@@ -96,16 +97,15 @@ export class PlanoService {
 
 
     raycast(){
-        console.log('raycast')
-        let max = [2.0007832050323486, 0.05491405725479126, 3.999821424484253];
-        let min = [-2.0007832050323486, -0.05491405725479126, -3.999821424484253];
+        let max = [6.7299752270850615, 0.05491405725479126, 3.71756911277771];
+        let min = [-6.7299752270850615, -0.05491405725479126, -3.717568874359131];
 
         let vertices = [
-            vec3.fromValues(min[0], min[1], min[2]), // vértice inferior izquierdo
-            vec3.fromValues(max[0], min[1], min[2]), // vértice inferior derecho
-            vec3.fromValues(min[0], min[1], max[2]), // vértice superior izquierdo
-            vec3.fromValues(max[0], min[1], max[2])  // vértice superior derecho
-        ]
+            vec3.fromValues(min[0], max[1], min[2]),
+            vec3.fromValues(max[0], max[1], min[2]),
+            vec3.fromValues(max[0], max[1], max[2]),
+            vec3.fromValues(min[0], max[1], max[2])
+        ];
 
         let rayOrigin = this.avatar.getTraslacion();
         let rayDirection = vec3.fromValues(0, -1, 0);

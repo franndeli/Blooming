@@ -29,10 +29,10 @@ export class PlanoService {
         this.motorGrafico = motor;
         this.canvas = this.motorGrafico.getCanvas();
 
-        // this.motorGrafico.getCamaraActiva().setTraslacion([0, 5, 11]);
-        // this.motorGrafico.getCamaraActiva().setRotacion([-20, 0, 0]);
-        this.motorGrafico.getCamaraActiva().setTraslacion([0, 10, 0]);
-        this.motorGrafico.getCamaraActiva().setRotacion([-90, 0, 0]);
+        this.motorGrafico.getCamaraActiva().setTraslacion([0, 5, 11]);
+        this.motorGrafico.getCamaraActiva().setRotacion([-20, 0, 0]);
+        // this.motorGrafico.getCamaraActiva().setTraslacion([0, 5, 0]);
+        // this.motorGrafico.getCamaraActiva().setRotacion([-90, 0, 0]);
 
         console.log(escena);
 
@@ -97,32 +97,54 @@ export class PlanoService {
 
 
     raycast(){
-        let max = [6.7299752270850615, 0.05491405725479126, 3.71756911277771];
-        let min = [-6.7299752270850615, -0.05491405725479126, -3.717568874359131];
 
-        let vertices = [
-            vec3.fromValues(min[0], max[1], min[2]),
-            vec3.fromValues(max[0], max[1], min[2]),
-            vec3.fromValues(max[0], max[1], max[2]),
-            vec3.fromValues(min[0], max[1], max[2])
+        //Parte arriba izquierda
+        let maxAI = [-2.474585339753885, 0.05491405725479126, 2.384185791015625e-07];
+        let minAI = [-7.423756019261654, 0.05491405725479126, -4.771241830065353];
+        //Parte arriba medio
+        let maxAM = [2.474585339753885,  0.05491405725479126, 2.384185791015625e-07]; 
+        let minAM = [-2.474585339753885, 0.05491405725479126, -4.771241830065353];
+        //Parte arriba derecha
+        let maxAD = [7.423756019261654, 0.05491405725479126, 2.384185791015625e-07];
+        let minAD = [2.474585339753885, 0.05491405725479126, -4.771241830065353];
+        //Parte bajo izquierda
+        let maxBI = [-2.474585339753885, 0.05491405725479126, 4.771241830065353];
+        let minBI = [-7.423756019261654, 0.05491405725479126, -2.384185791015625e-07];
+        //Parte bajo medio
+        let maxBM = [2.474585339753885, 0.05491405725479126, 4.771241830065353];
+        let minBM = [-2.474585339753885, 0.05491405725479126, 2.384185791015625e-07];
+        //Parte bajo derecha
+        let maxBD = [7.423756019261654, 0.05491405725479126, 4.771241830065353];
+        let minBD = [2.474585339753885, 0.05491405725479126, 2.384185791015625e-07];
+        
+        let partes = [
+            {nombre: 'Arriba Izquierda', max: maxAI, min: minAI},
+            {nombre: 'Arriba Medio', max: maxAM, min: minAM},
+            {nombre: 'Arriba Derecha', max: maxAD, min: minAD},
+            {nombre: 'Bajo Izquierda', max: maxBI, min: minBI},
+            {nombre: 'Bajo Medio', max: maxBM, min: minBM},
+            {nombre: 'Bajo Derecha', max: maxBD, min: minBD}
         ];
 
         let rayOrigin = this.avatar.getTraslacion();
         let rayDirection = vec3.fromValues(0, -1, 0);
-    
-        let v0 = vertices[0];
-        let v1 = vertices[1];
-        let v2 = vertices[2];
-        let v3 = vertices[3];
-    
-        if (this.intersectRayTriangle2(rayOrigin, rayDirection, v0, v1, v2) || this.intersectRayTriangle2(rayOrigin, rayDirection, v0, v2, v3)) {
-            console.log('sobre el plano')
-            return true;
-        }else{
-            console.log('fuera del plano')
-        }
-        
 
+        for(let parte of partes){
+            let vertices = [
+                vec3.fromValues(parte.min[0], parte.max[1], parte.min[2]),
+                vec3.fromValues(parte.max[0], parte.max[1], parte.min[2]),
+                vec3.fromValues(parte.max[0], parte.max[1], parte.max[2]),
+                vec3.fromValues(parte.min[0], parte.max[1], parte.max[2])
+            ];
+
+            if (this.intersectRayTriangle2(rayOrigin, rayDirection, vertices[0], vertices[1], vertices[2]) || this.intersectRayTriangle2(rayOrigin, rayDirection, vertices[0], vertices[2], vertices[3])) {
+                console.log(parte.nombre);
+                return true;
+            }else{
+                
+            }
+        }
+    
         return false;
     }
 

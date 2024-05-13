@@ -12,20 +12,15 @@ data-sidebar-position="fixed" data-header-position="fixed">
             <div class="row">
               <div class="col-md-4" *ngFor="let clase of clasesData.clases">
                   <div class="card"> 
-                    <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
-                    <div class="card-body">
-                      <h5 class="card-title" style="text-align: center; font-size: 25px; margin-bottom: 20px;">{{clase.Nombre}}</h5>
+                    <button (click)="verClase(clase.ID_Clase)"><div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
+                      <div class="card-body">
+                    <h5 class="card-title" style="text-align: center; font-size: 25px; margin-bottom: 20px;">{{clase.Nombre}}</h5>
                       <p  class="card-title" class="ti ti-user" style="text-align: center; font-size: 15px; margin-bottom: 10px;"><b>{{clase.NumAlumnos}}</b> </p>   
                        <!-- Contenedor del gráfico de medidor ECharts -->
                        <div id="echarts-chart-{{clase.ID_Clase}}" style="width: 200px; height:200px; margin: auto;"></div>
-                       <br>
-                       <br>
-                      <div class="botones">
-                        <button class="btn btn-primary" (click)="verClase(clase.ID_Clase)"><span><i class="ti ti-click" style="font-size: 15px;"></i></span> Ver Clase</button>
-                      </div>
-
+                     
                     </div>
-                  </div>
+                  </div></button>
                 </div>
               </div>
             </div>

@@ -164,7 +164,7 @@ initECharts(claseID: any, totalMediaClase: any) {
   const chartElement = document.getElementById('echarts-chart-' + claseID);
   const chart = echarts.init(chartElement);
 
-        
+        /*
         const option = {
             series: [
                 {
@@ -256,11 +256,94 @@ initECharts(claseID: any, totalMediaClase: any) {
                     ]
                 }
             ]
-        };
+        };*/
+        console.log('Total media clase grafiicccccca:', totalMediaClase);
+        const option = {
+          series: [
+              {
+                  type: 'gauge',
+                  progress: {
+                      show: true,
+                      width: 18,
+                      itemStyle: {  
+                        color: this.getItemColor(totalMediaClase)
+                      } 
+                  },
+                  
+            pointer: {
+              itemStyle: {  
+                color: this.getItemColor(totalMediaClase)
+              } 
+            },
+                  axisLine: {
+                      lineStyle: {
+                          width: 18
+                      }
+                  },
+                  axisTick: {
+                      show: false
+                  },
+                  splitLine: {
+                    show:false,
+                      length: 15,
+                      lineStyle: {
+                          width: 2,
+                          color: '#9989'
+                      }
+                  },
+                  axisLabel: {
+                    show:false,
+                      distance: 25,
+                      color: '#99r9',
+                      fontSize: 20
+                  },
+                  anchor: {
+                      show: true,
+                      showAbove: true,
+                      size: 25,
+                     
+                      itemStyle: {
+                          borderWidth: 0,
+                          color: this.getItemColor(totalMediaClase)
+                      }
+                  },
+                  title: {
+                    offsetCenter: [0, '114%'],
+                    fontSize: 15,
+                    fontWeight: 'bold' ,
+                    color: 'rgb(42, 53, 71)'
+                  },
+                  detail: {
+                      valueAnimation: true,
+                      fontSize: 20,
+                      offsetCenter: [0, '70%']
+                  },
+                  data: [
+                      {
+                          value: totalMediaClase ,
+                          name: 'Media emocional'
+                      }
+                  ]
+              }
+          ]
+      };
         
         chart.setOption(option);
 }
-
+getItemColor(totalMediaClase:any) {
+   // Determinar el color según el valor del porcentaje
+  if (totalMediaClase >= 0 && totalMediaClase <= 20) {
+      return 'rgb(233, 31, 31)'; // Color rojo para porcentajes del 0% al 20%
+  } else if (totalMediaClase > 20 && totalMediaClase <= 40) {
+      return '#F7C65B'; // Color naranja para porcentajes del 21% al 40%
+  } else if (totalMediaClase > 40 && totalMediaClase <= 60) {
+      return '#dce232'; // Color verde claro para porcentajes del 41% al 60%
+  } else if (totalMediaClase > 60 && totalMediaClase <= 80) {
+      return '#8aca69'; // Color verde para porcentajes del 61% al 80%
+  } else {
+      return '#61AB3D'; // Color azul para porcentajes del 81% al 100%
+  }
+}
 
 verClase(claseID: any){
   this.clasID = claseID;

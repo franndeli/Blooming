@@ -18,7 +18,11 @@ void main(){
         colorOutput = texture2D(sampler, fragTexCoord);
     } 
     if (isSelected) {
-        colorOutput *= vec4(1.2, 1.2, 1.2, 1.0); // Aumentar brillo por ejemplo
+        // Iluminar el color de salida aumentando la luminosidad
+        vec4 greenLight = vec4(0.0, 1.0, 0.0, 1.0); // RGB verde con alfa completo
+        // Aumentar la luminosidad con una mezcla hacia el verde
+        float blendFactor = 0.3; // Controla cuánto verde se añade
+        colorOutput = mix(colorOutput, greenLight, blendFactor);
     }
     gl_FragColor = colorOutput;
 }

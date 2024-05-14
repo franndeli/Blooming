@@ -8,3 +8,15 @@ html, body {
 #canvasWebGL {
     display: block; /* Elimina cualquier espacio extra */
 }
+
+.pregunta {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    text-align: center; 
+    font-size: 5vh;
+    color: white;
+    padding-top: 10px;
+    margin-top: 5vh;
+}
+

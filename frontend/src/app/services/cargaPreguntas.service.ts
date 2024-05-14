@@ -3,7 +3,10 @@ import { AlumnoService } from './alumnos.service';
 import { SesionService } from './sesiones.service';
 import { RespuestaService } from './respuestas.service';
 import { AuthService } from './auth.service';
+
 import { Injectable } from '@angular/core';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 
 type Resultados = { [ambito: string]: number };
 
@@ -22,7 +25,9 @@ export class CargarPreguntasService {
   preguntaActual: any = null;
   mostrarReiniciar: boolean = false;
 
-  textMesh!: THREE.Mesh | undefined
+  textMesh!: THREE.Mesh | undefined;
+
+  canvas!: any;
 
   objectKeys = Object.keys;
 
@@ -59,10 +64,8 @@ export class CargarPreguntasService {
   }
 
   async cargarPreguntas() {
-    console.log("hola");
     return new Promise((resolve, reject) => {
-        this.alumnoService.getAlumnoID(localStorage.getItem('id')).subscribe( (ambitos: any) => {
-            console.log("hola2");  
+        this.alumnoService.getAlumnoID(localStorage.getItem('id')).subscribe( (ambitos: any) => { 
             this.ambitos = JSON.parse(ambitos.alumnos[0].Ambitos);
             this.aparicionambitos = JSON.parse(ambitos.alumnos[0].AparicionAmbitos);
             this.sesionService.getSesionCount(localStorage.getItem('id')).subscribe(async (sesiones: any) => {
@@ -76,7 +79,7 @@ export class CargarPreguntasService {
                     }
                     //   this.sesionService.crearSesion();
                     this.guardarPreguntas();
-                    await this.guardarIndiceActual();
+                    this.guardarIndiceActual();
                     resolve(this.preguntas);
                     return this.preguntas;
                 });

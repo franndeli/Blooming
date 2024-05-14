@@ -1,7 +1,7 @@
 import { MotorGrafico } from '../graphics/motor/motorGrafico';
 import { mat4, vec3, mat3 } from 'gl-matrix';
 import { Injectable } from '@angular/core';
-import { TNodo } from '../graphics';
+import { TNodo, TRecursoMalla } from '../graphics';
 
 var clickIzq = false;
 var escalado = 1;
@@ -25,6 +25,8 @@ export class CuboService {
     private modelos: TNodo[] = [];
     private canvas!: HTMLCanvasElement;
     private requestId: number | null = null;
+
+    public ultimaCaraSeleccionada: any = null;
 
     constructor() { }
     
@@ -96,12 +98,12 @@ export class CuboService {
 
     rayPicking(event: MouseEvent) {
         const caras = [
-            { vertices: [vec3.fromValues(-1, -1, 1), vec3.fromValues(-1, 1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, -1, 1)], nombre: "Delantera" },
-            { vertices: [vec3.fromValues(1, -1, -1), vec3.fromValues(1, 1, -1), vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, -1, -1)], nombre: "Trasera" },
-            { vertices: [vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, 1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, 1, -1)], nombre: "Superior" },
-            { vertices: [vec3.fromValues(-1, -1, -1), vec3.fromValues(1, -1, -1), vec3.fromValues(1, -1, 1), vec3.fromValues(-1, -1, 1)], nombre: "Inferior" },
-            { vertices: [vec3.fromValues(1, -1, -1), vec3.fromValues(1, -1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, 1, -1)], nombre: "Derecha" },
-            { vertices: [vec3.fromValues(-1, -1, 1), vec3.fromValues(-1, -1, -1), vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, 1, 1)], nombre: "Izquierda" }
+            { vertices: [vec3.fromValues(-1, -1, 1), vec3.fromValues(-1, 1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, -1, 1)], nombre: "Cube.001" },
+            { vertices: [vec3.fromValues(1, -1, -1), vec3.fromValues(1, 1, -1), vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, -1, -1)], nombre: "Cube.002" },
+            { vertices: [vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, 1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, 1, -1)], nombre: "Cube.003" },
+            { vertices: [vec3.fromValues(-1, -1, -1), vec3.fromValues(1, -1, -1), vec3.fromValues(1, -1, 1), vec3.fromValues(-1, -1, 1)], nombre: "Cube.005" },
+            { vertices: [vec3.fromValues(1, -1, -1), vec3.fromValues(1, -1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, 1, -1)], nombre: "Cube.006" },
+            { vertices: [vec3.fromValues(-1, -1, 1), vec3.fromValues(-1, -1, -1), vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, 1, 1)], nombre: "Cube.004" }
         ];
 
         let rect = this.canvas.getBoundingClientRect();
@@ -130,29 +132,41 @@ export class CuboService {
         let matrizTransfInversa = mat4.invert(mat4.create(), cubo!.getMatrizTransf());
         let localRayOrigin = vec3.transformMat4(vec3.create(), this.camActiva.getTraslacion(), matrizTransfInversa);
         let localRayDirection = vec3.transformMat3(vec3.create(), rayWorld, mat3.normalFromMat4(mat3.create(), matrizTransfInversa));
-        
-        for (let cara of caras) {
-          let v0 = cara.vertices[0];
-          let v1 = cara.vertices[1];
-          let v2 = cara.vertices[2];
-          let v3 = cara.vertices[3];
-    
-          let t1 = this.intersectRayTriangle(localRayOrigin, localRayDirection, v0, v1, v2);
-          let t2 = this.intersectRayTriangle(localRayOrigin, localRayDirection, v0, v2, v3);
-    
-          if (t1 !== null || t2 !== null) {
-              intersecciones.push({ cara: cara.nombre, t: Math.min(t1 ?? Infinity, t2 ?? Infinity) });
-          }
+
+        const recursoMalla = cubo!.getEntidad() as TRecursoMalla;
+
+        for (let cara of recursoMalla.getCaras()) {
+            // console.log(cara);
+            // console.log(recursoMalla.getTexturaPorCara(cara.nombre));
+            // if (recursoMalla.getTexturaPorCara(cara.nombre) === "Sin textura") {
+            //     console.log("Detección de cara sin textura: parando raypicking.");
+            //     return; // Detiene todo el proceso inmediatamente
+            // }
+
+            let v0 = cara.vertices[0];
+            let v1 = cara.vertices[1];
+            let v2 = cara.vertices[2];
+            let v3 = cara.vertices[3];
+
+            let t1 = this.intersectRayTriangle(localRayOrigin, localRayDirection, v0, v1, v2);
+            let t2 = this.intersectRayTriangle(localRayOrigin, localRayDirection, v0, v2, v3);
+
+            if (t1 !== null || t2 !== null) {
+                intersecciones.push({ cara: cara.nombre, t: Math.min(t1 ?? Infinity, t2 ?? Infinity) });
+            }
         }
-    
+
         if (intersecciones.length === 0) {
             console.log("Click fuera del cubo");
             return;
         }
-    
+
         intersecciones.sort((a, b) => a.t - b.t);
         caraSeleccionada = intersecciones[0].cara;
-        console.log("Cara seleccionada: " + caraSeleccionada);
+        recursoMalla.seleccionarCara(recursoMalla.objectIDs[caraSeleccionada]);
+        console.log(`Cara seleccionada: ${caraSeleccionada}, Textura: ${recursoMalla.getTexturaPorCara(caraSeleccionada)}`);
+        
+        this.setCaraSeleccionada(caraSeleccionada, recursoMalla.getTexturaPorCara(caraSeleccionada));
     }
     
     intersectRayTriangle(rayOrigin: vec3, rayDirection: vec3, v0: vec3, v1: vec3, v2: vec3): number | null {
@@ -164,5 +178,9 @@ export class CuboService {
             cancelAnimationFrame(this.requestId);
             this.requestId = null;
         }
+    }
+
+    setCaraSeleccionada(cara: any, textura: string){
+        this.ultimaCaraSeleccionada = { cara: cara, textura: textura };
     }
 }

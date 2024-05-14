@@ -26,7 +26,7 @@ export class TRecursoMalla extends TRecurso {
 
   private baseColor!: Float32Array;
 
-  private objectIDs: any = {};
+  objectIDs: any = {};
 
   private texturas: any
 
@@ -217,23 +217,40 @@ export class TRecursoMalla extends TRecurso {
     indicesTexturas.sort(() => 0.5 - Math.random());
 
     for (let i = 0; i < carasParaTexturizar; i++) {
-        // Asignar cada textura a una cara diferente
-        this.texturaPorCara[this.objectIDs[caras[i]]] = indicesTexturas[i];
+        // Asignar el nombre de cada textura a una cara diferente
+        this.texturaPorCara[caras[i]] = this.texturas[indicesTexturas[i]].nombre;
     }
+
+    console.log(this.texturaPorCara);
+  }
+
+  getTexturaPorCara(cara: string): string {
+    console.log(this.texturaPorCara[cara]);
+    return this.texturaPorCara[cara] || "Sin textura";
   }
 
   public seleccionarCara(index: number) {
     this.selectedFaceIndex = index;
+    // let caraActual = Object.keys(this.objectIDs).find(key => this.objectIDs[key] === index);
+    // if (caraActual) {
+    //     console.log(`Cara seleccionada: ${caraActual}, Textura: ${this.getTexturaPorCara(caraActual)}`);
+    // }
   }
 
-
+  getCaras() {
+    return [
+        { nombre: "Cube.001", vertices: [vec3.fromValues(-1, -1, 1), vec3.fromValues(-1, 1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, -1, 1)], textura: this.texturaPorCara["Cube.001"] },
+        { nombre: "Cube.002", vertices: [vec3.fromValues(1, -1, -1), vec3.fromValues(1, 1, -1), vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, -1, -1)], textura: this.texturaPorCara["Cube.002"] },
+        { nombre: "Cube.003", vertices: [vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, 1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, 1, -1)], textura: this.texturaPorCara["Cube.003"] },
+        { nombre: "Cube.004", vertices: [vec3.fromValues(-1, -1, 1), vec3.fromValues(-1, -1, -1), vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, 1, 1)], textura: this.texturaPorCara["Cube.004"] },
+        { nombre: "Cube.005", vertices: [vec3.fromValues(-1, -1, -1), vec3.fromValues(1, -1, -1), vec3.fromValues(1, -1, 1), vec3.fromValues(-1, -1, 1)], textura: this.texturaPorCara["Cube.005"] },
+        { nombre: "Cube.006", vertices: [vec3.fromValues(1, -1, -1), vec3.fromValues(1, -1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, 1, -1)], textura: this.texturaPorCara["Cube.006"] }
+    ];
+  }
 
   dibujar(matrizTransf: mat4): void {
     let gl = this.gl;
     gl.useProgram(this.programId);
-
-    // let applyTextureArray = [0, 0, 0, 0, 0, 0];
-    // applyTextureArray[2] = 1;
 
     // Iterar sobre cada mesh registrado (cada uno tiene su propio conjunto de buffers)
     for (let i = 0; i < this.vertexBuffers.length; i++) {
@@ -249,53 +266,45 @@ export class TRecursoMalla extends TRecurso {
         gl.vertexAttribPointer(normalLocation, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(normalLocation);
 
-        //Configuración de buffer de textura
+        // Configuración de buffer de textura
         gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordBuffers[i]);
         let texCoordLocation = gl.getAttribLocation(this.programId, 'vertTexCoord');
         gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(texCoordLocation);
 
-        // let applyTexture = (i === this.objectIDs["Cube.006"]);
-        // let applyTextureUniform = gl.getUniformLocation(this.programId, 'applyTexture');
-        // gl.uniform1i(applyTextureUniform, applyTexture ? 1 : 0);
-
-        let texturaIndex = this.texturaPorCara[i];
-
-        // console.log(this.texturas[texturaIndex].tex);
-        if (texturaIndex !== undefined) {
-            gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, this.texturas[texturaIndex].texture);
-            gl.uniform1i(gl.getUniformLocation(this.programId, 'sampler'), 0);
-            gl.uniform1i(gl.getUniformLocation(this.programId, 'applyTexture'), 1);
+        // Identificar la cara actual mediante su índice para buscar la textura correspondiente
+        let caraActual = Object.keys(this.objectIDs).find(key => this.objectIDs[key] === i);
+        if (caraActual && this.texturaPorCara[caraActual]) {
+            let texturaInfo = this.texturas.find((t: any) => t.nombre === this.texturaPorCara[caraActual!]);
+            if (texturaInfo && texturaInfo.texture) {
+                gl.activeTexture(gl.TEXTURE0);
+                gl.bindTexture(gl.TEXTURE_2D, texturaInfo.texture);
+                gl.uniform1i(gl.getUniformLocation(this.programId, 'sampler'), 0);
+                gl.uniform1i(gl.getUniformLocation(this.programId, 'applyTexture'), 1);
+            } else {
+                gl.uniform1i(gl.getUniformLocation(this.programId, 'applyTexture'), 0);
+            }
         } else {
             gl.uniform1i(gl.getUniformLocation(this.programId, 'applyTexture'), 0);
         }
 
+        // Seleccionar la cara si está seleccionada
         let isSelectedUniform = gl.getUniformLocation(this.programId, 'isSelected');
         gl.uniform1i(isSelectedUniform, this.selectedFaceIndex === i ? 1 : 0);
 
         // Configuración de la matriz de modelo-vista
-        var locationVmatrix = this.gl.getUniformLocation(this.programId, 'u_ModelViewMatrix');
-        if (locationVmatrix) {
-          let modelViewMatrix = mat4.create();
-          mat4.multiply(modelViewMatrix, this.TRecusoShader.getViewMatrix(), matrizTransf);
-          this.gl.uniformMatrix4fv(locationVmatrix, false, modelViewMatrix);
-        }
+        let modelViewMatrix = mat4.create();
+        mat4.multiply(modelViewMatrix, this.TRecusoShader.getViewMatrix(), matrizTransf);
+        gl.uniformMatrix4fv(gl.getUniformLocation(this.programId, 'u_ModelViewMatrix'), false, modelViewMatrix);
 
+        // Configurar el color base
         let colorLocation = gl.getUniformLocation(this.programId, 'u_Color');
         gl.uniform4fv(colorLocation, this.baseColor);
-
-        // Configuración del buffer de coordenadas de textura, si existe
-        // if (this.texCoordBuffers[i]) {
-        //     gl.bindBuffer(gl.ARRAY_BUFFER, this.texCoordBuffers[i]);
-        //     let textCoordAttribLocation = gl.getAttribLocation(this.programId, 'vertTexCoord');
-        //     gl.vertexAttribPointer(textCoordAttribLocation, 2, gl.FLOAT, false, 0, 0);
-        //     gl.enableVertexAttribArray(textCoordAttribLocation);
-        // }
 
         // Vinculación y dibujo usando el buffer de índices
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffers[i]);
         gl.drawElements(gl.TRIANGLES, this.indexCounts[i], gl.UNSIGNED_SHORT, 0);
     }
-  }
+}
+
 }

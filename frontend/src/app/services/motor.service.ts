@@ -30,6 +30,7 @@ export class MotorService {
 
   public async inicializarMotor(canvasRef: ElementRef<HTMLCanvasElement>, interfaz: number) {
     this.interfaz = interfaz;
+
     if(canvasRef && canvasRef.nativeElement){
       this.canvas = canvasRef.nativeElement;
       await this.motorGrafico.iniciarEscena(this.canvas, this.interfaz);
@@ -57,7 +58,8 @@ export class MotorService {
         this.planoService.crearPlano(this.motorGrafico, this.escena, this.texturas);
         //this.escenaACtual = this.escenaPlano
       }
-
+      
+      console.log(this.cargarPreguntas.preguntaActual);
       // setInterval(() => {
       //   this.interfaz = this.interfaz == 1 ? 2 : 1;
       //   this.cambiarInterfaz(this.interfaz);
@@ -68,6 +70,11 @@ export class MotorService {
     }
   }
 
+  getPreguntas(){
+    console.log(this.cargarPreguntas.preguntaActual);
+    return this.cargarPreguntas.preguntaActual;
+  }
+
   async cargarTexturas() {
     const texturas: any[] = [];
     
@@ -75,16 +82,10 @@ export class MotorService {
       texturas.push(this.cargarPreguntas.preguntaActual.respuestas.opciones[i].Imagen);
     }
 
-    console.log(texturas);
-    // const texturas = [
-    //     '../../assets/images/opciones/1.png',
-    //     '../../assets/images/opciones/2.png',
-    //     '../../assets/images/opciones/3.png',
-    //     '../../assets/images/opciones/4.png'
-    // ];
+    // console.log(texturas);
 
     this.texturas = await Promise.all(texturas.map(async url => await this.motorGrafico.cargarTextura(url)));
-    console.log(this.texturas);
+    // console.log(this.texturas);
   }
 
 

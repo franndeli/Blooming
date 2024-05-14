@@ -7,8 +7,6 @@ const Profesor = require('../models/profesor');
 const sequelize = require('../database/configdb');
 const hashPassword = require('../middleware/hashHelper');
 
-
-
 const getProfesores = async (req, res) => {
     try {
         const tam = Number(req.query.numFilas) || 0;
@@ -38,44 +36,49 @@ const getProfesores = async (req, res) => {
         }
 
         const paginationOptions = tam > 0 ? { limit: tam, offset: desde } : {};
-        let orderOptions;
-        if(queryParams.ordenar == 1){
-            orderOptions = [['Nombre', 'ASC']];
-        }else if(queryParams.ordenar == 2){
-            orderOptions = [['Nombre', 'DESC']];
-        }else if(queryParams.ordenar == 0){
-            orderOptions = [];
-        }else if(queryParams.ordenar == 3){
-            orderOptions = [['Apellidos', 'ASC']];
-        }else if(queryParams.ordenar == 4){
-            orderOptions = [['Apellidos', 'DESC']];
-        }else if(queryParams.ordenar == 5){
-            orderOptions = [[Clase, 'Nombre', 'ASC']];
-        }else if(queryParams.ordenar == 6){
-            orderOptions = [[Clase, 'Nombre', 'DESC']];
-        }else if(queryParams.ordenar == 7){
-            orderOptions = [[Centro, 'Calle', 'ASC']];
-        }else if(queryParams.ordenar == 8){
-            orderOptions = [[Centro, 'Calle', 'DESC']];
+        let orderOptions=[];
+        if(orderOptions){
+            if(queryParams.ordenar == 1){
+                orderOptions = [['Nombre', 'ASC']];
+            }else if(queryParams.ordenar == 2){
+                orderOptions = [['Nombre', 'DESC']];
+            }else if(queryParams.ordenar == 0){
+                orderOptions = [];
+            }else if(queryParams.ordenar == 3){
+                orderOptions = [['Apellidos', 'ASC']];
+            }else if(queryParams.ordenar == 4){
+                orderOptions = [['Apellidos', 'DESC']];
+            }else if(queryParams.ordenar == 5){
+                orderOptions = [[Clase, 'Nombre', 'ASC']];
+            }else if(queryParams.ordenar == 6){
+                orderOptions = [[Clase, 'Nombre', 'DESC']];
+            }else if(queryParams.ordenar == 7){
+                orderOptions = [[Centro, 'Calle', 'ASC']];
+            }else if(queryParams.ordenar == 8){
+                orderOptions = [[Centro, 'Calle', 'DESC']];
+            }
         }
-
-        let whereOptions = [
-            { Nombre: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-            { Apellidos: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-            { '$Clase.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-            
-        ];
-
-        if (req.Rol === 'Admin') {
+        let whereOptions=[];
+        let where = { ...queryOptions };
+        if(textoBusqueda){
+            where = {
+                ...where,
+                [sequelize.Op.or]: whereOptions
+            };
             whereOptions.push(
-                { '$Centro.Nombre$' : { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { Nombre: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { Apellidos: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { '$Clase.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
             );
+            if (req.Rol === 'Admin') {
+                whereOptions.push(
+                    { '$Centro.Nombre$' : { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                );
+            }
         }
 
         const profesores = await Profesor.findAll({
-            where:{
-                [sequelize.Op.or]: whereOptions
-            },  queryOptions,
+            where: where,
             ...paginationOptions,
             attributes: { exclude: pwd ? [] : ['Contraseña'] },
             order: orderOptions,

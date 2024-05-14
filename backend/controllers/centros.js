@@ -34,34 +34,44 @@ const getCentros = async (req, res) => {
         }
 
         const paginationOptions = tam > 0 ? { limit: tam, offset: desde } : {};
-        let orderOptions;
-        if(queryParams.ordenar == 1){
-            orderOptions = [['Nombre', 'ASC']];
-        }else if(queryParams.ordenar == 2){
-            orderOptions = [['Nombre', 'DESC']];
-        }else if(queryParams.ordenar == 0){
-            orderOptions = [];
-        }else if(queryParams.ordenar == 3){
-            orderOptions = [['Email', 'ASC']];
-        }else if(queryParams.ordenar == 4){
-            orderOptions = [['Email', 'DESC']];
-        }else if(queryParams.ordenar == 5){
-            orderOptions = [['Calle', 'ASC']];
-        }else if(queryParams.ordenar == 6){
-            orderOptions = [['Calle', 'DESC']];
+        let orderOptions=[];
+        if(orderOptions){
+            if(queryParams.ordenar == 1){
+                orderOptions = [['Nombre', 'ASC']];
+            }else if(queryParams.ordenar == 2){
+                orderOptions = [['Nombre', 'DESC']];
+            }else if(queryParams.ordenar == 0){
+                orderOptions = [];
+            }else if(queryParams.ordenar == 3){
+                orderOptions = [['Email', 'ASC']];
+            }else if(queryParams.ordenar == 4){
+                orderOptions = [['Email', 'DESC']];
+            }else if(queryParams.ordenar == 5){
+                orderOptions = [['Calle', 'ASC']];
+            }else if(queryParams.ordenar == 6){
+                orderOptions = [['Calle', 'DESC']];
+            }
+        }
+
+        let whereOptions=[];
+        let where = { ...queryOptions };
+        if(textoBusqueda){
+            where = {
+                ...where,
+                [sequelize.Op.or]: whereOptions
+            };
+            whereOptions.push(
+                { Nombre: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { Email: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { Localidad: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { Provincia: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { Calle: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { CP: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+            );
         }
 
         const centros = await Centro.findAll({
-            where:{
-                [sequelize.Op.or]: [
-                    { Nombre: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-                    { Email: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-                    { Localidad: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-                    { Provincia: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-                    { Calle: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-                    { CP: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-                ]
-            }, queryOptions,
+            where: where,
             ...paginationOptions,
             attributes: { exclude: ['Contraseña'] },
             order: orderOptions

@@ -20,17 +20,8 @@ const getAlumnos = async (req, res) => {
         
         let queryOptions = {};
 
-        /*if (textoBusqueda) {
-            queryOptions[sequelize.Op.or] = [
-                { Nombre: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-                { Apellidos: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-                { Estado: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-                { '$Clase.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } }
-            ];  
-        }*/
-
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
-        console.log(isValidQuery);
+       
         if (!isValidQuery) {
             return res.status(400).json({ statusCode: 400, message: "Parámetros de búsqueda no válidos en Alumnos" });
         }
@@ -46,59 +37,66 @@ const getAlumnos = async (req, res) => {
         }
         
         const paginationOptions = tam > 0 ? { limit: tam, offset: desde } : {};
-        let orderOptions;
-        if(queryParams.ordenar == 1){
-            orderOptions = [['Nombre', 'ASC']];
-        }else if(queryParams.ordenar == 2){
-            orderOptions = [['Nombre', 'DESC']];
-        }else if(queryParams.ordenar == 0){
-            orderOptions = [];
-        }else if(queryParams.ordenar == 3){
-            orderOptions = [['Apellidos', 'ASC']];
-        }else if(queryParams.ordenar == 4){
-            orderOptions = [['Apellidos', 'DESC']];
-        }else if(queryParams.ordenar == 5){
-            orderOptions = [[Clase, 'Nombre', 'ASC']];
-        }else if(queryParams.ordenar == 6){
-            orderOptions = [[Clase, 'Nombre', 'DESC']];
-        }else if(queryParams.ordenar == 7){
-            orderOptions = [['FechaNacimiento', 'ASC']];
-        }else if(queryParams.ordenar == 8){
-            orderOptions = [['FechaNacimiento', 'DESC']];
-        }else if(queryParams.ordenar == 9){
-            orderOptions = [[Centro, 'Calle', 'ASC']];
-        }else if(queryParams.ordenar == 10){
-            orderOptions = [[Centro, 'Calle', 'DESC']];
-        }else if(queryParams.ordenar == 11){
-            orderOptions = [[Alumno.sequelize.literal("CASE WHEN Estado = 'Muy Bueno' THEN 5 WHEN Estado = 'Bueno' THEN 4 WHEN Estado = 'Normal' THEN 3 WHEN Estado = 'Malo' THEN 2 ELSE 1 END"), 'DESC']];
-        }else if(queryParams.ordenar == 12){
-            orderOptions =  [[Alumno.sequelize.literal("CASE WHEN Estado = 'Muy Bueno' THEN 5 WHEN Estado = 'Bueno' THEN 4 WHEN Estado = 'Normal' THEN 3 WHEN Estado = 'Malo' THEN 2 ELSE 1 END"), 'ASC']];
+        let orderOptions=[];
+        if(orderOptions){
+            if(queryParams.ordenar == 1){
+                orderOptions = [['Nombre', 'ASC']];
+            }else if(queryParams.ordenar == 2){
+                orderOptions = [['Nombre', 'DESC']];
+            }else if(queryParams.ordenar == 0){
+                orderOptions = [];
+            }else if(queryParams.ordenar == 3){
+                orderOptions = [['Apellidos', 'ASC']];
+            }else if(queryParams.ordenar == 4){
+                orderOptions = [['Apellidos', 'DESC']];
+            }else if(queryParams.ordenar == 5){
+                orderOptions = [[Clase, 'Nombre', 'ASC']];
+            }else if(queryParams.ordenar == 6){
+                orderOptions = [[Clase, 'Nombre', 'DESC']];
+            }else if(queryParams.ordenar == 7){
+                orderOptions = [['FechaNacimiento', 'ASC']];
+            }else if(queryParams.ordenar == 8){
+                orderOptions = [['FechaNacimiento', 'DESC']];
+            }else if(queryParams.ordenar == 9){
+                orderOptions = [[Centro, 'Calle', 'ASC']];
+            }else if(queryParams.ordenar == 10){
+                orderOptions = [[Centro, 'Calle', 'DESC']];
+            }else if(queryParams.ordenar == 11){
+                orderOptions = [[Alumno.sequelize.literal("CASE WHEN Estado = 'Muy Bueno' THEN 5 WHEN Estado = 'Bueno' THEN 4 WHEN Estado = 'Normal' THEN 3 WHEN Estado = 'Malo' THEN 2 ELSE 1 END"), 'DESC']];
+            }else if(queryParams.ordenar == 12){
+                orderOptions =  [[Alumno.sequelize.literal("CASE WHEN Estado = 'Muy Bueno' THEN 5 WHEN Estado = 'Bueno' THEN 4 WHEN Estado = 'Normal' THEN 3 WHEN Estado = 'Malo' THEN 2 ELSE 1 END"), 'ASC']];
+            }
         }
+        
+        let whereOptions=[];
+        let where = { ...queryOptions };
 
-        let whereOptions = [
-            { Nombre: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-            { Apellidos: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-            { Estado: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-            
-            
-        ];
-
-        if (req.Rol === 'Centro') {
-            whereOptions.push(
-                { '$Clase.Nombre$' : { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-            );
-        }
-
-        if (req.Rol === 'Admin') {
-            whereOptions.push(
-                { '$Centro.Nombre$' : { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-            );
-        }
-
-        const alumnos = await Alumno.findAll({
-            where: {
+        if(textoBusqueda){
+            where = {
+                ...where,
                 [sequelize.Op.or]: whereOptions
-            }, queryOptions,
+            };
+            whereOptions.push(
+                { Nombre: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { Apellidos: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { Estado: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+            );
+    
+            if (req.Rol === 'Centro') {
+                whereOptions.push(
+                    { '$Clase.Nombre$' : { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                );
+            }
+    
+            if (req.Rol === 'Admin') {
+                whereOptions.push(
+                    { '$Centro.Nombre$' : { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                );
+            }
+        }
+        
+        const alumnos = await Alumno.findAll({
+            where: where, 
             ...paginationOptions,
             attributes: { exclude: ['Contraseña'] },
             order: orderOptions,

@@ -34,39 +34,45 @@ const getClases = async (req, res) => {
         }
 
         const paginationOptions = tam > 0 ? { limit: tam, offset: desde } : {};
-        let orderOptions;
-        if(queryParams.ordenar == 1){
-            orderOptions = [['Nombre', 'ASC']];
-        }else if(queryParams.ordenar == 2){
-            orderOptions = [['Nombre', 'DESC']];
-        }else if(queryParams.ordenar == 0){
-            orderOptions = [];
-        }else if(queryParams.ordenar == 3){
-            orderOptions = [['NumAlumnos', 'ASC']];
-        }else if(queryParams.ordenar == 4){
-            orderOptions = [['NumAlumnos', 'DESC']];
-        }else if(queryParams.ordenar == 5){
-            orderOptions = [[Centro, 'Calle', 'ASC']];
-        }else if(queryParams.ordenar == 6){
-            orderOptions = [[Centro, 'Calle', 'DESC']];
+        let orderOptions=[];
+        if(orderOptions){
+            if(queryParams.ordenar == 1){
+                orderOptions = [['Nombre', 'ASC']];
+            }else if(queryParams.ordenar == 2){
+                orderOptions = [['Nombre', 'DESC']];
+            }else if(queryParams.ordenar == 0){
+                orderOptions = [];
+            }else if(queryParams.ordenar == 3){
+                orderOptions = [['NumAlumnos', 'ASC']];
+            }else if(queryParams.ordenar == 4){
+                orderOptions = [['NumAlumnos', 'DESC']];
+            }else if(queryParams.ordenar == 5){
+                orderOptions = [[Centro, 'Calle', 'ASC']];
+            }else if(queryParams.ordenar == 6){
+                orderOptions = [[Centro, 'Calle', 'DESC']];
+            }
         }
-
-        let whereOptions = [
-            { Nombre: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-            { NumAlumnos: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
             
-        ];
-
-        if (req.Rol === 'Admin') {
+        let whereOptions=[];
+        let where = { ...queryOptions };
+        if(textoBusqueda){
+            where = {
+                ...where,
+                [sequelize.Op.or]: whereOptions
+            };
             whereOptions.push(
-                { '$Centro.Nombre$' : { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { Nombre: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { NumAlumnos: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
             );
+            if (req.Rol === 'Admin') {
+                whereOptions.push(
+                    { '$Centro.Nombre$' : { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                );
+            }
         }
 
         const clases = await Clase.findAll({
-            where: {
-                [sequelize.Op.or]: whereOptions
-            },queryOptions,
+            where: where,
             ...paginationOptions,
             order: orderOptions,
             include: [{

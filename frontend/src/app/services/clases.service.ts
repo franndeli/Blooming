@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
@@ -84,7 +83,7 @@ export class ClaseService {
     //   }
     //   return this.http.get(this.basePath+'?ID_Centro='+id+'&estado='+estado+'&numFilas='+filas+'&desde='+desde, this.httpOptions);
     // }
-  
+    
     deleteClase(id:number){
       this.getHeader();
       return this.http.delete(this.basePath+id, this.httpOptions);

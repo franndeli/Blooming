@@ -72,6 +72,7 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
   obtenerSesiones(){
     this.sesionService.getSesionesAlumno(this.alumnoID, this.dias).subscribe((res: any) => {
       const sesionesData = res.sesiones;
+      console.log(this.sesiones);
       this.sesiones.Ambitos.Clase = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Clase);
       this.sesiones.Ambitos.Amigos = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Amigos);
       this.sesiones.Ambitos.Familia = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Familia);

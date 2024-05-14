@@ -51,46 +51,55 @@ const getRespuestas = async (req, res) => {
         }
 
         const paginationOptions = tam > 0 ? { limit: tam, offset: desde } : {};
-        let orderOptions;
-        if(queryParams.ordenar == 1){
-            orderOptions = [[Alumno, 'Nombre', 'ASC']];
-        }else if(queryParams.ordenar == 2){
-            orderOptions = [[Alumno, 'Nombre', 'DESC']];
-        }else if(queryParams.ordenar == 0){
-            orderOptions =  [['FechaRespuesta', 'DESC']];
-        }else if(queryParams.ordenar == 3){
-            orderOptions = [[Alumno, Clase, 'Nombre', 'ASC']];
-        }else if(queryParams.ordenar == 4){
-            orderOptions = [[Alumno, Clase, 'Nombre', 'DESC']];
-        }else if(queryParams.ordenar == 5){
-            orderOptions = [[Pregunta, Ambito, 'Nombre', 'ASC']];
-        }else if(queryParams.ordenar == 6){
-            orderOptions = [[Pregunta, Ambito, 'Nombre', 'DESC']];
-        }else if(queryParams.ordenar == 7){
-            orderOptions = [[Pregunta, 'TextoPregunta', 'ASC']];
-        }else if(queryParams.ordenar == 8){
-            orderOptions = [[Pregunta, 'TextoPregunta', 'DESC']];
-        }else if(queryParams.ordenar == 9){
-            orderOptions = [[Opcion, 'TextoOpcion', 'ASC']];
-        }else if(queryParams.ordenar == 10){
-            orderOptions = [[Opcion, 'TextoOpcion', 'DESC']];
-        }if (queryParams.ordenar == 11) {
-            orderOptions = [[Opcion.sequelize.literal("CASE WHEN Gravedad = 2 THEN 1 WHEN Gravedad = 1 THEN 2 WHEN Gravedad = 0 THEN 3 ELSE 4 END"), 'ASC']];
-        } else if (queryParams.ordenar == 12) {
-            orderOptions = [[Opcion.sequelize.literal("CASE WHEN Gravedad = 2 THEN 1 WHEN Gravedad = 1 THEN 2 WHEN Gravedad = 0 THEN 3 ELSE 4 END"), 'DESC']];
+        let orderOptions=[];
+        if(orderOptions){
+            if(queryParams.ordenar == 1){
+                orderOptions = [[Alumno, 'Nombre', 'ASC']];
+            }else if(queryParams.ordenar == 2){
+                orderOptions = [[Alumno, 'Nombre', 'DESC']];
+            }else if(queryParams.ordenar == 0){
+                orderOptions =  [['FechaRespuesta', 'DESC']];
+            }else if(queryParams.ordenar == 3){
+                orderOptions = [[Alumno, Clase, 'Nombre', 'ASC']];
+            }else if(queryParams.ordenar == 4){
+                orderOptions = [[Alumno, Clase, 'Nombre', 'DESC']];
+            }else if(queryParams.ordenar == 5){
+                orderOptions = [[Pregunta, Ambito, 'Nombre', 'ASC']];
+            }else if(queryParams.ordenar == 6){
+                orderOptions = [[Pregunta, Ambito, 'Nombre', 'DESC']];
+            }else if(queryParams.ordenar == 7){
+                orderOptions = [[Pregunta, 'TextoPregunta', 'ASC']];
+            }else if(queryParams.ordenar == 8){
+                orderOptions = [[Pregunta, 'TextoPregunta', 'DESC']];
+            }else if(queryParams.ordenar == 9){
+                orderOptions = [[Opcion, 'TextoOpcion', 'ASC']];
+            }else if(queryParams.ordenar == 10){
+                orderOptions = [[Opcion, 'TextoOpcion', 'DESC']];
+            }if (queryParams.ordenar == 11) {
+                orderOptions = [[Opcion.sequelize.literal("CASE WHEN Gravedad = 2 THEN 1 WHEN Gravedad = 1 THEN 2 WHEN Gravedad = 0 THEN 3 ELSE 4 END"), 'ASC']];
+            } else if (queryParams.ordenar == 12) {
+                orderOptions = [[Opcion.sequelize.literal("CASE WHEN Gravedad = 2 THEN 1 WHEN Gravedad = 1 THEN 2 WHEN Gravedad = 0 THEN 3 ELSE 4 END"), 'DESC']];
+            }
         }
 
+        let whereOptions=[];
+        let where = { ...queryOptions };
+        if(textoBusqueda){
+            where = {
+                ...where,
+                [sequelize.Op.or]: whereOptions
+            };
+            whereOptions.push(
+                { '$Opcion.TextoOpcion$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { '$Alumno.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { '$Alumno.Clase.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { '$Pregunta.TextoPregunta$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { '$Pregunta.Ambito.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+            );
+        }
+        
         const respuestas = await Respuesta.findAll({
-            where:{
-                [sequelize.Op.or]: [
-                    { '$Opcion.TextoOpcion$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-                    { '$Alumno.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-                    { '$Alumno.Clase.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-                    { '$Pregunta.TextoPregunta$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-                    { '$Pregunta.Ambito.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
-                ]
-            }, 
-            queryOptions,
+            where: where,
             ...paginationOptions,
             subQuery: false,
             order: orderOptions,

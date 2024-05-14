@@ -6,6 +6,7 @@ import { SesionService } from '../../../services/sesiones.service';
 import { AlumnoService } from '../../../services/alumnos.service';
 import * as echarts from 'echarts';
 import { interval } from 'rxjs';
+import { splitNsName } from '@angular/compiler';
 
 @Component({
   selector: 'app-actividad-reciente',
@@ -181,7 +182,8 @@ export class ActividadRecienteComponent implements OnInit {
           scale: true,
           name: '',
           min: 0,
-          boundaryGap: [0.2, 0.2]
+          boundaryGap: [0.2, 0.2],
+          splitNumber: 1
         } 
       ],
       series: [
@@ -194,14 +196,6 @@ export class ActividadRecienteComponent implements OnInit {
             barBorderRadius: [5, 5, 0, 0]
           },
           barWidth: 80
-        },
-        {
-          name: 'Actividad Line',
-          type: 'line',
-          data: this.actividadPorDia,
-          itemStyle: {
-            color: 'green'
-          }
         }
       ]
     };

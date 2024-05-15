@@ -41,16 +41,13 @@ export class CargarPreguntasService {
       const estadoPreguntas = localStorage.getItem('preguntas');
       const estadoIndiceActual = localStorage.getItem('indiceActual');
 
-      ////console.log(estadoPreguntas)
-      ////console.log(estadoIndiceActual)
+      
     
       if (estadoPreguntas && estadoIndiceActual) {
         this.preguntas = JSON.parse(estadoPreguntas);
         this.indiceActual = JSON.parse(estadoIndiceActual);
         this.preguntaActual = this.preguntas[this.indiceActual];
       } else {
-        ////console.log(localStorage.getItem('mostrarContador'));
-        //console.log(localStorage.getItem('mostrarContador'));
       }
     } catch(error){
       console.error("Error al inicializar el estado:", error);
@@ -59,10 +56,8 @@ export class CargarPreguntasService {
   }
 
   async cargarPreguntas() {
-    console.log("hola");
     return new Promise((resolve, reject) => {
-        this.alumnoService.getAlumnoID(localStorage.getItem('id')).subscribe( (ambitos: any) => {
-            console.log("hola2");  
+        this.alumnoService.getAlumnoID(localStorage.getItem('id')).subscribe( (ambitos: any) => { 
             this.ambitos = JSON.parse(ambitos.alumnos[0].Ambitos);
             this.aparicionambitos = JSON.parse(ambitos.alumnos[0].AparicionAmbitos);
             this.sesionService.getSesionCount(localStorage.getItem('id')).subscribe(async (sesiones: any) => {

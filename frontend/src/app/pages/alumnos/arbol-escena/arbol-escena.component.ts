@@ -16,7 +16,12 @@ export class ArbolEscenaComponent implements AfterViewInit {
 
   async ngAfterViewInit() {
     // Se calcula aleatoriamente que interfaz toca
-    let interfaz = 2;
+    let interfaz = 1;
     this.motorService.inicializarMotor(this.canvasRef, interfaz);
+
+      setInterval(() => {
+        interfaz = interfaz == 1 ? 2 : 1;
+        this.motorService.cambiarInterfaz(interfaz);
+      }, 30000);
   }
 }

@@ -42,11 +42,7 @@ export class TRecursoMalla extends TRecurso {
     this.baseColor = new Float32Array(4);
     this.indices = new Uint16Array();
 
-    // console.log(texturas);
-
     this.texturas = texturas;
-
-    // console.log(this.texturas);
 
     var canvas = <HTMLCanvasElement>document.getElementById('canvasWebGL');
     var context = canvas.getContext('webgl2');
@@ -57,14 +53,9 @@ export class TRecursoMalla extends TRecurso {
     this.TRecusoShader = shader;
     this.programId = this.TRecusoShader.getProgramId();
     this.setNombre(nombre);
-    console.log(this.getNombre())
   }
 
   override async cargarRecurso(nombre: string): Promise<void> {
-    // console.log(`Cargando recurso de malla ${nombre}...`);
-
-    console.log(`Cargando recurso de malla ${nombre}...`);
-
     try {
         const url = this.basePath + nombre;
         const response = await fetch(url);
@@ -76,19 +67,13 @@ export class TRecursoMalla extends TRecurso {
             const bufferResponse = await fetch(bufferUrl);
             return bufferResponse.arrayBuffer();
         }));
-
-        // console.log(bufferData);
-
         
         let meshIndex = 0;
 
         // Recorrer cada malla en el archivo GLTF
         for (const mesh of gltf.meshes) {
-            console.log(`Procesando malla: ${mesh.name}`);
-
             this.objectIDs[mesh.name] = meshIndex;
             meshIndex++;
-            console.log(mesh.name);
 
             // Recorrer cada primitiva en la malla
             for (const primitive of mesh.primitives) {
@@ -104,25 +89,21 @@ export class TRecursoMalla extends TRecurso {
                 // Cargar los vértices
                 const bufferViewVertices = gltf.bufferViews[attributes.POSITION];
                 const vertexData = new Float32Array(bufferData[bufferViewVertices.buffer], bufferViewVertices.byteOffset, bufferViewVertices.byteLength / Float32Array.BYTES_PER_ELEMENT);
-                console.log(`Datos de vértices cargados para malla: ${mesh.name}`);
 
                 // Cargar las normales
                 const bufferViewNormal = gltf.bufferViews[attributes.NORMAL];
                 const normalData = new Float32Array(bufferData[bufferViewNormal.buffer], bufferViewNormal.byteOffset, bufferViewNormal.byteLength / Float32Array.BYTES_PER_ELEMENT);
-                console.log(`Datos de normales cargados para malla: ${mesh.name}`);
 
                 let texCoordData = undefined;
                 if (attributes.TEXCOORD_0 !== undefined) {
-                    const bufferViewTexCoords = gltf.bufferViews[attributes.TEXCOORD_0];
-                    texCoordData = new Float32Array(bufferData[bufferViewTexCoords.buffer], bufferViewTexCoords.byteOffset, bufferViewTexCoords.byteLength / Float32Array.BYTES_PER_ELEMENT);
-                    console.log(`Datos de coordenadas de textura cargados para malla: ${mesh.name}`);
+                  const bufferViewTexCoords = gltf.bufferViews[attributes.TEXCOORD_0];
+                  texCoordData = new Float32Array(bufferData[bufferViewTexCoords.buffer], bufferViewTexCoords.byteOffset, bufferViewTexCoords.byteLength / Float32Array.BYTES_PER_ELEMENT);
                 }
 
                 let indexData = undefined;
                 if (indices !== undefined) {
-                    const bufferViewIndices = gltf.bufferViews[gltf.accessors[indices].bufferView];
-                    indexData = new Uint16Array(bufferData[bufferViewIndices.buffer], bufferViewIndices.byteOffset, bufferViewIndices.byteLength / Uint16Array.BYTES_PER_ELEMENT);
-                    console.log(`Datos de índices cargados para malla: ${mesh.name}`);
+                  const bufferViewIndices = gltf.bufferViews[gltf.accessors[indices].bufferView];
+                  indexData = new Uint16Array(bufferData[bufferViewIndices.buffer], bufferViewIndices.byteOffset, bufferViewIndices.byteLength / Uint16Array.BYTES_PER_ELEMENT);
                 }
 
                 // let colorData = undefined;
@@ -138,9 +119,6 @@ export class TRecursoMalla extends TRecurso {
         }
         
         this.calcularCarasTexturas();
-        
-        console.log(`Recurso malla ${nombre} cargado correctamente.`);
-
     } catch (error) {
         console.error(`Error al cargar el recurso de malla ${nombre}:`, error);
     }
@@ -154,8 +132,6 @@ export class TRecursoMalla extends TRecurso {
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, vertexData, gl.STATIC_DRAW);
     this.vertexBuffers.push(vertexBuffer!);
-
-    // console.log(vertexBuffer);
 
     let error = gl.getError();
     if (error !== gl.NO_ERROR) {

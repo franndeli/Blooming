@@ -2,70 +2,49 @@ import { mat4, vec3, mat3 } from 'gl-matrix';
 import { CuboService } from '../../services/cubo.service';
 import { PlanoService } from '../../services/plano.service';
 import { GestorRecursos, TRecursoMalla, TNodo, TCamara, TLuz, TRecursoTextura } from '../../graphics';
+import { event } from 'jquery';
 
 export class MotorGrafico {
-
-  public time:number = 0;
-  private width: number = 0;
-  private height: number = 0;
-  public rotando:boolean = true;
-  private cuboNecesitaActualizar: boolean = true;
-
   public escena!: TNodo;
-  private camara!: TNodo;
-  private avatar!: TNodo;
   public modelos: TNodo[];
   private camActiva!: TNodo;
-  
   private camaraActiva: number = 0;
-  private registroLuces: TNodo[] = [];
-  private lucesActivas: boolean[] = [];
-  private registroCamaras: TNodo[] = [];
-  private gestorRecursos = new GestorRecursos();
-  
-  
   private canvas!: HTMLCanvasElement;
   private gl!: WebGL2RenderingContext;
-  private program: WebGLProgram | null = null;
-
-  private cubo!: any;
+  private registroCamaras: TNodo[] = [];
+  private gestorRecursos = new GestorRecursos();
+ 
 
   constructor(private cuboService: CuboService, private planoService: PlanoService){
     this.modelos = [];
   }
 
+  mouseMove = (event: any) => {
+    this.planoService.mouseMove(event, this.canvas.width, this.canvas.height);
+    this.planoService.raycast();
+  }
+
+  rayPicking = (event: any) => this.cuboService.rayPicking(event, this.canvas);
+
   async iniciarEscena(canvas: HTMLCanvasElement, interfaz: number) {
-
-    // if (this.canvas) {
-    //   this.canvas.removeEventListener("mousedown", this.cuboService.mouseDown);
-    //   this.canvas.removeEventListener("mouseup", this.cuboService.mouseUp);
-    //   this.canvas.removeEventListener("mouseout", this.cuboService.mouseUp);
-    //   this.canvas.removeEventListener("mousemove", this.cuboService.mouseMove);
-    //   this.canvas.removeEventListener("wheel", this.cuboService.zoom);
-    //   this.canvas.removeEventListener("click", this.cuboService.rayPicking.bind(this));
-    // }
-
     if(canvas) {
       this.canvas = canvas;
+      this.clearEvents();
       if(interfaz == 1){
         this.canvas.addEventListener("mousedown", this.cuboService.mouseDown, false);
         this.canvas.addEventListener("mouseup", this.cuboService.mouseUp, false);
         this.canvas.addEventListener("mouseout", this.cuboService.mouseUp, false);
         this.canvas.addEventListener("mousemove", this.cuboService.mouseMove, false);
         this.canvas.addEventListener("wheel", this.cuboService.zoom, false);
-        this.canvas.addEventListener("click", this.cuboService.rayPicking.bind(this), false);
+        this.canvas.addEventListener("click", this.rayPicking, false);
       }
 
       if(interfaz == 2){
         this.canvas.addEventListener("mousedown", this.planoService.mouseDown, false);
         this.canvas.addEventListener("mouseup", this.planoService.mouseUp, false);
         this.canvas.addEventListener("mouseout", this.planoService.mouseUp, false);
-        // this.canvas.addEventListener("mousemove", this.planoService.mouseMove, false);
-        this.canvas.addEventListener("mousemove", (event) => {
-          this.planoService.mouseMove(event, this.canvas.width, this.canvas.height);
-          this.planoService.raycast();
-          }, false);
-        }
+        this.canvas.addEventListener("mousemove", this.mouseMove, false);
+      }
       
       this.resizeCanvasToDisplaySize(this.canvas);
 
@@ -76,6 +55,19 @@ export class MotorGrafico {
 
     window.addEventListener('resize', () => this.resizeCanvasToDisplaySize(this.canvas));
   }
+
+    clearEvents() {
+      this.canvas.removeEventListener("mousedown", this.cuboService.mouseDown, false);
+      this.canvas.removeEventListener("mouseup", this.cuboService.mouseUp, false);
+      this.canvas.removeEventListener("mouseout", this.cuboService.mouseUp, false);
+      this.canvas.removeEventListener("mousemove", this.cuboService.mouseMove, false);
+      this.canvas.removeEventListener("wheel", this.cuboService.zoom, false);
+      this.canvas.removeEventListener("click", this.rayPicking, false);
+      this.canvas.removeEventListener("mousedown", this.planoService.mouseDown, false);
+      this.canvas.removeEventListener("mouseup", this.planoService.mouseUp, false);
+      this.canvas.removeEventListener("mouseout", this.planoService.mouseUp, false);
+      this.canvas.removeEventListener("mousemove", this.mouseMove, false);
+    }
 
     resizeCanvasToDisplaySize(canvas: HTMLCanvasElement) {
       const width = window.innerWidth;
@@ -157,14 +149,11 @@ export class MotorGrafico {
 
     this.modelos.push(modelo);
 
-    console.log('Modelo creado: ', modelo)
-
     return modelo;
   }
 
   async cargarTextura(fichero: string){
     const textura = await this.gestorRecursos.getRecurso(fichero, 'textura', null) as TRecursoTextura;
-    console.log('Textura cargada: ', textura)
     return textura;
   }
 
@@ -211,10 +200,10 @@ export class MotorGrafico {
     return gl;
   }
   
-  limpiarEscena(escenaActual: TNodo) {
-    for(let i = escenaActual.getHijos().length - 1; i >= 0; i--) {
-      let objeto = escenaActual.getHijos()[i];
-      escenaActual.removeHijo(objeto);
+  limpiarEscena(escena: TNodo) {
+    for(let i = escena.getHijos().length - 1; i >= 0; i--) {
+      let objeto = escena.getHijos()[i];
+      escena.removeHijo(objeto);
     }
   }
 
@@ -229,104 +218,5 @@ export class MotorGrafico {
       console.error('Se produjo un error de WebGL: ', error);
     }
   }
-
-  intersectRayTriangle(rayOrigin: vec3, rayDirection: vec3, v0: vec3, v1: vec3, v2: vec3): number | null {
-    let edge1 = vec3.subtract(vec3.create(), v1, v0);
-    let edge2 = vec3.subtract(vec3.create(), v2, v0);
-
-    let pvec = vec3.cross(vec3.create(), rayDirection, edge2);
-    let det = vec3.dot(edge1, pvec);
-
-    if (Math.abs(det) < 1e-8) {
-      return null;
-    }
-
-    let invDet = 1 / det;
-
-    let tvec = vec3.subtract(vec3.create(), rayOrigin, v0);
-    let u = vec3.dot(tvec, pvec) * invDet;
-
-    if (u < 0 || u > 1) {
-      return null;
-    }
-
-    let qvec = vec3.cross(vec3.create(), tvec, edge1);
-    let v = vec3.dot(rayDirection, qvec) * invDet;
-    
-    if (v < 0 || u + v > 1) {
-      return null;
-    }
-
-    let t = vec3.dot(edge2, qvec) * invDet;
-
-    return t;
-  }
-
-  // raycast(){
-  //   let max = [2.0007832050323486, 0.05491405725479126, 3.999821424484253];
-  //   let min = [-2.0007832050323486, -0.05491405725479126, -3.999821424484253];
-
-  //   let vertices = [
-  //       vec3.fromValues(min[0], min[1], min[2]), // vértice inferior izquierdo
-  //       vec3.fromValues(max[0], min[1], min[2]), // vértice inferior derecho
-  //       vec3.fromValues(min[0], min[1], max[2]), // vértice superior izquierdo
-  //       vec3.fromValues(max[0], min[1], max[2])  // vértice superior derecho
-  //   ]
-
-  //   let avatar;
-  //   for (let modelo of this.modelos) {
-  //       if (modelo.getEntidad().getNombre() === 'avatar.gltf') {
-  //           avatar = modelo;
-  //           break;
-  //       }
-  //   }
-
-  //   let rayOrigin = avatar!.getTraslacion();
-  //   let rayDirection = vec3.fromValues(0, -1, 0);
-
-  //   let v0 = vertices[0];
-  //   let v1 = vertices[1];
-  //   let v2 = vertices[2];
-  //   let v3 = vertices[3];
-
-  //   if (this.intersectRayTriangle2(rayOrigin, rayDirection, v0, v1, v2) || this.intersectRayTriangle2(rayOrigin, rayDirection, v0, v2, v3)) {
-  //       console.log('sobre el plano')
-  //       return true;
-  //   }
-
-  //   return false;
-  // }
-
-  // intersectRayTriangle2(rayOrigin: vec3, rayDirection: vec3, v0: vec3, v1: vec3, v2: vec3): boolean | null {
-  //   let edge1 = vec3.subtract(vec3.create(), v1, v0);
-  //   let edge2 = vec3.subtract(vec3.create(), v2, v0);
-
-  //   let pvec = vec3.cross(vec3.create(), rayDirection, edge2);
-  //   let det = vec3.dot(edge1, pvec);
-
-  //   if (Math.abs(det) < 1e-8) {
-  //       return false;
-  //   }
-
-  //   let invDet = 1 / det;
-
-  //   let tvec = vec3.subtract(vec3.create(), rayOrigin, v0);
-  //   let u = vec3.dot(tvec, pvec) * invDet;
-
-  //   if (u < 0 || u > 1) {
-  //       return false;
-  //   }
-
-  //   let qvec = vec3.cross(vec3.create(), tvec, edge1);
-  //   let v = vec3.dot(rayDirection, qvec) * invDet;
-    
-  //   if (v < 0 || u + v > 1) {
-  //       return false;
-  //   }
-
-  //   let t = vec3.dot(edge2, qvec) * invDet;
-
-  //   return t > 1e-8;
-  // }
 
 }

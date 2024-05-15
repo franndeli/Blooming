@@ -17,7 +17,6 @@ export class TRecurso {
   }
 
   setNombre(nombre: string): void {
-    console.log(`Nombre: ${nombre}`);
     this.nombre = nombre;
   }
 

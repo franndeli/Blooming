@@ -3,43 +3,35 @@ import { mat4, vec3, mat3 } from 'gl-matrix';
 import { Injectable } from '@angular/core';
 import { TNodo } from '../graphics';
 
-var clickIzq = false;
+var dx = 0;
+var dy = 0;
 var old_x = 0;
 var old_y = 0;
 var trasX = 0;
 var trasY = 0;
-var dx = 0;
-var dy = 0;
+var clickIzq = false;
 
 @Injectable({
     providedIn: 'root'
 })
 
 export class PlanoService {
-    private plano!: TNodo;
     private avatar!: TNodo;
     private motorGrafico: any;
-    private width: number = 0;
-    private height: number = 0;
-    private modelos: TNodo[] = [];
-    private canvas!: HTMLCanvasElement;
     private requestId: number | null = null;
 
     public async crearPlano(motor: MotorGrafico, escena: TNodo, texturas: any){
         this.motorGrafico = motor;
-        this.canvas = this.motorGrafico.getCanvas();
 
-        this.motorGrafico.getCamaraActiva().setTraslacion([0, 5, 11]);
-        this.motorGrafico.getCamaraActiva().setRotacion([-20, 0, 0]);
-        // this.motorGrafico.getCamaraActiva().setTraslacion([0, 5, 0]);
-        // this.motorGrafico.getCamaraActiva().setRotacion([-90, 0, 0]);
+        this.motorGrafico.crearCamara(escena, [0, 5, 11], [-20, 0, 0], [1, 1, 1]);
 
-        console.log(escena);
-
-        this.plano = await this.motorGrafico.crearModelo(escena, 'plano_final.gltf', [0, 0, 0], [0, 0, 0], [1.2, 1.2, 1.2], texturas);
+        await this.motorGrafico.crearModelo(escena, 'plano_final.gltf', [0, 0, 0], [0, 0, 0], [1.2, 1.2, 1.2], texturas);
         this.avatar = await this.motorGrafico.crearModelo(escena, 'avatar.gltf', [0, 2.25, 0], [0, 0, 0], [0.5, 0.5, 0.5], texturas);
 
-        console.log(escena);
+        trasX = 0;
+        trasY = 0;
+
+        console.log('Escena del PLANO',escena);
         this.dibujado(escena);
     }
 
@@ -91,13 +83,10 @@ export class PlanoService {
             trasY += dy;
             old_x = event.pageX;
             old_y = event.pageY;
-            console.log(trasX, trasY)
         }
     }
 
-
     raycast(){
-
         //Parte arriba izquierda
         let maxAI = [-2.474585339753885, 0.05491405725479126, 2.384185791015625e-07];
         let minAI = [-7.423756019261654, 0.05491405725479126, -4.771241830065353];

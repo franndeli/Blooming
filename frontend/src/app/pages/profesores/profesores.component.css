@@ -34,3 +34,26 @@ button{
     justify-content: space-evenly;
 
 }
+#num-alumnos{
+    width: 50px; /* Ajusta este valor según tus necesidades */
+    height: 30px; /* Ajusta este valor según tus necesidades */
+    line-height: 30px; /* Asegura que el texto esté centrado verticalmente */
+    background-color:#8aca69;
+    border-radius: 40px;
+    color:white;
+    text-align: center; 
+    font-size:15px; 
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  
+}
+#num-alumnos:hover{
+    background-color:#5b8547;
+}
+#efecto{
+    transition: transform 0.3s ease; /* Añadido para suavizar el cambio de escala */
+}
+#efecto:hover{
+    box-shadow: 0 0 10px #749866;
+    transform: scale(1.05) ;
+}

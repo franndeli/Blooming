@@ -227,7 +227,7 @@ initECharts(claseID: any, totalMediaClase: any) {
                   },
                   data: [
                       {
-                          value: totalMediaClase ,
+                          value:  Math.round(totalMediaClase) ,
                           name: 'Media emocional'
                       }
                   ]
@@ -244,11 +244,11 @@ getItemColor(totalMediaClase:any) {
   } else if (totalMediaClase > 20 && totalMediaClase <= 40) {
       return '#F7C65B'; // Color naranja para porcentajes del 21% al 40%
   } else if (totalMediaClase > 40 && totalMediaClase <= 60) {
-      return '#dce232'; // Color verde claro para porcentajes del 41% al 60%
+      return '#dce232'; 
   } else if (totalMediaClase > 60 && totalMediaClase <= 80) {
-      return '#8aca69'; // Color verde para porcentajes del 61% al 80%
+      return '#8aca69'; 
   } else {
-      return '#61AB3D'; // Color azul para porcentajes del 81% al 100%
+      return '#61AB3D'; // Color verde para porcentajes del 81% al 100%
   }
 }
 

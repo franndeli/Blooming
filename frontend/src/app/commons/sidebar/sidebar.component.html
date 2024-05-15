@@ -14,7 +14,7 @@
     </div>
     <!-- Sidebar navigation-->
     <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
-        <br>
+      <br>
       <ul id="sidebarnav">
         <li class="nav-small-cap">
           <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
@@ -29,8 +29,23 @@
           </a>
         </li>
       </ul>
+      
     </nav>
     <!-- End Sidebar navigation -->
+  </div>
+  <div *ngIf="userRole === 'Profesor'">
+    <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
+      <ul id="sidebarnav">
+        <li class="sidebar-item">
+          <a class="sidebar-link" [routerLink]="'/profesores/ayuda-ambitos'"  aria-expanded="false">
+            <span>
+              <i class="ti ti-exclamation-mark"></i>
+            </span>
+            <span class="hide-menu">Explicación ámbitos </span>
+          </a>
+        </li>
+      </ul>
+    </nav>
   </div>
   <!-- End Sidebar scroll-->
 </aside>

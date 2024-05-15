@@ -47,6 +47,8 @@ import { SistemaPreguntasComponent } from './alumnos/sistema-preguntas/sistema-p
 
 import { ActividadRecienteNegativaComponent } from './profesores/actividad-reciente-negativa/actividad-reciente-negativa.component';
 import { RecompensasComponent } from './alumnos/recompensas/recompensas.component';
+import { TodosAlumnosComponent } from './profesores/todos-alumnos/todos-alumnos.component';
+import { AyudaAmbitosComponent } from './profesores/ayuda-ambitos/ayuda-ambitos.component';
 
 
 const routes: Routes = [
@@ -95,6 +97,8 @@ const routes: Routes = [
       { path: 'ver-alumnos', component: VerAlumnosPComponent},
       { path: 'perfil', component: PerfilProfesorComponent},
       { path: 'editar-profesor', component: EditarProfesorComponent},
+      { path: 'todos-alumnos', component: TodosAlumnosComponent},
+      { path: 'ayuda-ambitos', component: AyudaAmbitosComponent}
     ]
   },
   { 

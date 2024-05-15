@@ -1,0 +1,108 @@
+<!--  Main wrapper -->
+<div class="body-wrapper" style="margin-left: 0;">
+    <div class="container-fluid">
+        <!--  Row 1 -->
+        <div class="container-fluid">
+            <div class="container-fluid">
+                <div class="card">
+                    <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
+                        <div class="card-body">
+                            <h2 class="text-center">Explicación de los ámbitos</h2>
+                            <p style="text-align: justify; ">Los alumnos que usen Blooming deberán responder unas<strong> preguntas interactivas</strong> cada día. La aplicación obtendrá información de estas preguntas y la clasificará según su respuesta.</p>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <p style="text-align: justify; font-size: 15px;">En nuestra aplicación web medimos el estado de los alumnos con diferentes <strong> ámbitos</strong>, estos son: </p>
+                                            <div style="display: flex; justify-content: space-between;">
+                                                <span class="badge bg-amigos rounded-3 fw-semibold">Amigos</span>
+                                                <span class="badge bg-familia rounded-3 fw-semibold">Familia</span>
+                                                <span class="badge bg-clase rounded-3 fw-semibold">Clase</span>
+                                                <span class="badge bg-emociones rounded-3 fw-semibold">Emociones</span>
+                                                <span class="badge bg-fuera rounded-3 fw-semibold">Fuera de Clase</span>
+                                            </div>
+                                            <p style="text-align: justify; margin-top: 20px; font-size: 15px;">Cada ámbito tiene una puntuación de <strong>0 a 100</strong> que irá variando dependiendo de las respuestas de los alumnos. Cuando se añade un alumno nuevo, las puntuaciones de estos ámbitos se ponen a 50.</p>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <p style="text-align: justify; font-size: 15px;">Además, cada alumno tiene un <strong>estado general</strong>, que se calcula con la media de todos los ámbitos anteriores. Los estados se clasifican en: </p>
+                                            <div style="display: flex; justify-content: space-between;">
+                                                <span class="badge bg-muybueno rounded-3 fw-semibold">Muy Bueno</span>
+                                                <span class="badge bg-bueno rounded-3 fw-semibold">Bueno</span>
+                                                <span class="badge bg-normal rounded-3 fw-semibold">Normal</span>
+                                                <span class="badge bg-malo rounded-3 fw-semibold">Malo</span>
+                                                <span class="badge bg-muymalo rounded-3 fw-semibold">Muy Malo</span>
+                                            </div>
+                                            <p style="text-align: justify; font-size: 15px; margin-top: 10px;">Cuando se añade un alumno nuevo a una clase su estado será Normal. </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!---<p style="margin-top: 20px; font-size: 15px;">En nuestra aplicación web medimos el estado de los alumnos con diferentes ámbitos, estos son: </p>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span class="badge bg-amigos rounded-3 fw-semibold">Amigos</span>
+                                <span class="badge bg-familia rounded-3 fw-semibold">Familia</span>
+                                <span class="badge bg-clase rounded-3 fw-semibold">Clase</span>
+                                <span class="badge bg-emociones rounded-3 fw-semibold">Emociones</span>
+                                <span class="badge bg-fuera rounded-3 fw-semibold">Fuera de Clase</span>
+                            </div>
+                            <p style="margin-top: 20px; font-size: 15px;">Cada ámbito tiene una puntuación de 0 a 100 que irá variando dependiendo de las respuestas de los alumnos.</p>
+                            <p style="margin-top: 20px; font-size: 15px;">Además, cada alumno tiene un estado general, que se calcula con la media de todos los ámbitos anteriores. Los estados se clasifican en: </p>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span class="badge bg-muybueno rounded-3 fw-semibold">Muy Bueno</span>
+                                <span class="badge bg-bueno rounded-3 fw-semibold">Bueno</span>
+                                <span class="badge bg-normal rounded-3 fw-semibold">Normal</span>
+                                <span class="badge bg-malo rounded-3 fw-semibold">Malo</span>
+                                <span class="badge bg-muymalo rounded-3 fw-semibold">Muy Malo</span>
+                            </div>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
+                    <div class="card-body">
+                        <h2 class="text-center">Explicación de las preguntas</h2>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p style="text-align: justify; font-size: 15px;">Los alumnos responderán entre seis y ocho preguntas. Cabe destacar distintos puntos de las preguntas de nuestra aplicación web:</p>
+                                        <ol id="lista3">
+                                            <li>Las preguntas están clasificadas según los ámbitos mencionados anteriormente.</li>
+                                            <li>Si las respuestas para una pregunta de un ámbito son alarmantes, al día siguiente se le preguntará al alumno por este ámbito. </li>
+                                            <li>Si un alumno está más crítico en un ámbito pero en otros no, se le hará más preguntas sobre esos ámbitos alarmantes pero también se le harán sobre los otro ámbitos aunque en menor cantidad.</li>
+                                            <li>Cada respuesta de las preguntas tiene un peso </li>
+                                        </ol>
+                                        <p style="text-align: justify; margin-top: 20px; font-size: 15px;">Cada ámbito tiene una puntuación de <strong>0 a 100</strong> que irá variando dependiendo de las respuestas de los alumnos.</p>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p style="text-align: justify; font-size: 15px;">Cada respuesta de una pregunta tiene un peso diferente. Estos pesos son: </p>
+                                        <ul>
+                                            <li style="margin-bottom: 20px; text-align: justify;" ><span class="badge bg-muybueno rounded-3 fw-semibold">Muy Buena</span> - Si una respuesta tiene este peso, la puntuación del ámbito de la pregunta aumentará.</li>
+                                            <li style="margin-bottom: 20px; text-align: justify;" ><span class="badge bg-bueno rounded-3 fw-semibold">Buena</span> - Si una respuesta tiene este peso, la puntuación del ámbito de la pregunta aumentará, aunque menos que Muy Buena.</li>
+                                            <li style="margin-bottom: 20px; text-align: justify;" ><span class="badge bg-normal rounded-3 fw-semibold">Normal</span> - Si una respuesta tiene este peso, la puntuación del ámbito de la pregunta se quedará como está.</li>
+                                            <li style="margin-bottom: 20px; text-align: justify;" ><span class="badge bg-muymalo rounded-3 fw-semibold">Alarmante</span> - Si una respuesta tiene este peso, la puntuación del ámbito de la pregunta disminuirá.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="py-6 px-6 text-center">
+            <p class="copyright">&copy; 2023 Blooming. Proyecto académico de la Universidad de Alicante .</p>
+        </div>
+    </div>  
+</div>

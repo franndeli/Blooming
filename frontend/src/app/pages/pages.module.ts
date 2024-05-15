@@ -58,6 +58,8 @@ import { EditarProfesorComponent } from './profesores/editar-profesor/editar-pro
 import { SistemaPreguntasComponent } from './alumnos/sistema-preguntas/sistema-preguntas.component';
 import { ActividadRecienteNegativaComponent } from './profesores/actividad-reciente-negativa/actividad-reciente-negativa.component';
 import { RecompensasComponent } from './alumnos/recompensas/recompensas.component';
+import { AyudaAmbitosComponent } from './profesores/ayuda-ambitos/ayuda-ambitos.component';
+import { TodosAlumnosComponent } from './profesores/todos-alumnos/todos-alumnos.component';
 
 @NgModule({
   declarations: [
@@ -98,7 +100,9 @@ import { RecompensasComponent } from './alumnos/recompensas/recompensas.componen
       EditarProfesorComponent,
       SistemaPreguntasComponent,
       ActividadRecienteNegativaComponent,
-      RecompensasComponent
+      RecompensasComponent,
+      AyudaAmbitosComponent,
+      TodosAlumnosComponent
   ],
   exports: [
     AdminLayoutComponent,

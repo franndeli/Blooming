@@ -80,6 +80,7 @@ const getAlumnos = async (req, res) => {
                 { Nombre: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
                 { Apellidos: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
                 { Estado: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { '$Clase.Nombre$' : { [sequelize.Op.like]: `%${textoBusqueda}%` } },
             );
     
             if (req.Rol === 'Centro') {

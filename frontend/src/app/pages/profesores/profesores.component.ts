@@ -49,11 +49,11 @@ export class ProfesoresComponent implements OnInit{
       this.centroID = res.profesores[0].ID_Centro;
       this.claseService.getClasesCentro(this.centroID).subscribe(res => {
         this.clasesData = res; // Almacena los datos de las clases en la variable
-        console.log("INFO CLASES DATA" , this.clasesData);
+        //console.log("INFO CLASES DATA" , this.clasesData);
 
         this.clasesData.clases.forEach((clase: any) => {
           this.IdClaseActual = clase.ID_Clase; // Establecemos la clase actual
-          console.log('ID de la clase actual:', this.IdClaseActual);
+          //console.log('ID de la clase actual:', this.IdClaseActual);
           this.getAlumnosClaseActual(clase.ID_Clase); 
           
         });
@@ -74,9 +74,9 @@ getAlumnos(){
 getAlumnosClaseActual(claseID: any){  
   this.alumnoService.getAlumnosClase(claseID).subscribe(res => {
     this.alumnosEnClaseArray = res;
-    console.log('Alumnos en la clase actual:', this.alumnosEnClaseArray);
+    //console.log('Alumnos en la clase actual:', this.alumnosEnClaseArray);
     this.totalAlumnosClase = this.alumnosEnClaseArray.alumnos.length;
-    console.log('Total de alumnos en la clase actual:', this.totalAlumnosClase);
+    //console.log('Total de alumnos en la clase actual:', this.totalAlumnosClase);
     // Llamamos a mediaEmocional() después de obtener los datos de los alumnos en la clase actual
    this.mediaEmocional(claseID);
   })
@@ -93,7 +93,7 @@ mediaEmocional(claseID: any) {
   let alumnos: any[] =[];
   let todos:any[] = [];
 
-  console.log("alumnos entran en la mediaEmocional", this.alumnosEnClaseArray);
+  //console.log("alumnos entran en la mediaEmocional", this.alumnosEnClaseArray);
   //array de los alumnos de esa clase
   alumnos = this.alumnosEnClaseArray.alumnos;
   //array con todos los alumnos de ese profesor
@@ -111,11 +111,11 @@ mediaEmocional(claseID: any) {
     const valorEmociones = ambitosObj['Emociones'];
     const valorFueraClase = ambitosObj['Fuera de clase'];
 
-    console.log('Valor de Clase:', valorClase);
-    console.log('Valor de Amigos:', valorAmigos);
-    console.log('Valor de Familia:', valorFamilia);
-    console.log('Valor de Emociones:', valorEmociones);
-    console.log('Valor de Fuera de clase:', valorFueraClase);
+    //console.log('Valor de Clase:', valorClase);
+    //console.log('Valor de Amigos:', valorAmigos);
+    //console.log('Valor de Familia:', valorFamilia);
+    //console.log('Valor de Emociones:', valorEmociones);
+    //console.log('Valor de Fuera de clase:', valorFueraClase);
 });
 
   // Iterar sobre los datos de todos los alumnos en la clase
@@ -140,7 +140,7 @@ mediaEmocional(claseID: any) {
       }
 
       totalAlumnosConsiderados++;
-    console.log('Total de alumnos considerados:', totalAlumnosConsiderados);
+    //console.log('Total de alumnos considerados:', totalAlumnosConsiderados);
   }
 
   // Calcular la suma total de los ámbitos de todos los alumnos
@@ -149,11 +149,11 @@ mediaEmocional(claseID: any) {
   // Calcular la media emocional de la clase solo si hay alumnos considerados
   if (totalAlumnosConsiderados > 0) {
     this.totalMediaClase = total / totalAlumnosConsiderados/5 ;
-    console.log('Media emocional de la clase', claseID, ':', this.totalMediaClase);
+    //console.log('Media emocional de la clase', claseID, ':', this.totalMediaClase);
     // Llamar a initECharts() después de calcular la media emocional
     this.initECharts(claseID, this.totalMediaClase);
   } else {
-    console.log('No hay alumnos considerados para calcular la media emocional de la clase', claseID);
+    //console.log('No hay alumnos considerados para calcular la media emocional de la clase', claseID);
     this.totalMediaClase = 0;
     this.initECharts(claseID, this.totalMediaClase);
   }
@@ -164,7 +164,7 @@ initECharts(claseID: any, totalMediaClase: any) {
   const chartElement = document.getElementById('echarts-chart-' + claseID);
   const chart = echarts.init(chartElement);
 
-        console.log('Total media clase grafiicccccca:', totalMediaClase);
+        //console.log('Total media clase grafiicccccca:', totalMediaClase);
         const option = {
           series: [
               {

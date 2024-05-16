@@ -46,16 +46,13 @@ export class CargarPreguntasService {
       const estadoPreguntas = localStorage.getItem('preguntas');
       const estadoIndiceActual = localStorage.getItem('indiceActual');
 
-      ////console.log(estadoPreguntas)
-      ////console.log(estadoIndiceActual)
+      
     
       if (estadoPreguntas && estadoIndiceActual) {
         this.preguntas = JSON.parse(estadoPreguntas);
         this.indiceActual = JSON.parse(estadoIndiceActual);
         this.preguntaActual = this.preguntas[this.indiceActual];
       } else {
-        ////console.log(localStorage.getItem('mostrarContador'));
-        //console.log(localStorage.getItem('mostrarContador'));
       }
     } catch(error){
       console.error("Error al inicializar el estado:", error);

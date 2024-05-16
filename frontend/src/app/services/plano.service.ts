@@ -1,43 +1,39 @@
 import { MotorGrafico } from '../graphics/motor/motorGrafico';
 import { mat4, vec3, mat3 } from 'gl-matrix';
 import { Injectable } from '@angular/core';
-import { TNodo } from '../graphics';
+import { TNodo, TRecursoMalla } from '../graphics';
 
-var clickIzq = false;
+var dx = 0;
+var dy = 0;
 var old_x = 0;
 var old_y = 0;
 var trasX = 0;
 var trasY = 0;
-var dx = 0;
-var dy = 0;
+var clickIzq = false;
 
 @Injectable({
     providedIn: 'root'
 })
 
 export class PlanoService {
-    private plano!: TNodo;
     private avatar!: TNodo;
     private motorGrafico: any;
-    private width: number = 0;
-    private height: number = 0;
-    private modelos: TNodo[] = [];
-    private canvas!: HTMLCanvasElement;
     private requestId: number | null = null;
+    private plano!: TNodo;
 
     public async crearPlano(motor: MotorGrafico, escena: TNodo, texturas: any){
         this.motorGrafico = motor;
-        this.canvas = this.motorGrafico.getCanvas();
 
-        this.motorGrafico.getCamaraActiva().setTraslacion([0, 5, 11]);
-        this.motorGrafico.getCamaraActiva().setRotacion([-20, 0, 0]);
+        this.motorGrafico.crearCamara(escena, [0, 10, 0], [-90, 0, 0], [1, 1, 1]);
 
-        console.log(escena);
-
-        this.plano = await this.motorGrafico.crearModelo(escena, 'plano_final.gltf', [0, 0, 0], [0, 0, 0], [1.2, 1.2, 1.2], texturas);
+        this.plano = await this.motorGrafico.crearModelo(escena, 'plano_prueba.gltf', [0, 0, 0], [0, 0, 0], [1.2, 1.2, 1.2], texturas);
+        
         this.avatar = await this.motorGrafico.crearModelo(escena, 'avatar.gltf', [0, 2.25, 0], [0, 0, 0], [0.5, 0.5, 0.5], texturas);
 
-        console.log(escena);
+        trasX = 0;
+        trasY = 0;
+
+        console.log('Escena del PLANO',escena);
         this.dibujado(escena);
     }
 
@@ -81,7 +77,6 @@ export class PlanoService {
 
     mouseMove(event: MouseEvent, width: number, height: number){
         event.preventDefault();
-        console.log('mouseMove')
         let velocidadMovimiento = 5;
         if(clickIzq){
             dx = (event.pageX - old_x) * 5 / width * velocidadMovimiento;
@@ -90,39 +85,61 @@ export class PlanoService {
             trasY += dy;
             old_x = event.pageX;
             old_y = event.pageY;
-            console.log(trasX, trasY)
         }
     }
 
-
     raycast(){
-        console.log('raycast')
-        let max = [2.0007832050323486, 0.05491405725479126, 3.999821424484253];
-        let min = [-2.0007832050323486, -0.05491405725479126, -3.999821424484253];
-
-        let vertices = [
-            vec3.fromValues(min[0], min[1], min[2]), // vértice inferior izquierdo
-            vec3.fromValues(max[0], min[1], min[2]), // vértice inferior derecho
-            vec3.fromValues(min[0], min[1], max[2]), // vértice superior izquierdo
-            vec3.fromValues(max[0], min[1], max[2])  // vértice superior derecho
-        ]
+        // //Parte arriba izquierda
+        // let maxAI = [-2.474585339753885, 0.05491405725479126, 2.384185791015625e-07];
+        // let minAI = [-7.423756019261654, 0.05491405725479126, -4.771241830065353];
+        // //Parte arriba medio
+        // let maxAM = [2.474585339753885,  0.05491405725479126, 2.384185791015625e-07]; 
+        // let minAM = [-2.474585339753885, 0.05491405725479126, -4.771241830065353];
+        // //Parte arriba derecha
+        // let maxAD = [7.423756019261654, 0.05491405725479126, 2.384185791015625e-07];
+        // let minAD = [2.474585339753885, 0.05491405725479126, -4.771241830065353];
+        // //Parte bajo izquierda
+        // let maxBI = [-2.474585339753885, 0.05491405725479126, 4.771241830065353];
+        // let minBI = [-7.423756019261654, 0.05491405725479126, -2.384185791015625e-07];
+        // //Parte bajo medio
+        // let maxBM = [2.474585339753885, 0.05491405725479126, 4.771241830065353];
+        // let minBM = [-2.474585339753885, 0.05491405725479126, 2.384185791015625e-07];
+        // //Parte bajo derecha
+        // let maxBD = [7.423756019261654, 0.05491405725479126, 4.771241830065353];
+        // let minBD = [2.474585339753885, 0.05491405725479126, 2.384185791015625e-07];
+        
+        // let partes = [
+        //     {nombre: 'Cube.001', max: maxAI, min: minAI},
+        //     {nombre: 'Cube.002', max: maxAM, min: minAM},
+        //     {nombre: 'Cube.003', max: maxAD, min: minAD},
+        //     {nombre: 'Cube.006', max: maxBI, min: minBI},
+        //     {nombre: 'Cube.005', max: maxBM, min: minBM},
+        //     {nombre: 'Cube.004', max: maxBD, min: minBD}
+        // ];
 
         let rayOrigin = this.avatar.getTraslacion();
         let rayDirection = vec3.fromValues(0, -1, 0);
-    
-        let v0 = vertices[0];
-        let v1 = vertices[1];
-        let v2 = vertices[2];
-        let v3 = vertices[3];
-    
-        if (this.intersectRayTriangle2(rayOrigin, rayDirection, v0, v1, v2) || this.intersectRayTriangle2(rayOrigin, rayDirection, v0, v2, v3)) {
-            console.log('sobre el plano')
-            return true;
-        }else{
-            console.log('fuera del plano')
-        }
-        
 
+        const planoTexturasMalla = this.plano!.getEntidad() as TRecursoMalla;
+
+        for(let parte of planoTexturasMalla.getCarasPlano()){
+            let vertices = [
+                vec3.fromValues(parte.min[0], parte.max[1], parte.min[2]),
+                vec3.fromValues(parte.max[0], parte.max[1], parte.min[2]),
+                vec3.fromValues(parte.max[0], parte.max[1], parte.max[2]),
+                vec3.fromValues(parte.min[0], parte.max[1], parte.max[2])
+            ];
+
+            if (this.intersectRayTriangle2(rayOrigin, rayDirection, vertices[0], vertices[1], vertices[2]) || this.intersectRayTriangle2(rayOrigin, rayDirection, vertices[0], vertices[2], vertices[3])) {
+                // console.log(parte);
+                planoTexturasMalla.seleccionarCara(planoTexturasMalla.objectIDs[parte.nombre]);
+                this.motorGrafico.setCaraSeleccionada(parte.nombre, planoTexturasMalla.getTexturaPorCara(parte.nombre));
+                return true;
+            }else{
+                
+            }
+        }
+    
         return false;
     }
 

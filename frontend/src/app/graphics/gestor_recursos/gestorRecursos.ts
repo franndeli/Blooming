@@ -14,15 +14,16 @@ export class GestorRecursos {
     let recurso = null;
 
     for(let i = 0; i < this.recursos.length; i++){
-      if(this.recursos[i].getNombre() == nombre){
+      console.log(this.recursos);
+      if(this.recursos[i].getNombre() == nombre && tipo != "malla"){
         recurso = this.recursos[i];
+        console.log(recurso);
       }
     }
 
     if (!recurso) {
       switch (tipo) {
         case 'malla':
-          console.log('Creando recurso malla');
           recurso = new TRecursoMalla(nombre, await this.getRecurso('fragmentShader.glsl', 'shader', null), texturas);
           break;
         case 'textura':
@@ -44,8 +45,8 @@ export class GestorRecursos {
       //recurso.setNombre(nombre);
       
       this.recursos.push(recurso);
-      console.log(this.recursos)
     }
+
     return recurso;
   }
 }

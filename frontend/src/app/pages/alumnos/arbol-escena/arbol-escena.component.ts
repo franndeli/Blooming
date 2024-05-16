@@ -13,10 +13,10 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
   
   preguntaActual: any = {};
   texturacaraSeleccionada: any;
-
   respuestaSeleccionada: any = null;
 
   public fadeIn: boolean = false;
+  private interfaz!: number;
 
   constructor(private motorService: MotorService) {}
 
@@ -31,8 +31,8 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
 
   async ngAfterViewInit() {
     // Se calcula aleatoriamente que interfaz toca
-    let interfaz = 1;
-    await this.motorService.inicializarMotor(this.canvasRef, interfaz).then(() => {
+    this.interfaz = 2;
+    await this.motorService.inicializarMotor(this.canvasRef, this.interfaz).then(() => {
       this.preguntaActual = this.motorService.getPreguntas();
       console.log(this.preguntaActual);
 
@@ -41,6 +41,11 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
         this.handleCaraSeleccionada(data);
       });
     });
+
+    // setInterval(() => {
+      // interfaz = interfaz == 1 ? 2 : 1;
+      // this.motorService.cambiarInterfaz(interfaz);
+    // }, 30000);
   }
 
   handleCaraSeleccionada(data: any) {
@@ -62,8 +67,17 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   handleButtonClick() {
-    // Implementa la acción que deseas realizar cuando se haga clic en el botón
-    console.log("Botón clicado y respuesta seleccionada:", this.respuestaSeleccionada);
+    this.interfaz = this.interfaz === 1 ? 2 : 1;
+    this.setRespuestaSeleccionadaNull();
+
+    const motorGrafico = this.motorService.getMotorGrafico();
+    motorGrafico.getEventEmitter().off('caraSeleccionada', this.handleCaraSeleccionada);
+
+    this.motorService.cambiarInterfaz(this.interfaz);
+  }
+
+  setRespuestaSeleccionadaNull() {
+    this.respuestaSeleccionada = null;
   }
 
   // private setRandomBackground() {

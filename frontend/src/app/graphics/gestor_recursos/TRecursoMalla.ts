@@ -42,11 +42,7 @@ export class TRecursoMalla extends TRecurso {
     this.baseColor = new Float32Array(4);
     this.indices = new Uint16Array();
 
-    // console.log(texturas);
-
     this.texturas = texturas;
-
-    // console.log(this.texturas);
 
     var canvas = <HTMLCanvasElement>document.getElementById('canvasWebGL');
     var context = canvas.getContext('webgl2');
@@ -57,13 +53,14 @@ export class TRecursoMalla extends TRecurso {
     this.TRecusoShader = shader;
     this.programId = this.TRecusoShader.getProgramId();
     this.setNombre(nombre);
-    console.log(this.getNombre())
+  }
+
+  setSelectedFaceNull(){
+    this.selectedFaceIndex = null;
   }
 
   override async cargarRecurso(nombre: string): Promise<void> {
-    // console.log(`Cargando recurso de malla ${nombre}...`);
-
-    console.log(`Cargando recurso de malla ${nombre}...`);
+    this.selectedFaceIndex = null;
 
     try {
         const url = this.basePath + nombre;
@@ -76,19 +73,13 @@ export class TRecursoMalla extends TRecurso {
             const bufferResponse = await fetch(bufferUrl);
             return bufferResponse.arrayBuffer();
         }));
-
-        // console.log(bufferData);
-
         
         let meshIndex = 0;
 
         // Recorrer cada malla en el archivo GLTF
         for (const mesh of gltf.meshes) {
-            console.log(`Procesando malla: ${mesh.name}`);
-
             this.objectIDs[mesh.name] = meshIndex;
             meshIndex++;
-            console.log(mesh.name);
 
             // Recorrer cada primitiva en la malla
             for (const primitive of mesh.primitives) {
@@ -104,25 +95,21 @@ export class TRecursoMalla extends TRecurso {
                 // Cargar los vértices
                 const bufferViewVertices = gltf.bufferViews[attributes.POSITION];
                 const vertexData = new Float32Array(bufferData[bufferViewVertices.buffer], bufferViewVertices.byteOffset, bufferViewVertices.byteLength / Float32Array.BYTES_PER_ELEMENT);
-                console.log(`Datos de vértices cargados para malla: ${mesh.name}`);
 
                 // Cargar las normales
                 const bufferViewNormal = gltf.bufferViews[attributes.NORMAL];
                 const normalData = new Float32Array(bufferData[bufferViewNormal.buffer], bufferViewNormal.byteOffset, bufferViewNormal.byteLength / Float32Array.BYTES_PER_ELEMENT);
-                console.log(`Datos de normales cargados para malla: ${mesh.name}`);
 
                 let texCoordData = undefined;
                 if (attributes.TEXCOORD_0 !== undefined) {
-                    const bufferViewTexCoords = gltf.bufferViews[attributes.TEXCOORD_0];
-                    texCoordData = new Float32Array(bufferData[bufferViewTexCoords.buffer], bufferViewTexCoords.byteOffset, bufferViewTexCoords.byteLength / Float32Array.BYTES_PER_ELEMENT);
-                    console.log(`Datos de coordenadas de textura cargados para malla: ${mesh.name}`);
+                  const bufferViewTexCoords = gltf.bufferViews[attributes.TEXCOORD_0];
+                  texCoordData = new Float32Array(bufferData[bufferViewTexCoords.buffer], bufferViewTexCoords.byteOffset, bufferViewTexCoords.byteLength / Float32Array.BYTES_PER_ELEMENT);
                 }
 
                 let indexData = undefined;
                 if (indices !== undefined) {
-                    const bufferViewIndices = gltf.bufferViews[gltf.accessors[indices].bufferView];
-                    indexData = new Uint16Array(bufferData[bufferViewIndices.buffer], bufferViewIndices.byteOffset, bufferViewIndices.byteLength / Uint16Array.BYTES_PER_ELEMENT);
-                    console.log(`Datos de índices cargados para malla: ${mesh.name}`);
+                  const bufferViewIndices = gltf.bufferViews[gltf.accessors[indices].bufferView];
+                  indexData = new Uint16Array(bufferData[bufferViewIndices.buffer], bufferViewIndices.byteOffset, bufferViewIndices.byteLength / Uint16Array.BYTES_PER_ELEMENT);
                 }
 
                 // let colorData = undefined;
@@ -138,9 +125,6 @@ export class TRecursoMalla extends TRecurso {
         }
         
         this.calcularCarasTexturas();
-        
-        console.log(`Recurso malla ${nombre} cargado correctamente.`);
-
     } catch (error) {
         console.error(`Error al cargar el recurso de malla ${nombre}:`, error);
     }
@@ -154,8 +138,6 @@ export class TRecursoMalla extends TRecurso {
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, vertexData, gl.STATIC_DRAW);
     this.vertexBuffers.push(vertexBuffer!);
-
-    // console.log(vertexBuffer);
 
     let error = gl.getError();
     if (error !== gl.NO_ERROR) {
@@ -202,6 +184,7 @@ export class TRecursoMalla extends TRecurso {
   }
 
   calcularCarasTexturas() {
+    this.selectedFaceIndex = null;
     const caras = ["Cube.001", "Cube.002", "Cube.003", "Cube.004", "Cube.005", "Cube.006"];
     const texturasDisponibles = this.texturas.length;
     this.texturaPorCara = {};
@@ -245,6 +228,36 @@ export class TRecursoMalla extends TRecurso {
         { nombre: "Cube.004", vertices: [vec3.fromValues(-1, -1, 1), vec3.fromValues(-1, -1, -1), vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, 1, 1)], textura: this.texturaPorCara["Cube.004"] },
         { nombre: "Cube.005", vertices: [vec3.fromValues(-1, -1, -1), vec3.fromValues(1, -1, -1), vec3.fromValues(1, -1, 1), vec3.fromValues(-1, -1, 1)], textura: this.texturaPorCara["Cube.005"] },
         { nombre: "Cube.006", vertices: [vec3.fromValues(1, -1, -1), vec3.fromValues(1, -1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, 1, -1)], textura: this.texturaPorCara["Cube.006"] }
+    ];
+  }
+
+  getCarasPlano() {
+    //Parte arriba izquierda
+    let maxAI = [-2.474585339753885, 0.05491405725479126, 2.384185791015625e-07];
+    let minAI = [-7.423756019261654, 0.05491405725479126, -4.771241830065353];
+    //Parte arriba medio
+    let maxAM = [2.474585339753885,  0.05491405725479126, 2.384185791015625e-07]; 
+    let minAM = [-2.474585339753885, 0.05491405725479126, -4.771241830065353];
+    //Parte arriba derecha
+    let maxAD = [7.423756019261654, 0.05491405725479126, 2.384185791015625e-07];
+    let minAD = [2.474585339753885, 0.05491405725479126, -4.771241830065353];
+    //Parte bajo izquierda
+    let maxBI = [-2.474585339753885, 0.05491405725479126, 4.771241830065353];
+    let minBI = [-7.423756019261654, 0.05491405725479126, -2.384185791015625e-07];
+    //Parte bajo medio
+    let maxBM = [2.474585339753885, 0.05491405725479126, 4.771241830065353];
+    let minBM = [-2.474585339753885, 0.05491405725479126, 2.384185791015625e-07];
+    //Parte bajo derecha
+    let maxBD = [7.423756019261654, 0.05491405725479126, 4.771241830065353];
+    let minBD = [2.474585339753885, 0.05491405725479126, 2.384185791015625e-07];
+    
+    return [
+        {nombre: 'Cube.001', max: maxAI, min: minAI, textura: this.texturaPorCara["Cube.001"]},
+        {nombre: 'Cube.002', max: maxAM, min: minAM, textura: this.texturaPorCara["Cube.002"]},
+        {nombre: 'Cube.003', max: maxAD, min: minAD, textura: this.texturaPorCara["Cube.003"]},
+        {nombre: 'Cube.006', max: maxBI, min: minBI, textura: this.texturaPorCara["Cube.006"]},
+        {nombre: 'Cube.005', max: maxBM, min: minBM, textura: this.texturaPorCara["Cube.005"]},
+        {nombre: 'Cube.004', max: maxBD, min: minBD, textura: this.texturaPorCara["Cube.004"]}
     ];
   }
 

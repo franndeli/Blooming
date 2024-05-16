@@ -14,14 +14,12 @@ export class TRecursoShader extends TRecurso {
 
   private constructor(nombre: string) {
     super();
-    console.log(`Creando recurso de shader ${nombre}...`);
     this.camara = new TCamara();
     this.camara.setProjMatrix(90, this.gl.canvas.width / this.gl.canvas.height, 1, 100);
     this.projMatrix = this.camara.getProjMatrix();
     this.modelMatrix = mat4.create();
     this.viewMatrix = mat4.create();
     this.setNombre(nombre);
-    console.log(this.getNombre())
   }
 
   static async create(nombre: string): Promise<TRecursoShader> {
@@ -56,7 +54,6 @@ export class TRecursoShader extends TRecurso {
       }
 
       this.id = this.gl.createProgram();
-      console.log(`Creando: ${this.id}`);
       if (this.id) {
         this.gl.attachShader(this.id, vertexShaderId);
         this.gl.attachShader(this.id, fragmentShaderId);
@@ -64,9 +61,7 @@ export class TRecursoShader extends TRecurso {
 
         if (!this.gl.getProgramParameter(this.id, this.gl.LINK_STATUS)) {
           console.error(`Error al crear el programa GLSL para el shader ${this.gl.getProgramInfoLog(this.id)}`);
-        } else {
-          console.log(`Programa GLSL para el shader ${this.gl.getProgramInfoLog(this.id)} creado correctamente`);
-        }
+        } else {}
 
         this.gl.deleteShader(vertexShaderId);
         this.gl.deleteShader(fragmentShaderId);
@@ -74,8 +69,6 @@ export class TRecursoShader extends TRecurso {
         this.gl.useProgram(this.id);
       }
     }
-    
-    console.log(`Creando programa GLSL para el shader ${this.getNombre()}`);
   }
 
   async leerShader(nombreArchivo: string): Promise<string> {
@@ -83,7 +76,6 @@ export class TRecursoShader extends TRecurso {
       const url = this.basePath + nombreArchivo;
       const response = await fetch(url);
       const data = await response.text();
-      console.log(`Shader ${nombreArchivo} cargado correctamente.`)
       return data;
     } catch (error) {
       console.error(`Error al cargar el recurso de shader ${nombreArchivo}:`, error);

@@ -13,19 +13,26 @@ data-sidebar-position="fixed" data-header-position="fixed">
               <div class="col-md-4" *ngFor="let clase of clasesData.clases">
                   <div class="card" id="efecto"> 
                     <button (click)="verClase(clase.ID_Clase)"><div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
-                    <div class="card-body">
+                      <div class="card-body">
                       <div class="tarjetas-clases">
-                        <span class="card-title" style="text-align: center; font-size: 25px; margin-bottom: 20px; font-weight: bold;">{{clase.Nombre}}</span>
+
+                        <span class="card-title" style="text-align: center; font-size: 20px; margin-bottom: 20px; font-weight: bold;">{{clase.Nombre}}</span>
+                        
+                        <div id="tu-clase" *ngIf="esClaseProfe(clase.ID_Clase)">
+                          tu clase 
+                        </div>
+
                         <span id="num-alumnos" >
                           {{clase.NumAlumnos}} <i class="ti ti-user" style="font-size: 15px;"></i>
                         </span>
-                      </div>
 
+                      </div>
                         <!-- Contenedor del gráfico de medidor ECharts -->
                       <div class= "echarts">
                         <div  id="echarts-chart-{{clase.ID_Clase}}" style="width: 200px; height:200px; margin: auto;"></div>
                       </div>
                      
+                      
 
                     </div>
                   </div></button>

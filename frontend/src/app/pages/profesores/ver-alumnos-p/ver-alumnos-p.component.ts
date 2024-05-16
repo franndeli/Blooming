@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AlumnoService } from '../../../services/alumnos.service';
 import { ClaseService } from '../../../services/clases.service';
 import { RespuestaService } from '../../../services/respuestas.service'; 
+import { ProfesorService } from '../../../services/profesores.service';
 import * as echarts from 'echarts';
 import { event } from 'jquery';
 
@@ -34,7 +35,8 @@ export class VerAlumnosPComponent implements OnInit{
   private contar = 0;
 
   filtroNombre: string = ''; 
-
+  /*nuevo*/
+  
   constructor(private alumnoService: AlumnoService, private router: Router, private activatedRoute: ActivatedRoute, private claseService: ClaseService, private respuestaService: RespuestaService){
     this.alumnosData = [];
     this.alumnosTodosData = [];
@@ -50,12 +52,15 @@ export class VerAlumnosPComponent implements OnInit{
     if(this.claseID === '' || undefined){
       this.claseID = this.claseService.getClaseID();
     }
+ 
     this.obtenerClase();
     this.obtenerAlumnos(this.busqueda);
     this.obtenerTodosAlumnos();
     this.obtenerUltimasRespuestas();
   }
-
+  /*CALCULO DE MEDIA*/
+ 
+  /**********/
   onChangeOption(event: any) {
     const selectedOption = event.target.value;
 

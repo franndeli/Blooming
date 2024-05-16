@@ -32,7 +32,7 @@ button{
 .tarjetas-clases{
     display: flex;
     justify-content: space-evenly;
-
+   
 }
 #num-alumnos{
     width: 50px; /* Ajusta este valor según tus necesidades */
@@ -45,6 +45,7 @@ button{
     font-size:15px; 
     font-weight: bold;
     transition: background-color 0.3s ease, color 0.3s ease;
+    ;
   
 }
 #num-alumnos:hover{
@@ -56,4 +57,22 @@ button{
 #efecto:hover{
     box-shadow: 0 0 10px #749866;
     transform: scale(1.05) ;
+}
+
+#tu-clase{
+    width: 80px; /* Ajusta este valor según tus necesidades */
+    height: 30px; /* Ajusta este valor según tus necesidades */
+    line-height: 30px; /* Asegura que el texto esté centrado verticalmente */
+    background-color:#69a8ca;
+    border-radius: 30px;
+    color:white;
+    text-align: center; 
+    font-size:15px; 
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#tu-clase:hover{
+    background-color: #0056b3; /* Color de fondo azul oscuro al pasar el ratón por encima */
+    color: #f1f1f1; /* Color de texto blanco al pasar el ratón por encima */
 }

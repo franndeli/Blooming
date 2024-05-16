@@ -1,22 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+:host {
+    font-family: 'Montserrat';
+}
+
 html, body {
     width: 100%;
     height: 100%;
     margin: 0;
-    overflow: hidden; /* Evita desplazamiento */
+    overflow: hidden;
+}
+
+#background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: 100% auto; /* Ajusta el ancho al 100% y la altura automática */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    background-position: top center; /* Centra la imagen en la pantalla */
+    z-index: -1; /* Asegura que el fondo esté detrás del contenido */
 }
 
 #canvasWebGL {
-    display: block; /* Elimina cualquier espacio extra */
+    display: block;
 }
 
 .pregunta {
     position: absolute;
     top: 0;
     width: 100%;
-    text-align: center; 
+    text-align: center;
     font-size: 5vh;
-    color: white;
+    font-weight: 600;
+    font-family: 'Montserrat';
+    color: rgb(0, 0, 0);
     padding-top: 10px;
     margin-top: 5vh;
+    pointer-events: none;
+    cursor: none;
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5); /* Añade sombra al texto */
+}
+
+
+.hover_respuesta {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center; 
+    font-size: 3.5vh;
+    color: white;
+    bottom: 15%;
+    margin-bottom: 5vh;
+    pointer-events: none; /* Evita la interacción del ratón */
+    cursor: none;
+}
+
+button {
+    position: absolute;
+    left: 50%;
+    bottom: 5%;
+    transform: translateX(-50%);
+    font-size: 2vh;
+    padding: 10px 20px;
+    background-color: #68A63C;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #87a473;
+}
+
+.fade-in {
+    opacity: 1;
+}
+
+.fade-out {
+    opacity: 0;
 }
 

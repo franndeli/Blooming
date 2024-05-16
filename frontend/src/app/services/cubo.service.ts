@@ -97,14 +97,14 @@ export class CuboService {
     }
 
     rayPicking(event: MouseEvent) {
-        const caras = [
-            { vertices: [vec3.fromValues(-1, -1, 1), vec3.fromValues(-1, 1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, -1, 1)], nombre: "Cube.001" },
-            { vertices: [vec3.fromValues(1, -1, -1), vec3.fromValues(1, 1, -1), vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, -1, -1)], nombre: "Cube.002" },
-            { vertices: [vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, 1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, 1, -1)], nombre: "Cube.003" },
-            { vertices: [vec3.fromValues(-1, -1, -1), vec3.fromValues(1, -1, -1), vec3.fromValues(1, -1, 1), vec3.fromValues(-1, -1, 1)], nombre: "Cube.005" },
-            { vertices: [vec3.fromValues(1, -1, -1), vec3.fromValues(1, -1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, 1, -1)], nombre: "Cube.006" },
-            { vertices: [vec3.fromValues(-1, -1, 1), vec3.fromValues(-1, -1, -1), vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, 1, 1)], nombre: "Cube.004" }
-        ];
+        // const caras = [
+        //     { vertices: [vec3.fromValues(-1, -1, 1), vec3.fromValues(-1, 1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, -1, 1)], nombre: "Cube.001" },
+        //     { vertices: [vec3.fromValues(1, -1, -1), vec3.fromValues(1, 1, -1), vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, -1, -1)], nombre: "Cube.002" },
+        //     { vertices: [vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, 1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, 1, -1)], nombre: "Cube.003" },
+        //     { vertices: [vec3.fromValues(-1, -1, -1), vec3.fromValues(1, -1, -1), vec3.fromValues(1, -1, 1), vec3.fromValues(-1, -1, 1)], nombre: "Cube.005" },
+        //     { vertices: [vec3.fromValues(1, -1, -1), vec3.fromValues(1, -1, 1), vec3.fromValues(1, 1, 1), vec3.fromValues(1, 1, -1)], nombre: "Cube.006" },
+        //     { vertices: [vec3.fromValues(-1, -1, 1), vec3.fromValues(-1, -1, -1), vec3.fromValues(-1, 1, -1), vec3.fromValues(-1, 1, 1)], nombre: "Cube.004" }
+        // ];
 
         let rect = this.canvas.getBoundingClientRect();
         let x = ((event.clientX - rect.left) / (rect.right - rect.left)) * 2 - 1;
@@ -134,6 +134,7 @@ export class CuboService {
         let localRayDirection = vec3.transformMat3(vec3.create(), rayWorld, mat3.normalFromMat4(mat3.create(), matrizTransfInversa));
 
         const recursoMalla = cubo!.getEntidad() as TRecursoMalla;
+        let caraC;
 
         for (let cara of recursoMalla.getCaras()) {
             // console.log(cara);
@@ -154,12 +155,30 @@ export class CuboService {
             if (t1 !== null || t2 !== null) {
                 intersecciones.push({ cara: cara.nombre, t: Math.min(t1 ?? Infinity, t2 ?? Infinity) });
             }
+            
+            // console.log(cara);
+
+            // caraC = cara;
         }
+
+        // console.log(caraC);
 
         if (intersecciones.length === 0) {
             console.log("Click fuera del cubo");
             return;
         }
+
+        // console.log(intersecciones);
+        // console.log(intersecciones[0].cara)
+
+        // for (let caras of recursoMalla.getCaras()) {
+        //     console.log(caras.nombre);
+        //     console.log(intersecciones[0].cara)
+        //     if (intersecciones[0].cara == caras.nombre && caras.textura == undefined){
+        //         console.log("Click en una cara sin textura");
+        //         return;
+        //     }
+        // }
 
         intersecciones.sort((a, b) => a.t - b.t);
         caraSeleccionada = intersecciones[0].cara;

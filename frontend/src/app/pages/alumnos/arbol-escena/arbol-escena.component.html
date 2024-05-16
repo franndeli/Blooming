@@ -1,4 +1,11 @@
+<div id="background"></div>
 <div class="pregunta">
     {{ preguntaActual?.TextoPreguntaElegido ? preguntaActual.TextoPreguntaElegido : preguntaActual?.TextoPregunta }}
 </div>
+<!-- <div [ngClass]="{ 'fade-in': fadeIn, 'fade-out': !fadeIn }" class="hover_respuesta"> -->
+<div class="hover_respuesta">
+    {{ respuestaSeleccionada }}
+</div>
 <canvas #canvasWebGL id="canvasWebGL"></canvas>
+
+<button *ngIf="respuestaSeleccionada !== null" (click)="handleButtonClick()">Realizar Acción</button>

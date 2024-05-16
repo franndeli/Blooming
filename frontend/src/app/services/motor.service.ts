@@ -121,4 +121,8 @@ export class MotorService {
     }
   }
 
+  getMotorGrafico() {
+    return this.motorGrafico;
+  }
+
 }

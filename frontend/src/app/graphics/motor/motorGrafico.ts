@@ -1,3 +1,4 @@
+import { EventEmitter } from 'eventemitter3';
 import { mat4, vec3, mat3 } from 'gl-matrix';
 import { CuboService } from '../../services/cubo.service';
 import { PlanoService } from '../../services/plano.service';
@@ -30,8 +31,17 @@ export class MotorGrafico {
 
   private cubo!: any;
 
+  public ultimaCaraSeleccionada: any;
+
+  private eventEmitter: EventEmitter;
+
   constructor(private cuboService: CuboService, private planoService: PlanoService){
     this.modelos = [];
+    this.eventEmitter = new EventEmitter();
+  }
+
+  getEventEmitter() {
+    return this.eventEmitter;
   }
 
   async iniciarEscena(canvas: HTMLCanvasElement, interfaz: number) {
@@ -202,7 +212,7 @@ export class MotorGrafico {
     }
 
     gl.enable(gl.DEPTH_TEST);
-    gl.clearColor(0.0, 0.6, 1.0, 1.0);
+    // gl.clearColor(0.0, 0.6, 1.0, 1.0);
     gl.clearDepth(1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.enable(gl.CULL_FACE);
@@ -260,6 +270,12 @@ export class MotorGrafico {
     let t = vec3.dot(edge2, qvec) * invDet;
 
     return t;
+  }
+
+  setCaraSeleccionada(cara: any, textura: string){
+    this.ultimaCaraSeleccionada = { cara: cara, textura: textura };
+
+    this.eventEmitter.emit('caraSeleccionada', this.ultimaCaraSeleccionada);
   }
 
   // raycast(){

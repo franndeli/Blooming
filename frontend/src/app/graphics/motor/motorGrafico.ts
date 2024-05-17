@@ -21,10 +21,11 @@ export class MotorGrafico {
 
   mouseMove = (event: any) => {
     this.planoService.mouseMove(event, this.canvas.width, this.canvas.height);
-    this.planoService.raycast();
   }
 
   rayPicking = (event: any) => this.cuboService.rayPicking(event, this.canvas);
+
+  mouseDown = (event: any) => this.planoService.mouseDown(event, this.canvas);
 
   async iniciarEscena(canvas: HTMLCanvasElement, interfaz: number) {
     if(canvas) {
@@ -40,7 +41,7 @@ export class MotorGrafico {
       }
 
       if(interfaz == 2){
-        this.canvas.addEventListener("mousedown", this.planoService.mouseDown, false);
+        this.canvas.addEventListener("mousedown", this.mouseDown, false);
         this.canvas.addEventListener("mouseup", this.planoService.mouseUp, false);
         this.canvas.addEventListener("mouseout", this.planoService.mouseUp, false);
         this.canvas.addEventListener("mousemove", this.mouseMove, false);
@@ -63,7 +64,7 @@ export class MotorGrafico {
       this.canvas.removeEventListener("mousemove", this.cuboService.mouseMove, false);
       this.canvas.removeEventListener("wheel", this.cuboService.zoom, false);
       this.canvas.removeEventListener("click", this.rayPicking, false);
-      this.canvas.removeEventListener("mousedown", this.planoService.mouseDown, false);
+      this.canvas.removeEventListener("mousedown", this.mouseDown, false);
       this.canvas.removeEventListener("mouseup", this.planoService.mouseUp, false);
       this.canvas.removeEventListener("mouseout", this.planoService.mouseUp, false);
       this.canvas.removeEventListener("mousemove", this.mouseMove, false);

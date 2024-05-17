@@ -39,7 +39,7 @@ export class CuboService {
         theta = 0;
         escalado = 1;
 
-        console.log('Escena del CUBO',escena);
+        //('Escena del CUBO',escena);
         this.dibujado(escena);
     }
 

@@ -118,18 +118,18 @@ export class TRecursoShader extends TRecurso {
   setInt(gl: WebGL2RenderingContext, uniformNombre: string, valor: number): void {
     if(!this.id) return;
     const uniformLocation = gl.getUniformLocation(this.id, uniformNombre);
-    console.log(`Asignando entero a uniform en shader ${this.getNombre()}`);
+    //console.log(`Asignando entero a uniform en shader ${this.getNombre()}`);
   }
 
   setFloat(gl: WebGL2RenderingContext, uniformNombre: string, valor: number): void {
     if(!this.id) return;
     const uniformLocation = gl.getUniformLocation(this.id, uniformNombre);
-    console.log(`Asignando número de punto flotante a uniform en shader ${this.getNombre()}`);
+    //console.log(`Asignando número de punto flotante a uniform en shader ${this.getNombre()}`);
   }
 
   setMat4(gl: WebGL2RenderingContext, uniformNombre: string, matriz: number[]): void {
     if(!this.id) return;
     const uniformLocation = gl.getUniformLocation(this.id, uniformNombre);
-    console.log(`Asignando matriz 4x4 a uniform en shader ${this.getNombre()}`);
+    //console.log(`Asignando matriz 4x4 a uniform en shader ${this.getNombre()}`);
   }
 }

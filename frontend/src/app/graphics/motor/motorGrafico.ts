@@ -102,7 +102,7 @@ export class MotorGrafico {
     if(padre !== null){
       padre.addHijo(nodo);
     }
-    console.log('Nodo creado: ', nodo)
+    //console.log('Nodo creado: ', nodo)
 
     return nodo;
   }
@@ -124,7 +124,7 @@ export class MotorGrafico {
     this.setCamaraActiva(numCam);
     this.camActiva = this.getCamaraActiva();
 
-    console.log('camara activada: ', this.camActiva)
+    //console.log('camara activada: ', this.camActiva)
 
     return camara;
   }

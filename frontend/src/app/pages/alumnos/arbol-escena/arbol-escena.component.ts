@@ -14,6 +14,7 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
   preguntaActual: any = {};
   texturacaraSeleccionada: any;
   respuestaSeleccionada: any = null;
+  respuestaSeleccionadaCompleta: any = null;
 
   public fadeIn: boolean = false;
   private interfaz!: number;
@@ -34,25 +35,29 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
     this.interfaz = 2;
     await this.motorService.inicializarMotor(this.canvasRef, this.interfaz).then(() => {
       this.preguntaActual = this.motorService.getPreguntas();
-      console.log(this.preguntaActual);
-
-      const motorGrafico = this.motorService.getMotorGrafico();
-      motorGrafico.getEventEmitter().on('caraSeleccionada', (data: any) => {
-        this.handleCaraSeleccionada(data);
-      });
+      //console.log(this.preguntaActual);
     });
 
     // setInterval(() => {
       // interfaz = interfaz == 1 ? 2 : 1;
       // this.motorService.cambiarInterfaz(interfaz);
     // }, 30000);
+    const motorGrafico = this.motorService.getMotorGrafico();
+    motorGrafico.getEventEmitter().on('caraSeleccionada', (data: any) => {
+      this.handleCaraSeleccionada(data);
+    });
   }
 
   handleCaraSeleccionada(data: any) {
+    // console.log('hola');
     // console.log('Cara seleccionada en arbol-escena:', data);
     for(let i=0; i<this.preguntaActual.respuestas.opciones.length; i++){
+
+      //console.log(this.preguntaActual.respuestas.opciones[i])
+
       // console.log(this.preguntaActual.respuestas.opciones[i].Imagen);
       if (this.preguntaActual.respuestas.opciones[i].Imagen == data.textura){
+        this.respuestaSeleccionadaCompleta = this.preguntaActual.respuestas.opciones[i];
         this.respuestaSeleccionada = this.preguntaActual.respuestas.opciones[i].TextoOpcion;
       }
     }
@@ -60,10 +65,11 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
       this.respuestaSeleccionada = null;
     }
     
-    this.fadeIn = true;
-    setTimeout(() => {
-      this.fadeIn = false;
-    }, 1000);
+    //console.log(this.respuestaSeleccionada);
+    // this.fadeIn = true;
+    // setTimeout(() => {
+    //   this.fadeIn = false;
+    // }, 1000);
   }
 
   handleButtonClick() {
@@ -72,6 +78,14 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
 
     const motorGrafico = this.motorService.getMotorGrafico();
     motorGrafico.getEventEmitter().off('caraSeleccionada', this.handleCaraSeleccionada);
+
+    this.preguntaActual = this.motorService.siguientePregunta(this.respuestaSeleccionadaCompleta.Gravedad, this.respuestaSeleccionadaCompleta.ID_Opcion);
+
+    //console.log(this.preguntaActual);
+
+    if(this.preguntaActual == null){
+      return;
+    }
 
     this.motorService.cambiarInterfaz(this.interfaz);
   }

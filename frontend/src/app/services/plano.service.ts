@@ -33,7 +33,7 @@ export class PlanoService {
         trasX = 0;
         trasY = 0;
 
-        console.log('Escena del PLANO',escena);
+        //console.log('Escena del PLANO',escena);
         this.dibujado(escena);
     }
 

@@ -204,11 +204,11 @@ export class TRecursoMalla extends TRecurso {
         this.texturaPorCara[caras[i]] = this.texturas[indicesTexturas[i]].nombre;
     }
 
-    console.log(this.texturaPorCara);
+    //console.log(this.texturaPorCara);
   }
 
   getTexturaPorCara(cara: string): string {
-    console.log(this.texturaPorCara[cara]);
+    //console.log(this.texturaPorCara[cara]);
     return this.texturaPorCara[cara] || "Sin textura";
   }
 

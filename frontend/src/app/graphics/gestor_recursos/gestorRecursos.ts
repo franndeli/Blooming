@@ -14,10 +14,10 @@ export class GestorRecursos {
     let recurso = null;
 
     for(let i = 0; i < this.recursos.length; i++){
-      console.log(this.recursos);
+      // console.log(this.recursos);
       if(this.recursos[i].getNombre() == nombre && tipo != "malla"){
         recurso = this.recursos[i];
-        console.log(recurso);
+        //console.log(recurso);
       }
     }
 

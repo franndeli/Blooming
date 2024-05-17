@@ -4,9 +4,7 @@ import { SesionService } from './sesiones.service';
 import { RespuestaService } from './respuestas.service';
 import { AuthService } from './auth.service';
 
-import { Injectable } from '@angular/core';
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
-import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
+import { Injectable, OnDestroy, OnInit } from '@angular/core';
 
 type Resultados = { [ambito: string]: number };
 
@@ -41,23 +39,27 @@ export class CargarPreguntasService {
     private authService: AuthService
   ) {}
 
-  async ngOnInit() {
+  async comprobarPreguntas() {
     try{
       const estadoPreguntas = localStorage.getItem('preguntas');
-      const estadoIndiceActual = localStorage.getItem('indiceActual');
-
+      const estadoIndiceActual = localStorage.getItem('indiceActual');  
       
-    
       if (estadoPreguntas && estadoIndiceActual) {
+        
         this.preguntas = JSON.parse(estadoPreguntas);
         this.indiceActual = JSON.parse(estadoIndiceActual);
         this.preguntaActual = this.preguntas[this.indiceActual];
+
+        //console.log(this.indiceActual);
+        return true
       } else {
+        return false
       }
     } catch(error){
       console.error("Error al inicializar el estado:", error);
     }
 
+    return false
   }
 
   async cargarPreguntas() {
@@ -74,7 +76,7 @@ export class CargarPreguntasService {
                     if (this.preguntas && this.preguntas.length > 0) {
                         this.preguntaActual = this.preguntas[this.indiceActual];
                     }
-                    //   this.sesionService.crearSesion();
+                    this.sesionService.crearSesion();
                     this.guardarPreguntas();
                     this.guardarIndiceActual();
                     resolve(this.preguntas);
@@ -101,7 +103,7 @@ export class CargarPreguntasService {
     }
     this.respuestaService.postRespuesta(respuesta).subscribe({
       next: (response) => {
-        //console.log('Respuesta creada con éxito:', response);
+        console.log('Respuesta creada con éxito:', response);
       },
       error: (error) => {
         console.error('Error al crear respuesta:', error);
@@ -122,7 +124,7 @@ export class CargarPreguntasService {
     this.loadNewQuestion();
   }
 
-  private loadNewQuestion() {
+  loadNewQuestion() {
     // Incrementa el índice actual para pasar a la siguiente pregunta
     if (this.indiceActual < this.preguntas.length - 1) {
       this.indiceActual++;
@@ -132,6 +134,7 @@ export class CargarPreguntasService {
     } else {
       // Manejar el final del cuestionario
       this.preguntaActual = null;
+      this.acabose();
     }
   }
 
@@ -292,7 +295,17 @@ export class CargarPreguntasService {
   finalizarSesion() {
     localStorage.removeItem('preguntas');
     localStorage.removeItem('indiceActual');
-    localStorage.removeItem('hasShownCubeMessage');
-    localStorage.removeItem('hasShownBoardMessage');
+    // localStorage.removeItem('hasShownCubeMessage');
+    // localStorage.removeItem('hasShownBoardMessage');
+  }
+
+  async acabose(){
+    try {
+      await this.multiplicarYActualizarAmbitos();
+      await this.sesionService.finalizarSesion(this.gravedadesActualizadas);
+      this.finalizarSesion();
+    } catch(error) {
+      console.error('Error en el proceso de acabose:', error);
+    }
   }
 }

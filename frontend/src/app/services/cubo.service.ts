@@ -18,7 +18,7 @@ var clickIzq = false;
 
 export class CuboService {
     private cubo!: TNodo;
-    private camaraCubo: any;
+    private camara!: TNodo;
     private motorGrafico: any;
     private width: number = 0;
     private height: number = 0;
@@ -31,7 +31,7 @@ export class CuboService {
     public async crearCubo(motor: MotorGrafico, escena: TNodo, texturas: any){
         this.motorGrafico = motor;
 
-        this.camaraCubo = this.motorGrafico.crearCamara(escena, [0, 0, 10], [0, 0, 0], [1, 1, 1]);
+        this.camara = this.motorGrafico.crearCamara(escena, [0, 0, 10], [0, 0, 0], [1, 1, 1]);
         
         this.cubo = await this.motorGrafico.crearModelo(escena, 'cubo_prueba_seis_caras.gltf', [0, 0, 0], [0, 0, 0], [1, 1, 1], texturas);
         
@@ -113,18 +113,18 @@ export class CuboService {
         let y = -((event.clientY - rect.top) / (rect.bottom - rect.top)) * 2 + 1;
     
         let rayClip = vec3.fromValues(x, y, -1);
-        let rayEye = vec3.transformMat4(vec3.create(), rayClip, mat4.invert(mat4.create(), this.camaraCubo.getEntidad().getProjMatrix()));
+        let rayEye = vec3.transformMat4(vec3.create(), rayClip, mat4.invert(mat4.create(), this.camara.getEntidad().getProjMatrix()));
         rayEye[2] = -1;
         rayEye[3] = 0;
     
-        let rayWorld = vec3.transformMat4(vec3.create(), rayEye, mat4.invert(mat4.create(), this.camaraCubo.getEntidad().getViewMatrix()));
+        let rayWorld = vec3.transformMat4(vec3.create(), rayEye, mat4.invert(mat4.create(), this.camara.getEntidad().getViewMatrix()));
         rayWorld = vec3.normalize(rayWorld, rayWorld);
 
         let intersecciones = [];
         let caraSeleccionada = null;
         
         let matrizTransfInversa = mat4.invert(mat4.create(), this.cubo.getMatrizTransf());
-        let localRayOrigin = vec3.transformMat4(vec3.create(), this.camaraCubo.getTraslacion(), matrizTransfInversa);
+        let localRayOrigin = vec3.transformMat4(vec3.create(), this.camara.getTraslacion(), matrizTransfInversa);
         let localRayDirection = vec3.transformMat3(vec3.create(), rayWorld, mat3.normalFromMat4(mat3.create(), matrizTransfInversa));
 
         const recursoMalla = this.cubo!.getEntidad() as TRecursoMalla;
@@ -212,7 +212,7 @@ export class CuboService {
         let t = vec3.dot(edge2, qvec) * invDet;
     
         return t;
-      }
+    }
 
     public detenerDibujado() {
         if (this.requestId !== null) {

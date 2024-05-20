@@ -1,7 +1,8 @@
 import { MotorGrafico } from '../graphics/motor/motorGrafico';
-import { mat4, vec3, mat3 } from 'gl-matrix';
+import { mat4, vec3, mat3, vec4, glMatrix } from 'gl-matrix';
 import { Injectable } from '@angular/core';
 import { TNodo, TRecursoMalla } from '../graphics';
+import { on } from 'node:events';
 
 var dx = 0;
 var dy = 0;
@@ -10,25 +11,26 @@ var old_y = 0;
 var trasX = 0;
 var trasY = 0;
 var clickIzq = false;
+var onAvatar = false;
 
 @Injectable({
     providedIn: 'root'
 })
 
 export class PlanoService {
+    private plano!: TNodo;
     private avatar!: TNodo;
     private motorGrafico: any;
+    private camara!: TNodo;
     private requestId: number | null = null;
-    private plano!: TNodo;
 
     public async crearPlano(motor: MotorGrafico, escena: TNodo, texturas: any){
         this.motorGrafico = motor;
 
-        this.motorGrafico.crearCamara(escena, [0, 10, 0], [-90, 0, 0], [1, 1, 1]);
+        this.camara = this.motorGrafico.crearCamara(escena, [0, 0, 11], [0, 0, 0], [1, 1, 1]);
 
-        this.plano = await this.motorGrafico.crearModelo(escena, 'plano_prueba.gltf', [0, 0, 0], [0, 0, 0], [1.2, 1.2, 1.2], texturas);
-        
-        this.avatar = await this.motorGrafico.crearModelo(escena, 'avatar.gltf', [0, 2.25, 0], [0, 0, 0], [0.5, 0.5, 0.5], texturas);
+        this.plano = await this.motorGrafico.crearModelo(escena, 'plano_prueba.gltf', [0, 0, 0], [90, 0, 0], [1.2, 1.2, 1.2], texturas);
+        this.avatar = await this.motorGrafico.crearModelo(escena, 'avatar.gltf', [0, 0, 1.25], [0, 0, 0], [0.5, 0.5, 0.5], texturas);
 
         trasX = 0;
         trasY = 0;
@@ -44,7 +46,7 @@ export class PlanoService {
 
         let render = () => {
             if(this.avatar !== null){
-                this.avatar.setTraslacion([trasX, 2.25, trasY]);
+                this.avatar.setTraslacion([trasX, trasY, 1]);
             }
             this.motorGrafico.dibujarEscena(escena);
             this.requestId = requestAnimationFrame(render);
@@ -59,10 +61,11 @@ export class PlanoService {
         }
     }
 
-    mouseDown(event: MouseEvent){
+    mouseDown(event: MouseEvent, canvas: HTMLCanvasElement){
         event.preventDefault();
         if(event.button == 0){
             clickIzq = true;
+            this.rayPicking(event, canvas);
             old_x = event.pageX;
             old_y = event.pageY;
         }
@@ -72,107 +75,137 @@ export class PlanoService {
         event.preventDefault();
         if(event.button == 0){
             clickIzq = false;
+            onAvatar = false;
         }
     }
 
     mouseMove(event: MouseEvent, width: number, height: number){
         event.preventDefault();
-        let velocidadMovimiento = 5;
-        if(clickIzq){
-            dx = (event.pageX - old_x) * 5 / width * velocidadMovimiento;
-            dy = (event.pageY - old_y) * 5 / height * velocidadMovimiento;
+        let velocidadMovimientoX = 3.5;
+        let velocidadMovimientoY = 2.5;
+        if(clickIzq && onAvatar){
+            dx = (event.pageX - old_x) * 5 / width * velocidadMovimientoX;
+            dy = (event.pageY - old_y) * 5 / height * velocidadMovimientoY;
             trasX += dx;
-            trasY += dy;
+            trasY += -dy;
             old_x = event.pageX;
             old_y = event.pageY;
+
+            this.rayCasting();
         }
     }
 
-    raycast(){
-        // //Parte arriba izquierda
-        // let maxAI = [-2.474585339753885, 0.05491405725479126, 2.384185791015625e-07];
-        // let minAI = [-7.423756019261654, 0.05491405725479126, -4.771241830065353];
-        // //Parte arriba medio
-        // let maxAM = [2.474585339753885,  0.05491405725479126, 2.384185791015625e-07]; 
-        // let minAM = [-2.474585339753885, 0.05491405725479126, -4.771241830065353];
-        // //Parte arriba derecha
-        // let maxAD = [7.423756019261654, 0.05491405725479126, 2.384185791015625e-07];
-        // let minAD = [2.474585339753885, 0.05491405725479126, -4.771241830065353];
-        // //Parte bajo izquierda
-        // let maxBI = [-2.474585339753885, 0.05491405725479126, 4.771241830065353];
-        // let minBI = [-7.423756019261654, 0.05491405725479126, -2.384185791015625e-07];
-        // //Parte bajo medio
-        // let maxBM = [2.474585339753885, 0.05491405725479126, 4.771241830065353];
-        // let minBM = [-2.474585339753885, 0.05491405725479126, 2.384185791015625e-07];
-        // //Parte bajo derecha
-        // let maxBD = [7.423756019261654, 0.05491405725479126, 4.771241830065353];
-        // let minBD = [2.474585339753885, 0.05491405725479126, 2.384185791015625e-07];
-        
-        // let partes = [
-        //     {nombre: 'Cube.001', max: maxAI, min: minAI},
-        //     {nombre: 'Cube.002', max: maxAM, min: minAM},
-        //     {nombre: 'Cube.003', max: maxAD, min: minAD},
-        //     {nombre: 'Cube.006', max: maxBI, min: minBI},
-        //     {nombre: 'Cube.005', max: maxBM, min: minBM},
-        //     {nombre: 'Cube.004', max: maxBD, min: minBD}
-        // ];
-
+    rayCasting() {
         let rayOrigin = this.avatar.getTraslacion();
-        let rayDirection = vec3.fromValues(0, -1, 0);
+        let rayDirection = vec3.fromValues(0, 0, -1);
+
+        // let divisiones = [
+        //     {name: "Arriba Izquierda", min: vec3.fromValues(-7.25, 0, 0), max: vec3.fromValues(-2.42, 4.35, 0)},
+        //     {name: "Bajo Izquierda", min: vec3.fromValues(-7.25, -4.35, 0), max: vec3.fromValues(-2.42, 0, 0)},
+        //     {name: "Arriba Medio", min: vec3.fromValues(-2.42, 0, 0), max: vec3.fromValues(2.42, 4.35, 0)},
+        //     {name: "Bajo Medio", min: vec3.fromValues(-2.42, -4.35, 0), max: vec3.fromValues(2.42, 0, 0)},
+        //     {name: "Arriba Derecha", min: vec3.fromValues(-2.42, 0, 0), max: vec3.fromValues(7.25, 4.35, 0)},
+        //     {name: "Bajo Derecha", min: vec3.fromValues(-2.42, -4.35, 0), max: vec3.fromValues(7.25, 0, 0)}
+        // ];  
 
         const planoTexturasMalla = this.plano!.getEntidad() as TRecursoMalla;
+        const divisiones = planoTexturasMalla.getCarasPlano();
 
-        for(let parte of planoTexturasMalla.getCarasPlano()){
-            let vertices = [
-                vec3.fromValues(parte.min[0], parte.max[1], parte.min[2]),
-                vec3.fromValues(parte.max[0], parte.max[1], parte.min[2]),
-                vec3.fromValues(parte.max[0], parte.max[1], parte.max[2]),
-                vec3.fromValues(parte.min[0], parte.max[1], parte.max[2])
-            ];
-
-            if (this.intersectRayTriangle2(rayOrigin, rayDirection, vertices[0], vertices[1], vertices[2]) || this.intersectRayTriangle2(rayOrigin, rayDirection, vertices[0], vertices[2], vertices[3])) {
-                // console.log(parte);
-                planoTexturasMalla.seleccionarCara(planoTexturasMalla.objectIDs[parte.nombre]);
-                this.motorGrafico.setCaraSeleccionada(parte.nombre, planoTexturasMalla.getTexturaPorCara(parte.nombre));
+        for (let i = 0; i < divisiones.length; i++) {
+            let part = divisiones[i];
+            let intersection = this.rayIntersectsAABB(rayOrigin, rayDirection, part.min, part.max);
+            if (intersection) {
+                planoTexturasMalla.seleccionarCara(planoTexturasMalla.objectIDs[part.nombre]);
+                this.motorGrafico.setCaraSeleccionada(part.nombre, planoTexturasMalla.getTexturaPorCara(part.nombre));
                 return true;
-            }else{
-                
             }
         }
-    
+        // console.log("Fuera Plano");
         return false;
     }
 
-    intersectRayTriangle2(rayOrigin: vec3, rayDirection: vec3, v0: vec3, v1: vec3, v2: vec3): boolean | null {
-        let edge1 = vec3.subtract(vec3.create(), v1, v0);
-        let edge2 = vec3.subtract(vec3.create(), v2, v0);
+    rayIntersectsAABB(rayOrigin: vec3, rayDirection: vec3, aabbMin: vec3, aabbMax: vec3) {
+        let tMin = (aabbMin[0] - rayOrigin[0]) / rayDirection[0];
+        let tMax = (aabbMax[0] - rayOrigin[0]) / rayDirection[0];
 
-        let pvec = vec3.cross(vec3.create(), rayDirection, edge2);
-        let det = vec3.dot(edge1, pvec);
+        if (tMin > tMax) [tMin, tMax] = [tMax, tMin];
 
-        if (Math.abs(det) < 1e-8) {
-            return false;
-        }
+        let yMin = (aabbMin[1] - rayOrigin[1]) / rayDirection[1];
+        let yMax = (aabbMax[1] - rayOrigin[1]) / rayDirection[1];
 
-        let invDet = 1 / det;
+        if (yMin > yMax) [yMin, yMax] = [yMax, yMin];
 
-        let tvec = vec3.subtract(vec3.create(), rayOrigin, v0);
-        let u = vec3.dot(tvec, pvec) * invDet;
+        if ((tMin > yMax) || (yMin > tMax)) return false;
 
-        if (u < 0 || u > 1) {
-            return false;
-        }
+        if (yMin > tMin) tMin = yMin;
+        if (yMax < tMax) tMax = yMax;
 
-        let qvec = vec3.cross(vec3.create(), tvec, edge1);
-        let v = vec3.dot(rayDirection, qvec) * invDet;
-        
-        if (v < 0 || u + v > 1) {
-            return false;
-        }
+        let zMin = (aabbMin[2] - rayOrigin[2]) / rayDirection[2];
+        let zMax = (aabbMax[2] - rayOrigin[2]) / rayDirection[2];
 
-        let t = vec3.dot(edge2, qvec) * invDet;
+        if (zMin > zMax) [zMin, zMax] = [zMax, zMin];
 
-        return t > 1e-8;
+        if ((tMin > zMax) || (zMin > tMax)) return false;
+
+        return true;
     }
 
+
+    rayPicking(event: MouseEvent, canvas: HTMLCanvasElement) {
+        let rect = canvas.getBoundingClientRect();
+        let x = ((event.clientX - rect.left) / (rect.right - rect.left)) * 2 - 1;
+        let y = -((event.clientY - rect.top) / (rect.bottom - rect.top)) * 2 + 1;
+
+        let rayClip = vec3.fromValues(x, y, -1);
+        let rayEye = vec3.transformMat4(vec3.create(), rayClip, mat4.invert(mat4.create(), this.camara.getEntidad().getProjMatrix()));
+        rayEye[2] = -1;
+        rayEye[3] = 0;
+
+        let rayWorld = vec3.transformMat4(vec3.create(), rayEye, mat4.invert(mat4.create(), this.camara.getEntidad().getViewMatrix()));
+        rayWorld = vec3.normalize(rayWorld, rayWorld);
+        
+        let matrizTransfInversa = mat4.invert(mat4.create(), this.avatar.getMatrizTransf());
+        let localRayOrigin = vec3.transformMat4(vec3.create(), this.camara.getTraslacion(), matrizTransfInversa);
+        let localRayDirection = vec3.transformMat3(vec3.create(), rayWorld, mat3.normalFromMat4(mat3.create(), matrizTransfInversa));
+        
+        let min = vec3.fromValues(-1, -1, -1);
+        let max = vec3.fromValues(1, 1, 1);
+
+        if (this.intersectRayBox(localRayOrigin, localRayDirection, min, max)) {
+            onAvatar = true;
+        } else {
+            onAvatar = false;
+        }
+    }
+
+    intersectRayBox(origin: vec3, direction: vec3, min: vec3, max: vec3): boolean {
+        let tmin = (min[0] - origin[0]) / direction[0];
+        let tmax = (max[0] - origin[0]) / direction[0];
+
+        if (tmin > tmax) [tmin, tmax] = [tmax, tmin];
+
+        let tymin = (min[1] - origin[1]) / direction[1];
+        let tymax = (max[1] - origin[1]) / direction[1];
+
+        if (tymin > tymax) [tymin, tymax] = [tymax, tymin];
+
+        if ((tmin > tymax) || (tymin > tmax))
+            return false;
+
+        if (tymin > tmin)
+            tmin = tymin;
+
+        if (tymax < tmax)
+            tmax = tymax;
+
+        let tzmin = (min[2] - origin[2]) / direction[2];
+        let tzmax = (max[2] - origin[2]) / direction[2];
+
+        if (tzmin > tzmax) [tzmin, tzmax] = [tzmax, tzmin];
+
+        if ((tmin > tzmax) || (tzmin > tmax))
+            return false;
+
+        return true;
+    }
 }

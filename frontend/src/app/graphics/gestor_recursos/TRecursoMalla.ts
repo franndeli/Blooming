@@ -232,33 +232,14 @@ export class TRecursoMalla extends TRecurso {
   }
 
   getCarasPlano() {
-    //Parte arriba izquierda
-    let maxAI = [-2.474585339753885, 0.05491405725479126, 2.384185791015625e-07];
-    let minAI = [-7.423756019261654, 0.05491405725479126, -4.771241830065353];
-    //Parte arriba medio
-    let maxAM = [2.474585339753885,  0.05491405725479126, 2.384185791015625e-07]; 
-    let minAM = [-2.474585339753885, 0.05491405725479126, -4.771241830065353];
-    //Parte arriba derecha
-    let maxAD = [7.423756019261654, 0.05491405725479126, 2.384185791015625e-07];
-    let minAD = [2.474585339753885, 0.05491405725479126, -4.771241830065353];
-    //Parte bajo izquierda
-    let maxBI = [-2.474585339753885, 0.05491405725479126, 4.771241830065353];
-    let minBI = [-7.423756019261654, 0.05491405725479126, -2.384185791015625e-07];
-    //Parte bajo medio
-    let maxBM = [2.474585339753885, 0.05491405725479126, 4.771241830065353];
-    let minBM = [-2.474585339753885, 0.05491405725479126, 2.384185791015625e-07];
-    //Parte bajo derecha
-    let maxBD = [7.423756019261654, 0.05491405725479126, 4.771241830065353];
-    let minBD = [2.474585339753885, 0.05491405725479126, 2.384185791015625e-07];
-    
     return [
-        {nombre: 'Cube.001', max: maxAI, min: minAI, textura: this.texturaPorCara["Cube.001"]},
-        {nombre: 'Cube.002', max: maxAM, min: minAM, textura: this.texturaPorCara["Cube.002"]},
-        {nombre: 'Cube.003', max: maxAD, min: minAD, textura: this.texturaPorCara["Cube.003"]},
-        {nombre: 'Cube.006', max: maxBI, min: minBI, textura: this.texturaPorCara["Cube.006"]},
-        {nombre: 'Cube.005', max: maxBM, min: minBM, textura: this.texturaPorCara["Cube.005"]},
-        {nombre: 'Cube.004', max: maxBD, min: minBD, textura: this.texturaPorCara["Cube.004"]}
-    ];
+      {nombre: "Cube.001", min: vec3.fromValues(-7.25, 0, 0), max: vec3.fromValues(-2.42, 4.35, 0)},
+      {nombre: "Cube.006", min: vec3.fromValues(-7.25, -4.35, 0), max: vec3.fromValues(-2.42, 0, 0)},
+      {nombre: "Cube.002", min: vec3.fromValues(-2.42, 0, 0), max: vec3.fromValues(2.42, 4.35, 0)},
+      {nombre: "Cube.005", min: vec3.fromValues(-2.42, -4.35, 0), max: vec3.fromValues(2.42, 0, 0)},
+      {nombre: "Cube.003", min: vec3.fromValues(-2.42, 0, 0), max: vec3.fromValues(7.25, 4.35, 0)},
+      {nombre: "Cube.004", min: vec3.fromValues(-2.42, -4.35, 0), max: vec3.fromValues(7.25, 0, 0)}
+  ];
   }
 
   dibujar(matrizTransf: mat4): void {

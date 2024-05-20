@@ -7,6 +7,7 @@ import Swal from 'sweetalert2'
 import * as echarts from 'echarts'; 
 import { Console } from 'console';
 
+
 @Component({
   selector: 'app-profesores',
   templateUrl: './profesores.component.html',
@@ -35,16 +36,16 @@ export class ProfesoresComponent implements OnInit{
   constructor(private claseService: ClaseService, private profesorService: ProfesorService, private alumnoService: AlumnoService, private router: Router){
     this.clasesData = [];
     this.alumnosTodosData = [];
+    
   }
 
   ngOnInit() {
     
     this.getClases(); //obtenemos las clases
     this.obtenerIDprofesor();
-  
    
   }
-  
+
   /*MÉTODO PARA MOSTRAR LA ETIQUETA DE TU CLASE"*/
   obtenerIDprofesor(){
     this.id = localStorage.getItem('id'); // ID del profesor

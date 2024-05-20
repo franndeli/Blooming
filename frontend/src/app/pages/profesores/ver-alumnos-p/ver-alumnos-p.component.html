@@ -4,6 +4,48 @@ data-sidebar-position="fixed" data-header-position="fixed">
   <div class="body-wrapper" style="margin-left: 0;">
     <div class="container-fluid">
       <div class="row">
+
+        <div id="mediasAmbitos">
+          <div class="card"> 
+            <div class="card-title" class="d-flex justify-content-around mb-3" style="margin-top: 20px;" >
+              <h5>Medias Generales</h5>
+            </div> 
+            <div class="card" style="margin-left: 15px; margin-right: 15px;">
+              
+            <div class="card-body">
+              <div class="d-flex justify-content-around">
+                <div>
+                  <span class="badge bg-danger rounded-3 fw-semibold">General:  {{totalMediaClase}}</span>
+                 
+                </div>
+                <div>
+                  <span class="badge bg-amigos rounded-3 fw-semibold">Amigos: {{totalMediaAmigos}}</span>
+                 
+                </div>
+                <div>
+                  <span class="badge bg-familia rounded-3 fw-semibold">Familia: {{totalMediaFamilia}}</span>
+                  
+                </div>
+                <div>
+                  <span class="badge bg-emociones rounded-3 fw-semibold">Emociones: {{totalMediaEmociones}}</span>
+                  
+                </div>
+                <div>
+                  <span class="badge bg-clase rounded-3 fw-semibold">Clase: {{totalMediaAmbitoClase}}</span>
+                 
+                </div>
+                <div>
+                  <span class="badge bg-fuera rounded-3 fw-semibold">Fuera de clase: {{totalMediaFueraClase}}</span>
+                 
+                </div>
+              </div>
+          </div>
+          </div>
+        </div>
+      </div>
+
+
+
         <div class="col-lg-6 align-items-strech">
           <div id="media"></div>
           <div class="card">
@@ -51,6 +93,8 @@ data-sidebar-position="fixed" data-header-position="fixed">
         <div class="col-lg-6">
           <div class="row">
             <div class="col-lg-12">
+
+
               <div class="card overflow-hidden position-relative">
                 
                   <div class="card-body"  >
@@ -73,9 +117,19 @@ data-sidebar-position="fixed" data-header-position="fixed">
                   <p class="text-center" *ngIf="mostrarMensaje && !hayDatos">No hay datos registrados todavía</p>
                 
                 </div>
+               
               </div>
+
+
+
+             
             </div>
           </div>
+
+
+         
+
+
         </div>   
 
       

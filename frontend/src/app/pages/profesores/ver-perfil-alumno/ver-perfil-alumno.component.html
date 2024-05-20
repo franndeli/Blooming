@@ -32,8 +32,11 @@
                                     <tbody>
                                         <tr *ngFor="let ambito of nombresAmbitos">
                                             <td class="border-bottom-0"><h6 class="fw-semibold mb-0">{{ambito}}</h6></td>
-                                            <td class="border-bottom-0 gravedad-circle" [ngClass]="getGravedadClass(alumnosData.Ambitos[ambito])" *ngIf="alumnosData.Ambitos !== undefined">
-                                                {{alumnosData.Ambitos[ambito]}}
+                                            <td class="border-bottom-0 gravedad-circle" style="margin-top: 10px;" [ngClass]="getGravedadClass(alumnosData.Ambitos[ambito])" *ngIf="alumnosData.Ambitos !== undefined">
+                                                {{alumnosData.Ambitos[ambito]}} 
+                                            </td>
+                                            <td class="border-bottom-0" style="padding-left: 2px;">
+                                                <span style="color: red; font-size: 14px;"><i class="ti ti-trending-down"></i> 0'45%</span>
                                             </td>
                                         </tr>
                                     </tbody>

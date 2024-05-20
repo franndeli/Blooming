@@ -14,29 +14,19 @@ data-sidebar-position="fixed" data-header-position="fixed">
               
             <div class="card-body">
               <div class="d-flex justify-content-around">
-                <div>
-                  <span class="badge bg-danger rounded-3 fw-semibold">General:  {{totalMediaClase}}</span>
-                 
-                </div>
-                <div>
-                  <span class="badge bg-amigos rounded-3 fw-semibold">Amigos: {{totalMediaAmigos}}</span>
-                 
-                </div>
-                <div>
-                  <span class="badge bg-familia rounded-3 fw-semibold">Familia: {{totalMediaFamilia}}</span>
-                  
-                </div>
-                <div>
-                  <span class="badge bg-emociones rounded-3 fw-semibold">Emociones: {{totalMediaEmociones}}</span>
-                  
-                </div>
-                <div>
-                  <span class="badge bg-clase rounded-3 fw-semibold">Clase: {{totalMediaAmbitoClase}}</span>
-                 
-                </div>
-                <div>
-                  <span class="badge bg-fuera rounded-3 fw-semibold">Fuera de clase: {{totalMediaFueraClase}}</span>
-                 
+                <div class="table-responsive" *ngIf="alumnosData.length > 0; else noAlumnos">
+                  <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
+                    <thead class="text-dark fs-4">
+                        <tr>
+                          <th><span class="badge bg-danger rounded-3 fw-semibold">General:  {{totalMediaClase}}</span></th>
+                          <th><span class="badge bg-amigos rounded-3 fw-semibold">Amigos: {{totalMediaAmigos}}</span></th>
+                          <th><span class="badge bg-familia rounded-3 fw-semibold">Familia: {{totalMediaFamilia}}</span></th>
+                          <th><span class="badge bg-emociones rounded-3 fw-semibold">Emociones: {{totalMediaEmociones}}</span></th>
+                          <th><span class="badge bg-clase rounded-3 fw-semibold">Clase: {{totalMediaAmbitoClase}}</span></th>
+                          <th><span class="badge bg-fuera rounded-3 fw-semibold">Fuera de clase: {{totalMediaFueraClase}}</span></th>
+                        </tr>
+                    </thead>
+                  </table>
                 </div>
               </div>
           </div>

@@ -31,8 +31,12 @@ data-sidebar-position="fixed" data-header-position="fixed">
                             <div class="card-body">
                                 <ul>
                                     <li><span class="card-title" style="text-align: center; font-size: 17px; font-weight: bold;">{{alumno.Nombre}} {{alumno.Apellidos}}</span></li>
-                                    <li style="border-bottom: 0;"><span class="card-title" style="text-align: center; font-size: 15px; margin-right: 20px;">{{alumno.Clase.Nombre}}</span>
-                                    <span class="card-title" style="text-align: center; font-size: 15px; margin-bottom: 0;" [ngClass]="getClaseEstado(alumno.Estado)">{{alumno.Estado}}</span></li>
+                                    <li style="border-bottom: 0;">
+                                      <span class="card-title" style="text-align: center; font-size: 15px; margin-right: 20px;">{{alumno.Clase.Nombre}}</span>
+                                      <span class="card-title" style="text-align: center; font-size: 15px; margin-bottom: 0; margin-left: 10px; margin-right: 10px;" [ngClass]="getClaseEstado(alumno.Estado)">{{alumno.Estado}}<span style="color: green; font-size: 14px; margin-left: 5px; margin-right: 5px;"><i class="ti ti-trending-up"></i></span></span>
+                                      
+                                      <span style="color: red; font-size: 14px; margin-left: 5px;"><i class="ti ti-trending-down"></i> 0'45%</span>
+                                  </li>
                                 </ul>
                             </div>
                         </div>

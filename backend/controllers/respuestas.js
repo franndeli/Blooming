@@ -154,7 +154,7 @@ const getRespuestas = async (req, res) => {
         }
 
         if (queryParams['Gravedad'] !== undefined && queryParams['Gravedad'] != -1) {
-            console.log(queryParams['Gravedad']);
+            //console.log(queryParams['Gravedad']);
             countOptions.include.push({
                 model: Opcion,
                 where: { Gravedad: queryParams['Gravedad'] }

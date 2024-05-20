@@ -90,7 +90,7 @@ export class CrearAlumnosComponent implements OnInit, OnChanges {
       }
       this.claseService.putClase(datosActualizados).subscribe(
         (response: any) => {
-          console.log('Clase actualizada exitosamente');
+          //console.log('Clase actualizada exitosamente');
         },
         (error) => {
           console.error('Error de creación');

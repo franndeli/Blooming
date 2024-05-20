@@ -40,7 +40,7 @@ export class RespuestaService {
         return this.http.get(this.basePath, this.httpOptions);
     }
 
-    getRespuestasAlumno(id: any, gravedad: number, desde?: number, filas?: number){
+    getRespuestasAlumno(id: any, gravedad: number, desde?: number, filas?: number, ordenar?: number, textoBusqueda?: string){
         this.getHeader();
         if(!desde){
           desde = 0;
@@ -48,7 +48,7 @@ export class RespuestaService {
         if(!filas){
           filas = 0;
         }
-        return this.http.get(this.basePath+'?ID_Alumno='+id+'&Gravedad='+gravedad+'&numFilas='+filas+'&desde='+desde, this.httpOptions);
+        return this.http.get(this.basePath+'?ID_Alumno='+id+'&Gravedad='+gravedad+'&numFilas='+filas+'&desde='+desde+'&ordenar='+ordenar+'&textoBusqueda='+textoBusqueda, this.httpOptions);
     }
 
     getRespuestasClase(id: any, desde?: number, filas?: number){

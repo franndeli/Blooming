@@ -166,9 +166,7 @@ export class ActividadRecienteComponent implements OnInit {
     var option;
 
     option = {
-      title: {
-        text: 'Actividad de los alumnos en la aplicación'
-      },
+     
       xAxis: [
         {
           type: 'category',

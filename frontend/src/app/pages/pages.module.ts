@@ -60,6 +60,7 @@ import { ActividadRecienteNegativaComponent } from './profesores/actividad-recie
 import { RecompensasComponent } from './alumnos/recompensas/recompensas.component';
 import { AyudaAmbitosComponent } from './profesores/ayuda-ambitos/ayuda-ambitos.component';
 import { TodosAlumnosComponent } from './profesores/todos-alumnos/todos-alumnos.component';
+import { VerMasPreguntasComponent } from './profesores/ver-mas-preguntas/ver-mas-preguntas.component';
 
 @NgModule({
   declarations: [
@@ -102,7 +103,8 @@ import { TodosAlumnosComponent } from './profesores/todos-alumnos/todos-alumnos.
       ActividadRecienteNegativaComponent,
       RecompensasComponent,
       AyudaAmbitosComponent,
-      TodosAlumnosComponent
+      TodosAlumnosComponent,
+      VerMasPreguntasComponent
   ],
   exports: [
     AdminLayoutComponent,

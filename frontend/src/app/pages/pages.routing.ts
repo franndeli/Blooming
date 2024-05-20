@@ -49,6 +49,7 @@ import { ActividadRecienteNegativaComponent } from './profesores/actividad-recie
 import { RecompensasComponent } from './alumnos/recompensas/recompensas.component';
 import { TodosAlumnosComponent } from './profesores/todos-alumnos/todos-alumnos.component';
 import { AyudaAmbitosComponent } from './profesores/ayuda-ambitos/ayuda-ambitos.component';
+import { VerMasPreguntasComponent } from './profesores/ver-mas-preguntas/ver-mas-preguntas.component';
 
 
 const routes: Routes = [
@@ -98,7 +99,8 @@ const routes: Routes = [
       { path: 'perfil', component: PerfilProfesorComponent},
       { path: 'editar-profesor', component: EditarProfesorComponent},
       { path: 'todos-alumnos', component: TodosAlumnosComponent},
-      { path: 'ayuda-ambitos', component: AyudaAmbitosComponent}
+      { path: 'ayuda-ambitos', component: AyudaAmbitosComponent},
+      { path: 'ver-mas-preguntas', component: VerMasPreguntasComponent}
     ]
   },
   { 

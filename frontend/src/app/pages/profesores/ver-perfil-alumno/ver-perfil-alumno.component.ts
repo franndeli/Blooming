@@ -72,7 +72,7 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
   obtenerSesiones(){
     this.sesionService.getSesionesAlumno(this.alumnoID, this.dias).subscribe((res: any) => {
       const sesionesData = res.sesiones;
-      console.log(this.sesiones);
+      //console.log(this.sesiones);
       this.sesiones.Ambitos.Clase = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Clase);
       this.sesiones.Ambitos.Amigos = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Amigos);
       this.sesiones.Ambitos.Familia = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Familia);
@@ -176,8 +176,9 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
   }
 
   obtenerRespuestas(){
-    this.respuestaService.getRespuestasAlumno(this.alumnoID, this.gravedad, 0, 5).subscribe((res: any) => {
+    this.respuestaService.getRespuestasAlumno(this.alumnoID, -1, 0, 5, 0, '').subscribe((res: any) => {
       this.respuestasData = res.respuestas;
+      console.log(this.alumnoID);
     });
   }
 
@@ -347,6 +348,8 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
     a.click();
     document.body.removeChild(a);
   }
-  
+  verMasPreguntas(alumnoID: any){
+    this.router.navigate(['profesores/ver-mas-preguntas'], {state: {alumnoID, claseID: this.claseID}});
+  }
 
 }

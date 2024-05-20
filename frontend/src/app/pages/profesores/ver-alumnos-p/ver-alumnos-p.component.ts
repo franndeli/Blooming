@@ -32,6 +32,7 @@ export class VerAlumnosPComponent implements OnInit{
   public contMalo = 0;
 
   private contar = 0;
+  public tituloGrafica = 'General';
 
   filtroNombre: string = ''; 
 
@@ -62,21 +63,27 @@ export class VerAlumnosPComponent implements OnInit{
     switch (selectedOption) {
       case 'General':
         this.contarEstados();
+        this.tituloGrafica = 'General';
         break;
       case 'Clase':
         this.contarClase();
+        this.tituloGrafica = 'Clase';
         break;
       case 'Amigos':
         this.contarAmigos();
+        this.tituloGrafica = 'Amigos';
         break;
       case 'Familia':
         this.contarFamilia();
+        this.tituloGrafica = 'Familia';
         break;
       case 'Emociones':
         this.contarEmociones();
+        this.tituloGrafica = 'Emociones';
         break;
       case 'Fuera de clase':
         this.contarFueraClase();
+        this.tituloGrafica = 'Fuera de clase';
         break;
       default:
         break;

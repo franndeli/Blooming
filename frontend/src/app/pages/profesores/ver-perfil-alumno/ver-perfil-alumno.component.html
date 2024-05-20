@@ -50,7 +50,7 @@
                                     <h5 class="card-title fw-semibold"><span><i class="ti ti-graph" style="font-size: 20px;"></i></span> Gráfica resumen</h5>
                                 </div>
                                 <div>
-                                    <select class="form-select py-1 ps-2 border-1 border-success bg-light rounded-pill"  (change)="cambiarDias($event)">
+                                    <select class="form-select py-1 ps-2 border-1 bg-light rounded"  (change)="cambiarDias($event)">
                                         <option value=7>Últimos 7 días</option>
                                         <option value=15>Últimos 15 días</option>
                                         <option value=30>Últimos 30 días</option>
@@ -67,11 +67,9 @@
                 <div class="col-lg-8 d-flex align-items-stretch">
                     <div class="card w-100">
                         <div class="card-body p-4">
-                            <div class="mb-3 mb-sm-0">
+                            <div class="mb-3 mb-sm-0 d-flex justify-content-between">
                                 <h5 class="card-title fw-semibold">Preguntas recientes</h5>
-                            </div>
-                            <div>
-                                <select class="form-select w-auto ms-0 ms-sm-2 me-8 py-1 pe-7 ps-2 border-0" (change)="cambiarGravedad($event)">
+                                <select class="form-select w-auto ms-0 ms-sm-2 me-8 py-1 pe-7 ps-2 border-1 bg-light rounded" (change)="cambiarGravedad($event)">
                                     <option value=-1>Todas</option>
                                     <option value=-2>Alarmantes</option>
                                     <option value=1>Normales</option>
@@ -123,7 +121,7 @@
                             <div style=" text-align: center; margin-top: 20px;">
                                 <ul>
                                     <li style="margin-top: 7px;"><div>
-                                        <button type="button" class="btn btn-primary m-1">Más preguntas</button>
+                                        <button (click)="verMasPreguntas(alumnosData.ID_Alumno)" type="button" class="btn btn-primary m-1">Más preguntas</button>
                                     </div></li>
                                 </ul>
                             </div>

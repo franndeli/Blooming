@@ -1,0 +1,59 @@
+<div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+data-sidebar-position="fixed" data-header-position="fixed">
+
+<div class="body-wrapper" style="margin-left: 0;">
+  <div class="container-fluid">
+      <!--  Row 1 -->
+
+      <div class="container-fluid">
+        <div class="card">
+          <div class="card-body">
+            <h1>Alumnos del Centro <span><i class="ti ti-friends"></i></span></h1>
+            <div class="table-responsive">
+                <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
+                    <thead class="text-dark fs-4">
+                        <tr>
+                            <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre <span class="arrow" (click)="onClickContar(1)">&#x25B2;</span><span class="arrow" (click)="onClickContar(2)">&#x25BC;</span></th>
+                            <th><span><i class="ti ti-pin" style="font-size: 15px;"></i></span> Estado  <span class="arrow" (click)="onClickContar(11)">&#x25B2;</span><span class="arrow" (click)="onClickContar(12)">&#x25BC;</span></th>
+                            <th><span><i class="ti ti-school" style="font-size: 15px;"></i></span> Clase  <span class="arrow" (click)="onClickContar(5)">&#x25B2;</span><span class="arrow" (click)="onClickContar(6)">&#x25BC;</span></th>
+                            <th><div class="input-group" style="width: 200px;">
+                                <input type="text" placeholder="Buscar alumno..." [(ngModel)]="filtroNombre" (input)="filtrarAlumnos()" class="form-control buscador">  
+                            </div></th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="row">
+              <div class="col-md-4" *ngFor="let alumno of alumnosData">
+                  <div class="card"> 
+                    <button>
+                        <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert" (click)="verPerfil(alumno.ID_Alumno)">
+                            <div class="card-body">
+                                <ul>
+                                    <li><span class="card-title" style="text-align: center; font-size: 17px; font-weight: bold;">{{alumno.Nombre}} {{alumno.Apellidos}}</span></li>
+                                    <li style="border-bottom: 0;">
+                                      <span class="card-title" style="text-align: center; font-size: 15px; margin-right: 20px;">{{alumno.Clase.Nombre}}</span>
+                                      <span class="card-title" style="text-align: center; font-size: 15px; margin-bottom: 0; margin-left: 10px; margin-right: 10px;" [ngClass]="getClaseEstado(alumno.Estado)">{{alumno.Estado}}<span style="color: green; font-size: 14px; margin-left: 5px; margin-right: 5px;"><i class="ti ti-trending-up"></i></span></span>
+                                      
+                                      <span style="color: red; font-size: 14px; margin-left: 5px;"><i class="ti ti-trending-down"></i> 0'45%</span>
+                                  </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+              </div>
+            </div>
+            <br>
+            <app-pagination (cambiarPagina)="cambiarPagina($event)" [texto]="true" [totalRegistros]="totalAlumnos" [registroActual]="posActual+1" (filasPagina)="cambiarFilasPagina($event)" [registroPag]="filPag"></app-pagination>
+          </div>
+        </div>
+      </div>
+      <br>
+      <br>
+
+      <div class="py-6 px-6 text-center">
+        <p class="copyright">&copy; 2023 Blooming. Proyecto académico de la Universidad de Alicante .</p>
+      </div>
+  </div>
+</div>

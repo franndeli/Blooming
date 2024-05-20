@@ -37,7 +37,7 @@ export class ActividadRecienteNegativaComponent {
   public respuestasData: any;
   private sesiones: any;
   public alumnosData: any;
-  public alumnosClases: any;
+  //public alumnosClases: any;
   public clasesData: any;
   public totalAlumnos = 0;
   public centroID: any;
@@ -62,7 +62,7 @@ export class ActividadRecienteNegativaComponent {
   alumnosInfo: AlumnosInfo[] = [];
   alumnosInfo2: AlumnosInfo[] = [];
   private claseID: any;
-  private gravedad: number = 0;
+  private gravedad: number = -1;
   
 
   constructor(private clasesService: ClaseService, private profesorService: ProfesorService, private centroService: CentroService, private alumnoService: AlumnoService, private respuestaService: RespuestaService, private router: Router, private activatedRoute: ActivatedRoute, private sesionService: SesionService){
@@ -85,21 +85,17 @@ export class ActividadRecienteNegativaComponent {
     }
     
     this.id = localStorage.getItem('id');
-
     this.obtenerCentro();
-    this.obtenerTodosAlumnos();
-    
   }
 
   obtenerTodosAlumnos(){
-    this.alumnoService.getAlumnos().subscribe((res: any) => {
+    this.alumnoService.getAlumnosCentro(this.centroID).subscribe((res: any) => {
       this.alumnosData = res.alumnos;
       this.totalAlumnos = this.alumnosData.length;
-      
+      //console.log(this.alumnosData);
     }, error => {
       console.error('Error al obtener los alumnos:', error);
     });
-    
   }
 
   obtenerCentro(){
@@ -108,6 +104,7 @@ export class ActividadRecienteNegativaComponent {
         this.centroID = data.profesores[0].ID_Centro; 
         this.obtenerRespuestas();
         this.obtenerClasesCentro();
+        this.obtenerTodosAlumnos();
       },
       (error: any) => {
         console.error('Error al obtener el centro:', error);
@@ -133,7 +130,6 @@ export class ActividadRecienteNegativaComponent {
     }
 
     this.mostrarMensaje = !this.hayDatos;
-
     
     var chartDom = document.getElementById('chart2')!;
     var myChart = echarts.init(chartDom);
@@ -277,7 +273,7 @@ export class ActividadRecienteNegativaComponent {
     }
     if (nombreSeleccionado) {
       for(let i=0; i<this.alumnosData.length; i++){
-        if(this.alumnosData[i].Clase.Nombre === nombreSeleccionado && this.alumnosData[i].ID_Centro === this.centroID){
+        if(this.alumnosData[i].Clase.Nombre === nombreSeleccionado){
           if( this.alumnosData[i].Estado === 'Malo'){
             this.alumnosInfo.push({idAlumno: this.alumnosData[i].ID_Alumno , nombre: this.alumnosData[i].Nombre, apellidos: this.alumnosData[i].Apellidos, clase: this.alumnosData[i].Clase, estado: this.alumnosData[i].Estado});
           } else if(this.alumnosData[i].Estado === 'Muy Malo'){
@@ -294,7 +290,6 @@ export class ActividadRecienteNegativaComponent {
           return 0; 
         }
       };
-      
       this.alumnosInfo.sort(ordenarPorEstado);
     }
   }
@@ -308,7 +303,7 @@ export class ActividadRecienteNegativaComponent {
     
     if (nombreSeleccionado) {
       for(let i=0; i<this.alumnosData.length; i++){
-        if(this.alumnosData[i].Clase.Nombre === nombreSeleccionado && this.alumnosData[i].ID_Centro === this.centroID){
+        if(this.alumnosData[i].Clase.Nombre === nombreSeleccionado){
           if( this.alumnosData[i].Estado === 'Bueno'){
             this.alumnosInfo2.push({idAlumno: this.alumnosData[i].ID_Alumno , nombre: this.alumnosData[i].Nombre, apellidos: this.alumnosData[i].Apellidos, clase: this.alumnosData[i].Clase, estado: this.alumnosData[i].Estado});
           } else if(this.alumnosData[i].Estado === 'Muy Bueno'){

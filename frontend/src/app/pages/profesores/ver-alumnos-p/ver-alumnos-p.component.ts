@@ -31,6 +31,11 @@ export class VerAlumnosPComponent implements OnInit{
   public contMuyMalo = 0;
   public contMalo = 0;
 
+  private contar = 0;
+  public tituloGrafica = 'General';
+
+  filtroNombre: string = ''; 
+
   constructor(private alumnoService: AlumnoService, private router: Router, private activatedRoute: ActivatedRoute, private claseService: ClaseService, private respuestaService: RespuestaService){
     this.alumnosData = [];
     this.alumnosTodosData = [];
@@ -63,21 +68,27 @@ export class VerAlumnosPComponent implements OnInit{
     switch (selectedOption) {
       case 'General':
         this.contarEstados();
+        this.tituloGrafica = 'General';
         break;
       case 'Clase':
         this.contarClase();
+        this.tituloGrafica = 'Clase';
         break;
       case 'Amigos':
         this.contarAmigos();
+        this.tituloGrafica = 'Amigos';
         break;
       case 'Familia':
         this.contarFamilia();
+        this.tituloGrafica = 'Familia';
         break;
       case 'Emociones':
         this.contarEmociones();
+        this.tituloGrafica = 'Emociones';
         break;
       case 'Fuera de clase':
         this.contarFueraClase();
+        this.tituloGrafica = 'Fuera de clase';
         break;
       default:
         break;
@@ -128,9 +139,13 @@ export class VerAlumnosPComponent implements OnInit{
     })
   }
 
+  filtrarAlumnos() {
+    this.obtenerAlumnos(this.filtroNombre);
+  }
+
   obtenerAlumnos(buscar : string){
     this.busqueda = buscar;
-    this.alumnoService.getAlumnosClase(this.claseID, this.posActual, this.filPag, buscar).subscribe((res: any) => {
+    this.alumnoService.getAlumnosClase(this.claseID, this.posActual, this.filPag, this.contar, this.busqueda).subscribe((res: any) => {
       if(res["alumnos"].length === 0){
         if(this.posActual > 0){
           this.posActual = this.posActual - this.filPag;
@@ -149,6 +164,21 @@ export class VerAlumnosPComponent implements OnInit{
     })
   }
 
+  onClickContar(num: number){
+    if(num == 1){
+      this.contar = 1;
+      this.obtenerAlumnos(this.busqueda);
+    } else if(num == 2){
+      this.contar = 2;
+      this.obtenerAlumnos(this.busqueda);
+    }else if(num == 11){
+      this.contar = 11;
+      this.obtenerAlumnos(this.busqueda);
+    }else if(num == 12){
+      this.contar = 12;
+      this.obtenerAlumnos(this.busqueda);
+    }
+  }
   obtenerTodosAlumnos(){
     this.alumnoService.getAlumnos().subscribe((res: any) => {
       this.alumnosTodosData = res.alumnos;
@@ -413,5 +443,28 @@ export class VerAlumnosPComponent implements OnInit{
       }
     }
     this.dibujarGrafica();
+  }
+  getAmbito(ambito: any): string {
+    let color = "";
+    
+    if(ambito === 'Familia'){
+      color = 'badge bg-familia rounded-3 fw-semibold';
+    }
+    if(ambito === 'Emociones'){
+      color = 'badge bg-emociones rounded-3 fw-semibold';
+    }
+    if(ambito === 'Amigos'){
+      color = 'badge bg-amigos rounded-3 fw-semibold';
+    }
+    if(ambito === 'Clase'){
+      color = 'badge bg-clase rounded-3 fw-semibold';
+    }
+    if(ambito === 'Inicio'){
+      color = 'badge bg-inicio rounded-3 fw-semibold';
+    }
+    if(ambito === 'Fuera de clase'){
+      color = 'badge bg-fuera rounded-3 fw-semibold';
+    }
+    return color;
   }
 }

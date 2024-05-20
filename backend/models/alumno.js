@@ -61,6 +61,10 @@ const Alumno = sequelize.define('Alumno', {
     Rol: {
         type: DataTypes.STRING,
         allowNull: true
+    },
+    Puntos: {
+        type: DataTypes.INTEGER,
+        allowNull: false
     }
 }, {
     tableName: 'alumno',

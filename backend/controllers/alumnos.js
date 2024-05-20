@@ -5,6 +5,7 @@ const Alumno = require('../models/alumno');
 const Respuesta = require('../models/respuesta');
 const Sesion = require('../models/sesion');
 const sequelize = require('../database/configdb');
+
 const hashPassword = require('../middleware/hashHelper');
 
 
@@ -12,18 +13,21 @@ const getAlumnos = async (req, res) => {
     try {
         const tam = Number(req.query.numFilas) || 0;
         const desde = Number(req.query.desde) || 0;
+        const textoBusqueda = req.query.textoBusqueda || '';
         const queryParams = req.query;
 
-        const validParams = ['ID_Alumno', 'Nombre', 'Apellidos', 'Usuario', 'FechaNacimiento', 'ID_Clase', 'ID_Centro', 'Estado', 'desde', 'numFilas', 'ordenar'];
+        const validParams = ['ID_Alumno', 'Nombre', 'Apellidos', 'Usuario', 'FechaNacimiento', 'ID_Clase', 'ID_Centro', 'Estado', 'desde', 'numFilas', 'ordenar', 'textoBusqueda'];
+        
+        let queryOptions = {};
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
+       
         if (!isValidQuery) {
             return res.status(400).json({ statusCode: 400, message: "Parámetros de búsqueda no válidos en Alumnos" });
         }
-        
-        const queryOptions = {};
+
         for (const param in queryParams) {
-            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde' && param !== 'ordenar') {
+            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde' && param !== 'ordenar' && param !== 'textoBusqueda') {
                 if (param === 'ID_Alumno') {
                     queryOptions[param] = queryParams[param];
                 } else {
@@ -31,18 +35,69 @@ const getAlumnos = async (req, res) => {
                 }
             }
         }
-
+        
         const paginationOptions = tam > 0 ? { limit: tam, offset: desde } : {};
-
-        let orderOptions;
-        if(queryParams.ordenar == 1) {
-            orderOptions = [['Nombre', 'ASC']];
-        }else if(queryParams.ordenar == 0) {
-            orderOptions = [];
+        let orderOptions=[];
+        if(orderOptions){
+            if(queryParams.ordenar == 1){
+                orderOptions = [['Nombre', 'ASC']];
+            }else if(queryParams.ordenar == 2){
+                orderOptions = [['Nombre', 'DESC']];
+            }else if(queryParams.ordenar == 0){
+                orderOptions = [];
+            }else if(queryParams.ordenar == 3){
+                orderOptions = [['Apellidos', 'ASC']];
+            }else if(queryParams.ordenar == 4){
+                orderOptions = [['Apellidos', 'DESC']];
+            }else if(queryParams.ordenar == 5){
+                orderOptions = [[Clase, 'Nombre', 'ASC']];
+            }else if(queryParams.ordenar == 6){
+                orderOptions = [[Clase, 'Nombre', 'DESC']];
+            }else if(queryParams.ordenar == 7){
+                orderOptions = [['FechaNacimiento', 'ASC']];
+            }else if(queryParams.ordenar == 8){
+                orderOptions = [['FechaNacimiento', 'DESC']];
+            }else if(queryParams.ordenar == 9){
+                orderOptions = [[Centro, 'Calle', 'ASC']];
+            }else if(queryParams.ordenar == 10){
+                orderOptions = [[Centro, 'Calle', 'DESC']];
+            }else if(queryParams.ordenar == 11){
+                orderOptions = [[Alumno.sequelize.literal("CASE WHEN Estado = 'Muy Bueno' THEN 5 WHEN Estado = 'Bueno' THEN 4 WHEN Estado = 'Normal' THEN 3 WHEN Estado = 'Malo' THEN 2 ELSE 1 END"), 'DESC']];
+            }else if(queryParams.ordenar == 12){
+                orderOptions =  [[Alumno.sequelize.literal("CASE WHEN Estado = 'Muy Bueno' THEN 5 WHEN Estado = 'Bueno' THEN 4 WHEN Estado = 'Normal' THEN 3 WHEN Estado = 'Malo' THEN 2 ELSE 1 END"), 'ASC']];
+            }
         }
+        
+        let whereOptions=[];
+        let where = { ...queryOptions };
 
+        if(textoBusqueda){
+            where = {
+                ...where,
+                [sequelize.Op.or]: whereOptions
+            };
+            whereOptions.push(
+                { Nombre: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { Apellidos: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { Estado: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { '$Clase.Nombre$' : { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+            );
+    
+            if (req.Rol === 'Centro') {
+                whereOptions.push(
+                    { '$Clase.Nombre$' : { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                );
+            }
+    
+            if (req.Rol === 'Admin') {
+                whereOptions.push(
+                    { '$Centro.Nombre$' : { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                );
+            }
+        }
+        
         const alumnos = await Alumno.findAll({
-            where: queryOptions,
+            where: where, 
             ...paginationOptions,
             attributes: { exclude: ['Contraseña'] },
             order: orderOptions,
@@ -119,8 +174,9 @@ const getAlumnos = async (req, res) => {
             const hashedPassword = hashPassword(req.body.Contraseña);
             const ambitos = {"Clase":50,"Amigos":50,"Familia":50,"Emociones":50,"Fuera de clase":50};
             const frecuencia = {"Clase":0,"Amigos":0,"Familia":0,"Emociones":0,"Fuera de clase":0}
-            const estado = "Normal"
-            const newAlumno = { ...req.body, Contraseña: hashedPassword, Usuario: usuario, Estado: estado, Ambitos: ambitos, AparicionAmbitos: frecuencia};
+            const estado = "Normal";
+            const points = 0;
+            const newAlumno = { ...req.body, Contraseña: hashedPassword, Usuario: usuario, Estado: estado, Ambitos: ambitos, AparicionAmbitos: frecuencia, Puntos: points};
         
             const createdAlumno = await Alumno.create(newAlumno);
         
@@ -159,14 +215,14 @@ const getAlumnos = async (req, res) => {
             to: datos.EmailTutor,
             subject: 'Bienvenido a Blooming',
             text: 
-`Buenas,
-Desde el ${centro.Nombre} le damos la bienvenida a su hijo a la plataforma Blooming. Se le ha matriculado en la clase ${clase.Nombre}.
-Los datos de acceso son:
-Usuario: ${usuario}
-Contraseña: ${datos.Contraseña}
-            
-Un saludo.
-${centro.Nombre}`
+                `Buenas,
+                Desde el ${centro.Nombre} le damos la bienvenida a su hijo a la plataforma Blooming. Se le ha matriculado en la clase ${clase.Nombre}.
+                Los datos de acceso son:
+                Usuario: ${usuario}
+                Contraseña: ${datos.Contraseña}
+                            
+                Un saludo.
+                ${centro.Nombre}`
         };
 
         transporter.sendMail(mailOptions, (error, info) => {

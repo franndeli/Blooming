@@ -8,38 +8,52 @@ data-sidebar-position="fixed" data-header-position="fixed">
                 <div class="card">
                     <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
                         <div class="card-body">
-                            <h5 class="card-title fw-semibold mb-4">Últimas preguntas respondidas <span><i class="ti ti-activity" style="font-size: 20px;"></i></span></h5>
+                            <h5 class="card-title fw-semibold mb-4">Actividad de los alumnos en la aplicación <span><i class="ti ti-graph" style="font-size: 20px;"></i></span></h5>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div id="chart"></div>
+                                </div>
+                            </div>
+                            <p>*Esta gráfica muestra la cantidad de alumnos que respoden al día</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5 class="card-title fw-semibold mb-4">Últimas preguntas respondidas <span><i class="ti ti-activity" style="font-size: 20px;"></i></span></h5>
+                                <div class="input-group" style="width: 200px;">
+                                  <input type="text" placeholder="Buscar alumno..." [(ngModel)]="filtroNombre" (input)="filtrarAlumnos()" class="form-control buscador">  
+                                </div>
+                              </div>
                             <div class="card">
                                 <div class="card-body">
                                     <div class="table-responsive" *ngIf="recientesData.length > 0; else noRespuestas">
                                         <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
                                             <thead class="text-dark fs-4">
                                                 <tr>
-                                                    <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
-                                                    <th><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Clase</th>
-                                                    <th><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Ámbito</th>
-                                                    <th><span><i class="ti ti-question-mark" style="font-size: 15px;"></i></span> Pregunta</th>
-                                                    <th><span><i class="ti ti-check" style="font-size: 15px;"></i></span> Respuesta</th>
-                                                    <th><span><i class="ti ti-alert-circle" style="font-size: 15px;"></i></span> Grado</th>
-                                                    <th></th>
+                                                    <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre <span class="arrow" (click)="onClickContar(1)">&#x25B2;</span><span class="arrow" (click)="onClickContar(2)"> &#x25BC;</span></th>
+                                                    <th><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Clase <span class="arrow" (click)="onClickContar(3)">&#x25B2;</span><span class="arrow" (click)="onClickContar(4)"> &#x25BC;</span></th>
+                                                    <th><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Ámbito <span class="arrow" (click)="onClickContar(5)">&#x25B2;</span><span class="arrow" (click)="onClickContar(6)"> &#x25BC;</span></th>
+                                                    <th><span><i class="ti ti-question-mark" style="font-size: 15px;"></i></span> Pregunta <span class="arrow" (click)="onClickContar(7)">&#x25B2;</span><span class="arrow" (click)="onClickContar(8)"> &#x25BC;</span></th>
+                                                    <th><span><i class="ti ti-check" style="font-size: 15px;"></i></span> Respuesta <span class="arrow" (click)="onClickContar(9)">&#x25B2;</span><span class="arrow" (click)="onClickContar(10)"> &#x25BC;</span></th>
+                                                    <th><span><i class="ti ti-alert-circle" style="font-size: 15px;"></i></span> Grado <span class="arrow" (click)="onClickContar(11)">&#x25B2;</span><span class="arrow" (click)="onClickContar(12)"> &#x25BC;</span></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr *ngFor="let reciente of recientesData">
-                                                    <td>{{reciente.Alumno.Nombre}} {{reciente.Alumno.Apellidos}}</td>
+                                                    <td><button class="btn-hover" (click)="verPerfil(reciente.ID_Alumno)">{{reciente.Alumno.Nombre}} {{reciente.Alumno.Apellidos}}</button></td>
                                                     <td>{{reciente.Alumno.Clase.Nombre}}</td>
-                                                    <td>{{reciente.Pregunta.Ambito.Nombre}}</td>
+                                                    <td><span [ngClass]="getAmbito(reciente.Pregunta.Ambito.Nombre)">{{reciente.Pregunta.Ambito.Nombre}}</span></td>
                                                     <td>{{reciente.Pregunta.TextoPregunta}}</td>
                                                     <td>{{reciente.Opcion.TextoOpcion}}</td>
                                                     <td [ngSwitch]="reciente.Opcion.Gravedad">
-                                                        <span *ngSwitchCase="-2">Alarmante</span>
-                                                        <span *ngSwitchCase="0">Normal</span>
-                                                        <span *ngSwitchCase="1">Buena</span>
-                                                        <span *ngSwitchCase="2">Muy Buena</span>
-                                                    </td>
-                                                    <td>
-                                                        <button class="btn btn-primary" (click)="verPerfil(reciente.ID_Alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button>
-                                                    </td>
+                                                        <span class="badge bg-danger rounded-3 fw-semibold" *ngSwitchCase="-2">Alarmante</span>
+                                                        <span class="badge bg-amarillo rounded-3 fw-semibold" *ngSwitchCase="0">Normal</span>
+                                                        <span class="badge bg-verde1 rounded-3 fw-semibold" *ngSwitchCase="1">Buena</span>
+                                                        <span class="badge bg-success rounded-3 fw-semibold" *ngSwitchCase="2">Muy Buena</span>
+                                                    </td>   
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -54,6 +68,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                         </div>
                     </div>
                 </div>
+                
                 <a href="/profesores/dashboard" class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</a>
             </div>
         </div>
@@ -63,5 +78,5 @@ data-sidebar-position="fixed" data-header-position="fixed">
         <div class="py-6 px-6 text-center">
           <p class="copyright">&copy; 2023 Blooming. Proyecto académico de la Universidad de Alicante .</p>
         </div>
-
+    </div>
 </div>

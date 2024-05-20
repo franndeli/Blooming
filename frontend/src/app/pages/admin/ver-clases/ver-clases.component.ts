@@ -17,15 +17,23 @@ export class VerClasesComponent implements OnInit {
   public filPag = 5;
   private busqueda = '';
 
+  private contar = 0;
+
+  filtroNombre: string = ''; 
+
   constructor(private claseService: ClaseService, private router: Router){}
 
   ngOnInit() {
     this.obtenerClases(this.busqueda);
   }
 
+  filtrarAlumnos() {
+    this.obtenerClases(this.filtroNombre);
+  }
+
   obtenerClases(buscar: string){
     this.busqueda = buscar;
-    this.claseService.getClases(this.posActual, this.filPag, buscar).subscribe((res: any) => {
+    this.claseService.getClases(this.posActual, this.filPag, this.contar, this.busqueda).subscribe((res: any) => {
       if(res["clases"].length === 0){
         if(this.posActual > 0){
           this.posActual = this.posActual - this.filPag;
@@ -79,6 +87,28 @@ export class VerClasesComponent implements OnInit {
   cambiarFilasPagina(filas: any){
     this.filPag = filas;
     this.cambiarPagina(1);
+  }
+
+  onClickContar(num: number){
+    if(num == 1){
+      this.contar = 1;
+      this.obtenerClases(this.busqueda);
+    } else if (num == 2){
+      this.contar = 2;
+      this.obtenerClases(this.busqueda);
+    }else if (num == 3){
+      this.contar = 3;
+      this.obtenerClases(this.busqueda);
+    }else if (num == 4){
+      this.contar = 4;
+      this.obtenerClases(this.busqueda);
+    }else if (num == 5){
+      this.contar = 5;
+      this.obtenerClases(this.busqueda);
+    }else if (num == 6){
+      this.contar = 6;
+      this.obtenerClases(this.busqueda);
+    }
   }
 
 }

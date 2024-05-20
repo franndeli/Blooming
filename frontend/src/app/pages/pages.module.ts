@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SidebarComponent } from '../commons/sidebar/sidebar.component';
@@ -58,6 +58,10 @@ import { EditarProfesorComponent } from './profesores/editar-profesor/editar-pro
 import { SistemaPreguntasComponent } from './alumnos/sistema-preguntas/sistema-preguntas.component';
 import { ActividadRecienteNegativaComponent } from './profesores/actividad-reciente-negativa/actividad-reciente-negativa.component';
 import { ArbolEscenaComponent } from './alumnos/arbol-escena/arbol-escena.component';
+import { RecompensasComponent } from './alumnos/recompensas/recompensas.component';
+import { AyudaAmbitosComponent } from './profesores/ayuda-ambitos/ayuda-ambitos.component';
+import { TodosAlumnosComponent } from './profesores/todos-alumnos/todos-alumnos.component';
+import { VerMasPreguntasComponent } from './profesores/ver-mas-preguntas/ver-mas-preguntas.component';
 
 @NgModule({
   declarations: [
@@ -97,8 +101,12 @@ import { ArbolEscenaComponent } from './alumnos/arbol-escena/arbol-escena.compon
     PerfilProfesorComponent,
     EditarProfesorComponent,
     SistemaPreguntasComponent,
+    ArbolEscenaComponent,
     ActividadRecienteNegativaComponent,
-    ArbolEscenaComponent
+    RecompensasComponent,
+    AyudaAmbitosComponent,
+    TodosAlumnosComponent,
+    VerMasPreguntasComponent
   ],
   exports: [
     AdminLayoutComponent,
@@ -111,6 +119,7 @@ import { ArbolEscenaComponent } from './alumnos/arbol-escena/arbol-escena.compon
     FormsModule,
     ReactiveFormsModule,
     ComponentsModule
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class PagesModule { }

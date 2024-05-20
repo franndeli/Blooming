@@ -159,10 +159,10 @@ data-sidebar-position="fixed" data-header-position="fixed">
           <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
             <div class="card-body">
               <h5 class="card-title fw-semibold mb-4">Informe Emocional - Últimas 5 respuestas <span><i class="ti ti-alert-triangle" style="font-size: 20px;"></i></span></h5>
-              <div class="position-absolute top-0 end-0 mt-3 me-2">
-                <select class="form-select py-1 ps-2 border-1 border-success bg-light rounded-pill" 
+              <div class="position-absolute top-0 end-0 mt-3 me-4">
+                <select class="form-select py-1 ps-2 border-1 bg-light rounded" 
                         style="outline: none; margin-top: 10px;" (change)="cambiarGravedad($event)"> 
-                  <option value=0>Todas</option>
+                  <option value=-1>Todas</option>
                   <option value=2>Positivas</option>
                   <option value=-2>Negativas</option>
                 </select>
@@ -177,18 +177,14 @@ data-sidebar-position="fixed" data-header-position="fixed">
                               <th><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Clase</th>
                               <th><span><i class="ti ti-question-mark" style="font-size: 15px;"></i></span> Pregunta</th>
                               <th><span><i class="ti ti-alert-triangle" style="font-size: 15px;"></i></span> Respuesta</th>
-                              <th></th>
                           </tr>
                       </thead>
                       <tbody>
                           <tr *ngFor="let respuesta of respuestasData;">
-                              <td>{{ respuesta.Alumno.Nombre }}</td>
+                              <td><button class="btn-hover" (click)="verPerfil(respuesta.ID_Alumno)">{{ respuesta.Alumno.Nombre }}</button></td>
                               <td>{{ respuesta.Alumno.Clase.Nombre }}</td>
                               <td>{{ respuesta.Pregunta.TextoPregunta }}</td>
                               <td> {{ respuesta.Opcion.TextoOpcion }} </td>
-                              <td>
-                                <button class="btn btn-primary" (click)="verPerfil(respuesta.ID_Alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button>
-                              </td>
                           </tr>
                         </tbody>
                       </table>

@@ -12,18 +12,30 @@ const getRespuestas = async (req, res) => {
     try {
         const tam = Number(req.query.numFilas) || 0;
         const desde = Number(req.query.desde) || 0;
+        const textoBusqueda = req.query.textoBusqueda || '';
         const queryParams = req.query;
 
-        const validParams = ['ID_Respuesta', 'ID_Pregunta', 'ID_Opcion', 'ID_Alumno', 'FechaRespuesta', 'ID_Sesion', 'Gravedad', 'ID_Clase', 'ID_Centro', 'desde', 'numFilas'];
+        const validParams = ['ID_Respuesta', 'ID_Pregunta', 'ID_Opcion', 'ID_Alumno', 'FechaRespuesta', 'ID_Sesion', 'Gravedad', 'ID_Clase', 'ID_Centro', 'desde', 'numFilas', 'ordenar', 'textoBusqueda'];
+
+        let queryOptions = {};
+
+        /*if (textoBusqueda) {
+            queryOptions[sequelize.Op.or] = [
+                { '$Opcion.TextoOpcion$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { '$Alumno.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { '$Pregunta.TextoPregunta$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { '$Pregunta.Ambito.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+            ];  
+        }*/
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {
             return res.status(400).json({ statusCode: 400, message: "Parámetros de búsqueda no válidos en Respuestas" });
         }
         
-        const queryOptions = {};
+        //const queryOptions = {};
         for (const param in queryParams) {
-            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde' && !(param === 'Gravedad' && queryParams[param] === '0')) {
+            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde' && !(param === 'Gravedad' && queryParams[param] == -1) && param !== 'ordenar' && param !== 'textoBusqueda') {
                 if (param === 'ID_Respuesta') {
                     queryOptions[param] = queryParams[param];
                 } else if (param === 'Gravedad') {
@@ -39,11 +51,58 @@ const getRespuestas = async (req, res) => {
         }
 
         const paginationOptions = tam > 0 ? { limit: tam, offset: desde } : {};
+        let orderOptions=[];
+        if(orderOptions){
+            if(queryParams.ordenar == 1){
+                orderOptions = [[Alumno, 'Nombre', 'ASC']];
+            }else if(queryParams.ordenar == 2){
+                orderOptions = [[Alumno, 'Nombre', 'DESC']];
+            }else if(queryParams.ordenar == 0){
+                orderOptions =  [['FechaRespuesta', 'DESC']];
+            }else if(queryParams.ordenar == 3){
+                orderOptions = [[Alumno, Clase, 'Nombre', 'ASC']];
+            }else if(queryParams.ordenar == 4){
+                orderOptions = [[Alumno, Clase, 'Nombre', 'DESC']];
+            }else if(queryParams.ordenar == 5){
+                orderOptions = [[Pregunta, Ambito, 'Nombre', 'ASC']];
+            }else if(queryParams.ordenar == 6){
+                orderOptions = [[Pregunta, Ambito, 'Nombre', 'DESC']];
+            }else if(queryParams.ordenar == 7){
+                orderOptions = [[Pregunta, 'TextoPregunta', 'ASC']];
+            }else if(queryParams.ordenar == 8){
+                orderOptions = [[Pregunta, 'TextoPregunta', 'DESC']];
+            }else if(queryParams.ordenar == 9){
+                orderOptions = [[Opcion, 'TextoOpcion', 'ASC']];
+            }else if(queryParams.ordenar == 10){
+                orderOptions = [[Opcion, 'TextoOpcion', 'DESC']];
+            }if (queryParams.ordenar == 11) {
+                orderOptions = [[Opcion.sequelize.literal("CASE WHEN Gravedad = 2 THEN 1 WHEN Gravedad = 1 THEN 2 WHEN Gravedad = 0 THEN 3 ELSE 4 END"), 'ASC']];
+            } else if (queryParams.ordenar == 12) {
+                orderOptions = [[Opcion.sequelize.literal("CASE WHEN Gravedad = 2 THEN 1 WHEN Gravedad = 1 THEN 2 WHEN Gravedad = 0 THEN 3 ELSE 4 END"), 'DESC']];
+            }
+        }
 
+        let whereOptions=[];
+        let where = { ...queryOptions };
+        if(textoBusqueda){
+            where = {
+                ...where,
+                [sequelize.Op.or]: whereOptions
+            };
+            whereOptions.push(
+                { '$Opcion.TextoOpcion$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { '$Alumno.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { '$Alumno.Clase.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { '$Pregunta.TextoPregunta$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { '$Pregunta.Ambito.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+            );
+        }
+        
         const respuestas = await Respuesta.findAll({
-            where: queryOptions,
+            where: where,
             ...paginationOptions,
             subQuery: false,
+            order: orderOptions,
             include: [
                 {
                     model: Pregunta,
@@ -74,12 +133,11 @@ const getRespuestas = async (req, res) => {
                     attributes: ['TextoOpcion', 'Gravedad'],
                     as: 'Opcion'
                 }
-            ],
-            order: [['FechaRespuesta', 'DESC']]
+            ]
         });
 
         let countOptions = { where: queryOptions, include: [] };
-
+        
         if (queryParams['ID_Centro'] !== undefined) {
             countOptions.include.push({
                 model: Alumno,
@@ -94,12 +152,38 @@ const getRespuestas = async (req, res) => {
                 where: { ID_Clase: queryParams['ID_Clase'] }
             });
         }
-        if (queryParams['Gravedad'] !== undefined) {
+
+        if (queryParams['Gravedad'] !== undefined && queryParams['Gravedad'] != -1) {
+            console.log(queryParams['Gravedad']);
             countOptions.include.push({
                 model: Opcion,
                 where: { Gravedad: queryParams['Gravedad'] }
             });
         }
+
+        /*if (textoBusqueda) {
+            countOptions.include.push({
+                model: Opcion,
+                where: { TextoOpcion: { [sequelize.Op.like]: `${textoBusqueda}` } },
+                required: true
+            });
+        }
+        if (textoBusqueda) {
+            countOptions.include.push({
+                model: Pregunta,
+                as: 'Pregunta',
+                where: { TextoPregunta: { [sequelize.Op.like]: `${textoBusqueda}` } },
+                required: true,
+                include: [
+                    {
+                        model: Ambito,
+                        where: { Nombre: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                        required: true
+                    }
+                ]
+            });
+        }   */
+
 
         const total = await Respuesta.count(countOptions);
         // let total;

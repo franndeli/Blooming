@@ -12,9 +12,10 @@ const getCentros = async (req, res) => {
     try {
         const tam = Number(req.query.numFilas) || 0;
         const desde = Number(req.query.desde) || 0;
+        const textoBusqueda = req.query.textoBusqueda || '';
         const queryParams = req.query;
 
-        const validParams = ['ID_Centro', 'Nombre', 'Email', 'Localidad', 'Provincia', 'Calle', 'CP', 'numFilas', 'desde'];
+        const validParams = ['ID_Centro', 'Nombre', 'Email', 'Localidad', 'Provincia', 'Calle', 'CP', 'numFilas', 'desde', 'ordenar', 'textoBusqueda'];
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {
@@ -23,7 +24,7 @@ const getCentros = async (req, res) => {
         
         const queryOptions = {};
         for (const param in queryParams) {
-            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde') {
+            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde' && param !== 'ordenar' && param !== 'textoBusqueda') {
                 if (param === 'ID_Centro') {
                     queryOptions[param] = queryParams[param];
                 } else {
@@ -33,11 +34,47 @@ const getCentros = async (req, res) => {
         }
 
         const paginationOptions = tam > 0 ? { limit: tam, offset: desde } : {};
+        let orderOptions=[];
+        if(orderOptions){
+            if(queryParams.ordenar == 1){
+                orderOptions = [['Nombre', 'ASC']];
+            }else if(queryParams.ordenar == 2){
+                orderOptions = [['Nombre', 'DESC']];
+            }else if(queryParams.ordenar == 0){
+                orderOptions = [];
+            }else if(queryParams.ordenar == 3){
+                orderOptions = [['Email', 'ASC']];
+            }else if(queryParams.ordenar == 4){
+                orderOptions = [['Email', 'DESC']];
+            }else if(queryParams.ordenar == 5){
+                orderOptions = [['Calle', 'ASC']];
+            }else if(queryParams.ordenar == 6){
+                orderOptions = [['Calle', 'DESC']];
+            }
+        }
+
+        let whereOptions=[];
+        let where = { ...queryOptions };
+        if(textoBusqueda){
+            where = {
+                ...where,
+                [sequelize.Op.or]: whereOptions
+            };
+            whereOptions.push(
+                { Nombre: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { Email: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { Localidad: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { Provincia: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { Calle: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { CP: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+            );
+        }
 
         const centros = await Centro.findAll({
-            where: queryOptions,
+            where: where,
             ...paginationOptions,
-            attributes: { exclude: ['Contraseña'] }
+            attributes: { exclude: ['Contraseña'] },
+            order: orderOptions
         });
 
         const total = await Centro.count({ where: queryOptions});
@@ -127,7 +164,7 @@ const updateCentro = async (req, res) => {
 const updateCentroPwd = async (req, res) => {
     try {
         const token = req.header('x-token');
-        const id = req.params.ID_Centro;
+        const id = parseInt(req.params.ID_Centro, 10);
         const { Contraseña, newPassword, newPassword2 } = req.body;
         
         const decodedToken = verify(token);

@@ -1,0 +1,44 @@
+.body-wrapper{
+    margin-left: 0px !important;
+    background-color: rgb(237, 225, 255);
+}
+h3{
+    margin-bottom: 30px;
+}
+h1{
+    text-align: center;
+}
+h5{
+    text-align: center;
+    margin-bottom: 30px;
+}
+.container-fluid{
+    padding-top: 30px !important;
+}
+/* Estilos para la ventana modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+}
+
+.close {
+    float: right;
+    cursor: pointer;
+}
+.card-header{
+    font-weight: bold;
+}

@@ -7,16 +7,15 @@ const Profesor = require('../models/profesor');
 const sequelize = require('../database/configdb');
 const hashPassword = require('../middleware/hashHelper');
 
-
-
 const getProfesores = async (req, res) => {
     try {
         const tam = Number(req.query.numFilas) || 0;
         const desde = Number(req.query.desde) || 0;
         const pwd = req.query.pwd || false;
+        const textoBusqueda = req.query.textoBusqueda || '';
         const queryParams = req.query;
 
-        const validParams = ['ID_Profesor', 'Nombre', 'Apellidos', 'Email', 'Contraseña', 'ID_Clase', 'ID_Centro', 'desde', 'numFilas', 'pwd'];
+        const validParams = ['ID_Profesor', 'Nombre', 'Apellidos', 'Email', 'Contraseña', 'ID_Clase', 'ID_Centro', 'desde', 'numFilas', 'pwd', 'ordenar', 'textoBusqueda'];
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {
@@ -25,7 +24,7 @@ const getProfesores = async (req, res) => {
         
         const queryOptions = {};
         for (const param in queryParams) {
-            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde' && param !== 'pwd') {
+            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde' && param !== 'pwd' && param !== 'ordenar' && param !== 'textoBusqueda') {
                 if (param === 'ID_Profesor') {
                     queryOptions[param] = queryParams[param];
                 } else if(param === 'ID_Centro'){
@@ -37,11 +36,52 @@ const getProfesores = async (req, res) => {
         }
 
         const paginationOptions = tam > 0 ? { limit: tam, offset: desde } : {};
+        let orderOptions=[];
+        if(orderOptions){
+            if(queryParams.ordenar == 1){
+                orderOptions = [['Nombre', 'ASC']];
+            }else if(queryParams.ordenar == 2){
+                orderOptions = [['Nombre', 'DESC']];
+            }else if(queryParams.ordenar == 0){
+                orderOptions = [];
+            }else if(queryParams.ordenar == 3){
+                orderOptions = [['Apellidos', 'ASC']];
+            }else if(queryParams.ordenar == 4){
+                orderOptions = [['Apellidos', 'DESC']];
+            }else if(queryParams.ordenar == 5){
+                orderOptions = [[Clase, 'Nombre', 'ASC']];
+            }else if(queryParams.ordenar == 6){
+                orderOptions = [[Clase, 'Nombre', 'DESC']];
+            }else if(queryParams.ordenar == 7){
+                orderOptions = [[Centro, 'Calle', 'ASC']];
+            }else if(queryParams.ordenar == 8){
+                orderOptions = [[Centro, 'Calle', 'DESC']];
+            }
+        }
+        let whereOptions=[];
+        let where = { ...queryOptions };
+        if(textoBusqueda){
+            where = {
+                ...where,
+                [sequelize.Op.or]: whereOptions
+            };
+            whereOptions.push(
+                { Nombre: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { Apellidos: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { '$Clase.Nombre$': { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+            );
+            if (req.Rol === 'Admin') {
+                whereOptions.push(
+                    { '$Centro.Nombre$' : { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                );
+            }
+        }
 
         const profesores = await Profesor.findAll({
-            where: queryOptions,
+            where: where,
             ...paginationOptions,
             attributes: { exclude: pwd ? [] : ['Contraseña'] },
+            order: orderOptions,
             include: [
                 {
                     model: Clase,
@@ -183,7 +223,7 @@ const updateProfesor = async (req, res) => {
 const updateProfesorPwd = async (req, res) => {
     try {
         const token = req.header('x-token');
-        const id = req.params.ID_Profesor;
+        const id = parseInt(req.params.ID_Profesor, 10);
         const { Contraseña, newPassword, newPassword2 } = req.body;
             
         const decodedToken = verify(token);

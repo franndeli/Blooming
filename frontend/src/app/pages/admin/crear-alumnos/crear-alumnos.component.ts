@@ -17,6 +17,7 @@ export class CrearAlumnosComponent implements OnInit, OnChanges {
   centrosData: any;
   clasesData: any;
   centroID: any;
+  private numero: number = 0;
 
   constructor(private fb:FormBuilder, private alumnoService: AlumnoService, private router: Router, private centroService: CentroService, private claseService: ClaseService){
     this.centrosData = [];
@@ -61,6 +62,7 @@ export class CrearAlumnosComponent implements OnInit, OnChanges {
     }else{
       this.alumnoService.postAlumno(this.form.value).subscribe(
         (response:any) => {
+          this.contarAlumno(this.form.value.ID_Clase);
           Swal.fire({
             icon: "success",
             title: "Alumno creado con éxito",
@@ -77,6 +79,24 @@ export class CrearAlumnosComponent implements OnInit, OnChanges {
         }
       );
     }
+  }
+
+  contarAlumno(id: any){
+    this.claseService.getClase(id).subscribe((res: any) => {
+      this.numero = res.clases[0].NumAlumnos + 1;
+      const datosActualizados = {
+        ID_Clase: id,
+        NumAlumnos: this.numero
+      }
+      this.claseService.putClase(datosActualizados).subscribe(
+        (response: any) => {
+          console.log('Clase actualizada exitosamente');
+        },
+        (error) => {
+          console.error('Error de creación');
+        }
+      )
+    });
   }
 
   validarForm(campo: string){

@@ -7,14 +7,20 @@
           <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
             <div class="card-body">
               <h1 class="card-title fw-semibold mb-4">Centros <span><i class="ti ti-home" style="font-size: 20px;"></i></span></h1>
+              <div class="container-btn-crear-clase">
+                <button  routerLink="/admin/crear-centros"class="btn btn-primary"><span><i class="ti ti-circle-plus" style="font-size: 15px;"></i></span> Crear Centro</button>
+              </div>
               <div class="card">
-                  <div class="card-body table-responsive">
+                <div class="input-group" style="width: 200px; margin-left: auto;">
+                  <input type="text" placeholder="Buscar centro..." [(ngModel)]="filtroNombre" (input)="filtrarAlumnos()" class="form-control buscador">  
+                </div>
+                  <div class="card-body table-responsive"  style="margin-top: -30px;">
                       <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
                           <thead class="text-dark fs-4">
                               <tr>
-                                  <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
-                                  <th><span><i class="ti ti-mail" style="font-size: 15px;"></i></span> Email</th>
-                                  <th><span><i class="ti ti-building-community" style="font-size: 15px;"></i></span> Dirección</th>
+                                  <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre <span class="arrow" (click)="onClickContar(1)">&#x25B2;</span><span class="arrow" (click)="onClickContar(2)"> &#x25BC;</span></th>
+                                  <th><span><i class="ti ti-mail" style="font-size: 15px;"></i></span> Email <span class="arrow" (click)="onClickContar(3)">&#x25B2;</span><span class="arrow" (click)="onClickContar(4)"> &#x25BC;</span></th>
+                                  <th><span><i class="ti ti-building-community" style="font-size: 15px;"></i></span> Dirección <span class="arrow" (click)="onClickContar(5)">&#x25B2;</span><span class="arrow" (click)="onClickContar(6)"> &#x25BC;</span></th>
                                   <th></th>
                               </tr>
                           </thead>
@@ -34,7 +40,7 @@
                       <app-pagination (cambiarPagina)="cambiarPagina($event)" [texto]="true" [totalRegistros]="totalCentros" [registroActual]="posActual+1" (filasPagina)="cambiarFilasPagina($event)" [registroPag]="filPag"></app-pagination>
                   </div>
               </div>
-              <button  routerLink="/admin/crear-centros"class="btn btn-primary"><span><i class="ti ti-circle-plus" style="font-size: 15px;"></i></span> Crear Centro</button>
+              
               <a href="/admin/dashboard" class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</a>
             </div>
           </div>

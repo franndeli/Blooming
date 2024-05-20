@@ -14,17 +14,23 @@ data-sidebar-position="fixed" data-header-position="fixed">
                 <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
                     <div class="card-body">
                         <h5 class="card-title fw-semibold mb-4">Alumnos <span><i class="ti ti-friends" style="font-size: 20px;"></i></span></h5>
+                        <div class="container-btn-crear-clase">
+                            <a href="/admin/crear-alumnos" class="btn btn-primary"><span><i class="ti ti-circle-plus" style="font-size: 15px;"></i></span> Crear Alumno</a>
+                        </div>
                         <div class="card">
-                            <div class="card-body table-responsive">
+                            <div class="input-group" style="width: 200px; margin-left: auto;">
+                                <input type="text" placeholder="Buscar alumno..." [(ngModel)]="filtroNombre" (input)="filtrarAlumnos()" class="form-control buscador">  
+                              </div>
+                            <div class="card-body table-responsive"  style="margin-top: -30px;">
                                 <table class="table text-nowrap mb-0 align-middle table-responsive-sm" style="background-color: white; border-radius: 1em;">
                                     <thead class="text-dark fs-4">
                                         <tr>
-                                            <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
-                                            <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Apellidos</th>
+                                            <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre <span class="arrow" (click)="onClickContar(1)">&#x25B2;</span><span class="arrow" (click)="onClickContar(2)"> &#x25BC;</span></th>
+                                            <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Apellidos <span class="arrow" (click)="onClickContar(3)">&#x25B2;</span><span class="arrow" (click)="onClickContar(4)"> &#x25BC;</span></th>
                                             <th><span><i class="ti ti-user" style="font-size: 15px;"></i></span> Usuario</th>
-                                            <th><span><i class="ti ti-cake" style="font-size: 15px;"></i></span> Fecha de nacimiento</th>
-                                            <th><span><i class="ti ti-home" style="font-size: 15px;"></i></span> Centro</th>
-                                            <th><span><i class="ti ti-school" style="font-size: 15px;"></i></span> Clase</th>
+                                            <th><span><i class="ti ti-cake" style="font-size: 15px;"></i></span> Fecha de nacimiento <span class="arrow" (click)="onClickContar(7)">&#x25B2;</span><span class="arrow" (click)="onClickContar(8)"> &#x25BC;</span></th>
+                                            <th><span><i class="ti ti-home" style="font-size: 15px;"></i></span> Centro <span class="arrow" (click)="onClickContar(9)">&#x25B2;</span><span class="arrow" (click)="onClickContar(10)"> &#x25BC;</span></th>
+                                            <th><span><i class="ti ti-school" style="font-size: 15px;"></i></span> Clase <span class="arrow" (click)="onClickContar(5)">&#x25B2;</span><span class="arrow" (click)="onClickContar(6)"> &#x25BC;</span></th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -38,7 +44,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                             <td>{{alumno.Clase.Nombre}}</td>
                                             <td class="botones">
                                                 <button class="btn btn-primary ti ti-pencil fs-5" (click)="editarAlumno(alumno)"></button>
-                                                <button class="btn btn-danger ti ti-trash fs-5" (click)="eliminarAlumno(alumno.ID_Alumno)"></button>
+                                                <button class="btn btn-danger ti ti-trash fs-5" (click)="eliminarAlumno(alumno.ID_Alumno, alumno.ID_Clase)"></button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -47,7 +53,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
                                 <app-pagination (cambiarPagina)="cambiarPagina($event)" [texto]="true" [totalRegistros]="totalAlumnos" [registroActual]="posActual+1" (filasPagina)="cambiarFilasPagina($event)" [registroPag]="filPag"></app-pagination>
                             </div>
                         </div>
-                        <a href="/admin/crear-alumnos" class="btn btn-primary"><span><i class="ti ti-circle-plus" style="font-size: 15px;"></i></span> Crear Alumno</a>
+                        
                         <a href="/admin/dashboard" class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</a>
                     </div>
                 </div>

@@ -8,28 +8,30 @@ data-sidebar-position="fixed" data-header-position="fixed">
           <div class="card">
             <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
               <div class="card-body">
-                <h5 class="card-title fw-semibold mb-4"> Clase {{claseData.Nombre}} <span><i class="ti ti-friends" style="font-size: 20px;"></i></span></h5>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                  <h5 class="card-title fw-semibold mb-0">Clase {{claseData.Nombre}} <span><i class="ti ti-friends" style="font-size: 20px;"></i></span></h5>
+                  <div class="input-group" style="width: 200px;">
+                    <input type="text" placeholder="Buscar alumno..." [(ngModel)]="filtroNombre" (input)="filtrarAlumnos()" class="form-control buscador">  
+                  </div>
+                </div>
                 <div class="card">
                   <div class="card-body">
                     <div class="table-responsive" *ngIf="alumnosData.length > 0; else noAlumnos">
                       <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
                         <thead class="text-dark fs-4">
                             <tr>
-                                <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
-                                <th><span><i class="ti ti-pin" style="font-size: 15px;"></i></span> Estado</th>
-                                <th></th>
+                                <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre <span class="arrow" (click)="onClickContar(1)">&#x25B2;</span><span class="arrow" (click)="onClickContar(2)">&#x25BC;</span></th>
+                                <th><span><i class="ti ti-pin" style="font-size: 15px;"></i></span> Estado  <span class="arrow" (click)="onClickContar(11)">&#x25B2;</span><span class="arrow" (click)="onClickContar(12)">&#x25BC;</span></th>
+                                <!--<th></th>-->
                             </tr>
                         </thead>
                         <tbody>
                           <tr *ngFor="let alumno of alumnosData">
-                              <td>{{alumno.Nombre}} {{alumno.Apellidos}}</td>
+                              <td><button class="btn-hover" (click)="verPerfil(alumno.ID_Alumno)">{{alumno.Nombre}} {{alumno.Apellidos}}</button></td>
                               <td>
                                   <div class="d-flex align-items-center gap-2">
                                       <span [ngClass]="getClaseEstado(alumno.Estado)">{{alumno.Estado}}</span>
                                   </div>
-                              </td>
-                              <td>
-                                  <button class="btn btn-primary" (click)="verPerfil(alumno.ID_Alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button>
                               </td>
                           </tr>
                         </tbody>
@@ -46,80 +48,73 @@ data-sidebar-position="fixed" data-header-position="fixed">
             </div> 
           </div>
         </div>
+        
         <div class="col-lg-6">
           <div class="row">
             <div class="col-lg-12">
               <div class="card overflow-hidden position-relative">
-                <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
-                  <div class="card-body"  >
-                    <h5 class="card-title mb-9 fw-semibold" style="margin-left: 10px; margin-top: 10px;">Gráfica General/Ámbitos <span><i class="ti ti-graph" style="font-size: 20px;"></i></span></h5> 
-                  </div>
-                  <div class="card-body" style="background-color: #fff; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);">
-                  <div class="position-absolute top-0 end-0 mt-3 me-2">
-                    <select class="form-select py-1 ps-2 border-1 border-success bg-light rounded-pill" 
-                            (change)="onChangeOption($event)" 
-                            style="outline: none; margin-top: 10px;">
-                      <option>General</option>
-                      <option>Clase</option>
-                      <option>Amigos</option>
-                      <option>Familia</option>
-                      <option>Emociones</option>
-                      <option>Fuera de clase</option>
-                    </select>
-                  </div>
-                  <div id="chart1"></div>
-                  <p class="text-center" *ngIf="mostrarMensaje && !hayDatos">No hay datos registrados todavía</p>
+                <div class="card-body d-flex align-items-center justify-content-between">
+                  <h5 class="card-title mb-9 fw-semibold" style="margin-left: 10px; margin-top: 10px;">Gráfica {{tituloGrafica}} <span><i class="ti ti-graph" style="font-size: 20px;"></i></span></h5> 
                 </div>
+                <!--<div class="card-body" style="background-color: #fff; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);">--->
+                <div class="position-absolute top-0 end-0 mt-3 me-4">
+                  <select class="form-select py-1 ps-2 border-1 bg-light rounded" (change)="onChangeOption($event)" style="outline: none; margin-top: 20px; ">
+                    <option>General</option>
+                    <option>Clase</option>
+                    <option>Amigos</option>
+                    <option>Familia</option>
+                    <option>Emociones</option>
+                    <option>Fuera de clase</option>
+                  </select>
                 </div>
+                <div id="chart1"></div>
+                <p class="text-center" *ngIf="mostrarMensaje && !hayDatos">No hay datos registrados todavía</p>
               </div>
             </div>
           </div>
-        </div>   
-      </div>
+        </div>
+      </div>   
+     
       <div class="container-fluid" style="padding: 0;">
         <div class="card">
-            <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
+          <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
+            <div class="card-body">
+              <h5 class="card-title fw-semibold mb-4">Últimas preguntas respondidas de esta clase <span><i class="ti ti-activity" style="font-size: 20px;"></i></span></h5>
+              <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title fw-semibold mb-4">Últimas preguntas respondidas de esta clase <span><i class="ti ti-activity" style="font-size: 20px;"></i></span></h5>
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="table-responsive" *ngIf="respuestasData.length > 0; else noRespuestas">
-                                <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
-                                    <thead class="text-dark fs-4">
-                                        <tr>
-                                            <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
-                                            <th><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Ámbito</th>
-                                            <th><span><i class="ti ti-question-mark" style="font-size: 15px;"></i></span> Pregunta</th>
-                                            <th><span><i class="ti ti-check" style="font-size: 15px;"></i></span> Respuesta</th>
-                                            <th><span><i class="ti ti-alert-circle" style="font-size: 15px;"></i></span> Grado</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                      <tr *ngFor="let respuesta of respuestasData">
-                                        <td>{{respuesta.Alumno.Nombre}} {{respuesta.Alumno.Apellidos}}</td>
-                                        <td>{{respuesta.Pregunta.Ambito.Nombre}}</td>
-                                        <td>{{respuesta.Pregunta.TextoPregunta}}</td>
-                                        <td>{{respuesta.Opcion.TextoOpcion}}</td>
-                                        <td [ngSwitch]="respuesta.Opcion.Gravedad">
-                                          <span *ngSwitchCase="-2">Alarmante</span>
-                                          <span *ngSwitchCase="0">Normal</span>
-                                          <span *ngSwitchCase="1">Buena</span>
-                                          <span *ngSwitchCase="2">Muy Buena</span>
-                                        </td>
-                                        <td>
-                                          <button class="btn btn-primary" (click)="verPerfil(respuesta.ID_Alumno)"><span><i class="ti ti-click" style="font-size: 15px;"></i> Ver perfil</span></button>
-                                        </td>
-                                      </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <ng-template #noRespuestas>
-                              <p class="text-center" style="margin-top: 16px; font-size: 20px;">No hay respuestas</p>
-                            </ng-template>
-                        </div>
-                    </div>
+                  <div class="table-responsive" *ngIf="respuestasData.length > 0; else noRespuestas">
+                    <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
+                      <thead class="text-dark fs-4">
+                        <tr>
+                            <th><span><i class="ti ti-signature" style="font-size: 15px;"></i></span> Nombre</th>
+                            <th><span><i class="ti ti-123" style="font-size: 15px;"></i></span> Ámbito</th>
+                            <th><span><i class="ti ti-question-mark" style="font-size: 15px;"></i></span> Pregunta</th>
+                            <th><span><i class="ti ti-check" style="font-size: 15px;"></i></span> Respuesta</th>
+                            <th><span><i class="ti ti-alert-circle" style="font-size: 15px;"></i></span> Grado</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let respuesta of respuestasData">
+                          <td><button class="btn-hover" (click)="verPerfil(respuesta.ID_Alumno)">{{respuesta.Alumno.Nombre}} {{respuesta.Alumno.Apellidos}}</button></td>
+                          <td><span [ngClass]="getAmbito(respuesta.Pregunta.Ambito.Nombre)">{{respuesta.Pregunta.Ambito.Nombre}}</span></td>
+                          <td>{{respuesta.Pregunta.TextoPregunta}}</td>
+                          <td>{{respuesta.Opcion.TextoOpcion}}</td>
+                          <td [ngSwitch]="respuesta.Opcion.Gravedad">
+                            <span class="badge bg-danger rounded-3 fw-semibold" *ngSwitchCase="-2">Alarmante</span>
+                                          <span class="badge bg-amarillo rounded-3 fw-semibold" *ngSwitchCase="0">Normal</span>
+                                          <span class="badge bg-verde1 rounded-3 fw-semibold" *ngSwitchCase="1">Buena</span>
+                                          <span class="badge bg-success rounded-3 fw-semibold" *ngSwitchCase="2">Muy Buena</span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <ng-template #noRespuestas>
+                    <p class="text-center" style="margin-top: 16px; font-size: 20px;">No hay respuestas</p>
+                  </ng-template>
                 </div>
+              </div>
+            </div>
             </div>
         </div>
         <a href="/profesores/dashboard" class="btn btn-outline-dark"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</a>

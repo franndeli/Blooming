@@ -48,6 +48,10 @@ import { SistemaPreguntasComponent } from './alumnos/sistema-preguntas/sistema-p
 import { ArbolEscenaComponent } from './alumnos/arbol-escena/arbol-escena.component';
 
 import { ActividadRecienteNegativaComponent } from './profesores/actividad-reciente-negativa/actividad-reciente-negativa.component';
+import { RecompensasComponent } from './alumnos/recompensas/recompensas.component';
+import { TodosAlumnosComponent } from './profesores/todos-alumnos/todos-alumnos.component';
+import { AyudaAmbitosComponent } from './profesores/ayuda-ambitos/ayuda-ambitos.component';
+import { VerMasPreguntasComponent } from './profesores/ver-mas-preguntas/ver-mas-preguntas.component';
 
 
 const routes: Routes = [
@@ -96,6 +100,9 @@ const routes: Routes = [
       { path: 'ver-alumnos', component: VerAlumnosPComponent},
       { path: 'perfil', component: PerfilProfesorComponent},
       { path: 'editar-profesor', component: EditarProfesorComponent},
+      { path: 'todos-alumnos', component: TodosAlumnosComponent},
+      { path: 'ayuda-ambitos', component: AyudaAmbitosComponent},
+      { path: 'ver-mas-preguntas', component: VerMasPreguntasComponent}
     ]
   },
   { 
@@ -104,7 +111,8 @@ const routes: Routes = [
       { path: 'dashboard', component: AlumnosComponent},
       { path: 'sidebar', component: SidebarComponent },
       { path: 'sistema-preguntas', component: SistemaPreguntasComponent },
-      { path: 'arbol-escena', component: ArbolEscenaComponent }
+      { path: 'arbol-escena', component: ArbolEscenaComponent },
+      { path: 'recompensas', component: RecompensasComponent }
   ]},
 ];
 

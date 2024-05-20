@@ -5,6 +5,16 @@ import { SesionService } from '../../../services/sesiones.service';
 import { RespuestaService } from '../../../services/respuestas.service';
 import * as echarts from 'echarts';
 import { Console } from 'console';
+import * as xmlbuilder from 'xmlbuilder';
+import jsPDF from 'jspdf';
+import Epub from 'epub-gen';
+import Papa from 'papaparse';
+
+interface Respuesta {
+  FechaRespuesta: string;
+  Pregunta: { TextoPregunta: string };
+  Opcion: { TextoOpcion: string };
+}
 
 @Component({
   selector: 'app-ver-perfil-alumno',
@@ -12,7 +22,11 @@ import { Console } from 'console';
   styleUrl: './ver-perfil-alumno.component.css'
 })
 
+
+
 export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
+
+  
   private alumnoID: any;
   public alumnosData: any;
   public nombreClase: string = '';
@@ -20,7 +34,7 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
   private sesiones: any;
   private claseID: any;
   private dias: number = 7;
-  private gravedad: number = 0;
+  private gravedad: number = -1;
   public nombresAmbitos: any = [];
   private volverPag: number = 0;
 
@@ -70,6 +84,7 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
       const sesionesData = res.sesiones;
 
       //console.log(this.sesiones.Ambitos);
+      //console.log(this.sesiones);
       this.sesiones.Ambitos.Clase = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Clase);
       this.sesiones.Ambitos.Amigos = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Amigos);
       this.sesiones.Ambitos.Familia = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Familia);
@@ -173,8 +188,9 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
   }
 
   obtenerRespuestas(){
-    this.respuestaService.getRespuestasAlumno(this.alumnoID, this.gravedad, 0, 5).subscribe((res: any) => {
+    this.respuestaService.getRespuestasAlumno(this.alumnoID, -1, 0, 5, 0, '').subscribe((res: any) => {
       this.respuestasData = res.respuestas;
+      console.log(this.alumnoID);
     });
   }
 
@@ -216,4 +232,136 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
       }
     }
   }
+
+  generarPDF() {
+    const pdf = new jsPDF();
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('Preguntas del alumno ' + this.alumnosData.Nombre + ' ' + this.alumnosData.Apellidos, 105, 20, { align: 'center' });
+    pdf.setFont('helvetica', 'normal');
+    pdf.setFontSize(12);
+    let yPos = 35;
+    for(let i = 0; i < this.respuestasData.length; i++){
+      pdf.text('Fecha: ' + this.respuestasData[i].FechaRespuesta, 15, yPos);
+      pdf.text('Pregunta: ' + this.respuestasData[i].Pregunta.TextoPregunta, 15, yPos + 15);
+      pdf.text('Opción: ' + this.respuestasData[i].Opcion.TextoOpcion, 15, yPos + 25);
+      yPos += 45; 
+    }
+
+    pdf.save('respuestas_alumno'+this.alumnosData.ID_Alumno+'.pdf');
+  }
+  generarXML() {
+    // Crear un documento XML
+    let xmlContent = `<?xml version="1.0" encoding="UTF-8"?>
+    <respuestas_alumno>
+        <alumno>
+            <nombre>${this.alumnosData.Nombre}</nombre>
+            <apellidos>${this.alumnosData.Apellidos}</apellidos>
+        </alumno>
+        <respuestas>`;
+
+    // Agregar cada respuesta como un elemento en el XML
+    for(let i = 0; i < this.respuestasData.length; i++){
+        const respuestaXML = `
+            <respuesta>
+                <fecha>${this.respuestasData[i].FechaRespuesta}</fecha>
+                <pregunta>${this.respuestasData[i].Pregunta.TextoPregunta}</pregunta>
+                <opcion>${this.respuestasData[i].Opcion.TextoOpcion}</opcion>
+            </respuesta>`;
+        
+        xmlContent += respuestaXML;
+    }
+
+    // Cerrar las etiquetas del documento XML
+    const finalXMLContent = xmlContent + '</respuestas></respuestas_alumno>';
+
+    // Descargar el contenido XML como un archivo
+    const blob = new Blob([finalXMLContent], { type: 'text/xml' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'respuestas_alumno.xml';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  }
+
+  generarHTML() {
+    // Iniciar la construcción del documento HTML
+    let htmlContent = `
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Respuestas del alumno ${this.alumnosData.Nombre} ${this.alumnosData.Apellidos}</title>
+    </head>
+    <body>
+        <h1>Preguntas del alumno ${this.alumnosData.Nombre} ${this.alumnosData.Apellidos}</h1>
+        <ul>`;
+
+    // Agregar cada respuesta como un elemento en la lista HTML
+    for(let i = 0; i < this.respuestasData.length; i++){
+        htmlContent += `
+        <li>
+            <strong>Fecha:</strong> ${this.respuestasData[i].FechaRespuesta}<br>
+            <strong>Pregunta:</strong> ${this.respuestasData[i].Pregunta.TextoPregunta}<br>
+            <strong>Opción:</strong> ${this.respuestasData[i].Opcion.TextoOpcion}<br>
+        </li>`;
+    }
+
+    // Cerrar las etiquetas del documento HTML
+    htmlContent += `
+        </ul>
+    </body>
+    </html>`;
+
+    // Descargar el contenido HTML como un archivo
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'respuestas_alumno.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  }
+
+  generarCSV() {
+    function quitarAcentos(cadena: string): string {
+      return cadena.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+    const nombreAlumno = `${this.alumnosData.Nombre} ${this.alumnosData.Apellidos}`;
+    const nombreAlumnoSinAcentos = quitarAcentos(nombreAlumno);
+
+    const csvData: any[] = this.respuestasData.map((respuesta: Respuesta) => ({
+      Fecha: respuesta.FechaRespuesta,
+      Pregunta: quitarAcentos(respuesta.Pregunta.TextoPregunta),
+      Opcion: quitarAcentos(respuesta.Opcion.TextoOpcion)
+    }));
+  
+    let csvContent = `"Nombre del Alumno: ${nombreAlumnoSinAcentos}"\n`;
+    csvContent += 'Fecha,Pregunta,Opcion\n';
+    csvData.forEach((item: any) => {
+      const row = [
+        item.Fecha,
+        `"${decodeURIComponent(item.Pregunta).replace(/"/g, '""')}"`,
+        `"${decodeURIComponent(item.Opcion).replace(/"/g, '""')}"`
+      ];
+      csvContent += row.join(',') + '\n';
+    });
+  
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.setAttribute('download', 'respuestas_alumno.csv');
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+  verMasPreguntas(alumnoID: any){
+    this.router.navigate(['profesores/ver-mas-preguntas'], {state: {alumnoID, claseID: this.claseID}});
+  }
+
 }

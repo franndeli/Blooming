@@ -36,6 +36,7 @@ export class EditarAdminComponent {
           });
         },
         (error) => {
+          //console.log(this.form.value.ID_Admin);
           console.error('Error: ', error.error);
           Swal.fire(error.error.message);
         }

@@ -10,9 +10,10 @@ const getClases = async (req, res) => {
     try {
         const tam = Number(req.query.numFilas) || 0;
         const desde = Number(req.query.desde) || 0;
+        const textoBusqueda = req.query.textoBusqueda || '';
         const queryParams = req.query;
 
-        const validParams = ['ID_Clase', 'Nombre', 'NumAlumnos', 'ID_Centro', 'desde', 'numFilas', 'estado'];
+        const validParams = ['ID_Clase', 'Nombre', 'NumAlumnos', 'ID_Centro', 'desde', 'numFilas', 'estado', 'ordenar', 'textoBusqueda'];
 
         const isValidQuery = Object.keys(queryParams).every(param => validParams.includes(param));
         if (!isValidQuery) {
@@ -21,7 +22,7 @@ const getClases = async (req, res) => {
         
         const queryOptions = {};
         for (const param in queryParams) {
-            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde') {
+            if (validParams.includes(param) && param !== 'numFilas' && param !== 'desde'  && param !== 'ordenar' && param !== 'textoBusqueda') {
                 if (param === 'ID_Clase') {
                     queryOptions[param] = queryParams[param];
                 } else if(param === 'ID_Centro'){
@@ -33,10 +34,47 @@ const getClases = async (req, res) => {
         }
 
         const paginationOptions = tam > 0 ? { limit: tam, offset: desde } : {};
+        let orderOptions=[];
+        if(orderOptions){
+            if(queryParams.ordenar == 1){
+                orderOptions = [['Nombre', 'ASC']];
+            }else if(queryParams.ordenar == 2){
+                orderOptions = [['Nombre', 'DESC']];
+            }else if(queryParams.ordenar == 0){
+                orderOptions = [];
+            }else if(queryParams.ordenar == 3){
+                orderOptions = [['NumAlumnos', 'ASC']];
+            }else if(queryParams.ordenar == 4){
+                orderOptions = [['NumAlumnos', 'DESC']];
+            }else if(queryParams.ordenar == 5){
+                orderOptions = [[Centro, 'Calle', 'ASC']];
+            }else if(queryParams.ordenar == 6){
+                orderOptions = [[Centro, 'Calle', 'DESC']];
+            }
+        }
+            
+        let whereOptions=[];
+        let where = { ...queryOptions };
+        if(textoBusqueda){
+            where = {
+                ...where,
+                [sequelize.Op.or]: whereOptions
+            };
+            whereOptions.push(
+                { Nombre: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                { NumAlumnos: { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+            );
+            if (req.Rol === 'Admin') {
+                whereOptions.push(
+                    { '$Centro.Nombre$' : { [sequelize.Op.like]: `%${textoBusqueda}%` } },
+                );
+            }
+        }
 
         const clases = await Clase.findAll({
-            where: queryOptions,
+            where: where,
             ...paginationOptions,
+            order: orderOptions,
             include: [{
                 model: Centro,
                 attributes: ['Nombre']
@@ -65,12 +103,13 @@ const getClases = async (req, res) => {
 const createClase = async (req, res) => {
     try {
         const { Nombre, ID_Centro } = req.body;
-
+        //const NumAlumnos = 0;
         const existClase = await Clase.findOne({ where: { Nombre, ID_Centro } });
         if (existClase) {
             return res.status(400).json({ ok: false, msg: 'Ya existe esta clase en el centro' });
         }
-
+        
+        //req.body.NumAlumnos = NumAlumnos;
         const nuevaClase = await Clase.create(req.body);
 
         res.json({

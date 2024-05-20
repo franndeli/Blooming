@@ -15,12 +15,12 @@ data-sidebar-position="fixed" data-header-position="fixed">
             <form [formGroup]="form">
               <div class="mb-3">
                 <label for="Usuario" class="form-label"><span><i class="ti ti-mail" style="font-size: 15px;"></i></span> Usuario / Email</label>
-                <input class="form-control" formControlName="Usuario" id="Usuario">
+                <input class="form-control" formControlName="Usuario" id="Usuario" placeholder="Introduce tu usuario/email">
               </div>
               <p class="text-danger" *ngIf="!validarLogin('Usuario')">El usuario es obligatorio</p>
               <div class="mb-4">
-                <label for="Contraseña" class="form-label"><span><i class="ti ti-password" style="font-size: 15px;"></i></span> Constraseña</label>
-                <input type="password" class="form-control" formControlName="Contraseña" id="Constraseña">
+                <label for="Contraseña" class="form-label"><span><i class="ti ti-password" style="font-size: 15px;"></i></span> Contraseña</label>
+                <input type="password" class="form-control" formControlName="Contraseña" id="Constraseña" placeholder="Introduce tu contraseña">
               </div>
               <p class="text-danger" *ngIf="!validarLogin('Contraseña')">La contraseña es obligatoria</p>
               <div class="d-flex align-items-center justify-content-between mb-4">
@@ -36,7 +36,7 @@ data-sidebar-position="fixed" data-header-position="fixed">
               <button [routerLink]="['/inicio']" class="btn btn-outline-dark w-100 py-8 fs-4 mb-4 rounded-2"><span><i class="ti ti-arrow-back" style="font-size: 15px;"></i></span> Volver</button>
               <div class="d-flex align-items-center justify-content-center">
                 <p class="fs-4 mb-0 fw-bold">¿Eres un Centro?</p>
-                <a class="text-primary fw-bold ms-2" [routerLink]="['/registro']">Regístrate</a>
+                <a style="font-size: medium;" class="text-primary fw-bold ms-2" [routerLink]="['/registro']">Regístrate</a>
               </div>
             </form>
           </div>

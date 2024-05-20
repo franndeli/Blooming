@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
 import * as THREE from 'three';
+//nuevo
+import { AvatarService } from '../../../app/pages/alumnos/avatares/avatar.service';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+import {  Group } from 'three';
 
 @Injectable({
   providedIn: 'root'
@@ -29,17 +33,22 @@ export class BoardService {
   mouse = new THREE.Vector2();
   selectedObject?: THREE.Mesh;
   isDragging = false;
-  movableCube?: THREE.Mesh;
+  movableCube?: any;
 
   movableCubeWidth = 10;
   movableCubeHeight = 10;
   movableCubeDepth = 5;
 
   offset!: THREE.Vector3;
+  //nuevo
+  selectedAvatar: string | null = null;
 
-  constructor() {
+  
+  //nuevo
+  constructor(private avatarService: AvatarService) {
     this.boardGroup = new THREE.Group();
     this.boardGroup.rotation.x = Math.PI / -5;
+    this.avatarService.avatarSeleccionado = this.selectedAvatar;
   }
 
   initMouseEvents(rendererElement: HTMLElement) {
@@ -95,7 +104,9 @@ export class BoardService {
 
     this.placeImagesOnBoard(preguntaActual);
     this.adjustBoardPosition();
-
+    //NUEVO. 
+   
+  
     this.createMovableCube();
     
     return this.boardGroup;
@@ -166,23 +177,35 @@ export class BoardService {
   }
 
   //MOVIMIENTO ---------------------------------------------
-  createMovableCube() {
-    // Crea el cubo
-    const geometry = new THREE.BoxGeometry(this.movableCubeWidth, this.movableCubeHeight, this.movableCubeDepth);
-    const material = new THREE.MeshBasicMaterial({ color: 0x4D8B21 });
-    this.movableCube = new THREE.Mesh(geometry, material);
-  
-    // Ajusta la posición del cubo
-    this.movableCube.position.set(
-      0,25,0
-    );
+  createMovableCube() { 
+    const loader = new FBXLoader();
 
-    // Añade el cubo a la escena
-    this.scene.add(this.movableCube);
+    // Establece la ruta de los archivos
+    loader.setPath('../assets/images/threejs/');
+
+    loader.load(`${this.selectedAvatar}.fbx`, (fbx: Group) => {
+      if (fbx instanceof Group) {
+        // Escalado, posición y rotación según sea necesario
+        fbx.scale.setScalar(0.04);
+        fbx.position.set(0, 25, 0); // Ajusta la posición según tus necesidades
+        fbx.rotation.set(0, -Math.PI / 2, 0); // Ajusta la rotación según tus necesidades
+        
+        // Agrega el avatar a la escena
+        this.scene.add(fbx);
+
+        // Almacena una referencia al avatar en algún miembro de la clase si es necesario
+        this.movableCube = fbx;
+      } else {
+        console.error('El modelo cargado no es una instancia de THREE.Group.');
+      }
+      this.movableCube.position.set(
+        0,25,0
+      );
+      this.scene.add(this.movableCube);
+    });
+   
   }
 
-  
-  
 
   onMouseDown(event: MouseEvent) {
     // Calcula la posición del ratón en coordenadas normalizadas

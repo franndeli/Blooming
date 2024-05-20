@@ -1,0 +1,71 @@
+  
+h1{
+    text-align: center;
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+.alert-secondary{
+    padding: 0;
+}
+
+button{
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+.bg-danger {
+    background-color: rgb(233, 31, 31) !important;
+}
+    
+.bg-warning {
+    background-color: rgb(255, 174, 31) !important;
+}
+    
+.bg-success {
+    background-color: green !important;
+}
+.bg-amarillo{
+    background-color: #dce232;
+}
+.bg-verde1{
+    background-color: #8aca69;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+button:hover {
+    opacity: 0.8;
+}
+li {
+    margin-bottom: 10px;
+}
+.input-group {
+    width: fit-content; 
+    margin-left: auto; 
+
+}
+  
+.buscador {
+    padding: 6px 8px; 
+    border-radius: 5px; 
+    width: 200px;
+}
+  
+.buscador:focus {
+    outline: none; 
+    border-color: dodgerblue;
+}
+.arrow{
+    cursor: pointer; 
+    transition: box-shadow 0.3s ease;
+}
+table > thead > tr > th {   
+    text-align: center;
+    margin-bottom: 40px;
+    border: none;
+}
+.card-body{
+    padding: 20px;
+}

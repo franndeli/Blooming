@@ -50,6 +50,12 @@ export class SesionService {
     return this.http.get<any[]>(this.basePath+'?ID_Alumno='+id+'&dias='+dias, {headers});
   }
 
+  getSesionesCentro(id: number){
+    const token = this.getToken();
+    const headers = new HttpHeaders().set('x-token', `${token}`);
+    return this.http.get<any[]>(this.basePath+'/?ID_Centro='+id+'&dias=0', {headers});
+  }
+
   getSesionCount(id: any){
     this.getHeader();
     return this.http.get(this.basePath+ 'count?ID_Alumno='+id, this.httpOptions);

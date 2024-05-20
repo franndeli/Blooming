@@ -37,7 +37,7 @@ export class AlumnoService {
 
   //LLAMADAS API 
 
-  getAlumnos(desde?: number, filas?: number, textoBusqueda?: string){
+  getAlumnos(desde?: number, filas?: number,  ordenar?: number, textoBusqueda?: string){
     this.getHeader();
     if(!desde){
       desde = 0;
@@ -48,10 +48,10 @@ export class AlumnoService {
     if(!textoBusqueda){
       textoBusqueda = '';
     }
-    return this.http.get(this.basePath+'?numFilas='+filas+'&desde='+desde, this.httpOptions );
+    return this.http.get(this.basePath+'?numFilas='+filas+'&desde='+desde+'&ordenar='+ordenar+'&textoBusqueda='+textoBusqueda, this.httpOptions );
   }
 
-  getAlumnosCentro(id: any, desde?: number, filas?: number, textoBusqueda?: string){
+  getAlumnosCentro(id: any, desde?: number, filas?: number, ordenar?: number, textoBusqueda?: string){
     this.getHeader();
     if(!desde){
       desde = 0;
@@ -62,10 +62,10 @@ export class AlumnoService {
     if(!textoBusqueda){
       textoBusqueda = '';
     }
-    return this.http.get(this.basePath+'?ID_Centro='+id+'&numFilas='+filas+'&desde='+desde, this.httpOptions);
+    return this.http.get(this.basePath+'?ID_Centro='+id+'&numFilas='+filas+'&desde='+desde+'&ordenar='+ordenar+'&textoBusqueda='+textoBusqueda, this.httpOptions);
   }
 
-  getAlumnosClase(id: any, desde?: number, filas?: number, textoBusqueda?: string){
+  getAlumnosClase(id: any, desde?: number, filas?: number, ordenar?: number, textoBusqueda?: string){
     this.getHeader();
     if(!desde){
       desde = 0;
@@ -76,7 +76,7 @@ export class AlumnoService {
     if(!textoBusqueda){
       textoBusqueda = '';
     }
-    return this.http.get(this.basePath+'?ID_Clase='+id+'&numFilas='+filas+'&desde='+desde, this.httpOptions);
+    return this.http.get(this.basePath+'?ID_Clase='+id+'&numFilas='+filas+'&desde='+desde+'&ordenar='+ordenar+'&textoBusqueda='+textoBusqueda, this.httpOptions);
   }
 
   getAlumnoID(id: any){

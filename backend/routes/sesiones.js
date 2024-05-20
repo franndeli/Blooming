@@ -20,8 +20,8 @@ router.get('/:ID_Alumno', [
 ], (req, res) => {
     getSesionesCount(req, res).catch(error => {
         res.status(error.statusCode || 500).json({ error: error.message });
-    })
-})
+    });
+});
 
 router.post('/', [
     validarJWT, validarRol(['Admin', 'Alumno']),

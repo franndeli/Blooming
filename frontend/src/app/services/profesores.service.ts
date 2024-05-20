@@ -93,5 +93,6 @@ export class ProfesorService {
     this.getHeader();
     return this.http.put(this.basePath+'/newp/'+formData.ID_Profesor, formData, this.httpOptions);
   }
-
+  
+ 
 }

@@ -5,6 +5,8 @@ import { ClaseService } from '../../services/clases.service';
 import { AlumnoService } from '../../services/alumnos.service';
 import Swal from 'sweetalert2'
 import * as echarts from 'echarts'; 
+import { Console } from 'console';
+
 
 @Component({
   selector: 'app-profesores',
@@ -28,55 +30,75 @@ export class ProfesoresComponent implements OnInit{
   public alumnosEnClaseArray : any;
   //total en 1 clase
   public totalAlumnosClase = 0;
-
+  public esClase = false;
+  public claseProfeId: any;
 
   constructor(private claseService: ClaseService, private profesorService: ProfesorService, private alumnoService: AlumnoService, private router: Router){
     this.clasesData = [];
     this.alumnosTodosData = [];
+    
   }
 
   ngOnInit() {
     
     this.getClases(); //obtenemos las clases
-    //this.IdClaseActual(); //guardamos id actual de la clase que está iterando
-  
+    this.obtenerIDprofesor();
+   
   }
-    
 
+  /*MÉTODO PARA MOSTRAR LA ETIQUETA DE TU CLASE"*/
+  obtenerIDprofesor(){
+    this.id = localStorage.getItem('id'); // ID del profesor
+    console.log("ID PROFESOR", this.id);
+    this.obtenerClaseProfesor();
+  }
+  obtenerClaseProfesor(){ 
+    this.profesorService.getProfesorID(this.id).subscribe((res: any) => {
+      console.log("INFO PROFESOR", res);
+      this.claseProfeId = res.profesores[0].ID_Clase;
+      console.log("ID CLASE PROFESOR", this.claseProfeId);
+    });
+  }
+  esClaseProfe(idClase: any){
+    if(this.claseProfeId == idClase){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  /*MÉTODOS PARA LA GRÁFICA*/
   getClases(){
     this.id = localStorage.getItem('id'); // ID del profesor
     this.profesorService.getProfesorID(this.id).subscribe((res: any) => {
+     console.log("INFO PROFESOR", res);
+    
       this.centroID = res.profesores[0].ID_Centro;
       this.claseService.getClasesCentro(this.centroID).subscribe(res => {
         this.clasesData = res; // Almacena los datos de las clases en la variable
-        //console.log("INFO CLASES DATA" , this.clasesData);
+        console.log("INFO CLASES DATA" , this.clasesData);
 
         this.clasesData.clases.forEach((clase: any) => {
           this.IdClaseActual = clase.ID_Clase; // Establecemos la clase actual
-          //console.log('ID de la clase actual:', this.IdClaseActual);
-          this.getAlumnosClaseActual(clase.ID_Clase); 
+          console.log('ID de la clase actual:', this.IdClaseActual);
           
+          this.getAlumnosClaseActual(clase.ID_Clase); 
+         
+        
+        
         });
       });
+      
     });
   }
-/*
-getAlumnos(){
-    this.alumnoService.getAlumnos().subscribe(res => {
-      console.log(res);
-      this.alumnosTodosData = res;
-      console.log('Alumnos obtendidos en getAlumnos():', this.alumnosTodosData);
-      this.getAlumnosClaseActual(); // Llama a getAlumnosClaseActual() después de obtener los datos de los alumnos
-      //this.checkDataAndCalculateMedia(); // Llamamos a un nuevo método para verificar los datos antes de calcular la media
-    })
-}
-*/
+
+
 getAlumnosClaseActual(claseID: any){  
   this.alumnoService.getAlumnosClase(claseID).subscribe(res => {
     this.alumnosEnClaseArray = res;
-    //console.log('Alumnos en la clase actual:', this.alumnosEnClaseArray);
+    console.log('Alumnos en la clase actual:', this.alumnosEnClaseArray);
     this.totalAlumnosClase = this.alumnosEnClaseArray.alumnos.length;
-    //console.log('Total de alumnos en la clase actual:', this.totalAlumnosClase);
+    console.log('Total de alumnos en la clase actual:', this.totalAlumnosClase);
     // Llamamos a mediaEmocional() después de obtener los datos de los alumnos en la clase actual
    this.mediaEmocional(claseID);
   })
@@ -93,7 +115,7 @@ mediaEmocional(claseID: any) {
   let alumnos: any[] =[];
   let todos:any[] = [];
 
-  //console.log("alumnos entran en la mediaEmocional", this.alumnosEnClaseArray);
+  console.log("alumnos entran en la mediaEmocional", this.alumnosEnClaseArray);
   //array de los alumnos de esa clase
   alumnos = this.alumnosEnClaseArray.alumnos;
   //array con todos los alumnos de ese profesor
@@ -111,11 +133,11 @@ mediaEmocional(claseID: any) {
     const valorEmociones = ambitosObj['Emociones'];
     const valorFueraClase = ambitosObj['Fuera de clase'];
 
-    //console.log('Valor de Clase:', valorClase);
-    //console.log('Valor de Amigos:', valorAmigos);
-    //console.log('Valor de Familia:', valorFamilia);
-    //console.log('Valor de Emociones:', valorEmociones);
-    //console.log('Valor de Fuera de clase:', valorFueraClase);
+    console.log('Valor de Clase:', valorClase);
+    console.log('Valor de Amigos:', valorAmigos);
+    console.log('Valor de Familia:', valorFamilia);
+    console.log('Valor de Emociones:', valorEmociones);
+    console.log('Valor de Fuera de clase:', valorFueraClase);
 });
 
   // Iterar sobre los datos de todos los alumnos en la clase
@@ -140,7 +162,7 @@ mediaEmocional(claseID: any) {
       }
 
       totalAlumnosConsiderados++;
-    //console.log('Total de alumnos considerados:', totalAlumnosConsiderados);
+    console.log('Total de alumnos considerados:', totalAlumnosConsiderados);
   }
 
   // Calcular la suma total de los ámbitos de todos los alumnos
@@ -149,11 +171,11 @@ mediaEmocional(claseID: any) {
   // Calcular la media emocional de la clase solo si hay alumnos considerados
   if (totalAlumnosConsiderados > 0) {
     this.totalMediaClase = total / totalAlumnosConsiderados/5 ;
-    //console.log('Media emocional de la clase', claseID, ':', this.totalMediaClase);
+    console.log('Media emocional de la clase', claseID, ':', this.totalMediaClase);
     // Llamar a initECharts() después de calcular la media emocional
     this.initECharts(claseID, this.totalMediaClase);
   } else {
-    //console.log('No hay alumnos considerados para calcular la media emocional de la clase', claseID);
+    console.log('No hay alumnos considerados para calcular la media emocional de la clase', claseID);
     this.totalMediaClase = 0;
     this.initECharts(claseID, this.totalMediaClase);
   }
@@ -164,7 +186,7 @@ initECharts(claseID: any, totalMediaClase: any) {
   const chartElement = document.getElementById('echarts-chart-' + claseID);
   const chart = echarts.init(chartElement);
 
-        //console.log('Total media clase grafiicccccca:', totalMediaClase);
+        console.log('Total media clase grafiicccccca:', totalMediaClase);
         const option = {
           series: [
               {
@@ -227,7 +249,7 @@ initECharts(claseID: any, totalMediaClase: any) {
                   },
                   data: [
                       {
-                          value: totalMediaClase ,
+                          value:  Math.round(totalMediaClase) ,
                           name: 'Media emocional'
                       }
                   ]
@@ -244,11 +266,11 @@ getItemColor(totalMediaClase:any) {
   } else if (totalMediaClase > 20 && totalMediaClase <= 40) {
       return '#F7C65B'; // Color naranja para porcentajes del 21% al 40%
   } else if (totalMediaClase > 40 && totalMediaClase <= 60) {
-      return '#dce232'; // Color verde claro para porcentajes del 41% al 60%
+      return '#dce232'; 
   } else if (totalMediaClase > 60 && totalMediaClase <= 80) {
-      return '#8aca69'; // Color verde para porcentajes del 61% al 80%
+      return '#8aca69'; 
   } else {
-      return '#61AB3D'; // Color azul para porcentajes del 81% al 100%
+      return '#61AB3D'; // Color verde para porcentajes del 81% al 100%
   }
 }
 
@@ -261,6 +283,5 @@ verClase(claseID: any){
 setClaseID(){
   this.claseService.setClaseID(this.clasID);
 }
-
 
 }

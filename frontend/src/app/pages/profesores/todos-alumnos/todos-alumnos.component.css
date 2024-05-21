@@ -69,3 +69,13 @@ table > thead > tr > th {
 .card-body{
     padding: 20px;
 }
+
+.icon-circle {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+}

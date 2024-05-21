@@ -30,13 +30,18 @@
                                 </div>
                                 <table class="table text-nowrap mb-0 align-middle">
                                     <tbody>
-                                        <tr *ngFor="let ambito of nombresAmbitos">
-                                            <td class="border-bottom-0"><h6 class="fw-semibold mb-0">{{ambito}}</h6></td>
-                                            <td class="border-bottom-0 gravedad-circle" style="margin-top: 10px;" [ngClass]="getGravedadClass(alumnosData.Ambitos[ambito])" *ngIf="alumnosData.Ambitos !== undefined">
-                                                {{alumnosData.Ambitos[ambito]}} 
+                                        <tr *ngFor="let resultado of resultadosComparacion">
+                                            <td class="border-bottom-0"><h6 class="fw-semibold mb-0">{{resultado.nombre}}</h6></td>
+                                            <td class="border-bottom-0 gravedad-circle" style="margin-top: 10px;" [ngClass]="getGravedadClass(alumnosData.Ambitos[resultado.nombre])" *ngIf="alumnosData.Ambitos !== undefined">
+                                                {{alumnosData.Ambitos[resultado.nombre]}} 
                                             </td>
                                             <td class="border-bottom-0" style="padding-left: 2px;">
-                                                <span style="color: red; font-size: 14px;"><i class="ti ti-trending-down"></i> 0'45%</span>
+                                                <span style="color: red; font-size: 14px;" *ngIf="resultado.mejora === 'empeora'">
+                                                    <i class="ti ti-trending-down"></i> -{{resultado.cambio}}%
+                                                </span>
+                                                <span style="color: green; font-size: 14px;" *ngIf="resultado.mejora === 'mejora'">
+                                                    <i class="ti ti-trending-up"></i> +{{resultado.cambio}}%
+                                                </span>
                                             </td>
                                         </tr>
                                     </tbody>

@@ -10,6 +10,12 @@ import jsPDF from 'jspdf';
 import Epub from 'epub-gen';
 import Papa from 'papaparse';
 
+interface ComparacionAmbito {
+  nombre: string;
+  mejora: string;
+  cambio: number;
+}
+
 interface Respuesta {
   FechaRespuesta: string;
   Pregunta: { TextoPregunta: string };
@@ -25,8 +31,6 @@ interface Respuesta {
 
 
 export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
-
-  
   private alumnoID: any;
   public alumnosData: any;
   public nombreClase: string = '';
@@ -37,11 +41,15 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
   private gravedad: number = -1;
   public nombresAmbitos: any = [];
   private volverPag: number = 0;
+  public tendenciaAmbitos: any = [];
+  public ambitosAnteriores: any = [];
+  resultadosComparacion: ComparacionAmbito[] = [];
 
   constructor(private respuestaService: RespuestaService, private router: Router, private activatedRoute: ActivatedRoute, private sesionService: SesionService, private alumnoService: AlumnoService){
     this.alumnosData = [];
     this.respuestasData = [];
     this.sesiones = {};
+    this.tendenciaAmbitos = [];
   }
 
   ngOnInit() {
@@ -60,6 +68,7 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
     this.obtenerAlumno();
     this.obtenerRespuestas();
     //this.obtenerSesiones();
+    this.compararAmbitos();
   }
 
   ngAfterViewInit() {
@@ -364,4 +373,41 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
     this.router.navigate(['profesores/ver-mas-preguntas'], {state: {alumnoID, claseID: this.claseID}});
   }
 
+  compararAmbitos(){
+    this.sesionService.getSesionesAlumno(this.alumnoID, 7).subscribe((res: any) => {
+      if(res.sesiones.length > 0){
+        this.ambitosAnteriores = JSON.parse(res.sesiones[0].ValorAmbitoFin);
+        //this.tendenciaAmbitos = this.ambitosAnteriores;
+        this.resultadosComparacion = this.comparar(this.ambitosAnteriores, this.alumnosData.Ambitos);
+        console.log(this.ambitosAnteriores);
+        console.log(this.alumnosData.Ambitos);
+        console.log(this.resultadosComparacion);
+      }
+    });
+  }
+  comparar(ambitosAnteriores: {[key: string]: number}, ambitosActuales: {[key: string]: number}): ComparacionAmbito[] {
+    const resultados: ComparacionAmbito[] = [];
+  
+    for (const ambito in ambitosAnteriores) {
+      if (ambitosAnteriores.hasOwnProperty(ambito) && ambitosActuales.hasOwnProperty(ambito)) {
+        let cambio = (ambitosAnteriores[ambito] - ambitosActuales[ambito]);
+        cambio = parseFloat(cambio.toFixed(2));
+        let mejora: string;
+        if (cambio > 0) {
+          mejora = 'empeora';
+        } else if (cambio < 0) {
+          mejora = 'mejora';
+        } else {
+          mejora = 'igual';
+        }
+        resultados.push({
+          nombre: ambito,
+          mejora: mejora,
+          cambio: Math.abs(cambio)
+        });
+      }
+    }
+  
+    return resultados;
+  }
 }

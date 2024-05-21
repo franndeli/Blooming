@@ -29,7 +29,7 @@ export class MotorService {
     this.motorGrafico = new MotorGrafico(cuboService, planoService);
   }
 
-  public async inicializarMotor(canvasRef: ElementRef<HTMLCanvasElement>, interfaz: number) {
+  public async inicializarMotor(canvasRef: ElementRef<HTMLCanvasElement>, interfaz: number, mostrarContador: any) {
     this.interfaz = interfaz;
 
     if(canvasRef && canvasRef.nativeElement){
@@ -45,7 +45,7 @@ export class MotorService {
 
       if(!lolete) {
         // this.preguntas = 
-        await this.cargarPreguntas.cargarPreguntas();
+        await this.cargarPreguntas.cargarPreguntas(mostrarContador);
       }
 
       await this.cargarTexturas();

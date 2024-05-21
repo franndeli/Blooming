@@ -1,12 +1,12 @@
   <div class="container background-container">
     <div class="titulo">
-      <h1 *ngIf="aux; else notWelcomeMessage">¡{{alumnoData.Nombre}}, bienvenido de nuevo a Blooming!</h1>
+      <h1 *ngIf="aux; else notWelcomeMessage">¡Hola de nuevo {{alumnoData.Nombre}}!</h1>
       <h2>{{obtenerFechaFormato()}}</h2>
       <ng-template #notWelcomeMessage>
           <h1>¡Hola {{alumnoData.Nombre}}! Bienvenido a Blooming</h1>
       </ng-template>
     </div>
-    <button routerLink="/cuestionario" class="btn comenzar-btn ">Comenzar</button>
+    <button (click)="empezarCuestionario()" class="btn comenzar-btn ">Comenzar</button>
   </div>
   <div class="burbujas">
     <div></div>

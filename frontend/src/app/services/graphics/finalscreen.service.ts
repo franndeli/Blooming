@@ -177,8 +177,8 @@ export class FinalScreenService {
   public updateCountdown(): void {
     if (this.globalStateService.mostrarContador) {
         const time = this.globalStateService.calculateTimeUntilNextPeriod()
-        const countdownString = `${time.hours.toString().padStart(2, '0')}:${time.minutes.toString().padStart(2, '0')}:${time.seconds.toString().padStart(2, '0')}`;
-        this.updateCountdownMesh(countdownString);
+        // const countdownString = `${time.hours.toString().padStart(2, '0')}:${time.minutes.toString().padStart(2, '0')}:${time.seconds.toString().padStart(2, '0')}`;
+        // this.updateCountdownMesh(countdownString);
     }
   }
 

@@ -1,6 +1,7 @@
-import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy, OnInit } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MotorService } from '../../../services/motor.service';
-import { TNodo, TMalla, TCamara } from '../../../graphics';
+import { GlobalStateService } from '../../../services/graphics/helpers/globalstate.service';
+import { Subscription, interval } from 'rxjs';
 
 @Component({
   selector: 'app-arbol-escena',
@@ -16,27 +17,74 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
   respuestaSeleccionada: any = null;
   respuestaSeleccionadaCompleta: any = null;
 
+  indiceActual: any;
+
   public fadeIn: boolean = false;
   private interfaz!: number;
 
-  constructor(private motorService: MotorService) {}
+  public loading: boolean = true;
 
-  ngOnInit() {
-    // this.setRandomBackground();
+  public mostrarContador: any = 'false';
+  public countdownTime: number = 0;
+  private countdownSubscription?: Subscription;
+
+  constructor(private motorService: MotorService, private globalStateService: GlobalStateService, private cdRef: ChangeDetectorRef) {}
+
+  async ngOnInit() {
+    // console.log('Estoy en ngOnInit');
+    await this.globalStateService.initializeState();
+    // this.mostrarContador = this.globalStateService.mostrarContador;
+    this.mostrarContador = localStorage.getItem('mostrarContador');
+    this.countdownTime = this.globalStateService.countdownTime;
+
+    console.log("this.mostrarContador", this.mostrarContador);
+    console.log(this.countdownTime);
+
+    console.log(this.mostrarContador == 'true');
+
+    if (this.mostrarContador == 'true') {
+      console.log("this.mostrarContador", this.mostrarContador);
+      console.log("Entro en mostrarContador = true")
+      this.startCountdown();
+      this.loading = false;
+    } else {
+      // console.log("Entro en mostrarContador = false")
+      this.indiceActual = JSON.parse(localStorage.getItem('indiceActual') || '0');
+      this.updateProgressBar();
+    }
+    // this.cdRef.detectChanges();
   }
 
   ngOnDestroy() {
     const motorGrafico = this.motorService.getMotorGrafico();
     motorGrafico.getEventEmitter().off('caraSeleccionada', this.handleCaraSeleccionada);
+
+    this.stopCountdown();
   }
 
   async ngAfterViewInit() {
+    // console.log('Estoy en ngAfterViewInit');
+    // this.mostrarContador = localStorage.getItem('mostrarContador');
+    
+    // console.log(this.jaja)
+    if(this.indiceActual > 0){
+      this.loading = false;
+    }
     // Se calcula aleatoriamente que interfaz toca
+    // this.interfaz = Math.random() < 0.5 ? 1 : 2;
     this.interfaz = 2;
-    await this.motorService.inicializarMotor(this.canvasRef, this.interfaz).then(() => {
+
+    const start = Date.now();
+    await this.motorService.inicializarMotor(this.canvasRef, this.interfaz, localStorage.getItem('mostrarContador')).then(() => {
       this.preguntaActual = this.motorService.getPreguntas();
       //console.log(this.preguntaActual);
     });
+
+    const elapsed = Date.now() - start;
+    const remainingTime = Math.max(2000 - elapsed, 0);
+    setTimeout(() => {
+      this.loading = false; // Ocultar la pantalla de carga
+    }, remainingTime);
 
     // setInterval(() => {
       // interfaz = interfaz == 1 ? 2 : 1;
@@ -46,6 +94,7 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
     motorGrafico.getEventEmitter().on('caraSeleccionada', (data: any) => {
       this.handleCaraSeleccionada(data);
     });
+      // this.cdRef.detectChanges();
   }
 
   handleCaraSeleccionada(data: any) {
@@ -72,15 +121,18 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
     // }, 1000);
   }
 
-  handleButtonClick() {
-    this.interfaz = this.interfaz === 1 ? 2 : 1;
+  async handleButtonClick() {
+    // this.interfaz = Math.random() < 0.5 ? 1 : 2;
+    this.interfaz = 2;
     this.setRespuestaSeleccionadaNull();
 
     const motorGrafico = this.motorService.getMotorGrafico();
     motorGrafico.getEventEmitter().off('caraSeleccionada', this.handleCaraSeleccionada);
+    this.indiceActual++;
+
+    await this.updateProgressBar();
 
     this.preguntaActual = this.motorService.siguientePregunta(this.respuestaSeleccionadaCompleta.Gravedad, this.respuestaSeleccionadaCompleta.ID_Opcion);
-
     //console.log(this.preguntaActual);
 
     if(this.preguntaActual == null){
@@ -103,5 +155,35 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
   //   const randomBackground = backgrounds[Math.floor(Math.random() * backgrounds.length)];
   //   document.getElementById('background')!.style.backgroundImage = randomBackground;
   // }
+
+  async updateProgressBar() {
+    const preguntas = JSON.parse(localStorage.getItem('preguntas') || '[]');
+
+    console.log(this.indiceActual);
+
+    if (preguntas.length > 0) {
+        const progreso = ((this.indiceActual) / (preguntas.length)) * 100;
+        const progressBar = document.getElementById('progress-bar');
+        if (progressBar) {
+            progressBar.style.height = `${progreso}%`;
+        }
+    }
+  }
+
+  private startCountdown() {
+    this.countdownSubscription = interval(1000).subscribe(() => {
+      const time = this.globalStateService.calculateTimeUntilNextPeriod();
+      // this.countdownTime = time.hours * 3600 + time.minutes * 60 + time.seconds;
+      // console.log(time);
+      this.countdownTime = time;
+    });
+  }
+
+  private stopCountdown() {
+    if (this.countdownSubscription) {
+      this.countdownSubscription.unsubscribe();
+    }
+  }
+
 }
 

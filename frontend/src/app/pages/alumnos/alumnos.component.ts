@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AlumnoService } from '../../services/alumnos.service'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-alumnos',
@@ -13,7 +14,7 @@ export class AlumnosComponent implements OnInit {
   alumnoData: any;
   fecha: any;
 
-  constructor(private activatedRoute: ActivatedRoute, private alumnoService: AlumnoService){
+  constructor(private activatedRoute: ActivatedRoute, private alumnoService: AlumnoService, private router: Router){
     this.alumnoData = [];
   }
 
@@ -40,6 +41,10 @@ export class AlumnosComponent implements OnInit {
       year: 'numeric'
     };
     return fechaHora.toLocaleDateString(undefined, formatoFecha);
+  }
+
+  empezarCuestionario(){
+    this.router.navigate(['alumnos/arbol-escena']);
   }
 
 }

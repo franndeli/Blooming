@@ -62,7 +62,7 @@ export class CargarPreguntasService {
     return false
   }
 
-  async cargarPreguntas() {
+  async cargarPreguntas(mostrarContador: any) {
     return new Promise((resolve, reject) => {
         this.alumnoService.getAlumnoID(localStorage.getItem('id')).subscribe( (ambitos: any) => { 
             this.ambitos = JSON.parse(ambitos.alumnos[0].Ambitos);
@@ -76,9 +76,12 @@ export class CargarPreguntasService {
                     if (this.preguntas && this.preguntas.length > 0) {
                         this.preguntaActual = this.preguntas[this.indiceActual];
                     }
-                    this.sesionService.crearSesion();
-                    this.guardarPreguntas();
-                    this.guardarIndiceActual();
+                    // console.log(mostrarContador);
+                    if(mostrarContador == 'false'){
+                      this.sesionService.crearSesion();
+                      this.guardarPreguntas();
+                      this.guardarIndiceActual();
+                    }
                     resolve(this.preguntas);
                     return this.preguntas;
                 });
@@ -265,7 +268,7 @@ export class CargarPreguntasService {
   
             this.alumnoService.putAlumno(datosActualizados).subscribe({
               next: (response) => {
-                //console.log('AparicionAmbitos actualizados con éxito:', response);
+                console.log('AparicionAmbitos actualizados con éxito:', response);
                 resolve(response); // Resuelve la promesa cuando la actualización es exitosa
               },
               error: (error) => {

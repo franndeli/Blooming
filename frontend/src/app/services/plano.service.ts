@@ -27,9 +27,9 @@ export class PlanoService {
     public async crearPlano(motor: MotorGrafico, escena: TNodo, texturas: any){
         this.motorGrafico = motor;
 
-        this.camara = this.motorGrafico.crearCamara(escena, [0, 0, 11], [0, 0, 0], [1, 1, 1]);
+        this.camara = this.motorGrafico.crearCamara(escena, [0, 0, 15], [0, 0, 0], [1, 1, 1]);
 
-        this.plano = await this.motorGrafico.crearModelo(escena, 'plano_prueba.gltf', [0, 0, 0], [90, 0, 0], [1.2, 1.2, 1.2], texturas);
+        this.plano = await this.motorGrafico.crearModelo(escena, 'plano_prueba.gltf', [0, 0, 0], [45, 0, 0], [1.2, 1.2, 1.2], texturas);
         this.avatar = await this.motorGrafico.crearModelo(escena, 'avatar.gltf', [0, 0, 1.25], [0, 0, 0], [0.5, 0.5, 0.5], texturas);
 
         trasX = 0;
@@ -81,8 +81,8 @@ export class PlanoService {
 
     mouseMove(event: MouseEvent, width: number, height: number){
         event.preventDefault();
-        let velocidadMovimientoX = 3.5;
-        let velocidadMovimientoY = 2.5;
+        let velocidadMovimientoX = 4.5;
+        let velocidadMovimientoY = 3.5;
         if(clickIzq && onAvatar){
             dx = (event.pageX - old_x) * 5 / width * velocidadMovimientoX;
             dy = (event.pageY - old_y) * 5 / height * velocidadMovimientoY;

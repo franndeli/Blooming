@@ -22,7 +22,7 @@ h1 {
     font-weight: bold;
     font-size: 4em;
     margin: 0;
-    animation: flotar 1s linear infinite alternate;
+    /* animation: flotar 1s linear infinite alternate; */
 }
 
 h2 {
@@ -45,14 +45,14 @@ h2 {
     font-weight: bold;
   }
 
-@keyframes flotar {
+/* @keyframes flotar {
     0% {
         transform: translateY(0);
     }
     100% {
         transform: translateY(-10px);
     }   
-}
+} */
 
 .burbujas {
     position: relative;

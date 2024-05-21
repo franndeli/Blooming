@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SesionService } from '../../sesiones.service';
+import { interval, Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -7,6 +8,7 @@ import { SesionService } from '../../sesiones.service';
 export class GlobalStateService {
   public mostrarContador: boolean = true;
   public countdownTime: number = 0;
+  private countdownSubscription?: Subscription;
 
   constructor(private sesionService: SesionService) {
   }
@@ -72,21 +74,26 @@ export class GlobalStateService {
     if (lastSessionDate >= lastReset && lastSessionDate < nextReset) {
         // El usuario ya hizo el cuestionario después del último reinicio
         this.setMostrarContador(true)
+        console.log("Puesto a true")
     } else {
         // La última sesión fue antes del último reinicio
         this.setMostrarContador(false)
+        console.log("Puesto a false")
     }
   }
 
   public setMostrarContador(value: boolean): void {
     this.mostrarContador = value;
     localStorage.setItem('mostrarContador', value.toString());
-    if (!value) {
+    console.log(value);
+    if (value) {
       this.calculateTimeUntilNextPeriod();
+    } else {
+      return;
     }
   }
 
-  public calculateTimeUntilNextPeriod(): { hours: number, minutes: number, seconds: number } {
+  public calculateTimeUntilNextPeriod(): number {
     //this.mostrarContador = false;
     if(this.mostrarContador === true){
       const now = new Date();
@@ -101,6 +108,8 @@ export class GlobalStateService {
 
       const timeDifference = resetTime.getTime() - now.getTime();
 
+      // console.log(timeDifference);
+
       this.countdownTime = timeDifference;
 
       if(this.countdownTime > 0){
@@ -113,17 +122,10 @@ export class GlobalStateService {
         localStorage.setItem('mostrarContador', 'false');
       }
 
-      return {
-          hours: Math.floor((timeDifference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((timeDifference / (1000 * 60)) % 60),
-          seconds: Math.floor((timeDifference / 1000) % 60),
-      };
+      return timeDifference
     } else {
-        return {
-            hours: 0,
-            minutes: 0,
-            seconds: 0,
-        }; 
+      console.log("Devolviendo 0 patatero")
+      return 0 
     } 
   }
 
@@ -140,6 +142,20 @@ export class GlobalStateService {
       this.setMostrarContador(false);
     }
   }*/
+
+  // private startCountdown() {
+  //   this.countdownSubscription = interval(1000).subscribe(() => {
+  //     const time = this.calculateTimeUntilNextPeriod();
+  //     console.log(time);
+  //     this.countdownTime = time.hours * 3600 + time.minutes * 60 + time.seconds;
+  //   });
+  // }
+
+  // private stopCountdown() {
+  //   if (this.countdownSubscription) {
+  //     this.countdownSubscription.unsubscribe();
+  //   }
+  // }
 
   public clearCache(): void {
     this.countdownTime = 0;

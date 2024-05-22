@@ -62,6 +62,7 @@ import { RecompensasComponent } from './alumnos/recompensas/recompensas.componen
 import { AyudaAmbitosComponent } from './profesores/ayuda-ambitos/ayuda-ambitos.component';
 import { TodosAlumnosComponent } from './profesores/todos-alumnos/todos-alumnos.component';
 import { VerMasPreguntasComponent } from './profesores/ver-mas-preguntas/ver-mas-preguntas.component';
+import { PoliticaPrivacidadComponent } from './politica-privacidad/politica-privacidad.component';
 
 @NgModule({
   declarations: [
@@ -106,7 +107,8 @@ import { VerMasPreguntasComponent } from './profesores/ver-mas-preguntas/ver-mas
     RecompensasComponent,
     AyudaAmbitosComponent,
     TodosAlumnosComponent,
-    VerMasPreguntasComponent
+    VerMasPreguntasComponent,
+    PoliticaPrivacidadComponent
   ],
   exports: [
     AdminLayoutComponent,

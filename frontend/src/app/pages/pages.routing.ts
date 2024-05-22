@@ -52,9 +52,17 @@ import { RecompensasComponent } from './alumnos/recompensas/recompensas.componen
 import { TodosAlumnosComponent } from './profesores/todos-alumnos/todos-alumnos.component';
 import { AyudaAmbitosComponent } from './profesores/ayuda-ambitos/ayuda-ambitos.component';
 import { VerMasPreguntasComponent } from './profesores/ver-mas-preguntas/ver-mas-preguntas.component';
+import { PoliticaPrivacidadComponent } from './politica-privacidad/politica-privacidad.component';
 
 
 const routes: Routes = [
+  {
+    path: 'politica-privacidad',
+    component: AdminLayoutComponent,
+    children: [
+      { path: '', component: PoliticaPrivacidadComponent }
+    ]
+  },
   { path: 'admin', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
     children: [
       { path: 'dashboard', component: AdmindashboardComponent},

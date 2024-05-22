@@ -7,6 +7,7 @@ import { sidebarItem } from '../interfaces/sidebar.interface';
 export class SidebarService {
 
   menuAdmin: sidebarItem[] = [
+    { titulo: 'Inicio', icono: 'ti ti-activity', url: '/admin/dashboard'},
     { titulo: 'Centros', icono: 'ti ti-home', url: '/admin/ver-centros'},
     { titulo: 'Profesores', icono: 'ti ti-users', url: '/admin/ver-profesores'},
     { titulo: 'Alumnos', icono: 'ti ti-friends', url: '/admin/ver-alumnos'},
@@ -20,6 +21,7 @@ export class SidebarService {
     { titulo: 'Informe Emocional', icono: 'ti ti-alert-triangle', url: '/profesores/actividad-negativa'}
   ];
   menuCentro: sidebarItem[] = [
+    { titulo: 'Inicio', icono: 'ti ti-activity', url: '/centros/dashboard'},
     { titulo: 'Profesores', icono: 'ti ti-users', url: '/centros/ver-profesores'},
     { titulo: 'Alumnos', icono: 'ti ti-friends', url: '/centros/ver-alumnos'},
     { titulo: 'Clases', icono: 'ti ti-school', url: '/centros/ver-clases'}

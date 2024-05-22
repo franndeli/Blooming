@@ -54,6 +54,8 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
       this.indiceActual = JSON.parse(localStorage.getItem('indiceActual') || '0');
       this.updateProgressBar();
     }
+
+    this.yoquese();
     // this.cdRef.detectChanges();
   }
 
@@ -65,6 +67,46 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   async ngAfterViewInit() {
+    // // console.log('Estoy en ngAfterViewInit');
+    // // this.mostrarContador = localStorage.getItem('mostrarContador');
+    
+    // // console.log(this.jaja)
+    // if(this.indiceActual > 0){
+    //   this.loading = false;
+    // }
+    // // Se calcula aleatoriamente que interfaz toca
+    // this.interfaz = Math.random() < 0.5 ? 1 : 2;
+
+    // const start = Date.now();
+
+    // console.log(this.mostrarContador);
+    // console.log(localStorage.getItem('mostrarContador'));
+
+    // console.log(this.globalStateService.mostrarContador)
+
+    // await this.motorService.inicializarMotor(this.canvasRef, this.interfaz, localStorage.getItem('mostrarContador')).then(() => {
+    //   this.preguntaActual = this.motorService.getPreguntas();
+    //   //console.log(this.preguntaActual);
+    // });
+
+    // const elapsed = Date.now() - start;
+    // const remainingTime = Math.max(2000 - elapsed, 0);
+    // setTimeout(() => {
+    //   this.loading = false; // Ocultar la pantalla de carga
+    // }, remainingTime);
+
+    // // setInterval(() => {
+    //   // interfaz = interfaz == 1 ? 2 : 1;
+    //   // this.motorService.cambiarInterfaz(interfaz);
+    // // }, 30000);
+    // const motorGrafico = this.motorService.getMotorGrafico();
+    // motorGrafico.getEventEmitter().on('caraSeleccionada', (data: any) => {
+    //   this.handleCaraSeleccionada(data);
+    // });
+    //   // this.cdRef.detectChanges();
+  }
+
+  async yoquese(){
     // console.log('Estoy en ngAfterViewInit');
     // this.mostrarContador = localStorage.getItem('mostrarContador');
     
@@ -73,8 +115,7 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
       this.loading = false;
     }
     // Se calcula aleatoriamente que interfaz toca
-    // this.interfaz = Math.random() < 0.5 ? 1 : 2;
-    this.interfaz = 2;
+    this.interfaz = Math.random() < 0.5 ? 1 : 2;
 
     const start = Date.now();
 
@@ -130,8 +171,7 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   async handleButtonClick() {
-    // this.interfaz = Math.random() < 0.5 ? 1 : 2;
-    this.interfaz = 2;
+    this.interfaz = Math.random() < 0.5 ? 1 : 2;
     this.setRespuestaSeleccionadaNull();
 
     const motorGrafico = this.motorService.getMotorGrafico();

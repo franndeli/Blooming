@@ -61,6 +61,22 @@ export class AuthService {
     if (localStorage.getItem('mostrarContador')) {
       localStorage.removeItem('mostrarContador');
     }
+
+    if (localStorage.getItem('preguntasPorSeleccionar')) {
+      localStorage.removeItem('preguntasPorSeleccionar');
+    }
+
+    if (localStorage.getItem('preguntas')) {
+      localStorage.removeItem('preguntas');
+    }
+
+    if (localStorage.getItem('sesionId')) {
+      localStorage.removeItem('sesionId');
+    }
+
+    if (localStorage.getItem('indiceActual')) {
+      localStorage.removeItem('indiceActual');
+    }
   
     // Redirigir al usuario a la página de login
     this.router.navigateByUrl('/login');

@@ -2,7 +2,8 @@ import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy, OnInit, Cha
 import { MotorService } from '../../../services/motor.service';
 import { GlobalStateService } from '../../../services/graphics/helpers/globalstate.service';
 import { Subscription, interval } from 'rxjs';
-import { MotorGrafico } from '../../../graphics/motor/motorGrafico';
+import { AuthService } from '../../../services/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-arbol-escena',
@@ -17,6 +18,7 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
   texturacaraSeleccionada: any;
   respuestaSeleccionada: any = null;
   respuestaSeleccionadaCompleta: any = null;
+  respuestaGravedad: any = null;
 
   indiceActual: any;
 
@@ -29,10 +31,14 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
   public countdownTime: number = 0;
   private countdownSubscription?: Subscription;
 
-  constructor(private motorService: MotorService, private globalStateService: GlobalStateService, private cdRef: ChangeDetectorRef) {}
+  constructor(private motorService: MotorService, 
+    private globalStateService: GlobalStateService, 
+    private cdRef: ChangeDetectorRef,
+    private authService: AuthService ) {}
 
   async ngOnInit() {
-    // console.log('Estoy en ngOnInit');
+    this.elegirFondo();
+    // // console.log('Estoy en ngOnInit');
     await this.globalStateService.initializeState();
 
     await new Promise(resolve => setTimeout(resolve, 50));
@@ -40,17 +46,17 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
     this.mostrarContador = localStorage.getItem('mostrarContador');
     this.countdownTime = this.globalStateService.countdownTime;
 
-    console.log("this.mostrarContador", this.mostrarContador);
-    console.log(this.countdownTime);
+    // console.log("this.mostrarContador", this.mostrarContador);
+    // console.log(this.countdownTime);
 
-    console.log(this.mostrarContador == 'true');
+    // console.log(this.mostrarContador == 'true');
 
     if (this.mostrarContador == 'true') {
-      console.log("this.mostrarContador", this.mostrarContador);
-      console.log("Entro en mostrarContador = true")
+      // console.log("this.mostrarContador", this.mostrarContador);
+      // console.log("Entro en mostrarContador = true")
       this.startCountdown();
     } else {
-      // console.log("Entro en mostrarContador = false")
+      // // console.log("Entro en mostrarContador = false")
       this.indiceActual = JSON.parse(localStorage.getItem('indiceActual') || '0');
       this.updateProgressBar();
     }
@@ -67,10 +73,10 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   async ngAfterViewInit() {
-    // // console.log('Estoy en ngAfterViewInit');
+    // // // console.log('Estoy en ngAfterViewInit');
     // // this.mostrarContador = localStorage.getItem('mostrarContador');
     
-    // // console.log(this.jaja)
+    // // // console.log(this.jaja)
     // if(this.indiceActual > 0){
     //   this.loading = false;
     // }
@@ -79,14 +85,14 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
 
     // const start = Date.now();
 
-    // console.log(this.mostrarContador);
-    // console.log(localStorage.getItem('mostrarContador'));
+    // // console.log(this.mostrarContador);
+    // // console.log(localStorage.getItem('mostrarContador'));
 
-    // console.log(this.globalStateService.mostrarContador)
+    // // console.log(this.globalStateService.mostrarContador)
 
     // await this.motorService.inicializarMotor(this.canvasRef, this.interfaz, localStorage.getItem('mostrarContador')).then(() => {
     //   this.preguntaActual = this.motorService.getPreguntas();
-    //   //console.log(this.preguntaActual);
+    //   //// console.log(this.preguntaActual);
     // });
 
     // const elapsed = Date.now() - start;
@@ -107,10 +113,10 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   async yoquese(){
-    // console.log('Estoy en ngAfterViewInit');
+    // // console.log('Estoy en ngAfterViewInit');
     // this.mostrarContador = localStorage.getItem('mostrarContador');
     
-    // console.log(this.jaja)
+    // // console.log(this.jaja)
     if(this.indiceActual > 0){
       this.loading = false;
     }
@@ -119,14 +125,14 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
 
     const start = Date.now();
 
-    console.log(this.mostrarContador);
-    console.log(localStorage.getItem('mostrarContador'));
+    // console.log(this.mostrarContador);
+    // console.log(localStorage.getItem('mostrarContador'));
 
-    console.log(this.globalStateService.mostrarContador)
+    // console.log(this.globalStateService.mostrarContador)
 
     await this.motorService.inicializarMotor(this.canvasRef, this.interfaz, localStorage.getItem('mostrarContador')).then(() => {
       this.preguntaActual = this.motorService.getPreguntas();
-      //console.log(this.preguntaActual);
+      //// console.log(this.preguntaActual);
     });
 
     const elapsed = Date.now() - start;
@@ -147,23 +153,24 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   handleCaraSeleccionada(data: any) {
-    // console.log('hola');
-    // console.log('Cara seleccionada en arbol-escena:', data);
+    // // console.log('hola');
+    // // console.log('Cara seleccionada en arbol-escena:', data);
     for(let i=0; i<this.preguntaActual.respuestas.opciones.length; i++){
 
-      //console.log(this.preguntaActual.respuestas.opciones[i])
+      //// console.log(this.preguntaActual.respuestas.opciones[i])
 
-      // console.log(this.preguntaActual.respuestas.opciones[i].Imagen);
+      // // console.log(this.preguntaActual.respuestas.opciones[i].Imagen);
       if (this.preguntaActual.respuestas.opciones[i].Imagen == data.textura){
         this.respuestaSeleccionadaCompleta = this.preguntaActual.respuestas.opciones[i];
         this.respuestaSeleccionada = this.preguntaActual.respuestas.opciones[i].TextoOpcion;
+        this.respuestaGravedad = this.preguntaActual.respuestas.opciones[i].Gravedad;
       }
     }
     if(data.textura == "Sin textura"){
       this.respuestaSeleccionada = null;
     }
     
-    //console.log(this.respuestaSeleccionada);
+    //// console.log(this.respuestaSeleccionada);
     // this.fadeIn = true;
     // setTimeout(() => {
     //   this.fadeIn = false;
@@ -181,7 +188,7 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
     await this.updateProgressBar();
 
     this.preguntaActual = this.motorService.siguientePregunta(this.respuestaSeleccionadaCompleta.Gravedad, this.respuestaSeleccionadaCompleta.ID_Opcion);
-    //console.log(this.preguntaActual);
+    //// console.log(this.preguntaActual);
 
     if(this.preguntaActual == null){
       await this.motorService.limpiarEscenaMoto();
@@ -210,7 +217,7 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
   async updateProgressBar() {
     const preguntas = JSON.parse(localStorage.getItem('preguntas') || '[]');
 
-    console.log(this.indiceActual);
+    // // console.log(this.indiceActual);
 
     if (preguntas.length > 0) {
         const progreso = ((this.indiceActual) / (preguntas.length)) * 100;
@@ -225,7 +232,7 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
     this.countdownSubscription = interval(1000).subscribe(() => {
       const time = this.globalStateService.calculateTimeUntilNextPeriod();
       // this.countdownTime = time.hours * 3600 + time.minutes * 60 + time.seconds;
-      // console.log(time);
+      // // console.log(time);
       this.countdownTime = time;
     });
   }
@@ -234,6 +241,32 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
     if (this.countdownSubscription) {
       this.countdownSubscription.unsubscribe();
     }
+  }
+
+  private elegirFondo(){
+    const background = document.getElementById('background');
+    const colors = ['green', 'blue', 'red'];
+    const selectedColor = colors[Math.floor(Math.random() * colors.length)];
+    background!.classList.add(selectedColor);
+  }
+
+  handleButtonClickjaja() {
+    //// console.log('Botón presionado');
+    Swal.fire({
+      title: "¿Estás seguro de que quieres salir del juego?",
+      //text: "Vas a salir de la aplicación",
+      icon: "warning",
+      iconColor: "#68A63C",
+      showCancelButton: true,
+      confirmButtonColor: "#68A63C",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "No",
+      confirmButtonText: "Sí"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.authService.logout();
+      }
+    });
   }
 
 }

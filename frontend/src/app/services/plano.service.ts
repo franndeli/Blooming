@@ -29,7 +29,7 @@ export class PlanoService {
 
         this.camara = this.motorGrafico.crearCamara(escena, [0, 0, 15], [0, 0, 0], [1, 1, 1]);
 
-        this.plano = await this.motorGrafico.crearModelo(escena, 'plano_prueba.gltf', [0, 0, 0], [45, 0, 0], [1.2, 1.2, 1.2], texturas);
+        this.plano = await this.motorGrafico.crearModelo(escena, 'plano_prueba.gltf', [0, 1, 0], [45, 0, 0], [1.2, 1.2, 1.2], texturas);
         this.avatar = await this.motorGrafico.crearModelo(escena, 'avatar.gltf', [0, 0, 1.25], [0, 0, 0], [0.5, 0.5, 0.5], texturas);
 
         trasX = 0;

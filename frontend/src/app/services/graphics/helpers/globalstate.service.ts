@@ -18,15 +18,14 @@ export class GlobalStateService {
       const alumnoID = localStorage.getItem('id');
       if (alumnoID) {
         this.sesionService.getSesionesAlumnoID(alumnoID).subscribe({
-          next: (response: any) => {
+          next: async (response: any) => {
             if (response.ok && response.sesiones.length > 0) {
               //console.log("Existen sesiones, vamos a calcularlas");
-              this.handleSesiones(response.sesiones);
-              resolve();  // Resuelve la promesa cuando la operación es exitosa
+              await this.handleSesiones(response.sesiones);
             } else {
               this.setMostrarContador(false);
-              resolve();  // También resolvemos aquí porque se completó la lógica, aunque no había sesiones
             }
+            resolve();
           },
           error: (error) => {
             console.error("Error al obtener sesiones:", error);
@@ -40,7 +39,7 @@ export class GlobalStateService {
     });
   }
 
-  private handleSesiones(sesiones: any[]) {
+  private async handleSesiones(sesiones: any[]) {
     const latestSession = sesiones[sesiones.length - 1];
     //console.log(latestSession);
     const now = new Date();
@@ -73,23 +72,21 @@ export class GlobalStateService {
     // Verificar si la última sesión fue después del último reinicio y antes del próximo
     if (lastSessionDate >= lastReset && lastSessionDate < nextReset) {
         // El usuario ya hizo el cuestionario después del último reinicio
-        this.setMostrarContador(true)
+        await this.setMostrarContador(true)
         console.log("Puesto a true")
     } else {
         // La última sesión fue antes del último reinicio
-        this.setMostrarContador(false)
+        await this.setMostrarContador(false)
         console.log("Puesto a false")
     }
   }
 
-  public setMostrarContador(value: boolean): void {
+  public async setMostrarContador(value: boolean): Promise<void> {
     this.mostrarContador = value;
     localStorage.setItem('mostrarContador', value.toString());
     console.log(value);
     if (value) {
       this.calculateTimeUntilNextPeriod();
-    } else {
-      return;
     }
   }
 

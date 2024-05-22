@@ -97,7 +97,7 @@ export class SesionService {
     })
   }
 
-  finalizarSesion(gravedadesActualizadas: any) {
+  async finalizarSesion(gravedadesActualizadas: any) {
     //console.log("Entro en finalizarSesion");
     this.getHeader();
     const sesionId = localStorage.getItem('sesionId');

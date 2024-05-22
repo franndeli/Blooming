@@ -2,6 +2,7 @@ import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy, OnInit, Cha
 import { MotorService } from '../../../services/motor.service';
 import { GlobalStateService } from '../../../services/graphics/helpers/globalstate.service';
 import { Subscription, interval } from 'rxjs';
+import { MotorGrafico } from '../../../graphics/motor/motorGrafico';
 
 @Component({
   selector: 'app-arbol-escena',
@@ -33,6 +34,8 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
   async ngOnInit() {
     // console.log('Estoy en ngOnInit');
     await this.globalStateService.initializeState();
+
+    await new Promise(resolve => setTimeout(resolve, 50));
     // this.mostrarContador = this.globalStateService.mostrarContador;
     this.mostrarContador = localStorage.getItem('mostrarContador');
     this.countdownTime = this.globalStateService.countdownTime;
@@ -46,7 +49,6 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
       console.log("this.mostrarContador", this.mostrarContador);
       console.log("Entro en mostrarContador = true")
       this.startCountdown();
-      this.loading = false;
     } else {
       // console.log("Entro en mostrarContador = false")
       this.indiceActual = JSON.parse(localStorage.getItem('indiceActual') || '0');
@@ -75,6 +77,12 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
     this.interfaz = 2;
 
     const start = Date.now();
+
+    console.log(this.mostrarContador);
+    console.log(localStorage.getItem('mostrarContador'));
+
+    console.log(this.globalStateService.mostrarContador)
+
     await this.motorService.inicializarMotor(this.canvasRef, this.interfaz, localStorage.getItem('mostrarContador')).then(() => {
       this.preguntaActual = this.motorService.getPreguntas();
       //console.log(this.preguntaActual);
@@ -136,6 +144,9 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
     //console.log(this.preguntaActual);
 
     if(this.preguntaActual == null){
+      await this.motorService.limpiarEscenaMoto();
+      this.mostrarContador == 'true';
+      this.startCountdown();
       return;
     }
 

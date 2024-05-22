@@ -79,6 +79,11 @@ export class MotorService {
     this.cargarInterfaces();
   }
 
+  public async limpiarEscenaMoto(){
+    this.motorGrafico.limpiarEscena(this.escenaCubo);
+    this.motorGrafico.limpiarEscena(this.escenaPlano);
+  }
+
   private cargarInterfaces(){
     if(this.interfaz == 1){
       //console.log('ESCENA CUBO')

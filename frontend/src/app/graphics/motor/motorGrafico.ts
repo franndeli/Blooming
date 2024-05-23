@@ -130,9 +130,9 @@ export class MotorGrafico {
     return camara;
   }
 
-  crearLuz(padre: TNodo | null, trasl: vec3, rot: vec3, esc: vec3, intensidad: vec3 /*, tipoLuz: EnumType*/): TNodo {
+  crearLuz(padre: TNodo | null, trasl: vec3, rot: vec3, esc: vec3, /*intensidad: vec3, tipoLuz: EnumType*/): TNodo {
     const luz = new TNodo(null, padre);
-    luz.setEntidad(new TLuz(intensidad));
+    luz.setEntidad(new TLuz());
     luz.setTraslacion(trasl);
     luz.setRotacion(rot);
     luz.setEscalado(esc);
@@ -141,6 +141,8 @@ export class MotorGrafico {
     if(padre != null){
       padre.addHijo(luz);
     }
+
+    console.log('Luz creada');
 
     return luz;
   } 

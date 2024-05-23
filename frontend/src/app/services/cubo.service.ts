@@ -19,6 +19,7 @@ var clickIzq = false;
 export class CuboService {
     private cubo!: TNodo;
     private camara!: TNodo;
+    private luz!: TNodo;
     private motorGrafico: any;
     private width: number = 0;
     private height: number = 0;
@@ -32,7 +33,7 @@ export class CuboService {
         this.motorGrafico = motor;
 
         this.camara = this.motorGrafico.crearCamara(escena, [0, 0, 10], [0, 0, 0], [1, 1, 1]);
-        
+        this.luz = this.motorGrafico.crearLuz(escena, [0, 10, 0], [0, 0, 0], [1, 1, 1]);
         this.cubo = await this.motorGrafico.crearModelo(escena, 'cubo_prueba_seis_caras.gltf', [0, 0, 0], [0, 0, 0], [1, 1, 1], texturas);
         
         phi = 0;

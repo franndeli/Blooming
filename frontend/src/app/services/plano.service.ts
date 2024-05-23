@@ -23,17 +23,20 @@ export class PlanoService {
     private motorGrafico: any;
     private camara!: TNodo;
     private requestId: number | null = null;
+    private luz!: TNodo;
 
     public async crearPlano(motor: MotorGrafico, escena: TNodo, texturas: any){
         this.motorGrafico = motor;
 
         this.camara = this.motorGrafico.crearCamara(escena, [0, 0, 15], [0, 0, 0], [1, 1, 1]);
-
-        this.plano = await this.motorGrafico.crearModelo(escena, 'plano_prueba.gltf', [0, 1, 0], [45, 0, 0], [1.2, 1.2, 1.2], texturas);
-        this.avatar = await this.motorGrafico.crearModelo(escena, 'avatar.gltf', [0, 0, 1.25], [0, 0, 0], [0.5, 0.5, 0.5], texturas);
+        
+        this.luz = this.motorGrafico.crearLuz(escena, [0, 10, 0], [0, 0, 0], [1, 1, 1]);
+        
+        this.plano = await this.motorGrafico.crearModelo(escena, 'plano_final_prueba_prueba_prueba.gltf', [0, 1, 0], [45, 0, 0], [1.2, 1.2, 1.2], texturas);
+        this.avatar = await this.motorGrafico.crearModelo(escena, 'pieza_tablero.gltf', [0, 0, 0], [0, 0, 0], [0.8, 0.8, 0.8], texturas);
 
         trasX = 0;
-        trasY = 0;
+        trasY = 2;
 
         //console.log('Escena del PLANO',escena);
         this.dibujado(escena);
@@ -46,7 +49,7 @@ export class PlanoService {
 
         let render = () => {
             if(this.avatar !== null){
-                this.avatar.setTraslacion([trasX, trasY, 1]);
+                this.avatar.setTraslacion([trasX, trasY, 2]);
             }
             this.motorGrafico.dibujarEscena(escena);
             this.requestId = requestAnimationFrame(render);
@@ -125,6 +128,9 @@ export class PlanoService {
     }
 
     rayIntersectsAABB(rayOrigin: vec3, rayDirection: vec3, aabbMin: vec3, aabbMax: vec3) {
+        aabbMin[1] += 2.0;
+        aabbMax[1] += 2.0;
+
         let tMin = (aabbMin[0] - rayOrigin[0]) / rayDirection[0];
         let tMax = (aabbMax[0] - rayOrigin[0]) / rayDirection[0];
 

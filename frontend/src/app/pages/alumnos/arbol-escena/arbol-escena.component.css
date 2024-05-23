@@ -85,6 +85,8 @@ html, body {
     align-items: center;
     position: absolute;
     left: 70px;
+    pointer-events: none; /* Evita la interacción del ratón */
+    cursor: none;
 }
 
 #progress-bar-container {

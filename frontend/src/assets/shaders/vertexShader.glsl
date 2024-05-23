@@ -15,6 +15,7 @@ uniform mat4 u_ProjectionMatrix;
 
 varying vec3 fragNormal;
 varying vec4 fragColor;
+varying vec3 fragPosition;
 
 void main() {
     gl_Position = u_ProjectionMatrix * u_ModelViewMatrix * vec4(vertPosition, 1.0);
@@ -25,4 +26,5 @@ void main() {
     fragColor = u_Color;
 
     fragNormal = vertNormal; 
+    fragPosition = vec3(u_ModelViewMatrix * vec4(vertPosition, 1.0));
 }

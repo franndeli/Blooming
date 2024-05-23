@@ -20,7 +20,7 @@ export class TCamara extends TEntidad {
         }
         
         this.gl = context;
-        console.log("GL en la cámara", this.gl)
+        // console.log("GL en la cámara", this.gl)
         this.projMatrix = mat4.create();
         this.viewMatrix = mat4.create();
         this.esPerspectiva = true;

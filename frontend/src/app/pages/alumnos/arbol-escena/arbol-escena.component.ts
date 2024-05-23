@@ -121,7 +121,7 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
       this.loading = false;
     }
 
-    this.interfaz = 1;
+    this.interfaz = 2;
 
     const start = Date.now();
 

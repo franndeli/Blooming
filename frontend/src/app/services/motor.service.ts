@@ -35,23 +35,25 @@ export class MotorService {
     if(canvasRef && canvasRef.nativeElement){
 
       this.canvas = canvasRef.nativeElement;
-      await this.motorGrafico.iniciarEscena(this.canvas, this.interfaz);
 
-      this.escena = this.motorGrafico.crearNodo(null, vec3.create(), vec3.create(), [1, 1, 1]);
-      this.escenaCubo = this.motorGrafico.crearNodo(this.escena, vec3.create(), vec3.create(), [1, 1, 1]);
-      this.escenaPlano = this.motorGrafico.crearNodo(this.escena, vec3.create(), vec3.create(), [1, 1, 1]);
+      if(mostrarContador == 'false'){
+        await this.motorGrafico.iniciarEscena(this.canvas, this.interfaz);
 
-      let lolete = await this.cargarPreguntas.comprobarPreguntas();
+        this.escena = this.motorGrafico.crearNodo(null, vec3.create(), vec3.create(), [1, 1, 1]);
+        this.escenaCubo = this.motorGrafico.crearNodo(this.escena, vec3.create(), vec3.create(), [1, 1, 1]);
+        this.escenaPlano = this.motorGrafico.crearNodo(this.escena, vec3.create(), vec3.create(), [1, 1, 1]);
 
-      if(!lolete) {
-        // this.preguntas = 
-        await this.cargarPreguntas.cargarPreguntas(mostrarContador);
+        let lolete = await this.cargarPreguntas.comprobarPreguntas();
+
+        if(!lolete) {
+          // this.preguntas = 
+          await this.cargarPreguntas.cargarPreguntas(mostrarContador);
+        }
+
+        await this.cargarTexturas();
+
+        this.cargarInterfaces();
       }
-
-      await this.cargarTexturas();
-
-      this.cargarInterfaces();
-    
     }else {
       console.error('Referencia de canvas no definida');
     }
@@ -62,8 +64,8 @@ export class MotorService {
     return this.cargarPreguntas.preguntaActual;
   }
 
-  siguientePregunta(gravedad: number, id: any){
-    this.cargarPreguntas.siguientePregunta(gravedad, id);
+  async siguientePregunta(gravedad: number, id: any){
+    await this.cargarPreguntas.siguientePregunta(gravedad, id);
     return this.cargarPreguntas.preguntaActual;
   }
   

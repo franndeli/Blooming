@@ -296,7 +296,6 @@ html, body {
     padding: 0.5em 1em; 
     background-color: transparent; 
     color: #68A63C; 
-    border: none; 
     border-radius: 20px;
     border: 1px solid #68A63C;
     cursor: pointer;
@@ -311,6 +310,54 @@ html, body {
 
 .jaja:active {
     transform: translateY(2px);
+}
+
+.botones{
+    display: flex;
+    flex-direction: row;
+    margin-top: 30px;
+    gap: 20px;
+}
+
+.volver{
+    border-radius: 20px;
+    border: 1px solid #68A63C;
+    padding: 0.5em 1em; 
+    background-color: transparent; 
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.volver:hover{
+    background-color: #68A63C;
+    border: 1px solid white;
+}
+
+.volver:hover svg{
+    fill: white;
+}
+
+.volver svg{
+    width: 40px;
+    height: 40px;
+    fill: #68A63C;
+    transition: fill 0.3s;
+}
+
+.Salir{
+    font-size: 17px;
+    border-radius: 20px;
+    border: 1px solid #fb3d3d;
+    color: #fb3d3d;
+    padding: 0.5em 1em; 
+    background-color: transparent; 
+    font-weight: 700;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.Salir:hover{
+    background-color: #fb3d3d;
+    border: 1px solid black; 
+    color: black
 }
 
   

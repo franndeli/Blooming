@@ -120,8 +120,8 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
     if(this.indiceActual > 0){
       this.loading = false;
     }
-    // Se calcula aleatoriamente que interfaz toca
-    this.interfaz = Math.random() < 0.5 ? 1 : 2;
+
+    this.interfaz = 1;
 
     const start = Date.now();
 
@@ -187,12 +187,15 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
 
     await this.updateProgressBar();
 
-    this.preguntaActual = this.motorService.siguientePregunta(this.respuestaSeleccionadaCompleta.Gravedad, this.respuestaSeleccionadaCompleta.ID_Opcion);
+    this.preguntaActual = await this.motorService.siguientePregunta(this.respuestaSeleccionadaCompleta.Gravedad, this.respuestaSeleccionadaCompleta.ID_Opcion);
     //// console.log(this.preguntaActual);
 
     if(this.preguntaActual == null){
       await this.motorService.limpiarEscenaMoto();
-      this.mostrarContador == 'true';
+      this.globalStateService.initializeState();
+      console.log("inicializado el contador y mostrar Contador")
+      this.mostrarContador = 'true';
+      // this.countdownTime = this.globalStateService.countdownTime;
       this.startCountdown();
       return;
     }
@@ -229,7 +232,7 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   private startCountdown() {
-    this.countdownSubscription = interval(1000).subscribe(() => {
+    this.countdownSubscription = interval(100).subscribe(() => {
       const time = this.globalStateService.calculateTimeUntilNextPeriod();
       // this.countdownTime = time.hours * 3600 + time.minutes * 60 + time.seconds;
       // // console.log(time);
@@ -254,7 +257,25 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
     //// console.log('Botón presionado');
     Swal.fire({
       title: "¿Estás seguro de que quieres salir del juego?",
-      //text: "Vas a salir de la aplicación",
+      text: "Puedes continuarlo más tarde",
+      icon: "warning",
+      iconColor: "#68A63C",
+      showCancelButton: true,
+      confirmButtonColor: "#68A63C",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "No",
+      confirmButtonText: "Sí"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.authService.noquieroJugarMas();
+      }
+    });
+  }
+
+  handleButtonClickSalir() {
+    //// console.log('Botón presionado');
+    Swal.fire({
+      title: "¿Estás seguro de que quieres salir de la aplicación?",
       icon: "warning",
       iconColor: "#68A63C",
       showCancelButton: true,
@@ -267,6 +288,11 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
         this.authService.logout();
       }
     });
+  }
+
+  handleButtonClickVolver() {
+    //// console.log('Botón presionado');
+    this.authService.noquieroJugarMas();
   }
 
 }

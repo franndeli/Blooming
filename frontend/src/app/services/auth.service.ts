@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
 import { tap, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { TokenResponse } from '../interfaces/token-response';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd  } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -81,6 +81,12 @@ export class AuthService {
     // Redirigir al usuario a la página de login
     this.router.navigateByUrl('/login');
     window.location.reload();
+  }
+
+  noquieroJugarMas(){
+    this.router.navigateByUrl('/alumnos/dashboard').then(() => {
+        window.location.reload();
+    });
   }
   
 

@@ -92,7 +92,7 @@ export class CargarPreguntasService {
 
   gravedadesPorAmbito: { [ambito: string]: number } = {};
 
-  siguientePregunta(gravedad: number, id: any) {
+  async siguientePregunta(gravedad: number, id: any) {
     let fechaRespuesta = new Date(); // Crea un objeto de fecha con la fecha y hora actual
     fechaRespuesta.setHours(fechaRespuesta.getHours() + 2); // Suma dos horas a la fecha actual
 
@@ -124,10 +124,10 @@ export class CargarPreguntasService {
     }
 
     //console.log(this.gravedadesPorAmbito);
-    this.loadNewQuestion();
+    await this.loadNewQuestion();
   }
 
-  loadNewQuestion() {
+  async loadNewQuestion() {
     // Incrementa el índice actual para pasar a la siguiente pregunta
     if (this.indiceActual < this.preguntas.length - 1) {
       this.indiceActual++;
@@ -137,7 +137,7 @@ export class CargarPreguntasService {
     } else {
       // Manejar el final del cuestionario
       this.preguntaActual = null;
-      this.acabose();
+      await this.acabose();
     }
   }
 
@@ -295,7 +295,7 @@ export class CargarPreguntasService {
     localStorage.setItem('indiceActual', JSON.stringify(this.indiceActual));
   }
 
-  finalizarSesion() {
+  async finalizarSesion() {
     localStorage.removeItem('preguntas');
     localStorage.removeItem('indiceActual');
     // localStorage.removeItem('hasShownCubeMessage');
@@ -306,7 +306,8 @@ export class CargarPreguntasService {
     try {
       await this.multiplicarYActualizarAmbitos();
       await this.sesionService.finalizarSesion(this.gravedadesActualizadas);
-      this.finalizarSesion();
+      console.log("Se acabó la sesión");
+      await this.finalizarSesion();
     } catch(error) {
       console.error('Error en el proceso de acabose:', error);
     }

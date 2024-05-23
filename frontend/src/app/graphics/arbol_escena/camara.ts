@@ -20,6 +20,7 @@ export class TCamara extends TEntidad {
         }
         
         this.gl = context;
+        console.log("GL en la cámara", this.gl)
         this.projMatrix = mat4.create();
         this.viewMatrix = mat4.create();
         this.esPerspectiva = true;
@@ -65,26 +66,38 @@ export class TCamara extends TEntidad {
     }
 
     override dibujar(matrizTransf: mat4): void {
-        this.gl.useProgram(this.gl.getParameter(this.gl.CURRENT_PROGRAM));
-
-        if(this.actualizarCamara){
-            if(this.esPerspectiva){
+        // Obtén el programa actual (deberías tener una referencia a él desde antes)
+        let currentProgram = this.gl.getParameter(this.gl.CURRENT_PROGRAM);
+    
+        // Asegúrate de que el programa es válido
+        if (!currentProgram) {
+            console.error("No hay un programa WebGL válido.");
+            return;
+        }
+    
+        this.gl.useProgram(currentProgram);
+    
+        if (this.actualizarCamara) {
+            if (this.esPerspectiva) {
                 let viewMatrix = mat4.create();
                 mat4.invert(viewMatrix, matrizTransf);
                 mat4.multiply(this.projMatrix, this.projMatrix, viewMatrix);
-            }else{
+            } else {
                 mat4.multiply(this.projMatrix, this.projMatrix, matrizTransf);
             }
             this.actualizarCamara = false;
         }
-
-        let modelViewMatrixLocation = this.gl.getUniformLocation(this.gl.getParameter(this.gl.CURRENT_PROGRAM), 'u_ModelViewMatrix');
-        let projectionMatrixLocation = this.gl.getUniformLocation(this.gl.getParameter(this.gl.CURRENT_PROGRAM), 'u_ProjectionMatrix');
+    
+        // Usa la referencia del programa almacenada en lugar de obtenerla de nuevo
+        let modelViewMatrixLocation = this.gl.getUniformLocation(currentProgram, 'u_ModelViewMatrix');
+        let projectionMatrixLocation = this.gl.getUniformLocation(currentProgram, 'u_ProjectionMatrix');
         this.gl.uniformMatrix4fv(modelViewMatrixLocation, false, this.getViewMatrix());
         this.gl.uniformMatrix4fv(projectionMatrixLocation, false, this.getProjMatrix());
     
-        this.gl.useProgram(this.gl.getParameter(this.gl.CURRENT_PROGRAM));
+        // Usa la referencia del programa almacenada en lugar de obtenerla de nuevo
+        this.gl.useProgram(currentProgram);
     }
+    
 
     private radianes(grados: number): number {
         return grados * Math.PI / 180;

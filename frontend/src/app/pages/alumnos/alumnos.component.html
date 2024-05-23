@@ -1,4 +1,7 @@
   <div class="container background-container">
+    <div class="button-container">
+      <button (click)="adios()" class="salir">Quiero salir</button>
+    </div>
     <div class="titulo">
       <h1 *ngIf="aux; else notWelcomeMessage">¡Hola de nuevo {{alumnoData.Nombre}}!</h1>
       <h2>{{obtenerFechaFormato()}}</h2>
@@ -6,7 +9,7 @@
           <h1>¡Hola {{alumnoData.Nombre}}! Bienvenido a Blooming</h1>
       </ng-template>
     </div>
-    <button (click)="empezarCuestionario()" class="btn comenzar-btn ">Comenzar</button>
+    <button id="comenzarBtn" (click)="empezarCuestionario()" class="btn comenzar-btn">Comenzar</button>
   </div>
   <div class="burbujas">
     <div></div>

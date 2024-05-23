@@ -4,8 +4,14 @@
     background-position: center;
     background-repeat: no-repeat;
 } 
+
+.button-container {
+    position: absolute;
+    top: 10px;
+}
   
 .container {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -28,6 +34,23 @@ h1 {
 h2 {
     color: #345f15;
     font-weight: bold;
+}
+
+.salir{
+    font-size: 17px;
+    border-radius: 20px;
+    border: 1px solid #fb3d3d;
+    color: #fb3d3d;
+    padding: 0.5em 1em; 
+    background-color: transparent; 
+    font-weight: 700;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.salir:hover{
+    background-color: #fb3d3d;
+    border: 1px solid black; 
+    color: black
 }
 
 .comenzar-btn {

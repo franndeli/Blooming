@@ -181,7 +181,7 @@ export class ProfesoresComponent implements OnInit{
     // Calcular la media emocional de la clase solo si hay alumnos considerados
     if (totalAlumnosConsiderados > 0) {
       this.totalMediaClase = total / totalAlumnosConsiderados/5 ;
-      //console.log('Media emocional de la clase', claseID, ':', this.totalMediaClase);
+      console.log('Media emocional de la clase', claseID, ':', this.totalMediaClase);
       // Llamar a initECharts() después de calcular la media emocional
       this.initECharts(claseID, this.totalMediaClase);
       this.calcularMediaAnterior(claseID, this.totalMediaClase);
@@ -213,7 +213,7 @@ export class ProfesoresComponent implements OnInit{
               resolve(); 
             } else {
               let ambitosActuales = alumnos[i].Ambitos;
-              //console.log("ambitos actuales", ambitosActuales);
+              // console.log("ambitos actuales", ambitosActuales);
               let data = JSON.parse(ambitosActuales);
               let values: number[] = Object.values(data) as number[];
               let sum = values.reduce((a, b) => a + b, 0);
@@ -225,7 +225,8 @@ export class ProfesoresComponent implements OnInit{
         });
       }
       totalSum = totalSum / alumnos.length;
-      totalSum = parseFloat(totalSum.toFixed(2));
+      totalSum = parseFloat(totalSum.toFixed(3));
+
       if(totalmedia > totalSum){
         this.resultadosComparacion.push({clase: claseID, mejora: 'mejora', cambio: parseFloat((totalmedia - totalSum).toFixed(2))});
       } else if(totalmedia < totalSum){
@@ -236,7 +237,7 @@ export class ProfesoresComponent implements OnInit{
     } else {
       this.resultadosComparacion.push({clase: claseID, mejora: 'igual', cambio: 0});
     }
-    //console.log("ams:", this.resultadosComparacion);
+    console.log("ams:", this.resultadosComparacion);
   }
 
 

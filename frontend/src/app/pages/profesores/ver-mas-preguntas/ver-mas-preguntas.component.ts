@@ -10,7 +10,7 @@ import { RespuestaService } from '../../../services/respuestas.service';
   styleUrl: './ver-mas-preguntas.component.css'
 })
 export class VerMasPreguntasComponent {
-  private alumnoID: any;
+  public alumnoID: any;
   private claseID: any;
   private contar = 0;
   filtroNombre: any;

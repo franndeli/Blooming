@@ -52,7 +52,7 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
     this.tendenciaAmbitos = [];
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.sesiones.Ambitos = {};
     this.sesiones.Dias = {};
     this.activatedRoute.paramMap.subscribe(params => {
@@ -65,9 +65,10 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
       this.alumnoID = localStorage.getItem('ID_Alumno');
     }
 
-    this.obtenerAlumno();
+    await this.obtenerAlumno();
     this.obtenerRespuestas();
     //this.obtenerSesiones();
+    console.log('hola');
     this.compararAmbitos();
   }
 
@@ -75,16 +76,16 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
     this.obtenerSesiones();
   }
 
-  obtenerAlumno(){
+  async obtenerAlumno(){
     this.alumnoService.getAlumnoID(this.alumnoID).subscribe((res: any) => {
       this.alumnosData = res.alumnos[0];
-      //console.log(this.alumnosData);
+      console.log(this.alumnosData);
       this.alumnosData.Ambitos = JSON.parse(this.alumnosData.Ambitos);
       //this.sesiones.Ambitos = this.alumnosData.Ambitos;
       this.nombreClase = this.alumnosData.Clase.Nombre;
 
-      //console.log(this.alumnosData.Ambitos);
-      //console.log(this.sesiones.Ambitos);
+      console.log(this.alumnosData.Ambitos);
+      // console.log(this.sesiones.Ambitos);
     });
   }
 
@@ -92,8 +93,8 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
     this.sesionService.getSesionesAlumno(this.alumnoID, this.dias).subscribe((res: any) => {
       const sesionesData = res.sesiones;
 
-      //console.log(this.sesiones.Ambitos);
-      //console.log(this.sesiones);
+      // console.log(this.sesiones.Ambitos);
+      // console.log(this.sesiones);
       this.sesiones.Ambitos.Clase = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Clase);
       this.sesiones.Ambitos.Amigos = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Amigos);
       this.sesiones.Ambitos.Familia = sesionesData.map((sesion: any) => JSON.parse(sesion.ValorAmbitoFin).Familia);
@@ -379,35 +380,45 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
   compararAmbitos(){
     this.sesionService.getSesionesAlumno(this.alumnoID, 7).subscribe((res: any) => {
       if(res.sesiones.length > 0){
-        this.ambitosAnteriores = JSON.parse(res.sesiones[0].ValorAmbitoFin);
+        if (this.alumnosData && this.alumnosData.Ambitos) {
+          this.ambitosAnteriores = JSON.parse(res.sesiones[0].ValorAmbitoFin);
+          this.resultadosComparacion = this.comparar(this.ambitosAnteriores, this.alumnosData.Ambitos);
+        } else{
+          console.error("No se pudieron obtener los ambientes actuales");
+        }
         //this.tendenciaAmbitos = this.ambitosAnteriores;
-        this.resultadosComparacion = this.comparar(this.ambitosAnteriores, this.alumnosData.Ambitos);
+        
         //console.log(this.ambitosAnteriores);
         //console.log(this.alumnosData.Ambitos);
         //console.log(this.resultadosComparacion);
+      } else {
+        this.resultadosComparacion = this.comparar(this.alumnosData.Ambitos, this.alumnosData.Ambitos);
+        // console.log(this.resultadosComparacion);
       }
     });
   }
+
   comparar(ambitosAnteriores: {[key: string]: number}, ambitosActuales: {[key: string]: number}): ComparacionAmbito[] {
     const resultados: ComparacionAmbito[] = [];
-  
-    for (const ambito in ambitosAnteriores) {
-      if (ambitosAnteriores.hasOwnProperty(ambito) && ambitosActuales.hasOwnProperty(ambito)) {
-        let cambio = (ambitosAnteriores[ambito] - ambitosActuales[ambito]);
-        cambio = parseFloat(cambio.toFixed(2));
-        let mejora: string;
-        if (cambio > 0) {
-          mejora = 'empeora';
-        } else if (cambio < 0) {
-          mejora = 'mejora';
-        } else {
-          mejora = 'igual';
+    if (ambitosAnteriores && ambitosActuales) {
+      for (const ambito in ambitosAnteriores) {
+        if (ambitosAnteriores.hasOwnProperty(ambito) && ambitosActuales.hasOwnProperty(ambito)) {
+          let cambio = (ambitosAnteriores[ambito] - ambitosActuales[ambito]);
+          cambio = parseFloat(cambio.toFixed(2));
+          let mejora: string;
+          if (cambio > 0) {
+            mejora = 'empeora';
+          } else if (cambio < 0) {
+            mejora = 'mejora';
+          } else {
+            mejora = 'igual';
+          }
+          resultados.push({
+            nombre: ambito,
+            mejora: mejora,
+            cambio: Math.abs(cambio)
+          });
         }
-        resultados.push({
-          nombre: ambito,
-          mejora: mejora,
-          cambio: Math.abs(cambio)
-        });
       }
     }
   

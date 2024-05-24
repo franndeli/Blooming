@@ -30,9 +30,9 @@
                                 </div>
                                 <table class="table text-nowrap mb-0 align-middle">
                                     <tbody>
-                                        <tr *ngFor="let resultado of resultadosComparacion">
+                                        <tr *ngFor="let resultado of resultadosComparacion"> 
                                             <td class="border-bottom-0"><h6 class="fw-semibold mb-0">{{resultado.nombre}}</h6></td>
-                                            <td class="border-bottom-0 gravedad-circle" style="margin-top: 10px;" [ngClass]="getGravedadClass(alumnosData.Ambitos[resultado.nombre])" *ngIf="alumnosData.Ambitos !== undefined">
+                                            <td class="border-bottom-0 gravedad-circle" style="margin-top: 10px;" [ngClass]="getGravedadClass(alumnosData.Ambitos[resultado.nombre])">
                                                 {{alumnosData.Ambitos[resultado.nombre]}} 
                                             </td>
                                             

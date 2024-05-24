@@ -52,9 +52,41 @@ import { RecompensasComponent } from './alumnos/recompensas/recompensas.componen
 import { TodosAlumnosComponent } from './profesores/todos-alumnos/todos-alumnos.component';
 import { AyudaAmbitosComponent } from './profesores/ayuda-ambitos/ayuda-ambitos.component';
 import { VerMasPreguntasComponent } from './profesores/ver-mas-preguntas/ver-mas-preguntas.component';
+import { PoliticaPrivacidadComponent } from './politica-privacidad/politica-privacidad.component';
+import { CookiesComponent } from './cookies/cookies.component';
+import { CondicionesUsoComponent } from './condiciones-uso/condiciones-uso.component';
+import { InformacionLegalComponent } from './informacion-legal/informacion-legal.component';
 
 
 const routes: Routes = [
+  {
+    path: 'politica-privacidad',
+    component: AdminLayoutComponent,
+    children: [
+      { path: '', component: PoliticaPrivacidadComponent }
+    ]
+  },
+  {
+    path: 'cookies',
+    component: AdminLayoutComponent,
+    children: [
+      { path: '', component: CookiesComponent }
+    ]
+  },
+  {
+    path: 'condiciones-uso',
+    component: AdminLayoutComponent,
+    children: [
+      { path: '', component: CondicionesUsoComponent }
+    ]
+  },
+  {
+    path: 'informacion-legal',
+    component: AdminLayoutComponent,
+    children: [
+      { path: '', component: InformacionLegalComponent }
+    ]
+  },
   { path: 'admin', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
     children: [
       { path: 'dashboard', component: AdmindashboardComponent},
@@ -73,7 +105,8 @@ const routes: Routes = [
       { path: 'perfil', component: PerfilAdminComponent},
       { path: 'editar-admin', component: EditarAdminComponent},
       { path: '**', redirectTo: 'dashboard'},
-  ]},
+  ]
+},
   {
     path: 'centros', component: AdminLayoutComponent, canActivate: [ AuthGuard ],
     children: [

@@ -24,26 +24,35 @@ data-sidebar-position="fixed" data-header-position="fixed">
                 </table>
             </div>
             <div class="row">
-              <div class="col-md-4" *ngFor="let alumno of alumnosData">
-                  <div class="card"> 
-                    <button>
-                        <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert" (click)="verPerfil(alumno.ID_Alumno)">
-                            <div class="card-body">
-                                <ul>
-                                    <li><span class="card-title" style="text-align: center; font-size: 17px; font-weight: bold;">{{alumno.Nombre}} {{alumno.Apellidos}}</span></li>
-                                    <li style="border-bottom: 0;">
-                                      <span class="card-title" style="text-align: center; font-size: 15px; margin-right: 20px;">{{alumno.Clase.Nombre}}</span>
-                                      <span class="card-title" style="text-align: center; font-size: 15px; margin-bottom: 0; margin-left: 10px; margin-right: 10px;" [ngClass]="getClaseEstado(alumno.Estado)">{{alumno.Estado}}<span style="color: green; font-size: 14px; margin-left: 5px; margin-right: 5px;"><i class="ti ti-trending-up"></i></span></span>
-                                      
-                                      <span style="color: red; font-size: 14px; margin-left: 5px;"><i class="ti ti-trending-down"></i> 0'45%</span>
-                                  </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </button>
+              <div class="col-md-4" *ngFor="let alumno of alumnosData; let i = index">
+                <div class="card" id="efecto"> 
+                  <button>
+                    <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert" (click)="verPerfil(alumno.ID_Alumno)">
+                      <div class="card-body">
+                        <ul>
+                          <li><span class="card-title" style="text-align: center; font-size: 17px; font-weight: bold;">{{alumno.Nombre}} {{alumno.Apellidos}}</span></li>
+                          <li style="border-bottom: 0;">
+                            <span class="card-title" style="text-align: center; font-size: 15px; margin-right: 20px;">{{alumno.Clase.Nombre}}</span>
+                            <span class="card-title" style="text-align: center; font-size: 15px; margin-bottom: 0; margin-left: 10px; margin-right: 10px;" [ngClass]="getClaseEstado(alumno.Estado)">{{alumno.Estado}}
+                              <ng-container *ngIf="alumnosTendencia[i]?.id === alumno.ID_Alumno">
+                                <span *ngIf="alumnosTendencia[i]?.tendencia === 'mejora'" style="color: green; font-size: 14px; margin-left: 5px; ">
+                                  <span class="icon-circle"><i class="ti ti-trending-up"></i></span>
+                                </span>
+                                <span *ngIf="alumnosTendencia[i]?.tendencia === 'empeora'" style="color: red; font-size: 14px; margin-left: 5px;">
+                                  <span class="icon-circle"><i class="ti ti-trending-down"></i></span>
+                                </span>
+                                <span *ngIf="alumnosTendencia[i]?.tendencia === 'igual'"></span>
+                              </ng-container>
+                            </span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </button>
                 </div>
               </div>
             </div>
+            <br>
             <br>
             <app-pagination (cambiarPagina)="cambiarPagina($event)" [texto]="true" [totalRegistros]="totalAlumnos" [registroActual]="posActual+1" (filasPagina)="cambiarFilasPagina($event)" [registroPag]="filPag"></app-pagination>
           </div>
@@ -52,8 +61,5 @@ data-sidebar-position="fixed" data-header-position="fixed">
       <br>
       <br>
 
-      <div class="py-6 px-6 text-center">
-        <p class="copyright">&copy; 2023 Blooming. Proyecto académico de la Universidad de Alicante .</p>
-      </div>
   </div>
 </div>

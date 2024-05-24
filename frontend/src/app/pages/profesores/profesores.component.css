@@ -12,7 +12,7 @@
         margin: .1em;
     }
 }
-  
+
 h1{
     text-align: center;
     margin-bottom: 25px;
@@ -35,9 +35,17 @@ button{
    
 }
 #num-alumnos{
-    width: 50px; /* Ajusta este valor según tus necesidades */
-    height: 30px; /* Ajusta este valor según tus necesidades */
-    line-height: 30px; /* Asegura que el texto esté centrado verticalmente */
+    width: 50px; 
+    height: 30px; 
+    line-height: 30px; 
+    border-radius: 40px;
+    text-align: center; 
+    font-size:15px; 
+}
+/*#num-alumnos{
+    width: 50px; 
+    height: 30px; 
+    line-height: 30px; 
     background-color:#8aca69;
     border-radius: 40px;
     color:white;
@@ -50,9 +58,9 @@ button{
 }
 #num-alumnos:hover{
     background-color:#5b8547;
-}
+}*/
 #efecto{
-    transition: transform 0.3s ease; /* Añadido para suavizar el cambio de escala */
+    transition: transform 0.3s ease; 
 }
 #efecto:hover{
     box-shadow: 0 0 10px #749866;
@@ -60,10 +68,10 @@ button{
 }
 
 #tu-clase{
-    width: 80px; /* Ajusta este valor según tus necesidades */
-    height: 30px; /* Ajusta este valor según tus necesidades */
-    line-height: 30px; /* Asegura que el texto esté centrado verticalmente */
-    background-color:#69a8ca;
+    width: 80px; 
+    height: 30px;
+    line-height: 30px; 
+    background-color:#8aca69;
     border-radius: 30px;
     color:white;
     text-align: center; 
@@ -73,6 +81,6 @@ button{
 }
 
 #tu-clase:hover{
-    background-color: #0056b3; /* Color de fondo azul oscuro al pasar el ratón por encima */
-    color: #f1f1f1; /* Color de texto blanco al pasar el ratón por encima */
+    background-color: #5b8547; 
+    color: #f1f1f1;
 }

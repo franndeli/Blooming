@@ -46,6 +46,12 @@
 .bg-danger {
   background-color: rgb(233, 31, 31) !important;
 }
+.bg-general {
+  background-color: rgb(255, 255, 255) !important;
+  border: 2px solid rgb(0, 0, 0);
+  font-size: 15px;
+  color: black;
+}
   
 .bg-warning {
   background-color: rgb(255, 174, 31) !important;

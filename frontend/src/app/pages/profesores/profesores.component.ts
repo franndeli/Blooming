@@ -195,6 +195,7 @@ export class ProfesoresComponent implements OnInit{
   }
 
   async calcularMediaAnterior(claseID: any, totalmedia: any){
+    totalmedia = parseFloat(totalmedia.toFixed(3));
     let alumnos: any[] =[];
     alumnos = this.alumnosEnClaseArray.alumnos;
     let totalSum = 0;
@@ -226,7 +227,7 @@ export class ProfesoresComponent implements OnInit{
       }
       totalSum = totalSum / alumnos.length;
       totalSum = parseFloat(totalSum.toFixed(3));
-
+      console.log(totalSum);
       if(totalmedia > totalSum){
         this.resultadosComparacion.push({clase: claseID, mejora: 'mejora', cambio: parseFloat((totalmedia - totalSum).toFixed(2))});
       } else if(totalmedia < totalSum){
@@ -245,7 +246,7 @@ export class ProfesoresComponent implements OnInit{
     const chartElement = document.getElementById('echarts-chart-' + claseID);
     const chart = echarts.init(chartElement);
 
-    //console.log('Total media clase grafiicccccca:', totalMediaClase);
+    // console.log('Total media clase grafiicccccca:', totalMediaClase);
     const option = {
       series: [
         {

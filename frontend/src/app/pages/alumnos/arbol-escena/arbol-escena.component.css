@@ -107,7 +107,7 @@ html, body {
     width: 100%;
     height: 0;
     border-radius: 15px;
-    transition: height 0.8s ease;
+    transition: height 1s ease;
     background: linear-gradient(45deg, #68A63C, #8EBF6B, #B8D9A0, #68A63C, #8EBF6B, #B8D9A0);
     background-size: 300% 300%;
     animation: gradientAnimation 6s linear infinite;
@@ -143,7 +143,7 @@ html, body {
     top: 0;
     width: 60%;
     text-align: center;
-    font-size: 5vh;
+    font-size: 6vh;
     font-weight: 900;
     /* font-family: 'Montserrat'; */
     color: rgb(0, 0, 0);
@@ -210,20 +210,28 @@ html, body {
 .siguiente {
     position: absolute;
     left: 50%;
-    bottom: 5%;
+    bottom: 10%;
     transform: translateX(-50%);
     font-size: 2vh;
     padding: 10px 20px;
     background-color: #68A63C;
     color: white;
-    border: none;
+    border: 2px solid white;
     border-radius: 5px;
     cursor: pointer;
+    box-shadow: 0 12px #53753d;
+    transition: all 0.4s ease;
+    font-weight: bold;
 }
 
-.siguiente:hover {
+/* .siguiente:hover {
     background-color: #87a473;
-}
+} */
+
+.siguiente:active {
+    box-shadow: 0 2px #53753d;
+    transform: translateX(-50%) translateY(3px);
+  }
 
 .fade-in {
     opacity: 1;
@@ -239,22 +247,43 @@ html, body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(185, 255, 185, 0.832);
+    background: rgba(255, 255, 255, 0.901);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 9999;
     flex-direction: column;
   }
+
+  .loading-overlay p {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: 600;
+  }
+  
+  .loading-container {
+    position: relative;
+    width: 120px;  /* Ajusta el tamaño del contenedor al tamaño del spinner */
+    height: 120px; /* Ajusta el tamaño del contenedor al tamaño del spinner */
+  }
   
   .loading-spinner {
-    border: 4px solid rgba(0, 0, 0, 0.1);
-    border-left-color: #000;
+    position: absolute;
+    border: 8px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #68A63C;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 100%;
+    height: 100%;
     animation: spin 1s linear infinite;
-    margin-bottom: 10px;
+  }
+  
+  .loading-image {
+    position: absolute; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120px; /* Ajusta el tamaño de la imagen según sea necesario */
+    height: auto;
   }
   
   @keyframes spin {
@@ -262,6 +291,7 @@ html, body {
       transform: rotate(360deg);
     }
   }
+  
 
   .contador-overlay {
     position: fixed;
@@ -269,13 +299,14 @@ html, body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.526);
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     z-index: 9998;
     text-align: center;
+    font-family:'Montserrat';
   }
   
   .contador-overlay p {
@@ -283,6 +314,8 @@ html, body {
     font-weight: 700;
     margin: 0.5rem;
     color: black;
+    cursor: none;
+    pointer-events: none;
   }
 
 .button-container {
@@ -320,12 +353,13 @@ html, body {
     display: flex;
     flex-direction: row;
     margin-top: 30px;
-    gap: 20px;
+    gap: 25px;
+    /* font-size: 30px; */
 }
 
 .volver{
     border-radius: 5px;
-    border: 1px solid #68A63C;
+    border: 2px solid #68A63C;
     padding: 0.5em 1em; 
     background-color: transparent; 
     transition: background-color 0.3s, transform 0.1s;
@@ -333,7 +367,7 @@ html, body {
 
 .volver:hover{
     background-color: #68A63C;
-    border: 1px solid white;
+    border: 2px solid white;
 }
 
 .volver:hover svg{
@@ -341,16 +375,16 @@ html, body {
 }
 
 .volver svg{
-    width: 40px;
-    height: 40px;
+    width: 70px;
+    height: 70px;
     fill: #68A63C;
     transition: fill 0.3s;
 }
 
 .Salir{
-    font-size: 17px;
+    font-size: 24px;
     border-radius: 5px;
-    border: 1px solid #fb3d3d;
+    border: 2px solid #fb3d3d;
     color: #fb3d3d;
     padding: 0.5em 1em; 
     background-color: transparent; 
@@ -360,7 +394,7 @@ html, body {
 
 .Salir:hover{
     background-color: #fb3d3d;
-    border: 1px solid rgb(255, 255, 255); 
+    border: 2px solid rgb(255, 255, 255); 
     color: rgb(255, 255, 255)
 }
 
@@ -388,6 +422,10 @@ html, body {
     to {
       opacity: 0;
     }
+  }
+
+  .verde-palabra{
+    color:#68A63C;
   }
   
 

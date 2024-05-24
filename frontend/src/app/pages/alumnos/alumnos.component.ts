@@ -56,13 +56,13 @@ export class AlumnosComponent implements OnInit {
             <div style="display: flex; justify-content: space-between; text-align: center; gap: 30px;">
                 <div style="width: 50%;">
                     <h3 style="font-weight: bold">Cuando veas el cubo</h3>
-                    <img src="./../../assets/images/como_jugar/captura_cubo.PNG" alt="Imagen del cubo" style="width: 70%; border-radius: 20px; margin-bottom: 10px;">
+                    <img src="./../../assets/images/como_jugar/captura_cubo.PNG" alt="Imagen del cubo" style="width: 70%; border-radius: 20px; margin-bottom: 15px;">
                     <p>Desliza el ratón por la pantalla para rotarlo y ¡elije la cara que más te guste!</p>
                 </div>
                 <div style="width: 50%;">
                     <h3 style="font-weight: bold">Cuando veas el tablero</h3>
                     <img src="../../../assets/images/como_jugar/captura_tablero.PNG" alt="Imagen del tablero 1" style="width: 70%; margin-bottom: 10px; border-radius: 20px;">
-                    <img src="ruta/a/tu/imagen3.jpg" alt="Imagen del tablero 2" style="width: 70%; border-radius: 20px; margin-bottom: 10px;">
+                    <img src="../../../assets/images/como_jugar/captura_ficha.PNG" alt="Imagen del tablero 2" style="width: 40%; border-radius: 20px; margin-bottom: 15px;">
                     <p>Pulsa la pieza y deslízala sobre la cara que más te guste</p>
                 </div>
             </div>

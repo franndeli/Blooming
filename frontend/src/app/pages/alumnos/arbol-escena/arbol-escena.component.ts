@@ -59,7 +59,7 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
       // console.log("this.mostrarContador", this.mostrarContador);
       // console.log("Entro en mostrarContador = true")
       this.startCountdown();
-      this.showConfetti();
+      // this.showConfetti();
     } else {
       // // console.log("Entro en mostrarContador = false")
       this.indiceActual = JSON.parse(localStorage.getItem('indiceActual') || '0');
@@ -117,6 +117,14 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
     //   // this.cdRef.detectChanges();
   }
 
+  // ngAfterViewChecked() {
+  //   console.log("Entrado en ngAfterViewChecked");
+  //   if (this.mostrarContador == 'true') {
+  //     this.cdRef.detectChanges();
+  //     this.showConfetti();
+  //   }
+  // }
+
   async yoquese(){
     // // console.log('Estoy en ngAfterViewInit');
     // this.mostrarContador = localStorage.getItem('mostrarContador');
@@ -126,7 +134,7 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
       this.loading = false;
     }
 
-    this.interfaz = 2;
+    this.interfaz = 1;
 
     const start = Date.now();
 
@@ -141,7 +149,7 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
     });
 
     const elapsed = Date.now() - start;
-    const remainingTime = Math.max(2000 - elapsed, 0);
+    const remainingTime = Math.max(2500 - elapsed, 0);
     setTimeout(() => {
       this.loading = false; // Ocultar la pantalla de carga
     }, remainingTime);
@@ -205,7 +213,7 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
         this.globalStateService.initializeState();
         this.mostrarContador = 'true';
         this.startCountdown();
-        this.showConfetti();
+        // this.showConfetti();
         return;
       }
 
@@ -302,17 +310,34 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
     });
   }
 
-  private showConfetti() {
-    console.log('ole');
-    const element = document.getElementById('contador-overlay') as HTMLElement;
-    console.log(element);
-    if (element) {
-      console.log('ole2');
-      party.confetti(element, {
-        count: party.variation.range(20, 40),
-      });
-    }
-  }  
+  // private showConfetti() {
+  //   // console.log('ole');
+  //   const element = document.getElementById('confeti');
+  //   // console.log(element);
+  //   if (element) {
+  //     // console.log('ole2');
+  //     party.confetti(element, {
+  //       count: 100,
+  //     });
+  //   }
+  // }  
+
+  // private showConfetti() {
+  //   if (this.mostrarContador == 'true') {
+  //     console.log('ole');
+  //     const element = document.getElementById('contador-overlay');
+  //     const papa = document.getElementById('goal-icon');
+  //     console.log(papa);
+  //     console.log(element);
+  //     if (element) {
+  //       console.log('ole2');
+  //       party.confetti(element, {
+  //         count: party.variation.range(20, 40),
+  //       });
+  //     }
+  //   }
+  // }
+  
 
   handleButtonClickVolver() {
     //// console.log('Botón presionado');

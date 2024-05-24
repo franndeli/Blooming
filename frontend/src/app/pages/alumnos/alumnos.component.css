@@ -41,7 +41,7 @@ h2 {
 }
 
 .salir{
-    font-size: 17px;
+    font-size: 19px;
     border-radius: 5px;
     border: 1px solid #fb3d3d;
     color: #fb3d3d;
@@ -60,7 +60,7 @@ h2 {
 .comenzar-btn {
     background-color: #68A63C;
     color: white;
-    font-size: 25px;
+    font-size: 30px;
     padding: 10px 20px;
     cursor: pointer;
     border-radius: 5px;

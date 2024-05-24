@@ -35,7 +35,7 @@ export class PlanoService {
         this.plano = await this.motorGrafico.crearModelo(escena, 'plano_final_prueba_prueba_prueba.gltf', [0, 1, 0], [45, 0, 0], [1.2, 1.2, 1.2], texturas);
         this.avatar = await this.motorGrafico.crearModelo(escena, 'pieza_tablero.gltf', [0, 0, 0], [0, 0, 0], [0.8, 0.8, 0.8], texturas);
 
-        trasX = 0;
+        trasX = 8.5;
         trasY = 2;
 
         //console.log('Escena del PLANO',escena);
@@ -84,7 +84,7 @@ export class PlanoService {
 
     mouseMove(event: MouseEvent, width: number, height: number){
         event.preventDefault();
-        let velocidadMovimientoX = 4.5;
+        let velocidadMovimientoX = 5.0;
         let velocidadMovimientoY = 3.5;
         if(clickIzq && onAvatar){
             dx = (event.pageX - old_x) * 5 / width * velocidadMovimientoX;

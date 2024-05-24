@@ -34,7 +34,7 @@ export class CuboService {
 
         this.camara = this.motorGrafico.crearCamara(escena, [0, 0, 10], [0, 0, 0], [1, 1, 1]);
         this.luz = this.motorGrafico.crearLuz(escena, [0, 10, 0], [0, 0, 0], [1, 1, 1]);
-        this.cubo = await this.motorGrafico.crearModelo(escena, 'cubo_prueba_seis_caras.gltf', [0, 0, 0], [0, 0, 0], [1, 1, 1], texturas);
+        this.cubo = await this.motorGrafico.crearModelo(escena, 'prueba_cubo_final_blooming.gltf', [0, 0, 0], [0, 0, 0], [1, 1, 1], texturas);
         
         phi = 0;
         theta = 0;

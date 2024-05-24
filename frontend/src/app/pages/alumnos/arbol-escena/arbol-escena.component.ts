@@ -4,6 +4,7 @@ import { GlobalStateService } from '../../../services/graphics/helpers/globalsta
 import { Subscription, interval } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
 import Swal from 'sweetalert2';
+import party from 'party-js';
 
 @Component({
   selector: 'app-arbol-escena',
@@ -31,6 +32,9 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
   public countdownTime: number = 0;
   private countdownSubscription?: Subscription;
 
+  public fadeInPregunta: boolean = true;
+  public fadeInRespuesta: boolean = false;
+
   constructor(private motorService: MotorService, 
     private globalStateService: GlobalStateService, 
     private cdRef: ChangeDetectorRef,
@@ -55,6 +59,7 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
       // console.log("this.mostrarContador", this.mostrarContador);
       // console.log("Entro en mostrarContador = true")
       this.startCountdown();
+      this.showConfetti();
     } else {
       // // console.log("Entro en mostrarContador = false")
       this.indiceActual = JSON.parse(localStorage.getItem('indiceActual') || '0');
@@ -175,6 +180,11 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
     // setTimeout(() => {
     //   this.fadeIn = false;
     // }, 1000);
+
+    this.fadeInRespuesta = true;
+    setTimeout(() => {
+      this.fadeInRespuesta = false;
+    }, 1000);
   }
 
   async handleButtonClick() {
@@ -187,20 +197,22 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
 
     await this.updateProgressBar();
 
-    this.preguntaActual = await this.motorService.siguientePregunta(this.respuestaSeleccionadaCompleta.Gravedad, this.respuestaSeleccionadaCompleta.ID_Opcion);
-    //// console.log(this.preguntaActual);
+    this.fadeInPregunta = false;
+    setTimeout(async () => {
+      this.preguntaActual = await this.motorService.siguientePregunta(this.respuestaSeleccionadaCompleta.Gravedad, this.respuestaSeleccionadaCompleta.ID_Opcion);
+      if (this.preguntaActual == null) {
+        await this.motorService.limpiarEscenaMoto();
+        this.globalStateService.initializeState();
+        this.mostrarContador = 'true';
+        this.startCountdown();
+        this.showConfetti();
+        return;
+      }
 
-    if(this.preguntaActual == null){
-      await this.motorService.limpiarEscenaMoto();
-      this.globalStateService.initializeState();
-      console.log("inicializado el contador y mostrar Contador")
-      this.mostrarContador = 'true';
-      // this.countdownTime = this.globalStateService.countdownTime;
-      this.startCountdown();
-      return;
-    }
+      this.motorService.cambiarInterfaz(this.interfaz);
 
-    this.motorService.cambiarInterfaz(this.interfaz);
+      this.fadeInPregunta = true;
+    }, 500);
   }
 
   setRespuestaSeleccionadaNull() {
@@ -289,6 +301,18 @@ export class ArbolEscenaComponent implements AfterViewInit, OnDestroy, OnInit {
       }
     });
   }
+
+  private showConfetti() {
+    console.log('ole');
+    const element = document.getElementById('contador-overlay') as HTMLElement;
+    console.log(element);
+    if (element) {
+      console.log('ole2');
+      party.confetti(element, {
+        count: party.variation.range(20, 40),
+      });
+    }
+  }  
 
   handleButtonClickVolver() {
     //// console.log('Botón presionado');

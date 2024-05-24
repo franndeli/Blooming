@@ -155,9 +155,9 @@ html, body {
     text-shadow: 
     0 1px 1px rgba(0, 0, 0, 0.1), 
     0 2px 2px rgba(0, 0, 0, 0.1), 
-    0 3px 3px #68A63C, 
-    0 4px 4px #8EBF6B, 
-    0 5px 5px #8EBF6B;
+    0 3px 3px #68a63cb7, 
+    0 4px 4px #8ebf6ba7, 
+    0 5px 5px #8ebf6b9b;
 }
 
 
@@ -172,15 +172,15 @@ html, body {
     margin-bottom: 5vh;
     pointer-events: none; /* Evita la interacción del ratón */
     cursor: none;
-    background-color: transparent;
 }
 
 .respuesta_seleccionada{
     padding-left: 15px;
     padding-right: 15px;
     color: black;
-    border: 2px solid black;
-    border-radius: 30px;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: white;
 }
 
 /* .gravedad-negativa {
@@ -279,8 +279,10 @@ html, body {
   }
   
   .contador-overlay p {
-    font-size: 1.5rem;
+    font-size: 3rem;
+    font-weight: 700;
     margin: 0.5rem;
+    color: black;
   }
 
 .button-container {
@@ -298,16 +300,16 @@ html, body {
     padding: 0.5em 1em; 
     background-color: transparent; 
     color: #68A63C; 
-    border-radius: 20px;
+    border-radius: 5px;
     border: 1px solid #68A63C;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.1s;
 }
 
 .jaja:hover {
-    background-color: #ff9f9f;
-    border: 1px solid #ff9f9f;
-    color:black;
+    background-color: #ff5656;
+    border: 1px solid #ffffff;
+    color:rgb(255, 255, 255);
 }
 
 .jaja:active {
@@ -322,7 +324,7 @@ html, body {
 }
 
 .volver{
-    border-radius: 20px;
+    border-radius: 5px;
     border: 1px solid #68A63C;
     padding: 0.5em 1em; 
     background-color: transparent; 
@@ -347,7 +349,7 @@ html, body {
 
 .Salir{
     font-size: 17px;
-    border-radius: 20px;
+    border-radius: 5px;
     border: 1px solid #fb3d3d;
     color: #fb3d3d;
     padding: 0.5em 1em; 
@@ -358,9 +360,36 @@ html, body {
 
 .Salir:hover{
     background-color: #fb3d3d;
-    border: 1px solid black; 
-    color: black
+    border: 1px solid rgb(255, 255, 255); 
+    color: rgb(255, 255, 255)
 }
+
+.fade-in {
+    animation: fadeIn 0.6s forwards;
+  }
+  
+  .fade-out {
+    animation: fadeOut 0.6s forwards;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  
 
   
   

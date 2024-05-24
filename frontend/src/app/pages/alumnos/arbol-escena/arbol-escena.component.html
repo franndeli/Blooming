@@ -8,7 +8,7 @@
         <p>Cargando, por favor espera...</p>
     </div>
 
-    <div *ngIf="mostrarContador == 'true'" class="contador-overlay">
+    <div *ngIf="mostrarContador == 'true'" id="contador-overlay" class="contador-overlay">
         <p>Muchas gracias por jugar</p>
         <p>Próxima sesión en: {{ countdownTime | date:'HH:mm:ss' }}</p>
         <div class="botones">
@@ -18,7 +18,7 @@
     </div>
 
 
-    <div class="pregunta">
+    <div [ngClass]="{'fade-in': fadeInPregunta, 'fade-out': !fadeInPregunta}" class="pregunta">
         {{ preguntaActual?.TextoPreguntaElegido ? preguntaActual.TextoPreguntaElegido : preguntaActual?.TextoPregunta }}
     </div>
     <!-- <div [ngClass]="{ 'fade-in': fadeIn, 'fade-out': !fadeIn }" class="hover_respuesta"> -->

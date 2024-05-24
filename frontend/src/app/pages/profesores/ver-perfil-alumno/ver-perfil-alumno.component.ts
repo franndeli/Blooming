@@ -199,7 +199,7 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
   obtenerRespuestas(){
     this.respuestaService.getRespuestasAlumno(this.alumnoID, -1, 0, 5, 0, '').subscribe((res: any) => {
       this.respuestasData = res.respuestas;
-      console.log(this.alumnoID);
+      //console.log(this.alumnoID);
     });
   }
 
@@ -238,6 +238,9 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
       }
       if(this.volverPag === 1){
         this.router.navigate(['profesores/actividad-negativa']);
+      }
+      if(this.volverPag === 2){
+        this.router.navigate(['profesores/todos-alumnos']);
       }
     }
   }
@@ -379,9 +382,9 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
         this.ambitosAnteriores = JSON.parse(res.sesiones[0].ValorAmbitoFin);
         //this.tendenciaAmbitos = this.ambitosAnteriores;
         this.resultadosComparacion = this.comparar(this.ambitosAnteriores, this.alumnosData.Ambitos);
-        console.log(this.ambitosAnteriores);
-        console.log(this.alumnosData.Ambitos);
-        console.log(this.resultadosComparacion);
+        //console.log(this.ambitosAnteriores);
+        //console.log(this.alumnosData.Ambitos);
+        //console.log(this.resultadosComparacion);
       }
     });
   }

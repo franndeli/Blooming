@@ -7,29 +7,39 @@ data-sidebar-position="fixed" data-header-position="fixed">
 
         <div id="mediasAmbitos">
           <div class="card"> 
+            <div class="alert alert-secondary" style="margin-bottom: 0;" role="alert">
             <div class="card-title" class="d-flex justify-content-around mb-3" style="margin-top: 20px;" >
               <h5>Medias Generales</h5>
             </div> 
-            <div class="card" style="margin-left: 15px; margin-right: 15px;">
+            <div class="card" >
               
-            <div class="card-body">
-              <div class="d-flex justify-content-around">
-                <div class="table-responsive" *ngIf="alumnosData.length > 0; else noAlumnos">
-                  <table class="table text-nowrap mb-0 align-middle" style="background-color: white; border-radius: 1em;">
-                    <thead class="text-dark fs-4">
-                        <tr>
-                          <th><span class="badge bg-danger rounded-3 fw-semibold">General:  {{totalMediaClase}}</span></th>
-                          <th><span class="badge bg-amigos rounded-3 fw-semibold">Amigos: {{totalMediaAmigos}}</span></th>
-                          <th><span class="badge bg-familia rounded-3 fw-semibold">Familia: {{totalMediaFamilia}}</span></th>
-                          <th><span class="badge bg-emociones rounded-3 fw-semibold">Emociones: {{totalMediaEmociones}}</span></th>
-                          <th><span class="badge bg-clase rounded-3 fw-semibold">Clase: {{totalMediaAmbitoClase}}</span></th>
-                          <th><span class="badge bg-fuera rounded-3 fw-semibold">Fuera de clase: {{totalMediaFueraClase}}</span></th>
-                        </tr>
-                    </thead>
-                  </table>
+                <div class="card-body">
+                  <div class="d-flex justify-content-around flex-wrap">
+                    <div class="table-responsive" *ngIf="alumnosData.length > 0; else noAlumnos">
+                      <div class="d-flex flex-column flex-md-row text-nowrap mb-0 align-middle bg-white rounded" style="border-radius: 1em;">
+                        <div class="p-2 text-dark fs-4">
+                          <span class="badge bg-general rounded-3 fw-semibold">General:  {{totalMediaClase}}</span>
+                        </div>
+                        <div class="p-2 text-dark fs-4">
+                          <span class="badge bg-amigos rounded-3 fw-semibold">Amigos: {{totalMediaAmigos}}</span>
+                        </div>
+                        <div class="p-2 text-dark fs-4">
+                          <span class="badge bg-familia rounded-3 fw-semibold">Familia: {{totalMediaFamilia}}</span>
+                        </div>
+                        <div class="p-2 text-dark fs-4">
+                          <span class="badge bg-emociones rounded-3 fw-semibold">Emociones: {{totalMediaEmociones}}</span>
+                        </div>
+                        <div class="p-2 text-dark fs-4">
+                          <span class="badge bg-clase rounded-3 fw-semibold">Clase: {{totalMediaAmbitoClase}}</span>
+                        </div>
+                        <div class="p-2 text-dark fs-4">
+                          <span class="badge bg-fuera rounded-3 fw-semibold">Fuera de clase: {{totalMediaFueraClase}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-          </div>
           </div>
         </div>
       </div>

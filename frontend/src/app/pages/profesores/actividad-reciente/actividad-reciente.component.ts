@@ -80,7 +80,7 @@ export class ActividadRecienteComponent implements OnInit {
   }
   obtenerRespuestasCentro(){
     this.respuestaService.getRespuestasCentro(this.idCentro, 0).subscribe((res: any) => {
-      console.log(res);
+      //console.log(res);
     });
   }
   filtrarAlumnos() {
@@ -89,7 +89,7 @@ export class ActividadRecienteComponent implements OnInit {
   obtenerActividadReciente(buscar: string) {
     this.busqueda = buscar;
     this.respuestaService.getRespuestasCentro(this.idCentro, -1, this.posActual, this.filPag, this.contar, this.busqueda).subscribe((res: any) => {
-      console.log(res)
+      //console.log(res)
       if(res["respuestas"].length === 0){
         if(this.posActual > 0){
           this.posActual = this.posActual - this.filPag;
@@ -151,37 +151,70 @@ export class ActividadRecienteComponent implements OnInit {
   }
 
   contarSesionesPorDia() {
-    const sesionesPorDia: { [fecha: string]: number } = {};
+    const sesionesPorDia: { [diaSemana: string]: number } = {};
+  
+    // Obtener la fecha actual y calcular la fecha hace 6 días
+    const hoy = new Date();
+    const haceSeisDias = new Date();
+    haceSeisDias.setDate(hoy.getDate() - 7);
   
     this.sesionesData.forEach((sesion: any) => {
       if (sesion.FechaInicio && sesion.FechaInicio.Fecha && typeof sesion.FechaInicio.Fecha === 'string') {
         const fechaInicio = new Date(sesion.FechaInicio.Fecha);
-        const diaSemana = fechaInicio.getDay(); 
-        sesionesPorDia[diaSemana] = (sesionesPorDia[diaSemana] || 0) + 1; 
+  
+        // Verificar si la fecha está dentro de los últimos 7 días
+        if (fechaInicio >= haceSeisDias && fechaInicio <= hoy) {
+          const diaSemana = fechaInicio.getDay(); // 0 es domingo, 6 es sábado
+          sesionesPorDia[diaSemana] = (sesionesPorDia[diaSemana] || 0) + 1;
+        }
       } else {
         console.error('La propiedad "FechaInicio.Fecha" no está presente o tiene un formato incorrecto:', sesion);
       }
     });
   
-    this.actividadPorDia = [0, 0, 0, 0, 0, 0, 0]; 
+    // Inicializar actividadPorDia para los últimos 7 días (0 a 6, domingo a sábado)
+    const actividadPorDiaTemp = [0, 0, 0, 0, 0, 0, 0];
     Object.keys(sesionesPorDia).forEach((dia) => {
-      this.actividadPorDia[parseInt(dia)] = sesionesPorDia[dia];
+      actividadPorDiaTemp[parseInt(dia)] = sesionesPorDia[dia];
     });
-    this.dibujarGrafica(); 
+  
+    // Reordenar actividadPorDia para que empiece desde el día actual
+    const diaActual = hoy.getDay();
+    this.actividadPorDia = actividadPorDiaTemp.slice(diaActual + 1).concat(actividadPorDiaTemp.slice(0, diaActual + 1));
+  
+    this.dibujarGrafica();
   }
   
   dibujarGrafica() {
+    const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const hoy = new Date();
+    const diaActual = hoy.getDay();
+    const diasReordenados = diasSemana.slice(diaActual + 1).concat(diasSemana.slice(0, diaActual + 1));
+  
     var chartDom = document.getElementById('chart');
     var myChart = echarts.init(chartDom);
     var option;
-
+  
     option = {
-     
       xAxis: [
         {
           type: 'category',
           boundaryGap: true,
-          data: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
+          data: diasReordenados,
+          axisLabel: {
+            formatter: (value: string, index: number) => {
+              if (index === diaActual+1) {
+                return `{bold|${value}}`;
+              }
+              return value;
+            },
+            rich: {
+              bold: {
+                fontWeight: 'bold',
+                fontSize: 16
+              }
+            }
+          }
         }
       ],
       yAxis: [
@@ -191,7 +224,7 @@ export class ActividadRecienteComponent implements OnInit {
           name: '',
           min: 0,
           boundaryGap: [0.2, 0.2],
-          splitNumber: 1
+          splitNumber: 5
         } 
       ],
       series: [
@@ -203,7 +236,14 @@ export class ActividadRecienteComponent implements OnInit {
             color: '#8aca69',
             barBorderRadius: [5, 5, 0, 0]
           },
-          barWidth: 80
+          barWidth: 80,
+          label: {
+            show: true,
+            position: 'top',
+            fontWeight: 'bold',  
+            formatter: '{c}', 
+            fontSize: 16
+          }
         }
       ]
     };

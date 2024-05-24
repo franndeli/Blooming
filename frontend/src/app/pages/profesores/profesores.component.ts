@@ -236,7 +236,7 @@ export class ProfesoresComponent implements OnInit{
     } else {
       this.resultadosComparacion.push({clase: claseID, mejora: 'igual', cambio: 0});
     }
-    console.log("ams:", this.resultadosComparacion);
+    //console.log("ams:", this.resultadosComparacion);
   }
 
 

@@ -79,3 +79,10 @@ table > thead > tr > th {
     width: 20px;
     height: 20px;
 }
+#efecto:hover{
+    box-shadow: 0 0 10px #749866;
+    transform: scale(1.05) ;
+}
+#efecto{
+    transition: transform 0.3s ease; 
+}

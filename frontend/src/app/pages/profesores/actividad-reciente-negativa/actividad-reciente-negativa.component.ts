@@ -260,9 +260,12 @@ export class ActividadRecienteNegativaComponent {
     this.conRiesgo.sort((a, b) => b.cont - a.cont);
 
     this.dibujarGrafica();
-
-    this.onChangeClase(this.clasesExisten[0].nombre);
-    this.onChangeClase2(this.clasesExisten[0].nombre);
+    
+    if (this.clasesExisten && this.clasesExisten.length > 0) {
+      this.onChangeClase(this.clasesExisten[0].nombre);
+      this.onChangeClase2(this.clasesExisten[0].nombre);
+  }
+    
   }
 
   onChangeClase(event: any) {

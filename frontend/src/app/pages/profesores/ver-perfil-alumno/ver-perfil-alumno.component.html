@@ -35,7 +35,8 @@
                                             <td class="border-bottom-0 gravedad-circle" style="margin-top: 10px;" [ngClass]="getGravedadClass(alumnosData.Ambitos[resultado.nombre])" *ngIf="alumnosData.Ambitos !== undefined">
                                                 {{alumnosData.Ambitos[resultado.nombre]}} 
                                             </td>
-                                            <td class="border-bottom-0" style="padding-left: 2px;">
+                                            
+                                            <td class="border-bottom-0" style="padding-left: 2px; padding-right: 0px;">
                                                 <span style="color: red; font-size: 14px;" *ngIf="resultado.mejora === 'empeora'">
                                                     <i class="ti ti-trending-down"></i> -{{resultado.cambio}}%
                                                 </span>

@@ -37,7 +37,7 @@ export class VerMasPreguntasComponent {
   getPreguntasAlumno(buscar: string){
     this.busqueda = buscar;
     this.respuestaService.getRespuestasAlumno(this.alumnoID, -1, this.posActual, this.filPag, this.contar, this.busqueda).subscribe((data: any) => {
-      console.log(data);
+      //console.log(data);
       if(data["respuestas"].length === 0){
         if(this.posActual > 0){
           this.posActual = this.posActual - this.filPag;

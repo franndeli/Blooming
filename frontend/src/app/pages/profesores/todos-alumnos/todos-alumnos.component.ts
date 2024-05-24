@@ -5,18 +5,24 @@ import { ProfesorService } from '../../../services/profesores.service';
 import { RespuestaService } from '../../../services/respuestas.service';
 import { SesionService } from '../../../services/sesiones.service';
 
+interface ComparacionAmbito {
+  id: string;
+  tendencia: string;
+}
+
 
 @Component({
   selector: 'app-todos-alumnos',
   templateUrl: './todos-alumnos.component.html',
   styleUrl: './todos-alumnos.component.css'
 })
+
 export class TodosAlumnosComponent {
   private idProfesor: any;
   private idClase: any;
   private idCentro: any;
   alumnosData: any;
-  public alumnosTendencia: any;
+  public alumnosTendencia:  ComparacionAmbito[] = [];
   sesionAlumnoAnterior: any;
   filtroNombre: string = ''; 
   public posActual = 0;
@@ -105,7 +111,9 @@ export class TodosAlumnosComponent {
   }
 
   verPerfil(alumnoID: any){
-    this.router.navigate(['profesores/ver-perfil-alumno'], {state: {alumnoID, claseID: this.idClase}});
+    const volverPag = 2;
+    localStorage.setItem('ID_Alumno', alumnoID);
+    this.router.navigate(['profesores/ver-perfil-alumno'], {state: {alumnoID, volverPag}});
   }
 
   getClaseEstado(estado: any): string {
@@ -139,7 +147,7 @@ export class TodosAlumnosComponent {
           //console.log(res);
           if(res.sesiones.length > 0){
             this.sesionAlumnoAnterior = res.sesiones[0];
-            console.log(this.sesionAlumnoAnterior);
+            //console.log(this.sesionAlumnoAnterior);
   
             let data = JSON.parse(this.sesionAlumnoAnterior.ValorAmbitoFin);
   
@@ -147,7 +155,7 @@ export class TodosAlumnosComponent {
             let sum = values.reduce((a, b) => a + b, 0);
             let average = sum / values.length;
     
-            console.log('La media es: ', average);
+            //console.log('La media es: ', average);
   
             if(average >= 0 && average <= 20){
               this.EstadoAnterior = 'Muy Malo';
@@ -160,8 +168,8 @@ export class TodosAlumnosComponent {
             } else if (average > 80 && average <= 100){
               this.EstadoAnterior = 'Muy Bueno';
             }
-            console.log('El estado anterior es: ', this.EstadoAnterior);
-            console.log('El estado actual es: ', this.alumnosData[i].Estado);
+            //console.log('El estado anterior es: ', this.EstadoAnterior);
+            //console.log('El estado actual es: ', this.alumnosData[i].Estado);
   
             // Comparación de estados
             const indiceEstadoAnterior = estados.indexOf(this.EstadoAnterior);
@@ -178,11 +186,12 @@ export class TodosAlumnosComponent {
           } else{
             this.alumnosTendencia.push({id: this.alumnosData[i].ID_Alumno, tendencia: 'igual'});
           }
+          //console.log('La tendencia es: ', this.alumnosTendencia);
         });
       }
       
     }
-    console.log('La tendencia es: ', this.alumnosTendencia);
+    //console.log('La tendencia es: ', this.alumnosTendencia);
   }
   
 }

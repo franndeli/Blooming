@@ -55,7 +55,6 @@ import { PerfilProfesorComponent } from './profesores/perfil-profesor/perfil-pro
 import { EditarProfesorComponent } from './profesores/editar-profesor/editar-profesor.component';
 
 //ALUMNOS
-import { SistemaPreguntasComponent } from './alumnos/sistema-preguntas/sistema-preguntas.component';
 import { ActividadRecienteNegativaComponent } from './profesores/actividad-reciente-negativa/actividad-reciente-negativa.component';
 import { ArbolEscenaComponent } from './alumnos/arbol-escena/arbol-escena.component';
 import { RecompensasComponent } from './alumnos/recompensas/recompensas.component';
@@ -104,7 +103,6 @@ import { InformacionLegalComponent } from './informacion-legal/informacion-legal
     EditarCentroComponent,
     PerfilProfesorComponent,
     EditarProfesorComponent,
-    SistemaPreguntasComponent,
     ArbolEscenaComponent,
     ActividadRecienteNegativaComponent,
     RecompensasComponent,

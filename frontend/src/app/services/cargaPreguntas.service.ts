@@ -23,8 +23,6 @@ export class CargarPreguntasService {
   preguntaActual: any = null;
   mostrarReiniciar: boolean = false;
 
-  textMesh!: THREE.Mesh | undefined;
-
   canvas!: any;
 
   objectKeys = Object.keys;

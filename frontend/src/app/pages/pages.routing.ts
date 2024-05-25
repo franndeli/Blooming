@@ -43,8 +43,6 @@ import { EditarCentroComponent } from './centros/editar-centro/editar-centro.com
 import { PerfilProfesorComponent } from './profesores/perfil-profesor/perfil-profesor.component';
 import { EditarProfesorComponent } from './profesores/editar-profesor/editar-profesor.component';
 
-import { SistemaPreguntasComponent } from './alumnos/sistema-preguntas/sistema-preguntas.component';
-
 import { ArbolEscenaComponent } from './alumnos/arbol-escena/arbol-escena.component';
 
 import { ActividadRecienteNegativaComponent } from './profesores/actividad-reciente-negativa/actividad-reciente-negativa.component';
@@ -143,7 +141,6 @@ const routes: Routes = [
     children: [
       { path: 'dashboard', component: AlumnosComponent},
       { path: 'sidebar', component: SidebarComponent },
-      { path: 'sistema-preguntas', component: SistemaPreguntasComponent },
       { path: 'arbol-escena', component: ArbolEscenaComponent },
       { path: 'recompensas', component: RecompensasComponent }
   ]},

@@ -7,6 +7,7 @@ import { GlobalStateService } from './helpers/globalstate.service';
 @Injectable({
   providedIn: 'root'
 })
+
 export class FinalScreenService {
     scene!: THREE.Scene;
     camera!: THREE.PerspectiveCamera;

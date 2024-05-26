@@ -34,7 +34,6 @@ export class ActividadRecienteComponent implements OnInit {
   }
 
   ngOnInit() {
-
     if(localStorage.getItem('ID_Clase')){
       localStorage.removeItem('ID_Clase');
     }

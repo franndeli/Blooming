@@ -75,7 +75,6 @@ export class ActividadRecienteNegativaComponent {
   }
 
   ngOnInit() {
-
     if(localStorage.getItem('ID_Clase')){
       localStorage.removeItem('ID_Clase');
     }

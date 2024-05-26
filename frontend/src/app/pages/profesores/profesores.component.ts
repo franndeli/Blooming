@@ -48,10 +48,15 @@ export class ProfesoresComponent implements OnInit{
   }
 
   ngOnInit() {
-    
+    if(localStorage.getItem('ID_Clase')){
+      localStorage.removeItem('ID_Clase');
+    }
+
+    if(localStorage.getItem('ID_Alumno')){
+      localStorage.removeItem('ID_Alumno');
+    }
     this.getClases(); //obtenemos las clases
     this.obtenerIDprofesor();
-   
   }
 
   /*MÉTODO PARA MOSTRAR LA ETIQUETA DE TU CLASE"*/
@@ -333,7 +338,8 @@ export class ProfesoresComponent implements OnInit{
   }
 
   verClase(claseID: any){
-    this.clasID = claseID;
+    // this.clasID = claseID;
+    localStorage.setItem('ID_Clase', claseID);
     this.setClaseID();
     this.router.navigate(['profesores/ver-alumnos'], {state: {claseID}});
   }

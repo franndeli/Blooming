@@ -32,7 +32,7 @@ export class CuboService {
     public async crearCubo(motor: MotorGrafico, escena: TNodo, texturas: any){
         this.motorGrafico = motor;
 
-        this.camara = this.motorGrafico.crearCamara(escena, [0, 0, 10], [0, 0, 0], [1, 1, 1]);
+        this.camara = this.motorGrafico.crearCamara(escena, [0, 0, 7], [0, 0, 0], [1, 1, 1]);
         this.luz = this.motorGrafico.crearLuz(escena, [0, 10, 0], [0, 0, 0], [1, 1, 1]);
         this.cubo = await this.motorGrafico.crearModelo(escena, 'cubo_final_blooming.gltf', [0, 0, 0], [0, 0, 0], [1, 1, 1], texturas);
         
@@ -78,7 +78,7 @@ export class CuboService {
     
     mouseMove(event: MouseEvent){
         event.preventDefault();
-        let velocidadRotacion = 30;
+        let velocidadRotacion = 35;
         if(clickIzq){
             dx = (event.pageX - old_x) * 2 * Math.PI / this.width * velocidadRotacion;
             dy = (event.pageY - old_y) * 2 * Math.PI / this.height * velocidadRotacion;

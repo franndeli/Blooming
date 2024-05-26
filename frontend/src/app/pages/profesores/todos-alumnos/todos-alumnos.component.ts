@@ -38,9 +38,16 @@ export class TodosAlumnosComponent {
   }
 
   ngOnInit(){
+    if(localStorage.getItem('ID_Clase')){
+      localStorage.removeItem('ID_Clase');
+    }
+
+    if(localStorage.getItem('ID_Alumno')){
+      localStorage.removeItem('ID_Alumno');
+    }
+
     this.idProfesor = localStorage.getItem('id');
     this.getIdCentro();
-    
   }
 
   getIdCentro(){

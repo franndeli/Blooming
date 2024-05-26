@@ -84,7 +84,7 @@ export class PlanoService {
 
     mouseMove(event: MouseEvent, width: number, height: number){
         event.preventDefault();
-        let velocidadMovimientoX = 4.0;
+        let velocidadMovimientoX = 5.4;
         let velocidadMovimientoY = 3.5;
         if(clickIzq && onAvatar){
             dx = (event.pageX - old_x) * 5 / width * velocidadMovimientoX;

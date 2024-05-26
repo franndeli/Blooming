@@ -70,7 +70,7 @@ export class VerAlumnosCComponent implements OnInit{
       confirmButtonText: "Eliminar"
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log(idClase);
+        //console.log(idClase);
         this.quitarAlumno(idClase);
         this.alumnoService.deleteAlumno(id).subscribe(res => {
           this.obtenerAlumnos(this.busqueda);
@@ -93,7 +93,7 @@ export class VerAlumnosCComponent implements OnInit{
       }
       this.claseService.putClase(datosActualizados).subscribe(
         (response: any) => {
-          console.log('Clase actualizada exitosamente');
+          //console.log('Clase actualizada exitosamente');
         },
         (error) => {
           console.error('Error de creación');

@@ -142,7 +142,7 @@ export class MotorGrafico {
       padre.addHijo(luz);
     }
 
-    console.log('Luz creada');
+    //('Luz creada');
 
     return luz;
   } 

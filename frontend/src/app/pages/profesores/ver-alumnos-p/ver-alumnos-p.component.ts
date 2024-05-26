@@ -150,7 +150,7 @@ export class VerAlumnosPComponent implements OnInit{
     this.claseService.getClase(this.claseID).subscribe((res: any) => {
       this.claseData = res.clases[0];
       this.idClase = res.clases[0].ID_Clase;
-      console.log('Clase:', this.idClase);
+      //console.log('Clase:', this.idClase);
       this.getAlumnosClaseActual(this.idClase);
     });
   }
@@ -159,7 +159,7 @@ export class VerAlumnosPComponent implements OnInit{
     this.alumnoService.getAlumnosClase(claseID).subscribe(res => {
       this.arrayAlumnosClase= res;
       this.numeroAlumnos = this.arrayAlumnosClase.alumnos.length;
-      console.log('Total de alumnos en la clase:', this.numeroAlumnos);
+      //console.log('Total de alumnos en la clase:', this.numeroAlumnos);
       this.mediaEmocional(claseID);
     });
   }
@@ -175,10 +175,10 @@ export class VerAlumnosPComponent implements OnInit{
   let alumnos: any[] =[];
   let todos:any[] = [];
 
-  console.log("alumnos entran en la mediaEmocional", this.numeroAlumnos);
+  //console.log("alumnos entran en la mediaEmocional", this.numeroAlumnos);
   //array de los alumnos de esa clase
   alumnos = this.arrayAlumnosClase.alumnos;
-  console.log("alumnos", alumnos);
+  //console.log("alumnos", alumnos);
   //array con todos los alumnos de ese profesor
   //todos = this.alumnosTodosData.alumnos;
   //console.log("todos", todos);
@@ -194,11 +194,11 @@ export class VerAlumnosPComponent implements OnInit{
     const valorEmociones = ambitosObj['Emociones'];
     const valorFueraClase = ambitosObj['Fuera de clase'];
 
-    console.log('Valor de Clase:', valorClase);
-    console.log('Valor de Amigos:', valorAmigos);
-    console.log('Valor de Familia:', valorFamilia);
-    console.log('Valor de Emociones:', valorEmociones);
-    console.log('Valor de Fuera de clase:', valorFueraClase);
+    //console.log('Valor de Clase:', valorClase);
+    //console.log('Valor de Amigos:', valorAmigos);
+    //console.log('Valor de Familia:', valorFamilia);
+    //console.log('Valor de Emociones:', valorEmociones);
+    //console.log('Valor de Fuera de clase:', valorFueraClase);
 });
 
   // Iterar sobre los datos de todos los alumnos en la clase
@@ -223,7 +223,7 @@ export class VerAlumnosPComponent implements OnInit{
       }
 
       totalAlumnosConsiderados++;
-    console.log('Total de alumnos considerados:', totalAlumnosConsiderados);
+    //console.log('Total de alumnos considerados:', totalAlumnosConsiderados);
   }
 
   // Calcular la suma total de los ámbitos de todos los alumnos
@@ -232,14 +232,14 @@ export class VerAlumnosPComponent implements OnInit{
   // Calcular la media emocional de la clase solo si hay alumnos considerados
   if (totalAlumnosConsiderados > 0) {
     this.totalMediaClase = Math.round(total / totalAlumnosConsiderados / 5);
-    console.log('Media emocional de la clase', claseID, ':', this.totalMediaClase);
+    //console.log('Media emocional de la clase', claseID, ':', this.totalMediaClase);
     this.mediaAmigos(claseID);
     this.mediaFamilia(claseID);
     this.mediaEmociones(claseID);
     this.mediaFueraClase(claseID);
     this.mediaAmbitoClase(claseID);
   } else {
-    console.log('No hay alumnos considerados para calcular la media emocional de la clase', claseID);
+    //console.log('No hay alumnos considerados para calcular la media emocional de la clase', claseID);
     this.totalMediaClase = 0;
     
   }
@@ -250,7 +250,7 @@ export class VerAlumnosPComponent implements OnInit{
     let alumnos: any[] =[];
     let suma=0;
     let totalAlumnosConsiderados = 0;
-    console.log("alumnos entran en la mediaEmocional", this.numeroAlumnos);
+    //console.log("alumnos entran en la mediaEmocional", this.numeroAlumnos);
    //array de los alumnos de esa clase
     alumnos = this.arrayAlumnosClase.alumnos;
     alumnos.forEach((alumno: any) => {
@@ -258,7 +258,7 @@ export class VerAlumnosPComponent implements OnInit{
       const ambitosObj = JSON.parse(ambitosJSON);
       // Acceder al valor numérico del ambito "AMIGOS"
       const valorAmigos = ambitosObj['Amigos'];
-      console.log('Valor de Amigos SOLO:', valorAmigos);
+      //console.log('Valor de Amigos SOLO:', valorAmigos);
     });
     // Iterar sobre los datos de todos los alumnos en la clase
     for (let i = 0; i < alumnos.length; i++) {
@@ -268,19 +268,19 @@ export class VerAlumnosPComponent implements OnInit{
     if (ambitoObj.hasOwnProperty('Clase')) {
       suma += Number(ambitoObj['Amigos']);
     }
-    console.log('Total de alumnos considerados  YEPA:', suma);
+    //console.log('Total de alumnos considerados  YEPA:', suma);
     totalAlumnosConsiderados++;
-    console.log('Total de alumnos considerados:', totalAlumnosConsiderados);
+    //console.log('Total de alumnos considerados:', totalAlumnosConsiderados);
     }
     this.totalMediaAmigos = Math.round(suma / totalAlumnosConsiderados);
-    console.log('Media emocional AMIGOS:', this.totalMediaAmigos);
+    //console.log('Media emocional AMIGOS:', this.totalMediaAmigos);
 
   }
   mediaFamilia(claseID: any) {
     let alumnos: any[] =[];
     let suma=0;
     let totalAlumnosConsiderados = 0;
-    console.log("alumnos entran en la mediaEmocional", this.numeroAlumnos);
+    //console.log("alumnos entran en la mediaEmocional", this.numeroAlumnos);
    //array de los alumnos de esa clase
     alumnos = this.arrayAlumnosClase.alumnos;
     alumnos.forEach((alumno: any) => {
@@ -288,7 +288,7 @@ export class VerAlumnosPComponent implements OnInit{
       const ambitosObj = JSON.parse(ambitosJSON);
       // Acceder al valor numérico del ambito "AMIGOS"
       const valorAmigos = ambitosObj['Familia'];
-      console.log('Valor de FAMILIA SOLO:', valorAmigos);
+      //console.log('Valor de FAMILIA SOLO:', valorAmigos);
     });
     // Iterar sobre los datos de todos los alumnos en la clase
     for (let i = 0; i < alumnos.length; i++) {
@@ -299,10 +299,10 @@ export class VerAlumnosPComponent implements OnInit{
       suma += Number(ambitoObj['Familia']);
     }
     totalAlumnosConsiderados++;
-    console.log('Total de alumnos considerados:', totalAlumnosConsiderados);
+    //console.log('Total de alumnos considerados:', totalAlumnosConsiderados);
     }
     this.totalMediaFamilia = Math.round(suma / totalAlumnosConsiderados);
-    console.log('Media emocional FAMILIA:', this.totalMediaFamilia);
+    //console.log('Media emocional FAMILIA:', this.totalMediaFamilia);
   }
   mediaEmociones(claseID: any) {
     let alumnos: any[] =[];
@@ -315,7 +315,7 @@ export class VerAlumnosPComponent implements OnInit{
       const ambitosObj = JSON.parse(ambitosJSON);
       // Acceder al valor numérico del ambito "AMIGOS"
       const valorAmigos = ambitosObj['Emociones'];
-      console.log('Valor de Emociones SOLO:', valorAmigos);
+      //console.log('Valor de Emociones SOLO:', valorAmigos);
     });
     // Iterar sobre los datos de todos los alumnos en la clase
     for (let i = 0; i < alumnos.length; i++) {
@@ -329,7 +329,7 @@ export class VerAlumnosPComponent implements OnInit{
     
     }
     this.totalMediaEmociones = Math.round(suma / totalAlumnosConsiderados);
-    console.log('Media emocional EMOCIONES:', this.totalMediaEmociones);
+    //console.log('Media emocional EMOCIONES:', this.totalMediaEmociones);
   }
   mediaFueraClase(claseID: any) {
     let alumnos: any[] =[];
@@ -342,7 +342,7 @@ export class VerAlumnosPComponent implements OnInit{
       const ambitosObj = JSON.parse(ambitosJSON);
       // Acceder al valor numérico del ambito "AMIGOS"
       const valorAmigos = ambitosObj['Fuera de clase'];
-      console.log('Valor de Fuera de Clase SOLO:', valorAmigos);
+      //console.log('Valor de Fuera de Clase SOLO:', valorAmigos);
     });
     // Iterar sobre los datos de todos los alumnos en la clase
     for (let i = 0; i < alumnos.length; i++) {
@@ -356,7 +356,7 @@ export class VerAlumnosPComponent implements OnInit{
     
     }
     this.totalMediaFueraClase = Math.round(suma / totalAlumnosConsiderados);
-    console.log('Media emocional Fuera de clase:', this.totalMediaFueraClase);
+    //console.log('Media emocional Fuera de clase:', this.totalMediaFueraClase);
   }
   mediaAmbitoClase(claseID: any) {
     let alumnos: any[] =[];
@@ -369,7 +369,7 @@ export class VerAlumnosPComponent implements OnInit{
       const ambitosObj = JSON.parse(ambitosJSON);
       // Acceder al valor numérico del ambito "AMIGOS"
       const valorAmigos = ambitosObj['Clase'];
-      console.log('Valor de Clase SOLO:', valorAmigos);
+      //console.log('Valor de Clase SOLO:', valorAmigos);
     });
     // Iterar sobre los datos de todos los alumnos en la clase
     for (let i = 0; i < alumnos.length; i++) {
@@ -383,7 +383,7 @@ export class VerAlumnosPComponent implements OnInit{
     
     }
     this.totalMediaAmbitoClase= Math.round(suma / totalAlumnosConsiderados);
-    console.log('Media emocional de clase:', this.totalMediaAmbitoClase);
+    //console.log('Media emocional de clase:', this.totalMediaAmbitoClase);
   }
 
   filtrarAlumnos() {
@@ -429,7 +429,7 @@ export class VerAlumnosPComponent implements OnInit{
   obtenerTodosAlumnos(){
     this.alumnoService.getAlumnos().subscribe((res: any) => {
       this.alumnosTodosData = res.alumnos;
-      //console.log(this.alumnosTodosData);
+      ////console.log(this.alumnosTodosData);
       this.totalAlumnos2 = this.alumnosTodosData.length;
       this.contarEstados();
     }, error => {

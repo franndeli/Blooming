@@ -39,7 +39,7 @@ export class CrearAlumnosCComponent implements OnInit {
     this.id = localStorage.getItem('id');
     this.claseService.getClasesCentro(this.id).subscribe(res => {
       this.clasesData = res;
-      console.log(this.clasesData);
+      //console.log(this.clasesData);
     })
   }
 
@@ -78,7 +78,7 @@ export class CrearAlumnosCComponent implements OnInit {
       }
       this.claseService.putClase(datosActualizados).subscribe(
         (response: any) => {
-          console.log('Clase actualizada exitosamente');
+          //console.log('Clase actualizada exitosamente');
         },
         (error) => {
           console.error('Error de creación');

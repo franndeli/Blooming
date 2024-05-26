@@ -159,7 +159,7 @@ export class CuboService {
         // console.log(caraC);
 
         if (intersecciones.length === 0) {
-            console.log("Click fuera del cubo");
+            //console.log("Click fuera del cubo");
             return;
         }
 

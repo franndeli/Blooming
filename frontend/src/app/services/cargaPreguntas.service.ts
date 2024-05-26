@@ -104,7 +104,7 @@ export class CargarPreguntasService {
     }
     this.respuestaService.postRespuesta(respuesta).subscribe({
       next: (response) => {
-        console.log('Respuesta creada con éxito:', response);
+        //console.log('Respuesta creada con éxito:', response);
       },
       error: (error) => {
         console.error('Error al crear respuesta:', error);
@@ -266,7 +266,7 @@ export class CargarPreguntasService {
   
             this.alumnoService.putAlumno(datosActualizados).subscribe({
               next: (response) => {
-                console.log('AparicionAmbitos actualizados con éxito:', response);
+                //('AparicionAmbitos actualizados con éxito:', response);
                 resolve(response); // Resuelve la promesa cuando la actualización es exitosa
               },
               error: (error) => {
@@ -304,7 +304,7 @@ export class CargarPreguntasService {
     try {
       await this.multiplicarYActualizarAmbitos();
       await this.sesionService.finalizarSesion(this.gravedadesActualizadas);
-      console.log("Se acabó la sesión");
+      //console.log("Se acabó la sesión");
       await this.finalizarSesion();
     } catch(error) {
       console.error('Error en el proceso de acabose:', error);

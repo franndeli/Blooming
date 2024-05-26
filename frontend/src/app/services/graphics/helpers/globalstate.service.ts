@@ -73,18 +73,18 @@ export class GlobalStateService {
     if (lastSessionDate >= lastReset && lastSessionDate < nextReset) {
         // El usuario ya hizo el cuestionario después del último reinicio
         await this.setMostrarContador(true)
-        console.log("Puesto a true")
+        //console.log("Puesto a true")
     } else {
         // La última sesión fue antes del último reinicio
         await this.setMostrarContador(false)
-        console.log("Puesto a false")
+        //console.log("Puesto a false")
     }
   }
 
   public async setMostrarContador(value: boolean): Promise<void> {
     this.mostrarContador = value;
     localStorage.setItem('mostrarContador', value.toString());
-    console.log(value);
+    //console.log(value);
     if (value) {
       this.calculateTimeUntilNextPeriod();
     }
@@ -121,7 +121,7 @@ export class GlobalStateService {
 
       return timeDifference
     } else {
-      console.log("Devolviendo 0 patatero")
+      //console.log("Devolviendo 0 patatero")
       return 0 
     } 
   }

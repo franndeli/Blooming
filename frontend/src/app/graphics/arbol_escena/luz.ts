@@ -17,7 +17,7 @@ export class TLuz extends TEntidad {
         this.intensidadDifusa = intensidadDifusa;
         this.intensidadEspecular = intensidadEspecular;
         this.posicion = posicion;
-        console.log('Intensidad de la luz:', this.intensidadAmbiental, this.intensidadDifusa, this.intensidadEspecular);
+        //console.log('Intensidad de la luz:', this.intensidadAmbiental, this.intensidadDifusa, this.intensidadEspecular);
         var canvas = <HTMLCanvasElement>document.getElementById('canvasWebGL');
         var context = canvas.getContext('webgl2');
         if (context === null) {

@@ -68,7 +68,7 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
     await this.obtenerAlumno();
     this.obtenerRespuestas();
     //this.obtenerSesiones();
-    console.log('hola');
+    //console.log('hola');
     this.compararAmbitos();
   }
 
@@ -79,12 +79,12 @@ export class VerPerfilAlumnoComponent implements OnInit, AfterViewInit {
   async obtenerAlumno(){
     this.alumnoService.getAlumnoID(this.alumnoID).subscribe((res: any) => {
       this.alumnosData = res.alumnos[0];
-      console.log(this.alumnosData);
+      //console.log(this.alumnosData);
       this.alumnosData.Ambitos = JSON.parse(this.alumnosData.Ambitos);
       //this.sesiones.Ambitos = this.alumnosData.Ambitos;
       this.nombreClase = this.alumnosData.Clase.Nombre;
 
-      console.log(this.alumnosData.Ambitos);
+      //console.log(this.alumnosData.Ambitos);
       // console.log(this.sesiones.Ambitos);
     });
   }

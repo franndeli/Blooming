@@ -1,2 +1,2 @@
-# dek4
-[ABPGC23] Proyecto de Contenidos del grupo DEK4 de ABP 2023/24
+# Blooming
+Aplicación para el seguimiento emocional de los alumnos en el entorno escolar de primaria y principios de secundaria.

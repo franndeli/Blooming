@@ -3,7 +3,7 @@
 ## Descripción del Proyecto
 Blooming es una aplicación innovadora diseñada para monitorear el bienestar emocional de los alumnos en entornos escolares, específicamente en primaria y principios de secundaria. La plataforma ofrece un enfoque integral que combina un backend robusto con un frontend interactivo, permitiendo a educadores y administradores seguir el estado emocional de los estudiantes de manera efectiva y en tiempo real.
 
-Para probarlo en directo puedes pinchar [aquí](blooming.ovh)
+Para probarlo en directo puedes pinchar [aquí](https://blooming.ovh/inicio)
 
 ## Tecnologías Utilizadas
 ### Backend

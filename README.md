@@ -70,5 +70,5 @@ Agradecemos las contribuciones de la comunidad. Para contribuir, por favor sigue
 ## Licencia
 Este proyecto está licenciado bajo la Licencia GPL-3.0. Para más detalles, consulta el archivo LICENSE.
 
-Si te ha gustado el proyecto, quieres más información o te interesa contactar con el equipo desarrollador no dudes en ponerte en contacto con este [email](delicadofranvi@gmail.com)
+Si te ha gustado el proyecto, quieres más información o te interesa contactar con el equipo desarrollador no dudes en ponerte en contacto a través del email delicadofranvi@gmail.com
 ¡Muchas gracias por visitar Blooming!

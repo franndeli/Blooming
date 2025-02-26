@@ -1,74 +1,73 @@
-### Blooming
+# Blooming
 
-## Descripción del Proyecto
-Blooming es una aplicación innovadora diseñada para monitorear el bienestar emocional de los alumnos en entornos escolares, específicamente en primaria y principios de secundaria. La plataforma ofrece un enfoque integral que combina un backend robusto con un frontend interactivo, permitiendo a educadores y administradores seguir el estado emocional de los estudiantes de manera efectiva y en tiempo real.
+## Project Description
+Blooming is an innovative application designed to monitor the emotional well-being of students in school environments, specifically targeting elementary and early middle school students. The platform offers a comprehensive approach, combining a robust backend with an interactive frontend, enabling educators and administrators to track students' emotional states effectively and in real-time.
 
-Para probarlo en directo puedes pinchar [aquí](https://blooming.ovh/inicio)
+## Technologies Used
 
-## Tecnologías Utilizadas
 ### Backend
-- **Node.js** y **Express**: Utilizados para construir una API RESTful escalable y eficiente.
-- **Sequelize**: ORM para la gestión de bases de datos SQL, proporcionando una interfaz fluida y simplificada para el acceso a datos.
+- **Node.js and Express**: Used to build a scalable and efficient RESTful API.
+- **Sequelize**: ORM for SQL database management, providing a streamlined and simplified interface for data access.
 
 ### Frontend
-- **Angular**: Framework de desarrollo frontend que permite crear una interfaz de usuario dinámica, modular y altamente interactiva.
-- **HTML5, CSS3 y SCSS**: Utilizados para diseñar una interfaz atractiva y responsive.
-- **WebGL**: Implementado para desarrollar un motor gráfico entero y personalizado pensado para la experiencia de los alumnos dentro de la aplicación.
+- **Angular**: Frontend development framework for creating a dynamic, modular, and highly interactive user interface.
+- **HTML5, CSS3, and SCSS**: Used to design an attractive and responsive interface.
+- **WebGL**: Implemented to develop a fully custom graphics engine tailored to the student experience within the application.
 
-### Características Clave
-- **Gestión de KPIs**: Integración de indicadores clave de rendimiento para el seguimiento y análisis de métricas emocionales de los estudiantes.
-- **Seguridad y Escalabilidad**: Implementación de prácticas de seguridad robustas y arquitectura escalable para soportar el crecimiento del proyecto.
-- **Interfaz de Usuario Intuitiva**: Diseño centrado en el usuario para facilitar la navegación, la interacción y la visualización de los datos.
+## Key Features
+- **KPI Management**: Integration of key performance indicators for tracking and analyzing students' emotional metrics.
+- **Security and Scalability**: Implementation of robust security practices and scalable architecture to support project growth.
+- **Intuitive User Interface**: User-centered design to facilitate navigation, interaction, and data visualization.
 
-## Estructura del Proyecto
-- **backend/**: Contiene el código del servidor, incluyendo controladores, modelos y rutas.
-- **frontend/**: Código fuente de la aplicación Angular, con todos los componentes, servicios y estilos necesarios.
+## Project Structure
+- **backend/**: Contains the server code, including controllers, models, and routes.
+- **frontend/**: Source code for the Angular application, including all necessary components, services, and styles.
 
-## Instalación y Configuración
-### Prerrequisitos
+## Installation and Configuration
+
+### Prerequisites
 - Node.js
 - npm (Node Package Manager)
 - Angular CLI
-- Base de datos SQL (por ejemplo, MySQL o PostgreSQL)
+- SQL database (e.g., MySQL or PostgreSQL)
 
-### Pasos de Instalación
-1. **Clonar el Repositorio**
+### Installation Steps
+1. Clone the Repository:
    ```bash
    git clone https://github.com/franndeli/Blooming.git
    ```
-2. **Instalar Dependencias del Backend**
+2. Install Backend Dependencies:
    ```bash
    cd backend
    npm install
    ```
-3. **Configurar la Base de Datos**
-   - Crear una base de datos en tu gestor SQL preferido.
-   - Configurar las credenciales de la base de datos en el archivo `config/config.json`.
-
-4. **Iniciar el Servidor Backend**
+3. Set Up the Database:
+   - Create a database in your preferred SQL manager.
+   - Configure the database credentials in the `config/config.json` file.
+4. Start the Backend Server:
    ```bash
    npm start
    ```
-5. **Instalar Dependencias del Frontend**
+5. Install Frontend Dependencies:
    ```bash
    cd ../frontend
    npm install
    ```
-6. **Iniciar la Aplicación Frontend**
+6. Start the Frontend Application:
    ```bash
    ng serve
    ```
 
-## Contribución
-Agradecemos las contribuciones de la comunidad. Para contribuir, por favor sigue estos pasos:
-1. Realiza un fork del repositorio.
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`).
-3. Realiza tus cambios y haz commit (`git commit -m 'Add some AmazingFeature'`).
-4. Empuja tus cambios a la rama (`git push origin feature/AmazingFeature`).
-5. Abre un Pull Request.
+## Contributing
+We welcome contributions from the community. To contribute, please follow these steps:
+1. Fork the repository.
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
 
-## Licencia
-Este proyecto está licenciado bajo la Licencia GPL-3.0. Para más detalles, consulta el archivo LICENSE.
+## License
+This project is licensed under the GPL-3.0 License. For more details, see the [LICENSE](LICENSE) file.
 
-Si te ha gustado el proyecto, quieres más información o te interesa contactar con el equipo desarrollador no dudes en ponerte en contacto a través del email delicadofranvi@gmail.com
-¡Muchas gracias por visitar Blooming!
+## Contact
+If you like the project, want more information, or are interested in contacting the development team, feel free to reach out via email at **delicadofranvi@gmail.com**. Thank you for visiting Blooming!

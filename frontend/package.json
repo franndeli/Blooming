@@ -34,7 +34,7 @@
     "formidable": "^3.5.1",
     "gl-matrix": "^3.4.3",
     "jquery": "^3.7.1",
-    "jspdf": "^2.5.1",
+    "jspdf": "^4.2.1",
     "ng-apexcharts": "^1.8.0",
     "papaparse": "^5.4.1",
     "party-js": "^2.2.0",
